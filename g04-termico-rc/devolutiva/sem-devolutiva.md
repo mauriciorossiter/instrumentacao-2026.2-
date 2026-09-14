@@ -33,6 +33,10 @@ Na primeira devolutiva, **apague este arquivo** (`sem-devolutiva.md`) no mesmo c
 
 ```bash
 git add g04-termico-rc/devolutiva
-git commit -m "g04: devolutiva da entrega 1"
+git commit -m "g04: devolutiva 1 - caracterizacao do sistema"
 git push origin g04-termico-rc
 ```
+
+Depois, abra um Pull Request da branch `g04-termico-rc` para a `main`, com o
+título no formato `g04 — Devolutiva 1: Caracterização do Sistema`. A data de abertura
+do PR é o que conta como data de envio da devolutiva.

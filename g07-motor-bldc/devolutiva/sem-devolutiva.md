@@ -33,6 +33,10 @@ Na primeira devolutiva, **apague este arquivo** (`sem-devolutiva.md`) no mesmo c
 
 ```bash
 git add g07-motor-bldc/devolutiva
-git commit -m "g07: devolutiva da entrega 1"
+git commit -m "g07: devolutiva 1 - caracterizacao do sistema"
 git push origin g07-motor-bldc
 ```
+
+Depois, abra um Pull Request da branch `g07-motor-bldc` para a `main`, com o
+título no formato `g07 — Devolutiva 1: Caracterização do Sistema`. A data de abertura
+do PR é o que conta como data de envio da devolutiva.

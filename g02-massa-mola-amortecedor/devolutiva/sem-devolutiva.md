@@ -33,6 +33,10 @@ Na primeira devolutiva, **apague este arquivo** (`sem-devolutiva.md`) no mesmo c
 
 ```bash
 git add g02-massa-mola-amortecedor/devolutiva
-git commit -m "g02: devolutiva da entrega 1"
+git commit -m "g02: devolutiva 1 - caracterizacao do sistema"
 git push origin g02-massa-mola-amortecedor
 ```
+
+Depois, abra um Pull Request da branch `g02-massa-mola-amortecedor` para a `main`, com o
+título no formato `g02 — Devolutiva 1: Caracterização do Sistema`. A data de abertura
+do PR é o que conta como data de envio da devolutiva.

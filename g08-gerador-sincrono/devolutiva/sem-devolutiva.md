@@ -33,6 +33,10 @@ Na primeira devolutiva, **apague este arquivo** (`sem-devolutiva.md`) no mesmo c
 
 ```bash
 git add g08-gerador-sincrono/devolutiva
-git commit -m "g08: devolutiva da entrega 1"
+git commit -m "g08: devolutiva 1 - caracterizacao do sistema"
 git push origin g08-gerador-sincrono
 ```
+
+Depois, abra um Pull Request da branch `g08-gerador-sincrono` para a `main`, com o
+título no formato `g08 — Devolutiva 1: Caracterização do Sistema`. A data de abertura
+do PR é o que conta como data de envio da devolutiva.
