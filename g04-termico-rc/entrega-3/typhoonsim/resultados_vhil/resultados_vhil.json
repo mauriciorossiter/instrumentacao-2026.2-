@@ -1,0 +1,74 @@
+{
+  "metadata": {
+    "acquired_at": "01/09/2026 15:02:55 -0300",
+    "source": "Typhoon HIL API - Virtual HIL",
+    "model_name": "instrumento_estatico_generico.tse",
+    "model_sha256": "faf431e6cd40c2d267045761131149f64bd82382da03bf04a9bd871d37fc5f31",
+    "script_name": "executar_validacao_vhil.py"
+  },
+  "summary": {
+    "sample_count": 65,
+    "fit_sample_count": 65,
+    "x_min": 0.12099999934434891,
+    "x_max": 2.8429999351501465,
+    "reset_count": 0,
+    "p0": 0.0,
+    "k0": 1.0,
+    "p_hat": 0.4999999929658039,
+    "k_hat": 1.1999999932119303,
+    "delta_p": 0.4999999929658039,
+    "delta_k": 0.1999999932119303,
+    "expected_p": 0.5,
+    "expected_k": 1.2,
+    "tolerance_p": 0.01,
+    "tolerance_k": 0.01,
+    "passed": true
+  },
+  "fits": [
+    {
+      "signal": "Saida_ideal",
+      "intercept": 0.0,
+      "slope": 1.0,
+      "rmse": 0.0,
+      "max_abs_residual": 0.0,
+      "expected_intercept": 0.0,
+      "expected_slope": 1.0
+    },
+    {
+      "signal": "Saida_desvio_zero",
+      "intercept": 0.49999999752488233,
+      "slope": 1.0000000017461048,
+      "rmse": 3.194226478051815e-08,
+      "max_abs_residual": 1.2021765094516468e-07,
+      "expected_intercept": 0.5,
+      "expected_slope": 1.0
+    },
+    {
+      "signal": "Saida_sensibilidade",
+      "intercept": 6.486034598296442e-09,
+      "slope": 1.1999999870328635,
+      "rmse": 6.702124600894475e-08,
+      "max_abs_residual": 2.2111439701433255e-07,
+      "expected_intercept": 0.0,
+      "expected_slope": 1.2
+    },
+    {
+      "signal": "Saida_real",
+      "intercept": 0.4999999929658039,
+      "slope": 1.1999999932119303,
+      "rmse": 7.171086274149957e-08,
+      "max_abs_residual": 2.170675408308398e-07,
+      "expected_intercept": 0.5,
+      "expected_slope": 1.2
+    },
+    {
+      "signal": "Erro_total",
+      "intercept": 0.4999999965419589,
+      "slope": 0.19999999937929044,
+      "rmse": 2.376478141495578e-08,
+      "max_abs_residual": 7.674829216597345e-08,
+      "expected_intercept": 0.5,
+      "expected_slope": 0.2
+    }
+  ]
+}

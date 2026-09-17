@@ -1,0 +1,311 @@
+version = 4.2
+
+//
+// Equipe 04 - Geracao de dados brutos para desvio de zero e sensibilidade.
+// Typhoon HIL Control Center 2026.2 - HIL404 Base 1.
+// Duas varreduras completas de 0 a 10 V, uma para cada condicao.
+// A leitura exportada inclui ruido de medicao deliberado e nao e filtrada.
+// Use executar_geracao_dados_equipe_04.py para obter o CSV exigido.
+//
+
+model "Equipe_04_Geracao_Dados_DesvioZeroSensibilidade" {
+    configuration {
+        hil_device = "HIL404"
+        hil_configuration_id = 6
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 25.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Constant" "Habilita experimento" {
+            execution_rate = "0.001"
+            value = "1"
+        }
+        [
+            position = 7520, 8008
+        ]
+
+        component "core/C function" "Gerador de duas varreduras" {
+            arb_defs = "/*Begin code section*/
+// Uma varredura completa por condicao, sem repeticao intencional.
+const double TS_RAMP = 0.001;
+const double TAXA_RAMP = 1.0;
+const double X_MAX = 10.0;
+/*End code section*/"
+            execution_rate = "0.001"
+            global_variables = "real x_state;int condition_state;int finished_state;"
+            init_fnc = "/*Begin code section*/
+x_state = 0.0;
+condition_state = 1;
+finished_state = 0;
+/*End code section*/"
+            input_terminals = "real enable;"
+            input_terminals_dimensions = "inherit"
+            input_terminals_feedthrough = "False"
+            input_terminals_show_labels = "True"
+            output_fnc = "/*Begin code section*/
+x_referencia = x_state;
+condicao_id = (double) condition_state;
+concluido = (double) finished_state;
+/*End code section*/"
+            output_terminals = "real x_referencia;real condicao_id;real concluido;"
+            output_terminals_dimensions = "inherit;inherit;inherit"
+            output_terminals_feedthrough = "True;True;True"
+            output_terminals_show_labels = "True;True;True"
+            update_fnc = "/*Begin code section*/
+if (enable >= 0.5) {
+    if (finished_state == 0) {
+        x_state += TAXA_RAMP * TS_RAMP;
+        if (x_state >= X_MAX) {
+            if (condition_state == 1) {
+                x_state = 0.0;
+                condition_state = 2;
+            } else {
+                x_state = X_MAX;
+                finished_state = 1;
+            }
+        }
+    }
+} else {
+    x_state = 0.0;
+    condition_state = 1;
+    finished_state = 0;
+}
+/*End code section*/"
+        }
+        [
+            position = 7704, 7976
+            size = 168, 88
+        ]
+
+        component "core/C function" "Caracteristica estatica" {
+            arb_defs = "/*Begin code section*/
+// Condicao 1 preserva os parametros do trabalho anterior.
+// Condicao 2 altera simultaneamente intercepto e sensibilidade.
+const double B_COND_1 = 0.5;
+const double K_COND_1 = 1.2;
+const double B_COND_2 = 1.0;
+const double K_COND_2 = 0.9;
+/*End code section*/"
+            execution_rate = "0.001"
+            input_terminals = "real x;real condicao_id;"
+            input_terminals_dimensions = "inherit;inherit"
+            input_terminals_feedthrough = "True;True"
+            input_terminals_show_labels = "True;True"
+            output_fnc = "/*Begin code section*/
+double b_local = (condicao_id < 1.5) ? B_COND_1 : B_COND_2;
+double k_local = (condicao_id < 1.5) ? K_COND_1 : K_COND_2;
+y_sem_ruido = b_local + k_local * x;
+/*End code section*/"
+            output_terminals = "real y_sem_ruido;"
+            output_terminals_dimensions = "inherit"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+        }
+        [
+            position = 8056, 7976
+            size = 184, 88
+        ]
+
+        component "core/C function" "Ruido de medicao" {
+            arb_defs = "/*Begin code section*/
+// Ruido deliberado de pequena amplitude, aplicado depois da caracteristica.
+const double NOISE_AMPLITUDE = 0.02;
+/*End code section*/"
+            execution_rate = "0.001"
+            global_variables = "real noise_state;"
+            init_fnc = "/*Begin code section*/
+noise_state = 0.371234567;
+/*End code section*/"
+            input_terminals = "real y_sem_ruido;"
+            input_terminals_dimensions = "inherit"
+            input_terminals_feedthrough = "True"
+            input_terminals_show_labels = "True"
+            output_fnc = "/*Begin code section*/
+double noise_local = NOISE_AMPLITUDE * (2.0 * noise_state - 1.0);
+y_instrumento = y_sem_ruido + noise_local;
+/*End code section*/"
+            output_terminals = "real y_instrumento;"
+            output_terminals_dimensions = "inherit"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            update_fnc = "/*Begin code section*/
+// Mapa logistico: sequencia pseudoaleatoria deterministica e reprodutivel.
+noise_state = 3.99 * noise_state * (1.0 - noise_state);
+if (noise_state <= 0.0 || noise_state >= 1.0) {
+    noise_state = 0.371234567;
+}
+/*End code section*/"
+        }
+        [
+            position = 8280, 7976
+            size = 176, 72
+        ]
+
+        component "core/Probe" X_referencia {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "x_referencia"
+        }
+        [
+            position = 7936, 7912
+        ]
+
+        component "core/Probe" Y_instrumento {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "y_instrumento"
+        }
+        [
+            position = 8560, 7992
+        ]
+
+        component "core/Probe" Condicao_id {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "condicao_id"
+        }
+        [
+            position = 7936, 8080
+        ]
+
+        component "core/Probe" Experimento_concluido {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "experimento_concluido"
+        }
+        [
+            position = 7936, 8136
+        ]
+
+        connect "Habilita experimento.out" "Gerador de duas varreduras.enable" as Connection1
+        connect "Gerador de duas varreduras.x_referencia" "Caracteristica estatica.x" as Connection2
+        connect "Gerador de duas varreduras.x_referencia" X_referencia.in as Connection3
+        connect "Gerador de duas varreduras.condicao_id" "Caracteristica estatica.condicao_id" as Connection4
+        connect "Gerador de duas varreduras.condicao_id" Condicao_id.in as Connection5
+        connect "Gerador de duas varreduras.concluido" Experimento_concluido.in as Connection6
+        connect "Caracteristica estatica.y_sem_ruido" "Ruido de medicao.y_sem_ruido" as Connection7
+        connect "Ruido de medicao.y_instrumento" Y_instrumento.in as Connection8
+    }
+
+    default {
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+    }
+}
