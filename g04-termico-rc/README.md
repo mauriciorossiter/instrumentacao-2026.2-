@@ -22,6 +22,7 @@
 | e3-typhoonsim | material organizado | — |
 | e4-dados | material organizado | — |
 | e5-relatorio-final | material organizado | — |
+| e6-modulacao-am | material organizado | — |
 
 ## Organização
 
@@ -33,6 +34,8 @@ Cada entrega mantém seus arquivos separados:
 - `entrega-4/`: dados e modelo de geração
 - `entrega-5/entrega-corrigida-professor/`: versão corrigida para entrega, dados e reprodutibilidade
 - `entrega-5/projeto-overleaf/`: fontes LaTeX, dados derivados e modelo do relatório
+- `entrega-6/projeto-overleaf/`: fontes LaTeX, scripts, modelo TyphoonSim e referências analíticas
+- `entrega-6/relatorios/`: PDF da modulação em amplitude
 
 ## Observações
 
