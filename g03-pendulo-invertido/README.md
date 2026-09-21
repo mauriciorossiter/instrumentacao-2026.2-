@@ -1,8 +1,11 @@
 # Pêndulo invertido — Grupo 03
 
 **Domínio de origem:** mecânico
+
 **Ordem:** 4ª
+
 **Linearidade:** não linear, instável
+
 **Solução algébrica de referência:** apenas linearizada
 
 ## Equipe
