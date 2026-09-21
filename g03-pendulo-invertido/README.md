@@ -9,9 +9,10 @@
 
 | Nome completo | Matrícula |
 |---|---|
-| | |
-| | |
-| | |
+| Luiz Eduardo Soares Bezerra | 23111886 |
+| Marco Albuquerque Silva Rocha Gomes | 23111881 |
+| Matheus Henrique Gomes de Oliveira | 23113128 |
+| Valter Gomes da Silva Neto | 23111882 |
 
 ## Entregas
 
