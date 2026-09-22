@@ -1,0 +1,295 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "simulacao4" {
+    configuration {
+        hil_device = "HIL404"
+        hil_configuration_id = 6
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 1.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component Subsystem Subsystem1 {
+            layout = dynamic
+            component Subsystem "Amperímetro Digital" {
+                layout = dynamic
+                context real_time {
+                }
+
+                context typhoonsim {
+                }
+
+                component "core/Gain" Gain_in {
+                    execution_rate = "1e-4"
+                    gain = "1e6"
+                }
+                [
+                    position = 7712, 8064
+                ]
+
+                component "core/Round" Round1 {
+                    execution_rate = "1e-4"
+                }
+                [
+                    position = 7792, 8064
+                ]
+
+                component "core/Gain" Gain_out {
+                    execution_rate = "1e-4"
+                    gain = "1e-6"
+                }
+                [
+                    position = 7872, 8064
+                ]
+
+                component "core/Limit" Limit1 {
+                    execution_rate = "1e-4"
+                    lower_limit = "0"
+                    upper_limit = "4.095e-3"
+                }
+                [
+                    position = 7952, 8064
+                ]
+
+                port i_read {
+                    position = auto:auto
+                    kind = sp
+                    direction =  in
+                    sp_type {
+                        default = inherit
+                        readonly = True
+                    }
+                }
+                [
+                    position = 8024, 8064
+                ]
+
+                port i {
+                    position = auto:auto
+                    kind = sp
+                    direction =  out
+                    sp_type {
+                        default = auto
+                        readonly = True
+                    }
+                }
+                [
+                    position = 7640, 8064
+                ]
+
+                connect Gain_in.out Round1.in as Connection4
+                connect Gain_out.out Limit1.in as Connection6
+                connect Gain_out.in Round1.out as Connection7
+                connect i Gain_in.in as Connection8
+                connect Limit1.out i_read as Connection9
+
+                mask {
+                    description = "<html><head><meta name=\"qrichtext\" content=\"1\"></meta><meta charset=\"utf-8\"></meta><style type=\"text/css\">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: \"\2610\"; }li.checked::marker { content: \"\2612\"; }</style></head><body style=\"\"><p style=\"margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Edit the description</p></body></html>"
+
+                    CODE open
+                        from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                    
+                        dialog = RegularComponentPropertiesDialog(
+                            component=component,
+                            property_container=component.masks[-1],
+                            current_diagram=current_diagram
+                        )
+                        dialog.exec()
+                        
+                    ENDCODE
+                }
+            }
+            [
+                position = 8276, 8232
+                size = 112, 64
+            ]
+
+            component "core/Sum" Sum1 {
+                execution_rate = "1e-4"
+            }
+            [
+                position = 8156, 8232
+            ]
+
+            component "core/Constant" Constant1 {
+                execution_rate = "1e-4"
+                value = "1.00300e-3"
+            }
+            [
+                position = 8064, 8184
+            ]
+
+            component "core/Random Source" "Random Source1" {
+                execution_rate = "0.0001"
+                mean = "0"
+                stddev = "1"
+            }
+            [
+                position = 7988, 8280
+                size = 32, 32
+            ]
+
+            component "core/Gain" Gain1 {
+                execution_rate = "100e-6"
+                gain = "0.3e-6"
+            }
+            [
+                position = 8052, 8280
+            ]
+
+            component "core/Probe" i_in {
+            }
+            [
+                position = 8232, 8104
+            ]
+
+            component "core/Probe" i_read {
+            }
+            [
+                position = 8396, 8232
+            ]
+
+            junction Junction1 sp
+            [
+                position = 8204, 8232
+            ]
+
+            connect Sum1.in Constant1.out as Connection2
+            connect Gain1.in "Random Source1.out" as Connection3
+            connect Sum1.in1 Gain1.out as Connection4
+            connect Sum1.out Junction1 as Connection5
+            connect Junction1 "Amperímetro Digital.i" as Connection6
+            connect i_in.in Junction1 as Connection7
+            connect "Amperímetro Digital.i_read" i_read.in as Connection8
+        }
+        [
+            position = 7912, 8168
+            size = 160, 120
+        ]
+    }
+
+    default {
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Limit" {
+            upper_limit = "[\'inf\']"
+            lower_limit = "[\'-inf\']"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Round" {
+            round_fn = "floor"
+            execution_rate = "inherit"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Random Source" {
+            distribution = "Normal"
+            min = "0"
+            max = "5"
+            mean = "1"
+            stddev = "3"
+            lambd = "2"
+            k = "1"
+            rate = "1"
+            execution_rate = "100e-6"
+        }
+    }
+}
