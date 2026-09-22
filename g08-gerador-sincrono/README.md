@@ -9,15 +9,17 @@
 
 | Nome completo | Matrícula |
 |---|---|
-| | |
-| | |
-| | |
+|Cleiber de Meireles da Silva Junnior|13957115426|
+|Leonardo Lima Barbosa Pereira|22110875|
+|Willian Tcheldon Oliveira Santos|17212878|
 
 ## Entregas
 
 | Entrega | Estado | Tag |
 |---|---|---|
-| e1-caracterizacao | em andamento | — |
+| e1-caracterizacao | entregue | — |
+| e2-estaticas | entregue | |
+| e3-geracao-dados | entregue | |
 
 ## Observações
 

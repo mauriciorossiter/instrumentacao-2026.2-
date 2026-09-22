@@ -1,0 +1,394 @@
+{
+  "parametros": {
+    "ws": 376.99111843077515,
+    "H": 5.0,
+    "D": 0.01,
+    "Pmax": 2.0,
+    "Pm0": 0.8,
+    "delta0_rad": 0.41151684606748806,
+    "delta0_deg": 23.578178478201835,
+    "Ps_pu_por_rad": 1.833030277982336,
+    "wn_rad_s": 8.312858320782542,
+    "zeta": 0.022675180057398513,
+    "wd_rad_s": 8.310720960636305,
+    "fd_Hz": 1.322692321542693,
+    "sensibilidade_estatica_rad_por_pu": 0.5455447255899809,
+    "sensibilidade_estatica_graus_por_pu": 31.257410311928545
+  },
+  "A_limiar_intrinseco": {
+    "descricao": "razao ddelta/dPm deve permanecer 1/Ps para qualquer dPm>0 se o limiar for nulo",
+    "S_est_rad_por_pu": 0.5455447255899809,
+    "varredura": [
+      {
+        "dPm_pu": 0.01,
+        "ddelta_exato_rad": 0.005461984552206034,
+        "ddelta_exato_deg": 0.3129486626070586,
+        "razao_exata_rad_por_pu": 0.5461984552206034,
+        "desvio_rel_vs_1surPs_pc": 0.11983062065452336,
+        "ddelta_simulado_rad": 0.005461984552270038,
+        "razao_simulada_rad_por_pu": 0.5461984552270038,
+        "erro_sim_vs_exato_rad": 6.400435736964027e-14,
+        "erro_sim_vs_exato_pc": 1.171815056558328e-09
+      },
+      {
+        "dPm_pu": 0.001,
+        "ddelta_exato_rad": 0.0005456097139337479,
+        "ddelta_exato_deg": 0.03126113386974394,
+        "razao_exata_rad_por_pu": 0.5456097139337479,
+        "desvio_rel_vs_1surPs_pc": 0.011912560184084096
+      },
+      {
+        "dPm_pu": 0.0001,
+        "ddelta_exato_rad": 5.455512205948532e-05,
+        "ddelta_exato_deg": 0.0031257782448295642,
+        "razao_exata_rad_por_pu": 0.5455512205948532,
+        "desvio_rel_vs_1surPs_pc": 0.0011905540586503642,
+        "ddelta_simulado_rad": 5.455512206725688e-05,
+        "razao_simulada_rad_por_pu": 0.5455512206725688,
+        "erro_sim_vs_exato_rad": 7.771561172376096e-15,
+        "erro_sim_vs_exato_pc": 1.4245337337715442e-08
+      },
+      {
+        "dPm_pu": 1e-06,
+        "ddelta_exato_rad": 5.45544790508945e-07,
+        "ddelta_exato_deg": 3.12574140315112e-05,
+        "razao_exata_rad_por_pu": 0.545544790508945,
+        "desvio_rel_vs_1surPs_pc": 1.1899842679832215e-05,
+        "ddelta_simulado_rad": 5.455450708402587e-07,
+        "razao_simulada_rad_por_pu": 0.5455450708402587,
+        "erro_sim_vs_exato_rad": 2.8033131371785203e-13,
+        "erro_sim_vs_exato_pc": 5.1385572476336494e-05
+      },
+      {
+        "dPm_pu": 1e-08,
+        "ddelta_exato_rad": 5.455447260604984e-09,
+        "ddelta_exato_deg": 3.1257410338887214e-07,
+        "razao_exata_rad_por_pu": 0.5455447260604984,
+        "desvio_rel_vs_1surPs_pc": 8.624728491892387e-08,
+        "ddelta_simulado_rad": 5.455774332308039e-09,
+        "razao_simulada_rad_por_pu": 0.5455774332308039,
+        "erro_sim_vs_exato_rad": 3.270717030545711e-13,
+        "erro_sim_vs_exato_pc": 0.005995323342531962
+      },
+      {
+        "dPm_pu": 1e-10,
+        "ddelta_exato_rad": 5.455447205093833e-11,
+        "ddelta_exato_deg": 3.1257410020831745e-09,
+        "razao_exata_rad_por_pu": 0.5455447205093833,
+        "desvio_rel_vs_1surPs_pc": 9.312889248065965e-07,
+        "ddelta_simulado_rad": 5.4529047943674414e-11,
+        "razao_simulada_rad_por_pu": 0.5452904794367441,
+        "erro_sim_vs_exato_rad": 2.5424107263916085e-14,
+        "erro_sim_vs_exato_pc": 0.04660315883943889
+      },
+      {
+        "dPm_pu": 1e-11,
+        "ddelta_exato_rad": 5.455413898403094e-12,
+        "ddelta_exato_deg": 3.1257219187550855e-10,
+        "razao_exata_rad_por_pu": 0.5455413898403094,
+        "desvio_rel_vs_1surPs_pc": 0.0006114530147601188
+      }
+    ]
+  },
+  "B_limiar_quantizacao": {
+    "FS_delta_deg": 360.0,
+    "FS_Pm_pu": 2.0,
+    "varredura": [
+      {
+        "bits": 8,
+        "q_deg": 1.40625,
+        "limiar_delta_garantido_deg": 1.40625,
+        "limiar_delta_medio_deg": 0.703125,
+        "limiar_Pm_garantido_pu": 0.04498933168060127,
+        "limiar_Pm_medio_pu": 0.022494665840300635,
+        "limiar_pc_FS_entrada": 2.2494665840300634,
+        "limiar_pc_de_Pm0": 5.6236664600751585
+      },
+      {
+        "bits": 10,
+        "q_deg": 0.3515625,
+        "limiar_delta_garantido_deg": 0.3515625,
+        "limiar_delta_medio_deg": 0.17578125,
+        "limiar_Pm_garantido_pu": 0.011247332920150318,
+        "limiar_Pm_medio_pu": 0.005623666460075159,
+        "limiar_pc_FS_entrada": 0.5623666460075158,
+        "limiar_pc_de_Pm0": 1.4059166150187896
+      },
+      {
+        "bits": 12,
+        "q_deg": 0.087890625,
+        "limiar_delta_garantido_deg": 0.087890625,
+        "limiar_delta_medio_deg": 0.0439453125,
+        "limiar_Pm_garantido_pu": 0.0028118332300375794,
+        "limiar_Pm_medio_pu": 0.0014059166150187897,
+        "limiar_pc_FS_entrada": 0.14059166150187896,
+        "limiar_pc_de_Pm0": 0.3514791537546974
+      },
+      {
+        "bits": 14,
+        "q_deg": 0.02197265625,
+        "limiar_delta_garantido_deg": 0.02197265625,
+        "limiar_delta_medio_deg": 0.010986328125,
+        "limiar_Pm_garantido_pu": 0.0007029583075093948,
+        "limiar_Pm_medio_pu": 0.0003514791537546974,
+        "limiar_pc_FS_entrada": 0.03514791537546974,
+        "limiar_pc_de_Pm0": 0.08786978843867435
+      },
+      {
+        "bits": 16,
+        "q_deg": 0.0054931640625,
+        "limiar_delta_garantido_deg": 0.0054931640625,
+        "limiar_delta_medio_deg": 0.00274658203125,
+        "limiar_Pm_garantido_pu": 0.0001757395768773487,
+        "limiar_Pm_medio_pu": 8.786978843867436e-05,
+        "limiar_pc_FS_entrada": 0.008786978843867435,
+        "limiar_pc_de_Pm0": 0.021967447109668588
+      },
+      {
+        "bits": 18,
+        "q_deg": 0.001373291015625,
+        "limiar_delta_garantido_deg": 0.001373291015625,
+        "limiar_delta_medio_deg": 0.0006866455078125,
+        "limiar_Pm_garantido_pu": 4.393489421933718e-05,
+        "limiar_Pm_medio_pu": 2.196744710966859e-05,
+        "limiar_pc_FS_entrada": 0.0021967447109668588,
+        "limiar_pc_de_Pm0": 0.005491861777417147
+      }
+    ]
+  },
+  "C_limiar_ruido": {
+    "sigma_delta_deg": 0.02,
+    "alpha_falso_alarme": 0.001,
+    "Pd_alvo": 0.95,
+    "z_alpha": 3.090232306167813,
+    "z_Pd": 1.6448536269514722,
+    "k_deteccao": 4.735085933119286,
+    "fs_amostragem_Hz": 60.0,
+    "varredura": [
+      {
+        "N_amostras": 1,
+        "janela_s": 0.016666666666666666,
+        "sigma_diff_deg": 0.028284271247461905,
+        "limiar_delta_deg": 0.13392845491238714,
+        "limiar_Pm_pu": 0.004284694527661396,
+        "limiar_pc_FS_entrada": 0.21423472638306978
+      },
+      {
+        "N_amostras": 6,
+        "janela_s": 0.1,
+        "sigma_diff_deg": 0.011547005383792514,
+        "limiar_delta_deg": 0.054676062762448595,
+        "limiar_Pm_pu": 0.0017492192160776336,
+        "limiar_pc_FS_entrada": 0.08746096080388167
+      },
+      {
+        "N_amostras": 60,
+        "janela_s": 1.0,
+        "sigma_diff_deg": 0.0036514837167011074,
+        "limiar_delta_deg": 0.01729008918196554,
+        "limiar_Pm_pu": 0.0005531516849739546,
+        "limiar_pc_FS_entrada": 0.027657584248697728
+      },
+      {
+        "N_amostras": 600,
+        "janela_s": 10.0,
+        "sigma_diff_deg": 0.0011547005383792516,
+        "limiar_delta_deg": 0.00546760627624486,
+        "limiar_Pm_pu": 0.00017492192160776339,
+        "limiar_pc_FS_entrada": 0.00874609608038817
+      },
+      {
+        "N_amostras": 1200,
+        "janela_s": 20.0,
+        "sigma_diff_deg": 0.0008164965809277261,
+        "limiar_delta_deg": 0.003866181474790868,
+        "limiar_Pm_pu": 0.00012368847694703116,
+        "limiar_pc_FS_entrada": 0.006184423847351558
+      }
+    ],
+    "monte_carlo": {
+      "N": 60,
+      "n_ensaios": 200000,
+      "limite_decisao_deg": 0.01128393294679548,
+      "limiar_teorico_deg": 0.01729008918196554,
+      "Pd_no_limiar_medida": 0.950295,
+      "taxa_falso_alarme_medida": 0.00104,
+      "Pd_em_metade_do_limiar": 0.235135
+    }
+  },
+  "D_pico_vs_regime": {
+    "dPm_teste_pu": 0.001,
+    "Mp_simulado": 0.9312885183418571,
+    "Mp_teorico": 0.9312248655330518,
+    "ganho_transitorio_G": 1.931288518341857,
+    "erro_G_vs_teoria_pc": 0.003295981215932194,
+    "t_pico_s": 0.3781,
+    "t_pico_teorico_s": 0.3780168614094895,
+    "t_acomodacao_2pc_s": 21.22065907891938,
+    "janela_pico_1pc_s": 0.049199999999999966,
+    "N_amostras_no_pico": 2,
+    "T_observacao_regime_s": 20.0,
+    "N_amostras_regime": 1200,
+    "limiar_delta_regime_deg": 0.0038661814747908683,
+    "limiar_delta_pico_deg": 0.04903551062566954,
+    "razao_pico_sobre_regime_ruido": 12.683189070508387,
+    "limiar_delta_regime_quant_deg": 0.087890625,
+    "limiar_delta_pico_quant_deg": 0.045508801075180676,
+    "razao_pico_sobre_regime_quant": 0.5177890255665001,
+    "limiar_Pm_pico_quant_pu": 0.001455936388236663
+  },
+  "E_ponto_de_operacao": {
+    "bits": 12,
+    "q_deg": 0.087890625,
+    "varredura": [
+      {
+        "delta0_deg": 10.0,
+        "Pm0_pu": 0.34729635533386066,
+        "Ps_pu_por_rad": 1.969615506024416,
+        "sensibilidade_graus_por_pu": 29.089829633160935,
+        "limiar_Pm_12bits_pu": 0.0030213523457631097,
+        "limiar_pc_FS_entrada": 0.1510676172881555,
+        "zeta": 0.02187483754508761,
+        "wn_rad_s": 8.617003844113926
+      },
+      {
+        "delta0_deg": 23.578178,
+        "Pm0_pu": 0.7999999847011693,
+        "Ps_pu_por_rad": 1.833030284659293,
+        "sensibilidade_graus_por_pu": 31.25741019807097,
+        "limiar_Pm_12bits_pu": 0.0028118332402799033,
+        "limiar_pc_FS_entrada": 0.14059166201399517,
+        "zeta": 0.022675180016100444,
+        "wn_rad_s": 8.312858335922662
+      },
+      {
+        "delta0_deg": 45.0,
+        "Pm0_pu": 1.414213562373095,
+        "Ps_pu_por_rad": 1.4142135623730951,
+        "sensibilidade_graus_por_pu": 40.51423422706977,
+        "limiar_Pm_12bits_pu": 0.0021693764346476397,
+        "limiar_pc_FS_entrada": 0.108468821732382,
+        "zeta": 0.025815352810367613,
+        "wn_rad_s": 7.301684412373654
+      },
+      {
+        "delta0_deg": 60.0,
+        "Pm0_pu": 1.7320508075688772,
+        "Ps_pu_por_rad": 1.0000000000000002,
+        "sensibilidade_graus_por_pu": 57.29577951308231,
+        "limiar_Pm_12bits_pu": 0.0015339807878856416,
+        "limiar_pc_FS_entrada": 0.07669903939428208,
+        "zeta": 0.03069980123839465,
+        "wn_rad_s": 6.139960247678931
+      },
+      {
+        "delta0_deg": 75.0,
+        "Pm0_pu": 1.9318516525781366,
+        "Ps_pu_por_rad": 0.5176380902050415,
+        "sensibilidade_graus_por_pu": 110.68694633810064,
+        "limiar_Pm_12bits_pu": 0.0007940468854523481,
+        "limiar_pc_FS_entrada": 0.03970234427261741,
+        "zeta": 0.04266998110931657,
+        "wn_rad_s": 4.417521506102365
+      },
+      {
+        "delta0_deg": 85.0,
+        "Pm0_pu": 1.992389396183491,
+        "Ps_pu_por_rad": 0.17431148549531628,
+        "sensibilidade_graus_por_pu": 328.6976721601162,
+        "limiar_Pm_12bits_pu": 0.0002673904698576218,
+        "limiar_pc_FS_entrada": 0.01336952349288109,
+        "zeta": 0.07353135376353988,
+        "wn_rad_s": 2.56347190100085
+      }
+    ]
+  },
+  "F_limiar_da_cadeia": {
+    "N_media": 1200,
+    "T_media_s": 20.0,
+    "criterio_dither_sigma_sobre_q": 0.5,
+    "varredura": [
+      {
+        "bits": 8,
+        "q_deg": 1.40625,
+        "sigma_sobre_q": 0.014222222222222223,
+        "dither_efetivo": false,
+        "sigma_efetivo_deg": 0.4064417816551345,
+        "limiar_so_quantizacao_deg": 1.40625,
+        "limiar_so_ruido_deg": 0.0038661814747908683,
+        "limiar_cadeia_deg": 1.40625,
+        "limiar_cadeia_Pm_pu": 0.04498933168060127,
+        "limiar_cadeia_pc_FS": 2.249466584030064,
+        "mecanismo_dominante": "quantizacao"
+      },
+      {
+        "bits": 10,
+        "q_deg": 0.3515625,
+        "sigma_sobre_q": 0.05688888888888889,
+        "dither_efetivo": false,
+        "sigma_efetivo_deg": 0.10343927018878032,
+        "limiar_so_quantizacao_deg": 0.3515625,
+        "limiar_so_ruido_deg": 0.0038661814747908683,
+        "limiar_cadeia_deg": 0.3515625,
+        "limiar_cadeia_Pm_pu": 0.011247332920150318,
+        "limiar_cadeia_pc_FS": 0.562366646007516,
+        "mecanismo_dominante": "quantizacao"
+      },
+      {
+        "bits": 12,
+        "q_deg": 0.087890625,
+        "sigma_sobre_q": 0.22755555555555557,
+        "dither_efetivo": false,
+        "sigma_efetivo_deg": 0.03230681295909918,
+        "limiar_so_quantizacao_deg": 0.087890625,
+        "limiar_so_ruido_deg": 0.0038661814747908683,
+        "limiar_cadeia_deg": 0.087890625,
+        "limiar_cadeia_Pm_pu": 0.0028118332300375794,
+        "limiar_cadeia_pc_FS": 0.140591661501879,
+        "mecanismo_dominante": "quantizacao"
+      },
+      {
+        "bits": 14,
+        "q_deg": 0.02197265625,
+        "sigma_sobre_q": 0.9102222222222223,
+        "dither_efetivo": true,
+        "sigma_efetivo_deg": 0.0209817333703245,
+        "limiar_so_quantizacao_deg": 0.02197265625,
+        "limiar_so_ruido_deg": 0.0038661814747908683,
+        "limiar_cadeia_deg": 0.004055959443267497,
+        "limiar_cadeia_Pm_pu": 0.00012975993221420678,
+        "limiar_cadeia_pc_FS": 0.006487996610710339,
+        "mecanismo_dominante": "ruido"
+      },
+      {
+        "bits": 16,
+        "q_deg": 0.0054931640625,
+        "sigma_sobre_q": 3.640888888888889,
+        "dither_efetivo": true,
+        "sigma_efetivo_deg": 0.020062765785191776,
+        "limiar_so_quantizacao_deg": 0.0054931640625,
+        "limiar_so_ruido_deg": 0.0038661814747908683,
+        "limiar_cadeia_deg": 0.0038783146705888252,
+        "limiar_cadeia_Pm_pu": 0.00012407664716576893,
+        "limiar_cadeia_pc_FS": 0.006203832358288446,
+        "mecanismo_dominante": "ruido"
+      },
+      {
+        "bits": 18,
+        "q_deg": 0.001373291015625,
+        "sigma_sobre_q": 14.563555555555556,
+        "dither_efetivo": true,
+        "sigma_efetivo_deg": 0.02000392863125807,
+        "limiar_so_quantizacao_deg": 0.001373291015625,
+        "limiar_so_ruido_deg": 0.0038661814747908683,
+        "limiar_cadeia_deg": 0.0038669409148604297,
+        "limiar_cadeia_Pm_pu": 0.000123712773267871,
+        "limiar_cadeia_pc_FS": 0.00618563866339355,
+        "mecanismo_dominante": "ruido"
+      }
+    ],
+    "ganho_12_para_14_bits": 21.66950292017589,
+    "ganho_14_para_16_bits": 1.045804631074894,
+    "ilustracao_base_100MVA_kW": 12.975993221420678
+  }
+}

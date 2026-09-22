@@ -1,0 +1,59 @@
+ECOM060 - Instrumentacao Eletronica (2026.2)
+Metadados do arquivo Equipe_08_Limiar.csv
+-------------------------------------------------------------------------
+
+Equipe:                  08
+Sistema atribuido:       Sistema 7 - Gerador Sincrono (Swing Equation)
+Caracteristica modelada: Limiar (limiar de discriminacao, VIM 4.16)
+
+Grandeza de entrada (x_referencia):
+  Variacao angular do rotor em relacao a um ponto de operacao de
+  referencia estabelecido, delta - delta0 (o sinal de excitacao aplicado,
+  antes de passar pela cadeia de medicao).
+  Unidade: graus
+
+Grandeza de saida (y_instrumento):
+  Leitura da mesma grandeza fornecida pelo canal de medicao angular do
+  sistema instrumentado (apos a cadeia de medicao completa, com ruido
+  incluido).
+  Unidade: graus
+
+Coluna tempo:
+  Indice de amostra convertido para tempo decorrido de ensaio.
+  Unidade: segundos
+
+Faixa nominal do instrumento simulado:
+  Canal de medicao de angulo com fundo de escala de 360 graus (convencao
+  de angulo de sincrofasor, que envolve em +-180 graus). O ensaio de
+  limiar, por protocolo, explora apenas uma janela pequena em torno do
+  ponto de repouso (a partir de x_referencia = 0 grau), e nao a faixa
+  nominal inteira do instrumento.
+
+Protocolo de excitacao aplicado (conforme Orientacao - Geracao de dados,
+Secao 3.3, linha "Limiar"):
+  Pequenos incrementos crescentes de x, a partir de um ponto de repouso
+  constante, com leitura registrada apos cada incremento. A varredura
+  completa (repouso -> incrementos crescentes) foi repetida em multiplas
+  rodadas independentes, cada uma reiniciada no mesmo ponto de repouso,
+  para fornecer varias realizacoes de ruido por valor de x.
+
+Ruido de medicao:
+  Incluido deliberadamente na cadeia de medicao, antes da digitalizacao
+  (exigencia obrigatoria 1 da Orientacao).
+
+Pre-processamento:
+  Nenhum. Os dados sao entregues brutos, exatamente como produzidos pela
+  simulacao (exigencia obrigatoria 2 da Orientacao) -- sem medias,
+  filtragem ou suavizacao.
+
+Ferramenta de geracao:
+  Modelo do sistema instrumentado equivalente ao circuito eletrico
+  montado e validado no TyphoonSim (Typhoon HIL Control Center), com
+  erro cruzado TyphoonSim x Python inferior a 0,31% da excursao (ver
+  Secao 6 de ECOM060_Relatorio_Limiar_Grupo08.pdf, na raiz deste
+  repositorio). Detalhes de geracao em ../RELATORIO_geracao_dados_limiar.md.
+
+Nao sao revelados aqui os parametros numericos internos da funcao
+geradora (passo de quantizacao, desvio-padrao do ruido), conforme
+previsto na Orientacao, para preservar o exercicio de analise das
+Secoes 3.1 e 3.2.

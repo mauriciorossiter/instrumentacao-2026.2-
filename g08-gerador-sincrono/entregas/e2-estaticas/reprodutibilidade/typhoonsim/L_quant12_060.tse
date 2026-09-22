@@ -1,0 +1,346 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "L_quant12_060" {
+    configuration {
+        hil_device = "HIL101"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-3
+        simulation_time = 3.0
+        abs_tol = 1e-9
+        rel_tol = 1e-9
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Ground" gnd {
+        }
+        [
+            position = 8240, 8560
+        ]
+
+        component "core/Capacitor" C_inercia {
+            capacitance = "0.026525823848649224"
+            initial_voltage = "0.0"
+        }
+        [
+            position = 8640, 8420
+            rotation = right
+        ]
+
+        component "core/Resistor" R_amortec {
+            resistance = "100.0"
+        }
+        [
+            position = 8780, 8420
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" dw {
+            sig_output = "True"
+        }
+        [
+            position = 8920, 8420
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Current Source" I_Pm {
+        }
+        [
+            position = 8360, 8420
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Current Source" I_Pe {
+        }
+        [
+            position = 8500, 8420
+            rotation = right
+        ]
+
+        component "core/Constant" Pm {
+            value = "np.float64(0.8016870999380226)"
+        }
+        [
+            position = 8200, 8300
+        ]
+
+        component "core/Integrator" delta {
+            init_value = "0.41151684606748806"
+        }
+        [
+            position = 9120, 8420
+        ]
+
+        component "core/Trigonometric function" sin_delta {
+        }
+        [
+            position = 9120, 8300
+        ]
+
+        component "core/Gain" Pe_ganho {
+            gain = "-2.0"
+        }
+        [
+            position = 8860, 8220
+        ]
+
+        component "core/Constant" delta0 {
+            value = "0.41151684606748806"
+        }
+        [
+            position = 9260, 8560
+        ]
+
+        component "core/Sum" desvio {
+            signs = "+-"
+        }
+        [
+            position = 9260, 8420
+        ]
+
+        component "core/Gain" q_in {
+            gain = "651.8986469044033"
+        }
+        [
+            position = 9400, 8420
+        ]
+
+        component "core/Round" q_floor {
+        }
+        [
+            position = 9540, 8420
+        ]
+
+        component "core/Gain" q_out {
+            gain = "0.0015339807878856412"
+        }
+        [
+            position = 9680, 8420
+        ]
+
+        component "core/Probe" desvio_real {
+        }
+        [
+            position = 8192, 8192
+        ]
+
+        component "core/Probe" desvio_quant {
+        }
+        [
+            position = 8192, 8192
+        ]
+
+        component "core/Scope" Scope1 {
+            selected_signals = "[\"desvio_real\", \"desvio_quant\"]"
+        }
+        [
+            position = 8200, 8180
+        ]
+
+        junction no_W pe
+        [
+            position = 8640, 8300
+        ]
+
+        junction no_GND pe
+        [
+            position = 8640, 8540
+        ]
+
+        connect C_inercia.p_node no_W as Connection1
+        connect C_inercia.n_node no_GND as Connection2
+        connect R_amortec.p_node no_W as Connection3
+        connect R_amortec.n_node no_GND as Connection4
+        connect dw.p_node no_W as Connection5
+        connect dw.n_node no_GND as Connection6
+        connect I_Pm.p_node no_W as Connection7
+        connect I_Pm.n_node no_GND as Connection8
+        connect I_Pe.p_node no_W as Connection9
+        connect I_Pe.n_node no_GND as Connection10
+        connect gnd.node no_GND as Connection11
+        connect Pm.out I_Pm.in as Connection12
+        connect dw.out delta.in as Connection13
+        connect delta.out sin_delta.in as Connection14
+        connect sin_delta.out Pe_ganho.in as Connection15
+        connect Pe_ganho.out I_Pe.in as Connection16
+        connect delta.out desvio.in as Connection17
+        connect delta0.out desvio.in1 as Connection18
+        connect desvio.out desvio_real.in as Connection19
+        connect desvio.out q_in.in as Connection20
+        connect q_in.out q_floor.in as Connection21
+        connect q_floor.out q_out.in as Connection22
+        connect q_out.out desvio_quant.in as Connection23
+    }
+
+    default {
+        "core/Capacitor" {
+            signal_access = "inherit"
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Integrator" {
+            show_reset = "none"
+            reset_type = "asynchronous"
+            show_init_condition = "internal"
+            init_value = "0"
+            limit_output = "False"
+            limit_upper = "inf"
+            limit_lower = "-inf"
+            show_state = "False"
+            state_port_type = "inherit"
+            tml_file = "gen_accumulator_integrator"
+            mode = "integrator"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/Round" {
+            round_fn = "floor"
+            execution_rate = "inherit"
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Trigonometric function" {
+            trigonometric_fn = "sin"
+            angle = "Radians"
+            execution_rate = "inherit"
+        }
+
+        "core/Signal Controlled Current Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+}

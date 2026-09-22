@@ -1,0 +1,32 @@
+% ---------------------------------------------------------------------------
+% Preambulo - ECOM060 / Grupo 08 / Geracao de Dados - Limiar v1
+% (mesmo preambulo do relatorio Limiar v1 em ../../Latex/, reaproveitado)
+% ---------------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\captionsetup{font=small,labelfont=bf}
+\setlength{\parskip}{0.35em}
+
+% Caixa de destaque padrao
+\newtcolorbox{caixa}[1][]{
+  enhanced, breakable, colback=black!3, colframe=black!45,
+  boxrule=0.5pt, arc=2pt, left=6pt, right=6pt, top=5pt, bottom=5pt,
+  fonttitle=\bfseries\small, #1}
+
+% Notacao
+\newcommand{\pu}{\,\text{pu}}
+\newcommand{\Ts}{\mathrm{s}}

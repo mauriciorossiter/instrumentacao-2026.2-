@@ -1,0 +1,172 @@
+ENSAIO DE LIMIAR NO CIRCUITO ELETRICO EQUIVALENTE (TYPHOONSIM)
+ECOM060 - Grupo 08 - Sistema 7: Gerador Sincrono (Swing Equation)
+Topico: LIMIAR -- rodada 04, Caracteristicas estaticas de instrumentos
+-------------------------------------------------------------------------
+
+Tres modelos, um por degrau de entrada. Ambiente: Typhoon HIL Control
+Center 2026.2 (Linux), licenca com o produto TyphoonSim. Todos compilam
+com zero erros e zero avisos.
+
+Estes modelos ESTENDEM o circuito ja validado na entrega v2: a topologia
+eletrica e' a mesma, sem uma unica alteracao. O que se acrescenta e' a
+CADEIA DE MEDICAO -- um conversor A/D de 12 bits -- no ramo de sinal, a
+jusante do integrador. Ver Secao 6 do relatorio.
+
+
+1. POR QUE ESTE ENSAIO EXISTE
+-------------------------------------------------------------------------
+O limiar NAO esta na planta. O modelo continuo da swing equation tem
+limiar exatamente nulo (Secao 3 do relatorio): qualquer dPm > 0 produz
+ddelta > 0. O limiar aparece quando se acopla uma cadeia de medicao real.
+
+Estes modelos mostram isso DENTRO do circuito: a mesma planta, observada
+por um conversor de 12 bits, passa a ter um limiar mensuravel.
+
+
+2. CORRESPONDENCIA CIRCUITO <-> EQUACAO  (identica a' da v2)
+-------------------------------------------------------------------------
+  C_inercia   inercia do rotor      2H/ws              0,026525824 F
+  R_amortec   amortecimento         1/D                100,0 ohm
+  I_Pm        potencia mecanica     Pm                 ver tabela do item 4
+  I_Pe        potencia eletrica     -Pmax*sin(delta)   2,00 A de pico
+  delta       integrador            int(dw)dt + d0     CI = 0,411516846 rad
+
+  1 V = 1 rad/s        1 A = 1 pu        d0 = 23,5782 graus
+
+Solucionador: DAE, integracao BDF, passo maximo 1e-3 s, tolerancias 1e-9,
+tempo de simulacao 3,0 s. Todos identicos aos da v2.
+
+
+3. A CADEIA DE MEDICAO ACRESCENTADA (o que ha de novo)
+-------------------------------------------------------------------------
+Quatro blocos em serie, todos no dominio de SINAL, a jusante do
+integrador -- nao alteram a dinamica da planta, apenas a observam:
+
+  desvio    core/Sum  (signs '+-')   delta - d0
+  q_in      core/Gain                1/q = 651,8986  rad^-1
+  q_floor   core/Round (round_fn=floor)
+  q_out     core/Gain                q  = 1,533980788e-03 rad
+
+Composicao:  q * floor( (delta - d0) / q )
+
+Subtrair d0 ANTES de quantizar posiciona o ponto de operacao exatamente
+sobre uma transicao de codigo. Esse e' o PIOR CASO do limiar: e' preciso
+um quantum inteiro para mudar de codigo (se o ponto caisse no meio de um
+codigo, meio quantum bastaria). Mesma convencao do gabarito em Python.
+
+  Conversor: 12 bits sobre fundo de escala de 360 graus (angulo de
+  sincrofasor, que envolve em +-180).
+  Quantum:   q = 360/2^12 = 0,087891 graus
+  Limiar correspondente em Pm:  q_rad * Ps = 2,811833e-03 pu
+
+
+4. OS TRES MODELOS
+-------------------------------------------------------------------------
+Cada um aplica um degrau de Pm igual a uma fracao do limiar de 12 bits:
+
+  arquivo                 dPm          Pm [pu]
+  L_quant12_040.tse       0,40x limiar  0,8011247333
+  L_quant12_060.tse       0,60x limiar  0,8016870999
+  L_quant12_120.tse       1,20x limiar  0,8033741999
+
+Os valores de Pm nao sao redondos porque sao Pm0 + fator*limiar, com
+Pm0 = 0,80 pu e limiar = 2,811833e-03 pu.
+
+
+5. ABRINDO OS MODELOS
+-------------------------------------------------------------------------
+  1) Abra o Typhoon HIL Control Center.
+  2) Na tela inicial, entre no SCHEMATIC EDITOR.
+     O File > Open da janela principal do Control Center filtra arquivos
+     de biblioteca (.tlib) e nao lista os modelos.
+  3) File > Open > esta pasta > escolha o modelo.
+
+  Se a simulacao acusar falta de licenca: o Control Center pode deixar
+  processos ativos apos o fechamento da janela, e apos algumas horas a
+  instancia perde a sessao de licenca. O sintoma e' a mensagem
+  "appropriate license is not available" mesmo com licenca valida - o
+  mesmo residuo causa tambem "another instance is already running".
+  Encerrar e reabrir resolve os dois casos:
+
+      pkill -TERM -f typhoon_hil.exe ; sleep 5 ; pkill -KILL -f typhoon_hil.exe
+
+
+6. EXECUTANDO E CONFERINDO
+-------------------------------------------------------------------------
+Start Simulation e observar o Scope. Dois sinais, ambos em RADIANOS:
+
+  desvio_real    delta - d0, a grandeza verdadeira
+  desvio_quant   a mesma grandeza vista pelo conversor de 12 bits
+
+O QUE CONFERIR -- e' o resultado do ensaio:
+
+  modelo              pico de desvio_real   codigos que desvio_quant assume
+  L_quant12_040       0,067906 graus        {0}          so o codigo zero
+  L_quant12_060       0,101868 graus        {0, 1}       chega a 1 LSB
+  L_quant12_120       0,203789 graus        {0, 1, 2}    chega a 2 LSB
+
+  (1 LSB = q = 0,087891 graus = 1,533980788e-03 rad)
+
+LEITURA DOS TRES CASOS:
+
+  0,40x  A grandeza real muda visivelmente, mas desvio_quant NUNCA sai de
+         zero. A variacao esta ABAIXO DO LIMIAR: existe mudanca na entrada
+         e nenhuma mudanca detectavel na saida. E' a definicao do VIM
+         (item 4.16) materializada no circuito.
+
+  0,60x  Caso mais informativo. Em regime permanente a variacao continua
+         abaixo do limiar -- mas o sobressinal do transitorio vale 1,9313
+         vezes o valor de regime (zeta = 0,0227), e 0,60 x 1,9313 = 1,16,
+         o que basta para cruzar uma transicao de codigo. Ou seja: a mesma
+         variacao e' detectavel no PICO e indetectavel em REGIME. O limiar
+         depende de onde se le a resposta (Secao 5.3 do relatorio).
+
+  1,20x  Acima do limiar nos dois regimes; o codigo muda e permanece.
+
+
+7. CONFRONTO COM O GABARITO EM PYTHON
+-------------------------------------------------------------------------
+Os tres ensaios foram confrontados com o gabarito (DOP853, rtol 1e-10):
+
+  modelo           excursao     erro TS x Python   erro/excursao
+  L_quant12_040    0,0679 deg   2,038e-04 deg      0,3001 %
+  L_quant12_060    0,1019 deg   3,056e-04 deg      0,3000 %
+  L_quant12_120    0,2038 deg   6,104e-04 deg      0,2995 %
+
+Os conjuntos de codigos do conversor sao IDENTICOS nas duas ferramentas
+nos tres ensaios. Numeros completos em comparacao_limiar_typhoonsim.json.
+
+NOTA SOBRE COMO LER ESSE ERRO -- vale para a v2 tambem:
+A validacao da v2 reporta erros ABSOLUTOS de 0,0106 a 1,0906 grau. Seria
+natural ler o menor deles como "o piso do TyphoonSim" e concluir que o
+simulador nao mediria um limiar de milesimos de grau. A leitura e' errada.
+Normalizando pela excursao, os cinco ensaios da v2 caem entre 0,12 % e
+1,09 %: o erro e' PROPORCIONAL a' excursao -- e' deriva de fase acumulada
+pelo passo do solucionador, nao um piso aditivo. Os tres ensaios acima
+confirmam com 0,3001 %, 0,3000 % e 0,2995 %.
+
+Consequencia: num ensaio de pequenos sinais o erro cai junto. O maior
+observado foi 6,104e-04 grau, contra o limiar de 4,056e-03 grau que o
+relatorio especifica -- margem de 6,6 vezes. O circuito equivalente TEM
+resolucao para medir o limiar deste sistema.
+
+
+8. COMO OS MODELOS FORAM GERADOS
+-------------------------------------------------------------------------
+Nada nesta pasta precisa ser regenerado: os .tse vao prontos e tudo que
+os itens 6 e 7 pedem se confere abrindo os modelos no Control Center.
+
+Para registro, eles foram construidos e executados por dois scripts que
+acompanham o pacote de projeto da equipe (nao este pacote), a exemplo do
+que foi feito na entrega v2:
+
+  monta_circuito_limiar.py   gera os tres .tse e compila
+  roda_limiar.py             roda, exporta dados/*.csv e compara com o
+                             gabarito em Python
+
+  Ambiente: typhoon-hil-api 1.31.3 (wheel em api_install/ da instalacao
+  do Control Center), Python 3.10-3.13, numpy, scipy, matplotlib, pandas.
+  O roda_limiar.py le os limiares de referencia de resultados_limiar.json,
+  entao nao ha constante transcrita de um script para o outro.
+
+  Estao a' disposicao se o professor quiser conferi-los.
