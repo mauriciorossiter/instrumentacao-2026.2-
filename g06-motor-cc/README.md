@@ -1,7 +1,7 @@
 # Motor CC (escovado) — Grupo 06
 
 **Domínio de origem:** eletromecânico
-**Ordem:** 3ª
+**Ordem:** 2ª
 **Linearidade:** linear
 **Solução algébrica de referência:** solução fechada completa
 
