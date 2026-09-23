@@ -1,0 +1,518 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "atv5" {
+    configuration {
+        hil_device = "VHIL+"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 20.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Scope" Scope1 {
+            selected_signals = "[\'RawOutput\', \'OriginalInput\', \'DeadZoneOutput\']"
+            signals_data = "{\"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true, \"signals_tooltips_enabled\": true}, \"signals\": {\"RawOutput\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#00CC00\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"OriginalInput\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#0099FF\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"DeadZoneOutput\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#FF0000\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"4\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"5\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"6\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}}"
+            user_range_data = "{\"1\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"2\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"3\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"4\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"5\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"6\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}}"
+        }
+        [
+            position = 8272, 8392
+        ]
+
+        component "core/Probe" RawOutput {
+        }
+        [
+            position = 7912, 8304
+            rotation = left
+        ]
+
+        component "core/Probe" OriginalInput {
+        }
+        [
+            position = 7688, 8300
+            rotation = left
+        ]
+
+        component Subsystem "Instrumento Real Descrito por f[]" {
+            layout = dynamic
+            component "core/C function" "f0(t)" {
+                arb_defs = "/*Begin code section*/
+
+/*End code section*/"
+                execution_rate = "0.0001"
+                init_fnc = "/*Begin code section*/
+
+/*End code section*/"
+                input_terminals = "real x;real xm;"
+                input_terminals_dimensions = "1;1"
+                input_terminals_feedthrough = "True;True"
+                input_terminals_show_labels = "True;True"
+                output_fnc = "/*Begin code section*/
+y = x*(1 + (xm*0.1));
+/*End code section*/"
+                output_terminals = "real y;"
+                output_terminals_dimensions = "inherit"
+                output_terminals_feedthrough = "True"
+                output_terminals_show_labels = "False"
+                update_fnc = "/*Begin code section*/
+
+/*End code section*/"
+            }
+            [
+                position = 7648, 7904
+                size = 48, 48
+            ]
+
+            component "core/C function" "g0(t)" {
+                arb_defs = "/*Begin code section*/
+
+/*End code section*/"
+                execution_rate = "0.0001"
+                init_fnc = "/*Begin code section*/
+
+/*End code section*/"
+                input_terminals = "real xm;real xi;"
+                input_terminals_dimensions = "(1,);(1,)"
+                input_terminals_feedthrough = "True;True"
+                input_terminals_show_labels = "True;True"
+                output_fnc = "/*Begin code section*/
+y = (xm*0.2)*(xi);
+/*End code section*/"
+                output_terminals = "real y;"
+                output_terminals_dimensions = "inherit"
+                output_terminals_feedthrough = "True"
+                output_terminals_show_labels = "False"
+                update_fnc = "/*Begin code section*/
+
+/*End code section*/"
+            }
+            [
+                position = 7652, 8240
+                size = 48, 48
+            ]
+
+            component "core/Sum" Sum1 {
+            }
+            [
+                position = 7828, 8068
+            ]
+
+            port "x(t)" {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7452, 7896
+            ]
+
+            port "y(t)" {
+                position = auto:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8160, 8068
+            ]
+
+            port "xm(t)" {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7452, 8068
+            ]
+
+            port "xi(t)" {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7452, 8248
+            ]
+
+            junction Junction1 sp
+            [
+                position = 7564, 8068
+            ]
+
+            comment Comment1 START <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Sans'; font-size:12pt; font-weight:400; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">f̃0[x(t)]</p></body></html> ENDCOMMENT 
+            [
+                position = 7712, 7864
+            ]
+
+            comment Comment2 START <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Sans'; font-size:12pt; font-weight:400; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">g̃0[xi(t)]</p></body></html> ENDCOMMENT 
+            [
+                position = 7704, 8200
+            ]
+
+            comment Comment3 START <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Sans'; font-size:12pt; font-weight:400; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">y(t) = f̃0[x(t)] + g̃0[xi(t)]</p></body></html> ENDCOMMENT 
+            [
+                position = 7888, 8024
+            ]
+
+            comment Comment4 START <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Sans'; font-size:12pt; font-weight:400; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">  Modelo generalizado de instrumento</p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">  Ref.: AGUIRRE, L. A. Fundamentos de Instrumentação, Cap. 2.</p><p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">  y(t) = f0[x(t)] + g0[xi(t)]</p><p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">  x(t)  : entrada desejada (mensurando)</p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">  xm(t) : entrada modificante (ex.: temperatura) — altera f0 e g0</p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">  xi(t) : entrada de interferência (espúria) — soma-se à saída</p><p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">  f0 : resposta ao mensurando        g0 : efeito da interferência</p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">  Sum1 : combina sinal útil + parcela espúria -&gt; y(t)</p></body></html> ENDCOMMENT 
+            [
+                position = 6876, 7864
+            ]
+
+            connect "x(t)" "f0(t).x" as Connection1
+            connect "xi(t)" "g0(t).xi" as Connection3
+            connect "xm(t)" Junction1 as Connection4
+            connect Junction1 "f0(t).xm" as Connection5
+            [
+                breakpoints = 7564, 8068; 7564, 7912
+            ]
+            connect "g0(t).xm" Junction1 as Connection6
+            [
+                breakpoints = 7564, 8232; 7564, 8068
+            ]
+            connect "f0(t).y" Sum1.in as Connection7
+            connect "g0(t).y" Sum1.in1 as Connection8
+            connect "y(t)" Sum1.out as Connection9
+        }
+        [
+            position = 7808, 8376
+            size = 112, 64
+        ]
+
+        component "core/C function" Input {
+            arb_defs = "/*Begin code section*/
+
+/*End code section*/"
+            execution_rate = "0.0001"
+            init_fnc = "/*Begin code section*/
+
+/*End code section*/"
+            input_terminals = ""
+            input_terminals_dimensions = ""
+            input_terminals_feedthrough = ""
+            input_terminals_show_labels = ""
+            output_fnc = "/*Begin code section*/
+// Rampa triangular: 0 → 10 → 0 (periódica)
+static double t = 0.0;
+double Ts = 0.0001;      // passo de simulação (ajuste ao seu Ts real!)
+double periodo = 10.0;   // 5s subindo + 5s descendo
+double amplitude = 10.0;
+
+double fase = fmod(t, periodo);
+double saida;
+
+if (fase < periodo / 2.0) {
+    saida = amplitude * (fase / (periodo / 2.0));       // subida
+} else {
+    saida = amplitude * (1.0 - (fase - periodo / 2.0) / (periodo / 2.0));  // descida
+}
+
+out = saida;
+
+t = t + Ts;   // incrementa o tempo a cada passo
+/*End code section*/"
+            output_terminals_dimensions = "1"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            update_fnc = "/*Begin code section*/
+
+/*End code section*/"
+        }
+        [
+            position = 7484, 8316
+            size = 48, 48
+        ]
+
+        component "core/C function" dead_zone {
+            arb_defs = "/*Begin code section*/
+
+/*End code section*/"
+            init_fnc = "/*Begin code section*/
+
+/*End code section*/"
+            input_terminals = "real in;inherit val;"
+            input_terminals_dimensions = "inherit;inherit"
+            input_terminals_feedthrough = "True;True"
+            input_terminals_show_labels = "True;True"
+            output_fnc = "/*Begin code section*/
+static double out_ant = 0.0;   // valor anterior da saída
+
+double Zx    = val;   // largura da zona morta
+double ganho = 1.0;   // inclinação da parte ativa (fe)
+
+double sup = ganho * in - Zx / 2.0;   // limite quando a entrada sobe
+double inf = ganho * in + Zx / 2.0;   // limite quando a entrada desce
+
+double saida = out_ant;
+
+if (saida < sup) {
+    saida = sup;   // entrada subiu o bastante → puxa a saída pra cima
+}
+if (saida > inf) {
+    saida = inf;   // entrada desceu o bastante → puxa a saída pra baixo
+}
+
+out = saida;
+out_ant = saida;
+/*End code section*/"
+            output_terminals_dimensions = "inherit"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "False"
+            update_fnc = "/*Begin code section*/
+
+/*End code section*/"
+        }
+        [
+            position = 8108, 8376
+            size = 48, 48
+        ]
+
+        component "core/Constant" spurious_input {
+            value = "0"
+        }
+        [
+            position = 7484, 8408
+        ]
+
+        component "core/Constant" "Valor da Zona Morta" {
+            value = "5"
+        }
+        [
+            position = 7976, 8464
+        ]
+
+        component "core/Probe" DeadZoneOutput {
+        }
+        [
+            position = 8188, 8284
+            rotation = left
+        ]
+
+        component "core/C function" "Input (sin)" {
+            arb_defs = "/*Begin code section*/
+
+/*End code section*/"
+            execution_rate = "0.0001"
+            init_fnc = "/*Begin code section*/
+
+/*End code section*/"
+            input_terminals = ""
+            input_terminals_dimensions = ""
+            input_terminals_feedthrough = ""
+            input_terminals_show_labels = ""
+            output_fnc = "/*Begin code section*/
+// Onda senoidal periódica
+static double t = 0.0;
+double Ts = 0.0001;      // passo de simulação (ajuste ao seu Ts real!)
+double freq = 0.1;       // frequência em Hz (0.1 Hz = período de 10 s)
+double amplitude = 10.0; // amplitude do seno
+double offset = 0.0;     // deslocamento vertical (use amplitude p/ oscilar entre 0 e 2*amplitude)
+
+double saida = offset + amplitude * sin(2.0 * M_PI * freq * t);
+
+out = saida;
+t = t + Ts;   // incrementa o tempo a cada passo
+/*End code section*/"
+            output_terminals_dimensions = "1"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            update_fnc = "/*Begin code section*/
+
+/*End code section*/"
+        }
+        [
+            position = 7484, 8228
+            size = 48, 48
+        ]
+
+        junction Junction16 sp
+        [
+            position = 7916, 8376
+        ]
+
+        junction Junction17 sp
+        [
+            position = 7628, 8392
+        ]
+
+        junction Junction18 sp
+        [
+            position = 7688, 8356
+        ]
+
+        connect "Instrumento Real Descrito por f[].y(t)" Junction16 as Connection80
+        connect Junction16 RawOutput.in as Connection81
+        [
+            breakpoints = 7912, 8376
+        ]
+        connect dead_zone.in Junction16 as Connection82
+        connect "Instrumento Real Descrito por f[].xi(t)" Junction17 as Connection84
+        connect Junction17 "Instrumento Real Descrito por f[].xm(t)" as Connection85
+        [
+            breakpoints = 7632, 8392; 7632, 8380
+        ]
+        connect spurious_input.out Junction17 as Connection86
+        connect "Valor da Zona Morta.out" dead_zone.val as Connection87
+        [
+            breakpoints = 8028, 8432
+        ]
+        connect DeadZoneOutput.in dead_zone.out as Connection88
+        connect OriginalInput.in Junction18 as Connection94
+        connect Junction18 "Instrumento Real Descrito por f[].x(t)" as Connection95
+        [
+            breakpoints = 7688, 8360
+        ]
+        connect Input.out Junction18 as Connection96
+    }
+
+    default {
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+    }
+}
