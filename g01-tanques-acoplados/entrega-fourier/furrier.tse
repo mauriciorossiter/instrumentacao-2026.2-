@@ -1,0 +1,232 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.3
+//
+
+model "furrier" {
+    configuration {
+        hil_device = "VHIL+"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = auto
+        fine_auto_sim_step = False
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 100.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Square Wave Source" "Square Wave Source1" {
+            frequency = "60"
+        }
+        [
+            position = 7672, 8232
+        ]
+
+        component "core/Probe" Fourrier {
+        }
+        [
+            position = 8112, 8288
+        ]
+
+        component "core/C function" "C function1" {
+            arb_defs = "/*Begin code section*/
+
+/*End code section*/"
+            init_fnc = "/*Begin code section*/
+
+/*End code section*/"
+            input_terminals_dimensions = "inherit"
+            input_terminals_feedthrough = "True"
+            input_terminals_show_labels = "False"
+            output_fnc = "/*Begin code section*/
+double tempo = in; // Recebe a variável tempo do bloco Clock
+double A = 1.0;       // Amplitude do sinal
+double w0 = 2 * 3.14159 * 60; // Frequência angular (Ex: 60Hz)
+double soma = 0.0;
+int N = 50;           // Número máximo de harmônicos
+
+// Laço que calcula apenas os harmônicos ímpares
+for (int n = 1; n <= N; n += 2) {
+    soma += (4.0 * A / (n * 3.14159)) * sin(n * w0 * tempo);
+}
+
+out = soma; // Entrega o sinal truncado reconstruído na saída
+/*End code section*/"
+            output_terminals_dimensions = "inherit"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "False"
+            update_fnc = "/*Begin code section*/
+
+/*End code section*/"
+        }
+        [
+            position = 7848, 8288
+            size = 48, 48
+        ]
+
+        component "core/Scope" Scope1 {
+            selected_signals = "[\'Fourrier\', \'Onda Quadrada\']"
+            signals_data = "{\"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true, \"signals_tooltips_enabled\": true}, \"signals\": {\"Fourrier\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#FF0000\"}, \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"Onda Quadrada\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#FF0000\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"4\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"5\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"6\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}}"
+            user_range_data = "{\"1\": {\"user_x_range_mode\": \"Manual\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0.0, 1.0], \"user_y_range\": [0.0, 1.0]}, \"2\": {\"user_x_range_mode\": \"Manual\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0.0, 1.0], \"user_y_range\": [0.0, 1.0]}, \"3\": {\"user_x_range_mode\": \"Manual\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0.0, 1.0], \"user_y_range\": [0.0, 1.0]}, \"4\": {\"user_x_range_mode\": \"Manual\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0.0, 1.0], \"user_y_range\": [0.0, 1.0]}, \"5\": {\"user_x_range_mode\": \"Manual\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0.0, 1.0], \"user_y_range\": [0.0, 1.0]}, \"6\": {\"user_x_range_mode\": \"Manual\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0.0, 1.0], \"user_y_range\": [0.0, 1.0]}}"
+        }
+        [
+            position = 8204, 8256
+        ]
+
+        component "core/Probe" "Onda Quadrada" {
+        }
+        [
+            position = 8112, 8232
+        ]
+
+        component "core/Clock" Clock1 {
+        }
+        [
+            position = 7668, 8288
+        ]
+
+        connect "C function1.out" Fourrier.in as Connection2
+        [
+            breakpoints = 7888, 8288; 7928, 8288; 7928, 8288; 7984, 8288; 7984, 8288; 8008, 8288
+        ]
+        connect Clock1.out "C function1.in" as Connection7
+        connect "Onda Quadrada.in" "Square Wave Source1.out" as Connection8
+    }
+
+    default {
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/Clock" {
+            enb_reset = "False"
+            reset_at = "1.0"
+            execution_rate = "100e-6"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Square Wave Source" {
+            hs_output = "1"
+            ls_output = "0"
+            frequency = "50"
+            duty_cycle = "0.5"
+            phase = "0"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+    }
+}
