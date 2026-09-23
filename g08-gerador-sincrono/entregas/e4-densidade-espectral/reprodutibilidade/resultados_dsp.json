@@ -1,0 +1,65 @@
+{
+  "dataset_origem": "Equipe_08_Limiar.csv (Capitulo 3, Secao 3.3, Equipe 08)",
+  "Fs_Hz": 60.0,
+  "N_amostras": 3030,
+  "M_varreduras": 30,
+  "amostras_por_varredura": 101,
+  "duracao_total_s": 50.5,
+  "e_media": -0.04356822400990099,
+  "e_desvio_padrao": 0.03266718447770099,
+  "e_min": -0.1494140625,
+  "e_max": 0.052734375,
+  "acf_banda_95_branco": 0.03560694855612522,
+  "acf_lags_fora_da_banda_ate_250": 53,
+  "acf_rho_lag1": 0.07837174968760796,
+  "acf_primeiro_lag_dentro_da_banda": 3,
+  "welch_nperseg": 256,
+  "welch_noverlap": 128,
+  "welch_n_segmentos": 22,
+  "welch_resolucao_Hz": 0.234375,
+  "pgram_resolucao_Hz": 0.019801980198019802,
+  "spectral_flatness_periodograma": 0.5515748736891912,
+  "spectral_flatness_welch": 0.966254092945836,
+  "welch_top5_picos_Hz_potencia": [
+    [
+      5.859375,
+      0.0001239740018700099
+    ],
+    [
+      6.09375,
+      7.735510755940692e-05
+    ],
+    [
+      0.9375,
+      5.295716782850938e-05
+    ],
+    [
+      5.15625,
+      5.26820734707932e-05
+    ],
+    [
+      0.703125,
+      5.2567946669521744e-05
+    ]
+  ],
+  "welch_potencia_media_faixa_alta": 3.239843522796207e-05,
+  "welch_potencia_media_faixa_baixa": 3.921831213974834e-05,
+  "wiener_khinchin_M_lags": 200,
+  "wiener_khinchin_correlacao_log_welch_x_BT": 0.5110992353174105,
+  "repouso_N": 30,
+  "repouso_Fs_Hz": 0.594059405940594,
+  "repouso_media": -0.046875,
+  "repouso_desvio_padrao": 0.04459713252582347,
+  "repouso_acf_banda_95": 0.3578454042367085,
+  "repouso_acf_lag1": -0.03809523809523809,
+  "repouso_fora_da_banda": 0,
+  "repouso_flatness": 0.7743575556024023,
+  "ref_projeto_quantum_Q_deg": 0.087890625,
+  "ref_projeto_sigma_ruido_deg": 0.02,
+  "ref_projeto_incremento_x_deg": 0.0087890625,
+  "ref_projeto_amostras_por_quantum": 10.0,
+  "ref_projeto_freq_cruzamento_quantum_Hz": 6.0,
+  "ref_projeto_freq_repeticao_varredura_Hz": 0.594059405940594,
+  "ref_projeto_var_quantizacao_teorica": 0.0006437301635742188,
+  "ref_projeto_var_ruido_teorica": 0.0004
+}

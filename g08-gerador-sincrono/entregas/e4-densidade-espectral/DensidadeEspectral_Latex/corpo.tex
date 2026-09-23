@@ -1,0 +1,541 @@
+% ===========================================================================
+% CORPO - Capitulo 5, Secao 5.4.3 - Densidade Espectral de Potencia
+% ===========================================================================
+
+\begin{center}
+{\large\bfseries Universidade Federal de Alagoas}\\[2pt]
+{ECOM060 --- Instrumentação Eletrônica --- 2026.2}\\[10pt]
+{\LARGE\bfseries Funções de Densidade Espectral de Potência}\\[4pt]
+{\large Capítulo 5, Seção 5.4.3 (Aguirre) --- Estimação e Caracterização da
+``Brancura'' do Ruído do Canal de Medição --- Gerador Síncrono (\emph{Swing Equation})}\\[6pt]
+{\normalsize Versão 1}
+\end{center}
+
+\vspace{4pt}
+\noindent\textbf{Professor responsável:} Prof.\ Maurício Beltrão Rossiter\\
+\textbf{Sistema atribuído:} Sistema 7 --- Gerador síncrono (\emph{swing equation})\\
+\textbf{Atividade:} Orientação --- Capítulo 5: Análise Espectral, Sinais Modulados e Aleatórios\\
+\textbf{Subtema do Grupo 08:} Seção 5.4.3 --- Funções de densidade espectral de potência\\
+\textbf{Data:} 22 / 09 / 2026
+
+\subsection*{Identificação da equipe}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Nome completo} & \textbf{Matrícula}\\
+\midrule
+Cleiber de Meireles da Silva Junnior & 20113298\\
+Leonardo Lima Barbosa Pereira & 22110875\\
+Willian Tcheldon Oliveira Santos & 17212878\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ===========================================================================
+\section{Contexto e escopo desta entrega}
+\label{sec:contexto}
+
+Ao contrário da atividade do Capítulo 3, em que todas as equipes resolveram o mesmo tipo de
+exercício sobre características estáticas diferentes, o Capítulo 5 foi distribuído por
+seção~\cite{orientacaocap5}: cada equipe recebeu um subtema distinto e é responsável por
+produzir, sozinha, uma explicação da teoria correspondente apoiada em demonstração simulada. Não
+há apresentação em sala --- este relatório precisa ensinar o subtema por si só, de modo que
+qualquer colega, lendo-o, entenda a Seção~5.4.3 de Aguirre~\cite{aguirre2015} sem precisar
+consultar mais nada além do livro-texto.
+
+O subtema atribuído ao Grupo~08 é \textbf{5.4.3 --- Funções de densidade espectral de
+potência}. A tarefa central definida pela orientação~\cite{orientacaocap5} é: estimar a
+densidade espectral de potência (DEP) de um sinal de ruído real por periodograma e por método de
+Welch; caracterizar a sua ``brancura''; e relacionar o resultado com a autocorrelação da
+Equipe~06 (Seção~5.4.1) por meio do teorema de Wiener--Khinchin. A conexão com o TyphoonSim,
+neste subtema, não é gerar dados novos: é \textbf{reaproveitar um arquivo de dados de ruído já
+entregue no Capítulo 3}.
+
+\begin{caixa}[title={Sequência 06--07--08 e dataset utilizado}]
+A orientação~\cite{orientacaocap5} recomenda fortemente que as Equipes~06, 07 e~08 --- que
+formam a sequência lógica autocorrelação~$\to$~intervalos de confiança~$\to$~densidade espectral
+--- trabalhem sobre o \emph{mesmo} conjunto de dados de ruído, para que os três resultados sejam
+comparáveis entre si na correção. Este relatório foi produzido de forma independente pelo
+Grupo~08, sem canal de coordenação síncrona com as Equipes~06 e~07 no momento da elaboração;
+optou-se, portanto, por reaproveitar o próprio conjunto de dados já entregue pela Equipe~08 no
+Capítulo~3 (Seção~3.3, característica \textbf{Limiar}, arquivo \texttt{Equipe\_08\_Limiar.csv}),
+por ser o único disponível com origem e proveniência plenamente verificáveis por esta equipe.
+Caso as Equipes~06 e~07 tenham adotado outro conjunto, a Seção~\ref{sec:discussao} explica
+exatamente qual correspondência tempo--frequência deve, ainda assim, ser conferida entre os três
+relatórios --- o raciocínio não depende de qual dataset específico foi usado.
+\end{caixa}
+
+% ===========================================================================
+\section{Fundamentação teórica}
+\label{sec:teoria}
+
+\subsection{Sinais aleatórios, estacionariedade e ergodicidade}
+
+Um sinal de ruído $x[n]$ é uma realização de um \textbf{processo aleatório}: em cada instante
+$n$, $x[n]$ é uma variável aleatória, e o que se observa numa medição é apenas uma entre
+infinitas realizações possíveis. Um processo é dito \textbf{estacionário em sentido amplo (WSS)}
+quando sua média $E[x[n]]$ não depende de $n$ e sua autocorrelação depende apenas da diferença de
+instantes $k=n_2-n_1$, não dos instantes absolutos. Um processo WSS é \textbf{ergódico} quando
+médias estatísticas (calculadas sobre o conjunto de realizações, o ``ensemble'') podem ser
+substituídas por médias temporais calculadas sobre uma única realização longa o suficiente. É
+essa hipótese --- usual em instrumentação, e adotada aqui --- que permite estimar autocorrelação
+e densidade espectral de um ruído a partir de um único registro de dados, como o gerado no
+Capítulo~3.
+
+\subsection{Função de autocorrelação}
+\label{sec:acf-teoria}
+
+Para um processo WSS de média nula, a \textbf{função de autocorrelação (ACF)} é
+\begin{equation}
+R[k] \;=\; E\big[x[n]\,x[n+k]\big],
+\label{eq:acf-def}
+\end{equation}
+com $R[0]$ igual à potência média do sinal, $R[k]=R[-k]$ (simetria par) e $|R[k]|\le R[0]$ para
+todo $k$. Intuitivamente, $R[k]$ mede o quanto o valor do sinal num instante permite prever o
+valor $k$ amostras à frente: um ruído \textbf{branco} tem
+\begin{equation}
+R[k] \;=\; \sigma^2\,\delta[k],
+\label{eq:acf-branco}
+\end{equation}
+ou seja, amostras separadas por qualquer atraso não nulo são descorrelacionadas --- toda a
+potência do sinal está concentrada em $R[0]$, e nada resta para $k\neq0$. Na prática, com um
+registro finito de $N$ amostras, usa-se o estimador amostral enviesado
+\begin{equation}
+\hat R[k] \;=\; \frac{1}{N}\sum_{n=0}^{N-1-k} \big(x[n]-\bar x\big)\big(x[n+k]-\bar x\big),
+\qquad k=0,1,\dots,
+\label{eq:acf-estimador}
+\end{equation}
+que é o que a Equipe~06 (Seção~5.4.1) deve ter calculado, e o que também é calculado neste
+relatório (Seção~\ref{sec:metodologia}) como ponto de partida independente para a verificação do
+teorema de Wiener--Khinchin.
+
+\subsection{Densidade espectral de potência e o teorema de Wiener--Khinchin}
+\label{sec:wk-teoria}
+
+A \textbf{densidade espectral de potência (DEP)} $S(f)$ descreve como a potência de um sinal
+aleatório se distribui ao longo da frequência: $S(f)\,df$ é a potência contida numa faixa
+infinitesimal em torno de $f$, e $\int S(f)\,df = R[0]$ recupera a potência total. O
+\textbf{teorema de Wiener--Khinchin} estabelece que, para um processo WSS, a DEP é exatamente a
+transformada de Fourier (em tempo discreto) da função de autocorrelação:
+\begin{equation}
+S(f) \;=\; \FT\{R[k]\} \;=\; \sum_{k=-\infty}^{\infty} R[k]\,e^{-j2\pi f k},
+\qquad
+R[k] \;=\; \FT^{-1}\{S(f)\} \;=\; \int_{-1/2}^{1/2} S(f)\,e^{\,j2\pi f k}\,df .
+\label{eq:wk}
+\end{equation}
+Em~\eqref{eq:wk}, $f$ é a frequência \textbf{normalizada} (ciclos/amostra, $f\in[-1/2,1/2]$); nas
+seções seguintes é mais conveniente expressar a frequência em Hz, bastando substituir
+$f \to f/F_s$ nas equações acima --- uma simples troca de escala no eixo horizontal, sem qualquer
+mudança de conteúdo físico. O teorema é o elo formal entre o domínio do tempo (Equipe~06, autocorrelação) e o domínio da
+frequência (Equipe~08, DEP): as duas descrições contêm exatamente a mesma informação sobre o
+processo, apenas em bases diferentes. Combinando \eqref{eq:acf-branco} com \eqref{eq:wk},
+ruído branco tem DEP \textbf{constante} (``branca'') em toda a faixa de frequências:
+\begin{equation}
+R[k]=\sigma^2\delta[k] \;\; \Longleftrightarrow \;\; S(f) = \sigma^2, \;\; \forall f.
+\label{eq:branco-plano}
+\end{equation}
+``Caracterizar a brancura'' de um ruído medido é, portanto, verificar empiricamente essa
+correspondência: a ACF amostral colapsa para (aproximadamente) zero fora de $k=0$? A DEP
+estimada é (aproximadamente) plana? As duas perguntas devem receber a mesma resposta, e é essa
+consistência cruzada que a Seção~\ref{sec:discussao} explora entre este relatório e o da
+Equipe~06.
+
+\subsection{Estimadores práticos: periodograma, método de Welch e Blackman--Tukey}
+\label{sec:estimadores-teoria}
+
+Na prática, $S(f)$ não é observável diretamente --- apenas um registro finito $x[0..N-1]$ está
+disponível, e todo estimador de DEP é ele próprio uma variável aleatória. Três abordagens
+clássicas, todas empregadas neste relatório, são:
+
+\begin{enumerate}[leftmargin=1.6em]
+\item \textbf{Periodograma.} Definido diretamente a partir da transformada de Fourier discreta
+      (DFT) do sinal,
+      \begin{equation}
+      \hat S_{\text{per}}(f) \;=\; \frac{1}{N\,F_s}\Big|\sum_{n=0}^{N-1} x[n]\,e^{-j2\pi f n/F_s}\Big|^2,
+      \label{eq:periodograma}
+      \end{equation}
+      é algebricamente equivalente à transformada de Fourier do estimador enviesado
+      \eqref{eq:acf-estimador} (é a instância mais direta do teorema de Wiener--Khinchin). Sua
+      limitação clássica é estatística, não de viés: mesmo quando $N\to\infty$, a
+      \textbf{variância} do periodograma em cada frequência \textbf{não diminui} --- cada
+      componente se comporta como uma variável aleatória com distribuição próxima de
+      $\chi^2$ com 2 graus de liberdade, de modo que o periodograma bruto é um estimador
+      \emph{inconsistente} da DEP verdadeira: ele fica mais \emph{fino em resolução}, mas nunca
+      menos \emph{ruidoso ponto a ponto}, à medida que $N$ cresce.
+\item \textbf{Método de Welch~\cite{welch1967}.} Reduz a variância do periodograma dividindo o
+      registro em $K$ segmentos (tipicamente sobrepostos, com uma janela como Hann aplicada a
+      cada um para controlar o vazamento espectral), calculando o periodograma de cada segmento e
+      \textbf{promediando} os $K$ resultados:
+      \begin{equation}
+      \hat S_{\text{Welch}}(f) \;=\; \frac{1}{K}\sum_{i=1}^{K} \hat S_{\text{per}}^{(i)}(f).
+      \label{eq:welch}
+      \end{equation}
+      A promediação reduz a variância por um fator próximo de $1/K$, ao custo de piorar a
+      resolução em frequência de $\Delta f = F_s/N$ (periodograma bruto) para
+      $\Delta f = F_s/L$, onde $L<N$ é o comprimento de cada segmento --- um compromisso
+      viés--variância clássico em processamento de sinais.
+\item \textbf{Blackman--Tukey.} Em vez de trabalhar diretamente sobre o sinal, aplica o teorema
+      de Wiener--Khinchin \eqref{eq:wk} de forma truncada e janelada sobre a \emph{própria
+      autocorrelação amostral}:
+      \begin{equation}
+      \hat S_{\text{BT}}(f) \;=\; \FT\big\{w[k]\,\hat R[k]\big\}, \qquad |k|\le M \ll N,
+      \label{eq:bt}
+      \end{equation}
+      com $w[k]$ uma janela de atraso (aqui, Hann) que suaviza o efeito de truncar $\hat R[k]$
+      num máximo de $M$ atrasos. Por partir de $\hat R[k]$ calculada independentemente no domínio
+      do tempo, este estimador serve neste relatório como uma \textbf{verificação numérica
+      não trivial} do teorema de Wiener--Khinchin, comparável ao método de Welch (que nunca usa
+      $\hat R[k]$ explicitamente).
+\end{enumerate}
+
+Um indicador escalar usual de brancura é a \textbf{medida de achatamento espectral}
+(\emph{spectral flatness measure}, SFM), a razão entre a média geométrica e a média aritmética da
+DEP estimada numa faixa de frequências:
+\begin{equation}
+\text{SFM} \;=\; \frac{\exp\!\big(\tfrac{1}{B}\sum_b \ln \hat S(f_b)\big)}{\tfrac{1}{B}\sum_b \hat S(f_b)} \;\in\; (0,1],
+\label{eq:sfm}
+\end{equation}
+com $\text{SFM}\to 1$ para um espectro perfeitamente plano (branco) e $\text{SFM}\to 0$ para um
+espectro concentrado em poucas raias (fortemente colorido/tonal).
+
+% ===========================================================================
+\section{Descrição da demonstração simulada realizada}
+\label{sec:metodologia}
+
+\subsection{Dataset reaproveitado do Capítulo 3}
+\label{sec:dataset}
+
+Conforme exigido pela orientação~\cite{orientacaocap5} (item~4: ``equipes com subtemas de sinais
+aleatórios não precisam gerar nenhum dado novo no TyphoonSim''), este relatório reaproveita
+integralmente o arquivo já entregue pela própria Equipe~08 no Capítulo~3:
+
+\begin{center}\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Item} & \textbf{Valor}\\
+\midrule
+Arquivo & \texttt{Equipe\_08\_Limiar.csv} (caminho: \texttt{../../e3-geracao-dados/dados/})\\
+Equipe de origem & Equipe~08 (a própria equipe deste relatório)\\
+Característica estática & Limiar (limiar de discriminação, VIM~\cite{vim2012} item~4.16)\\
+Sistema & Sistema~7 --- Gerador síncrono (\emph{swing equation})\\
+Taxa de amostragem & $F_s = 60\ \text{Hz}$\\
+Estrutura & 30 varreduras independentes $\times$ 101 amostras/varredura $=3\,030$ amostras\\
+Ruído incluído & sim, deliberadamente, antes da digitalização (exigência do Cap.~3)\\
+Pré-processamento & nenhum (dados brutos, conforme entregue)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Cada varredura aplica ao canal de medição angular do gerador síncrono uma sequência de $101$
+incrementos pequenos e conhecidos a partir do repouso ($x_{\text{referencia}}=0$), registrando a
+leitura do instrumento ($y_{\text{instrumento}}$) após cada incremento; as $30$ varreduras são
+repetições independentes do mesmo protocolo, cada uma com uma nova realização de ruído. Os
+detalhes desse protocolo e a caracterização do próprio limiar já foram tratados
+em~\cite{limiarv1,geracaodadoslimiar} e \textbf{não são repetidos aqui} --- o interesse deste
+relatório não é o limiar em si, mas o ruído presente no canal de medição que o produz.
+
+\subsection{Sinal de ruído analisado}
+\label{sec:sinal-analisado}
+
+O arquivo entregue não contém uma coluna de ``ruído puro'': a coluna \texttt{y\_instrumento}
+mistura a grandeza de referência (a rampa de incrementos, \emph{conhecida e livre de
+distorção}) com o efeito do ruído do canal. Como $x_{\text{referencia}}[n]$ é exatamente o sinal
+de excitação aplicado --- e não uma estimativa ---, o sinal de erro do canal de medição
+\begin{equation}
+e[n] \;=\; y_{\text{instrumento}}[n] \;-\; x_{\text{referencia}}[n]
+\label{eq:sinal-erro}
+\end{equation}
+é o único sinal diretamente extraível deste dataset que isola o efeito do ruído (mais a
+quantização, que faz parte da cadeia de medição) sem exigir nenhum ajuste de modelo. É sobre
+$e[n]$, calculado sobre as $N=3\,030$ amostras do registro completo, que se aplicam periodograma,
+Welch e Blackman--Tukey (Seções~\ref{sec:resultados-tempo}--\ref{sec:resultados-wk}).
+
+Como verificação complementar, extraiu-se também a subsérie formada pela primeira amostra
+($x_{\text{referencia}}=0$, o ponto de repouso) de cada uma das $30$ varreduras --- ou seja,
+$30$ leituras repetidas do instrumento sob uma entrada nominalmente constante, amostradas numa
+escala de tempo ``lenta'' (uma amostra a cada varredura completa, $F_{s,\text{repouso}} =
+F_s/101 \approx 0{,}594\ \text{Hz}$). Esta subsérie corresponde ao ensaio clássico de
+repetibilidade de um instrumento e serve de contraponto de menor escala à análise principal
+(Seção~\ref{sec:resultados-repouso}).
+
+\subsection{Parâmetros computacionais}
+\label{sec:parametros}
+
+\begin{center}\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Cálculo} & \textbf{Parâmetros}\\
+\midrule
+Autocorrelação amostral \eqref{eq:acf-estimador} & atrasos $k=0,\dots,250$; banda de 95\% para
+  ruído branco: $\pm 1{,}96/\sqrt{N}$\\
+Periodograma \eqref{eq:periodograma} & janela retangular, resolução $F_s/N \approx 0{,}0198\ \text{Hz}$\\
+Welch \eqref{eq:welch} & janela de Hann, segmentos de $256$ amostras, sobreposição de $50\%$
+  ($K=22$ segmentos),\\
+  & resolução $F_s/256 \approx 0{,}234\ \text{Hz}$\\
+Blackman--Tukey \eqref{eq:bt} & janela de atraso de Hann, $M=200$, FFT com \emph{zero-padding} para
+  $4\,096$ pontos\\
+Medida de achatamento \eqref{eq:sfm} & calculada sobre todas as componentes de frequência não nula\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Todos os cálculos foram implementados em Python~3 com NumPy~\cite{numpy2020},
+SciPy (\texttt{scipy.signal.periodogram}, \texttt{scipy.signal.welch}) e
+Pandas~\cite{mckinney2010}, no script \texttt{reprodutibilidade/analise\_dsp.py}
+(Apêndice~\ref{ap:repro}), que lê diretamente o CSV do Capítulo~3 e não gera nenhum dado novo.
+
+\begin{caixa}[title={Sobre o uso dos parâmetros de projeto do canal simulado}]
+Por ser a própria equipe geradora do dataset do Capítulo~3, a Equipe~08 conhece os parâmetros
+internos do canal simulado --- quantum do conversor $q=360^\circ/2^{12}=0{,}087\,890\,625^\circ$
+e desvio-padrão do ruído injetado $\sigma_\delta=0{,}020^\circ$ --- que, por
+orientação~\cite{geracaodadoslimiar}, \textbf{não são revelados} no material entregue a outras
+equipes, para preservar o exercício de estimação de limiar/resolução (Seções~3.1/3.2) de quem
+recebe apenas o CSV. Esse sigilo protege um exercício \emph{diferente} do tratado aqui: neste
+relatório, os parâmetros de projeto são citados \textbf{apenas como referência de validação} do
+resultado espectral obtido de forma inteiramente empírica (Seção~\ref{sec:resultados-freq}), nunca
+como atalho para a estimativa em si.
+\end{caixa}
+
+% ===========================================================================
+\section{Resultados}
+\label{sec:resultados}
+
+\subsection{Sinal de erro no domínio do tempo}
+\label{sec:resultados-tempo}
+
+A Figura~\ref{fig:sinal-tempo} mostra $e[n]$ ao longo de todo o registro (30 varreduras,
+$50{,}5\ \text{s}$). O sinal oscila rapidamente em torno de uma média negativa
+($\bar e = -0{,}0436^\circ$, $\hat\sigma_e = 0{,}0327^\circ$), consistente com o mecanismo de
+quantização por truncamento ($y=q\lfloor(x+\text{ruído})/q\rfloor \le x+\text{ruído}$, que tende
+a produzir $e[n]\le 0$): não é um ruído de média nula, mas um erro de canal com componente
+sistemática de quantização somada à dispersão do ruído.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{figs/sinal_erro_tempo.pdf}
+\caption{Sinal de erro do canal de medição, $e[n]=y_{\text{instrumento}}[n]-x_{\text{referencia}}[n]$,
+ao longo do registro completo (30 varreduras concatenadas, $F_s=60\ \text{Hz}$).}
+\label{fig:sinal-tempo}
+\end{figure}
+
+A Figura~\ref{fig:acf} mostra a autocorrelação amostral normalizada
+$\hat\rho[k]=\hat R[k]/\hat R[0]$ para $k=0,\dots,250$. A correlação cai de $1$ (em $k=0$) para
+$\hat\rho[1]=0{,}078$ já no primeiro atraso, e a maior parte dos $250$ atrasos seguintes fica
+dentro da banda de 95\% esperada para ruído branco ($\pm 0{,}0356$) --- mas \textbf{53 dos 250
+atrasos (21\%)} excedem essa banda, um número bem acima dos $\sim\!12$--$13$ ($5\%$) esperados sob
+a hipótese de brancura estrita. A ACF, portanto, \emph{decai quase instantaneamente}, mas não é
+compatível, num teste estatístico formal, com ruído perfeitamente branco.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{figs/autocorrelacao.pdf}
+\caption{Autocorrelação amostral normalizada de $e[n]$, com banda de confiança de 95\% para a
+hipótese de ruído branco ($\pm 1{,}96/\sqrt{N}$).}
+\label{fig:acf}
+\end{figure}
+
+\subsection{Densidade espectral: periodograma \emph{versus} Welch}
+\label{sec:resultados-freq}
+
+A Figura~\ref{fig:periodograma-welch} sobrepõe o periodograma bruto (cinza) e a estimativa de
+Welch (azul, $K=22$ segmentos). O periodograma bruto ilustra exatamente a limitação descrita na
+Seção~\ref{sec:estimadores-teoria}: apesar da altíssima resolução em frequência
+($0{,}0198\ \text{Hz}$), cada componente flutua por várias ordens de grandeza em torno da
+estimativa de Welch, tornando-o, sozinho, inútil para julgar a forma da DEP. A promediação de
+Welch reduz drasticamente essa variância e revela uma DEP majoritariamente \textbf{plana}, com um
+piso de banda larga entre $\approx\! 1{,}5\times10^{-5}$ e $4\times10^{-5}\ \text{graus}^2/\text{Hz}$
+(potência média para $f>10\ \text{Hz}$: $3{,}24\times10^{-5}$; para $0<f<2\ \text{Hz}$:
+$3{,}92\times10^{-5}$ --- mesma ordem de grandeza), \textbf{exceto} por um pico estreito e bem
+definido entre $5{,}86$ e $6{,}09\ \text{Hz}$, cerca de $3$--$4$ vezes acima do piso.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{figs/periodograma_welch.pdf}
+\caption{Densidade espectral de potência de $e[n]$: periodograma bruto (cinza) \emph{versus}
+método de Welch (azul, $K=22$ segmentos de $256$ amostras, sobreposição de $50\%$).}
+\label{fig:periodograma-welch}
+\end{figure}
+
+Esse pico coincide quase exatamente com uma frequência prevista pelo próprio protocolo de
+excitação (Seção~\ref{sec:parametros}, caixa de referência): como o incremento de referência por
+amostra é $\Delta x = q/10$, o código de saída muda, em média, a cada $10$ amostras --- uma
+frequência determinística de cruzamento de quantum de $F_s/10=6\ \text{Hz}$. Os dois compartimentos
+de frequência mais próximos de $6\ \text{Hz}$ na grade de Welch ($5{,}859$ e $6{,}094\ \text{Hz}$,
+espaçados por $0{,}234\ \text{Hz}$) são exatamente os dois picos mais proeminentes do espectro,
+o que identifica a origem do pico como \textbf{determinística} (o próprio mecanismo de
+quantização sob uma rampa crescente), e não como ruído aleatório de banda larga.
+
+A medida de achatamento espectral \eqref{eq:sfm} confirma essa leitura: sobre o periodograma bruto,
+$\text{SFM}=0{,}552$ --- um valor baixo que reflete sobretudo a \emph{alta variância intrínseca}
+do próprio periodograma (muitos compartimentos caem, por acaso, muito próximos de zero, o que
+derruba a média geométrica), \textbf{não} uma DEP verdadeiramente colorida. Sobre a estimativa de
+Welch, já promediada, $\text{SFM}=0{,}966$ --- muito próximo de $1$, isto é, \textbf{globalmente
+quase plana}, com o desvio concentrado quase inteiramente na raia de $6\ \text{Hz}$.
+
+\subsection{Verificação numérica do teorema de Wiener--Khinchin}
+\label{sec:resultados-wk}
+
+A Figura~\ref{fig:wk} acrescenta ao gráfico anterior a estimativa de Blackman--Tukey
+\eqref{eq:bt}, obtida transformando a \emph{mesma} autocorrelação amostral da
+Figura~\ref{fig:acf} (calculada inteiramente no domínio do tempo, sem qualquer FFT direta sobre
+$e[n]$) com uma janela de Hann até $M=200$ atrasos. A curva de Blackman--Tukey reproduz o mesmo
+piso de banda larga e a mesma raia em $\approx\! 6\ \text{Hz}$ encontrados por Welch --- dois
+estimadores estatisticamente independentes (um construído inteiramente a partir de $\hat R[k]$,
+o outro a partir de médias de periodogramas de $e[n]$) convergem para a mesma descrição
+qualitativa da DEP. A correlação entre os logaritmos das duas estimativas (na grade de
+frequência de Welch) é $0{,}511$ --- uma concordância moderada, compatível com o fato de ambas
+serem, ainda, estimativas ruidosas de uma única realização finita, mas suficiente para validar
+numericamente a correspondência tempo--frequência do teorema de Wiener--Khinchin
+\eqref{eq:wk}: a informação contida em $\hat R[k]$ (Figura~\ref{fig:acf}) e a contida em
+$\hat S(f)$ (Figura~\ref{fig:periodograma-welch}) são, de fato, a mesma informação vista por
+duas janelas diferentes.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{figs/wiener_khinchin.pdf}
+\caption{Três estimadores independentes da DEP de $e[n]$: periodograma bruto, Welch (calculado
+diretamente sobre $e[n]$) e Blackman--Tukey (calculado transformando a autocorrelação amostral
+$\hat R[k]$, Figura~\ref{fig:acf}). A concordância entre Welch e Blackman--Tukey --- inclusive na
+raia de $6\ \text{Hz}$ --- é a verificação numérica do teorema de Wiener--Khinchin.}
+\label{fig:wk}
+\end{figure}
+
+\subsection{Complemento: subsérie em repouso}
+\label{sec:resultados-repouso}
+
+A Figura~\ref{fig:repouso} analisa a subsérie de $30$ leituras repetidas em $x_{\text{referencia}}=0$
+(Seção~\ref{sec:sinal-analisado}), representando o ensaio clássico de repetibilidade sob entrada
+constante. Ao contrário do registro completo, aqui \textbf{nenhum} dos $9$ atrasos calculados
+excede a banda de 95\% (que, para $N=30$, é bem mais larga: $\pm 0{,}358$); em particular,
+$\hat\rho[1]=-0{,}038$, essencialmente nulo. Isto é consistente com o protocolo de geração: cada
+varredura usa uma realização de ruído \emph{independente} das demais, de modo que, uma vez
+removida a rampa determinística de excitação (fixando $x_{\text{referencia}}=0$), o que resta
+\emph{é} compatível com ruído branco. O periodograma desta subsérie (painel~c) é, por sua vez,
+extremamente ruidoso ponto a ponto --- exatamente o comportamento inconsistente do periodograma
+bruto discutido na Seção~\ref{sec:estimadores-teoria}, aqui exacerbado por um registro de apenas
+$N=30$ amostras, longe do suficiente para que Welch ofereça alguma promediação útil.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figs/repouso_subserie.pdf}
+\caption{Subsérie em repouso ($x_{\text{referencia}}=0$, $30$ varreduras independentes,
+$F_{s,\text{repouso}}\approx 0{,}594\ \text{Hz}$): (a) série temporal; (b) autocorrelação
+amostral, dentro da banda de 95\% em todos os atrasos calculados; (c) periodograma bruto,
+ilustrando sua alta variância mesmo sob a hipótese de brancura.}
+\label{fig:repouso}
+\end{figure}
+
+% ===========================================================================
+\section{Discussão}
+\label{sec:discussao}
+
+\subsection{O ruído do canal é branco?}
+
+A resposta correta é \textbf{aproximadamente, mas não exatamente} --- e o valor pedagógico deste
+subtema está precisamente em conseguir dizer \emph{onde} e \emph{por quê} a hipótese de brancura
+falha, em vez de simplesmente assumi-la. Os quatro resultados da Seção~\ref{sec:resultados}
+contam a mesma história sob quatro ângulos diferentes:
+
+\begin{enumerate}[leftmargin=1.6em]
+\item A ACF do registro completo (Figura~\ref{fig:acf}) decai de $1$ para $\approx 0$ já no
+      primeiro atraso --- comportamento de ruído branco na escala grossa --- mas com $21\%$ dos
+      atrasos excedendo a banda de confiança, quatro vezes mais que o esperado sob brancura
+      estrita.
+\item A DEP de Welch (Figura~\ref{fig:periodograma-welch}) é quase plana
+      ($\text{SFM}=0{,}966$), mas exibe uma raia estreita e bem localizada em
+      $\approx\! 6\ \text{Hz}$.
+\item Essa raia coincide, dentro da resolução em frequência disponível, com a frequência
+      determinística de cruzamento de quantum prevista pelo próprio protocolo de excitação
+      ($F_s/10=6\ \text{Hz}$, Seção~\ref{sec:resultados-freq}) --- ou seja, tem origem
+      \textbf{sistemática} (quantização sob rampa crescente), não estocástica.
+\item Quando a componente determinística da rampa é removida por construção --- fixando a entrada
+      em repouso (Figura~\ref{fig:repouso}) ---, a ACF cai dentro da banda de confiança em
+      \emph{todos} os atrasos testados: o que resta do ruído do canal, isoladamente, \emph{é}
+      compatível com brancura.
+\end{enumerate}
+
+A conclusão --- consistente com \eqref{eq:branco-plano} e com o próprio mecanismo de geração do
+dataset (ruído gaussiano branco somado \emph{antes} da quantização, Seção~\ref{sec:dataset}) ---
+é que o \textbf{piso de ruído do canal é, de fato, aproximadamente branco}, mas o sinal
+$e[n]$ analisado no registro completo carrega, além desse piso, uma contaminação
+\textbf{determinística e previsível}, produzida pela interação entre o quantizador (não linear)
+e o próprio protocolo de excitação em rampa usado no Capítulo~3. Esta é uma lição geral de
+instrumentação, não uma peculiaridade deste dataset: um sinal de erro medido raramente é ruído
+\emph{puro}; separar o piso estocástico de contaminações sistemáticas do protocolo de ensaio ou
+da não linearidade do transdutor é exatamente o que as ferramentas de ACF/DEP desta seção
+permitem fazer.
+
+\subsection{Correspondência com a autocorrelação da Equipe 06 via Wiener--Khinchin}
+
+A orientação~\cite{orientacaocap5} antecipa a correspondência esperada entre os subtemas 5.4.1 e
+5.4.3: ``uma densidade espectral aproximadamente plana (Equipe~08) deve corresponder a uma
+autocorrelação que decai rapidamente (Equipe~06)''. Os resultados deste relatório confirmam essa
+correspondência de forma \emph{quantitativa}, e não apenas qualitativa: a mesma autocorrelação
+amostral que decai rapidamente (Figura~\ref{fig:acf}) foi transformada, via Blackman--Tukey
+\eqref{eq:bt}, numa DEP que reproduz --- picos e piso --- a DEP obtida de forma totalmente
+independente por Welch (Figura~\ref{fig:wk}). Se a Equipe~06 tiver analisado o mesmo arquivo
+\texttt{Equipe\_08\_Limiar.csv} (ou uma definição de sinal de erro equivalente à
+Equação~\eqref{eq:sinal-erro}), o relatório dela deve exibir: (i) decaimento da ACF já nos
+primeiros atrasos, compatível com a Figura~\ref{fig:acf}; e (ii) uma oscilação de pequena
+amplitude sobreposta a esse decaimento, com período em torno de $10$ amostras --- a contrapartida,
+no domínio do tempo, da raia de $6\ \text{Hz}$ encontrada aqui, já que uma componente periódica
+de frequência $f_0$ na DEP corresponde, pelo teorema de Wiener--Khinchin, a uma oscilação de
+mesmo período em $R[k]$. Caso a Equipe~06 tenha usado outro conjunto de dados do Capítulo~3, a
+correspondência qualitativa --- decaimento rápido da ACF~$\Leftrightarrow$~DEP aproximadamente
+plana --- continua sendo o critério de consistência a conferir entre os dois relatórios.
+
+\subsection{Limitações}
+
+Duas limitações devem ser registradas com a mesma transparência exigida pela
+orientação~\cite{orientacaocap5}. Primeiro, a subsérie de repouso
+(Seção~\ref{sec:resultados-repouso}) tem apenas $N=30$ amostras, insuficiente para uma estimativa
+de Welch com múltiplos segmentos; ela serve apenas como evidência qualitativa complementar, não
+como uma estimativa de DEP competitiva com a do registro completo. Segundo, este relatório foi
+produzido sem coordenação prévia com as Equipes~06 e~07 (caixa da Seção~\ref{sec:contexto}); a
+comparação numérica direta entre os três relatórios só é possível se as três equipes tiverem, de
+fato, usado o mesmo dataset --- algo que esta equipe recomenda verificar antes da correção
+conjunta da sequência 06--07--08.
+
+% ===========================================================================
+\section{Considerações finais}
+\label{sec:conclusao}
+
+Este relatório estimou a densidade espectral de potência do sinal de erro do canal de medição do
+Sistema~7 (gerador síncrono), reaproveitando o dataset de ruído já entregue pela própria
+Equipe~08 no Capítulo~3 (característica Limiar). Usando periodograma, método de Welch e
+Blackman--Tukey, mostrou-se que esse sinal é \textbf{aproximadamente branco em banda larga}, com
+uma contaminação determinística estreita em $\approx\!6\ \text{Hz}$ atribuível à interação entre
+o quantizador do canal e o protocolo de excitação em rampa do próprio ensaio --- e não a uma
+característica intrínseca do ruído aleatório do canal, que se mostrou compatível com brancura
+assim que isolado (subsérie em repouso, Seção~\ref{sec:resultados-repouso}). A concordância
+numérica entre a DEP obtida diretamente do sinal (Welch) e a DEP obtida transformando a
+autocorrelação amostral (Blackman--Tukey) verificou, de forma não trivial, o teorema de
+Wiener--Khinchin~\eqref{eq:wk}, fechando o elo pedido pela orientação entre este subtema e a
+autocorrelação da Equipe~06.
+
+% ===========================================================================
+\appendix
+\section{Reprodutibilidade}
+\label{ap:repro}
+
+\begin{center}\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Item} & \textbf{Especificação}\\
+\midrule
+Linguagem & Python 3\\
+Bibliotecas & NumPy~\cite{numpy2020}, SciPy~\cite{scipy2020}, Pandas~\cite{mckinney2010},
+  Matplotlib~\cite{matplotlib2007}\\
+Dado de entrada & \texttt{../../e3-geracao-dados/dados/Equipe\_08\_Limiar.csv} (Capítulo~3, já
+  entregue)\\
+Script de análise & \texttt{../reprodutibilidade/analise\_dsp.py} (gera todas as figuras e o
+  arquivo\\
+  & \texttt{resultados\_dsp.json} com todos os números citados neste relatório)\\
+Dados novos gerados & nenhum (conforme exigência~4 da orientação~\cite{orientacaocap5})\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ===========================================================================
+
+\input{referencias}
