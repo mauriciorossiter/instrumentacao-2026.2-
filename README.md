@@ -46,15 +46,32 @@ da modelagem.
 
 ## Como funciona
 
+O **GitHub** é o canal de envio: toda entrega e toda devolutiva é enviada por este
+repositório, que substitui os formulários de envio de atividades. O **Classroom** fica
+para a comunicação da disciplina — avisos, prazos e dúvidas. Não envie arquivos pelo
+Classroom.
+
+### Fluxo resumido
+
+1. Trabalhe na branch do seu grupo, dentro da pasta do seu grupo.
+2. Monte a entrega em `entregas/eN-<nome>/`, faça commit e push e abra um PR para a
+   `main`.
+3. Depois da correção do professor e da integração do PR, sincronize sua branch com a
+   `main`.
+4. Salve a versão final do relatório, com as correções incorporadas, em
+   `devolutiva/eN-<nome>.pdf`; faça commit e push e abra um PR para a `main`.
+5. Repita para a entrega seguinte.
+
 ### Cada grupo tem a sua branch
 
-A branch é permanente e leva o nome do grupo: `g01`, `g02`, ..., `g08`.
-É nela que o grupo trabalha o semestre inteiro.
+A branch é permanente e leva o nome da pasta do grupo: `g01-tanques-acoplados`,
+`g02-massa-mola-amortecedor`, ..., `g08-gerador-sincrono`. É nela que o grupo trabalha
+o semestre inteiro.
 
 ```bash
 git clone <url-do-repositorio>
 cd <repositorio>
-git switch g05          # sua branch, já criada
+git switch g05-monotanque   # sua branch, já criada
 ```
 
 **Trabalhe apenas na sua branch e apenas dentro da pasta do seu grupo.**
@@ -81,6 +98,9 @@ g05-monotanque/
     e2-<nome-da-proxima-entrega>/
       relatorio/
       typhoonsim/
+  devolutiva/
+    e1-caracterizacao.pdf
+    e2-<nome-da-proxima-entrega>.pdf
 ```
 
 Nomeie as pastas de entrega com prefixo numérico e nome descritivo, em minúsculas e
@@ -90,8 +110,9 @@ garante a ordenação; o nome torna a pasta legível meses depois.
 Toda entrega tem as duas pastas, `relatorio/` e `typhoonsim/`. Não crie estruturas
 próprias — a uniformidade é o que permite corrigir oito projetos diferentes.
 
-Entrega já submetida não se mexe. Se algo precisar de correção, ela entra na entrega
-seguinte, não por reescrita da anterior.
+Entrega já submetida não se mexe. As correções apontadas pelo professor não são feitas
+reescrevendo a entrega: elas entram na versão final do relatório, enviada como
+devolutiva (ver [A devolutiva também vira um Pull Request](#a-devolutiva-também-vira-um-pull-request)).
 
 ### Cada entrega vira um Pull Request
 
@@ -100,22 +121,57 @@ Quando a entrega estiver pronta:
 ```bash
 git add g05-monotanque/entregas/e1-caracterizacao
 git commit -m "g05: entrega 1 - caracterizacao do sistema"
-git push origin g05
+git push origin g05-monotanque
 ```
 
-Abra um Pull Request da sua branch (`g05`) para a `main`, com o título no formato
-`g05 — Entrega 1: Caracterização do Sistema`.
+Abra um Pull Request da sua branch (`g05-monotanque`) para a `main`, com o título no
+formato `g05 — Entrega 1: Caracterização do Sistema`.
 
 **A data de abertura do PR é o que conta como data de entrega.** Não a data do commit.
 
 Depois que o PR for aceito e integrado à `main`, sincronize sua branch antes de
-começar a próxima entrega:
+continuar:
 
 ```bash
-git switch g05
+git switch g05-monotanque
 git fetch origin
 git merge origin/main
 ```
+
+### A devolutiva também vira um Pull Request
+
+Depois que o professor corrigir a entrega, a equipe incorpora as correções e envia a
+**versão final do relatório**, em PDF, na pasta `devolutiva/` do grupo, com o nome da
+entrega a que ele se refere:
+
+```
+g05-monotanque/
+  entregas/
+    e1-caracterizacao/
+      relatorio/
+        relatorio.pdf          ← versão submetida
+  devolutiva/
+    e1-caracterizacao.pdf      ← versão final (devolutiva)
+```
+
+Os dois PDFs ficam no repositório: a versão submetida em `entregas/` não se apaga, não
+se renomeia e não se substitui. A devolutiva é o próprio PDF corrigido — não envie
+arquivo listando as alterações.
+
+Enquanto nenhuma devolutiva tiver sido enviada, a pasta contém apenas
+`sem-devolutiva.md`, um aviso padrão. Apague esse arquivo no mesmo commit da primeira
+devolutiva.
+
+```bash
+git add g05-monotanque/devolutiva
+git commit -m "g05: devolutiva 1 - caracterizacao do sistema"
+git push origin g05-monotanque
+```
+
+Abra um Pull Request para a `main` com o título no formato
+`g05 — Devolutiva 1: Caracterização do Sistema`. Como na entrega, **a data de abertura
+do PR é o que conta como data de envio da devolutiva.** Depois da integração,
+sincronize a branch com a `main` da mesma forma.
 
 ---
 
@@ -127,7 +183,7 @@ git merge origin/main
 - `figuras/` — as figuras do relatório, também como arquivos de imagem separados
 
 Escreva o relatório na ferramenta que preferir (Word, Google Docs, LaTeX local, o que
-for). O repositório recebe apenas o PDF final.
+for). O repositório recebe apenas o PDF, não os arquivos de edição.
 
 As figuras vão soltas em `figuras/` além de estarem dentro do PDF porque o GitHub
 renderiza imagem direto na interface: dá para conferir os gráficos sem baixar e abrir o
@@ -206,10 +262,10 @@ a referência de validação é outra, e precisa estar declarada no relatório.
 editarem em paralelo, o trabalho de uma delas será perdido. Combinem quem fica com cada
 arquivo em cada semana.
 
-**Suba o PDF apenas na versão final da entrega.** Cada commit de um arquivo binário
-guarda uma cópia inteira dele no histórico. Rascunhos e versões intermediárias devem
-ficar fora do repositório — subir o relatório dez vezes até acertar deixa o clone lento
-para todo mundo.
+**Suba cada PDF uma única vez, já pronto:** a versão submetida em `entregas/` e a versão
+final em `devolutiva/`. Cada commit de um arquivo binário guarda uma cópia inteira dele
+no histórico. Rascunhos e versões intermediárias devem ficar fora do repositório — subir
+o relatório dez vezes até acertar deixa o clone lento para todo mundo.
 
 **Evite acentos e espaços em nomes de arquivo e pasta.** Use `relatorio` e não
 `Relatório`, `captura-scada.png` e não `Captura SCADA.png`. Acentos em caminho causam
