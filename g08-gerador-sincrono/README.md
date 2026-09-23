@@ -20,6 +20,7 @@
 | e1-caracterizacao | entregue | — |
 | e2-estaticas | entregue | |
 | e3-geracao-dados | entregue | |
+| e4-densidade-espectral | entrgue | | |
 
 ## Observações
 
