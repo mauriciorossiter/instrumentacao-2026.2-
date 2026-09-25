@@ -9,9 +9,9 @@
 
 | Nome completo | Matrícula |
 |---|---|
-| | |
-| | |
-| | |
+|Lucas Momesso Alves|22112804|
+|Nicolas de Almeida Souza |23111883 |
+|Cláudio Henrique da Costa Santos |20211850|
 
 ## Entregas
 
