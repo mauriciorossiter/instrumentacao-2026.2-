@@ -1,0 +1,84 @@
+{
+  "componentes": {
+    "Iin_zero_uA": 40.0,
+    "Iin_span_uA": 160.0,
+    "R0_ideal_kohm": 62.49999999999999,
+    "Rin_ideal_kohm": 15.624999999999998,
+    "R0_com_kohm": 62.6,
+    "Rin_com_kohm": 15.6,
+    "I_zero_com_mA": 3.993610223642172,
+    "I_fs_com_mA": 20.0192512492832,
+    "erro_zero_pcFS": -0.039936102236423285,
+    "erro_fs_pcFS": 0.12032030801999767,
+    "sens_mA_por_grau": 0.0044515669515669525,
+    "sens_ideal_uA_por_grau": 4.444444444444444,
+    "sens_pot_mV_por_grau": 0.6944444444444444
+  },
+  "orcamento_corrente": {
+    "I_pot_nom_mA": 0.25,
+    "I_pot_max_mA": 0.2631578947368421,
+    "I_buffer_uA": 17.0,
+    "I_externa_total_mA": 0.2801578947368421,
+    "I_disponivel_mA": 3.7,
+    "I_minima_saida_mA": 0.48015789473684206,
+    "I_carga_VREF_mA": 0.4631578947368421,
+    "P_pot_mW": 0.625
+  },
+  "alternativas": {
+    "A": {
+      "Rp_ohm": 10000.0,
+      "Vexc_V": 2.5,
+      "Rin_kohm": 15.624999999999998,
+      "Rp_sobre_Rin": 0.6400000000000001,
+      "erro_lin_max_pcFS": 8.312441262454776,
+      "x_do_max": 0.681,
+      "I_externa_mA": 0.25,
+      "cabe_no_orcamento": true
+    },
+    "B": {
+      "Rp_ohm": 1000.0,
+      "Vexc_V": 5.0,
+      "Rin_kohm": 31.249999999999996,
+      "Rp_sobre_Rin": 0.032,
+      "erro_lin_max_pcFS": 0.47072799469981536,
+      "x_do_max": 0.667,
+      "I_externa_mA": 5.0,
+      "cabe_no_orcamento": false
+    },
+    "C": {
+      "Rp_ohm": 10000.0,
+      "Vexc_V": 2.5,
+      "Rin_kohm": 15.624999999999998,
+      "Rp_sobre_Rin": 0.6400000000000001,
+      "erro_lin_max_pcFS": 1.9999999999999998e-05,
+      "x_do_max": 0.5,
+      "I_externa_mA": 0.26699999999999996,
+      "cabe_no_orcamento": true
+    }
+  },
+  "laco": {
+    "V_loop": 24.0,
+    "R_L": 250.0,
+    "R_cabo": 50.0,
+    "R_total_max_ohm": 825.0,
+    "R_cabo_max_ohm": 575.0,
+    "V_tx_min_nominal": 18.0,
+    "V_RL_min": 1.0,
+    "V_RL_max": 5.0,
+    "P_Q1_max_W": 0.38
+  },
+  "orcamento_linearidade_pcFS": {
+    "potenciometro (linearidade independente)": 0.25,
+    "XTR115 (não linearidade, típ.)": 0.003,
+    "efeito de carga (com buffer)": 1.9999999999999998e-05,
+    "soma (pior caso)": 0.25302,
+    "XTR115 (não linearidade, máx. variante U)": 0.01
+  },
+  "r3b": {
+    "tensao_queda_cabo_pcFS": 0.4975124378109453,
+    "tensao_terra_pcFS": 2.0,
+    "corrente_queda_cabo_pcFS": 0.0,
+    "R_adc_ohm": 10000.0,
+    "dV_terra_V": 0.1
+  }
+}

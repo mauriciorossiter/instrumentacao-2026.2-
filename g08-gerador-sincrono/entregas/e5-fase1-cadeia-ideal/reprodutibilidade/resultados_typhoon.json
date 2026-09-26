@@ -1,0 +1,24 @@
+{
+  "n_pontos": 19998,
+  "t_final_s": 19.99700000010145,
+  "atraso_numerico_amostras": 2,
+  "atraso_numerico_ms": 2.0,
+  "residuo_apos_alinhar_uA": 0.0014626079121171642,
+  "erro_total_sem_compensar_atraso_pcFS": 0.14031712214150893,
+  "I_zero_mA": 3.993610143661499,
+  "I_fs_mA": 20.019250869750977,
+  "V_RL_min_V": 0.9984025359153748,
+  "V_RL_max_V": 5.004812717437744,
+  "V_TX_min_V": 17.994224548339844,
+  "erro_lin_max_pcFS": 1.1374951855626958e-05,
+  "erro_total_max_pcFS": 0.12031793594360352,
+  "histerese_max_pcFS": 0.0,
+  "dif_typhoon_python_max_uA": 0.0009427399803030312,
+  "atende_linearidade": true,
+  "erro_angulo_max_graus": 4.33154296875,
+  "cabo_max": {
+    "R_cabo_ohm": 550.0,
+    "dif_corrente_max_uA": 0.0,
+    "V_TX_min_V": 7.9845991134643555
+  }
+}

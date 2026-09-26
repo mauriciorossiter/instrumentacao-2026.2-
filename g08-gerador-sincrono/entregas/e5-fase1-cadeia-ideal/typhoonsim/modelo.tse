@@ -1,0 +1,668 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "modelo_tmp" {
+    configuration {
+        hil_device = "HIL101"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 0.001
+        simulation_time = 20.0
+        abs_tol = 1e-9
+        rel_tol = 1e-9
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Clock" relogio {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7600, 7800
+        ]
+
+        component "core/C function" referencia {
+            global_variables = "real THETA_FS;real T_MEIO;"
+            init_fnc = "THETA_FS = 3600.0;
+T_MEIO = 10.0000;"
+            input_terminals = "real t;"
+            input_terminals_dimensions = "inherit"
+            input_terminals_show_labels = "True;"
+            output_fnc = "/*Begin code section*/
+/* Sinal de referencia (R2): varredura triangular 0 -> THETA_FS -> 0 graus */
+if (t <= T_MEIO) {
+    theta_ref = THETA_FS * t / T_MEIO;
+} else {
+    theta_ref = THETA_FS * (2.0 * T_MEIO - t) / T_MEIO;
+}
+if (theta_ref < 0.0) theta_ref = 0.0;
+if (theta_ref > THETA_FS) theta_ref = THETA_FS;
+/*End code section*/"
+            output_terminals = "real theta_ref;"
+            output_terminals_dimensions = "inherit"
+            output_terminals_show_labels = "True;"
+        }
+        [
+            position = 7760, 7800
+        ]
+
+        component "core/C function" potenciometro {
+            global_variables = "real THETA_FS;real x;"
+            init_fnc = "THETA_FS = 3600.0;
+x = 0.0;"
+            input_terminals = "real theta;real vref;"
+            input_terminals_dimensions = "inherit;inherit"
+            input_terminals_feedthrough = "True;True;"
+            input_terminals_show_labels = "True;True;"
+            output_fnc = "/*Begin code section*/
+/* Potenciometro IDEAL (Entrega 01): divisor razao-metrico sem carga
+   (o cursor alimenta o buffer OPA333, impedancia de entrada ~infinita).
+   x = theta / THETA_FS ;  v_cursor = x * V(VREF)
+   As camadas nao ideais da Entrega 02 (resolucao, histerese, ruido de
+   contato) entram aqui, sobre x. */
+x = theta / THETA_FS;
+if (x < 0.0) x = 0.0;
+if (x > 1.0) x = 1.0;
+v_cursor = x * vref;
+/*End code section*/"
+            output_terminals = "real v_cursor;"
+            output_terminals_dimensions = "inherit"
+            output_terminals_show_labels = "True;"
+        }
+        [
+            position = 7960, 7840
+        ]
+
+        component "core/C function" receptor {
+            global_variables = "real THETA_FS;real R_L;"
+            init_fnc = "THETA_FS = 3600.0;
+R_L = 250.000;"
+            input_terminals = "real v_rl;real theta_ref;"
+            input_terminals_dimensions = "inherit;inherit"
+            input_terminals_feedthrough = "True;True;"
+            input_terminals_show_labels = "True;True;"
+            output_fnc = "/*Begin code section*/
+/* Receptor: le a tensao sobre R_L e converte em corrente e em angulo */
+i_mA = 1000.0 * v_rl / R_L;
+theta_med = THETA_FS * (i_mA - 4.0) / 16.0;
+/* erro da corrente medida contra a reta ideal 4-20 mA, em % do fundo de escala */
+erro_FE = 100.0 * (i_mA - (4.0 + 16.0 * theta_ref / THETA_FS)) / 16.0;
+/*End code section*/"
+            output_terminals = "real i_mA;real theta_med;real erro_FE;"
+            output_terminals_dimensions = "inherit;inherit;inherit"
+            output_terminals_feedthrough = "True;True;True;"
+            output_terminals_show_labels = "True;True;True;"
+        }
+        [
+            position = 9560, 8200
+        ]
+
+        component "core/Voltage Source" VREF_XTR115 {
+            init_const_value = "2.5"
+        }
+        [
+            position = 7960, 8160
+            rotation = right
+        ]
+
+        component "core/Resistor" R_pot {
+            resistance = "10000.0"
+        }
+        [
+            position = 8080, 8160
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_REF {
+            execution_rate = "0.001"
+            sig_output = "True"
+        }
+        [
+            position = 8180, 8160
+            rotation = right
+        ]
+
+        component "core/Resistor" R0 {
+            resistance = "62600.0"
+        }
+        [
+            position = 8340, 8040
+        ]
+
+        component "core/Signal Controlled Voltage Source" buffer_OPA333 {
+        }
+        [
+            position = 8200, 8340
+            rotation = right
+        ]
+
+        component "core/Resistor" R_IN {
+            resistance = "15600.0"
+        }
+        [
+            position = 8340, 8240
+        ]
+
+        component "core/Current Measurement" I_IN {
+            execution_rate = "0.001"
+            sig_output = "True"
+        }
+        [
+            position = 8480, 8160
+            rotation = right
+        ]
+
+        component "core/Ground" gnd_IRET {
+        }
+        [
+            position = 8200, 8520
+        ]
+
+        component "core/Gain" XTR115_x100 {
+            gain = "100.0"
+        }
+        [
+            position = 8620, 8160
+        ]
+
+        component "core/Voltage Source" V_LOOP {
+            init_const_value = "24.0"
+        }
+        [
+            position = 8760, 8360
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Current Source" XTR115_Io {
+        }
+        [
+            position = 8900, 8160
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_TX {
+            execution_rate = "0.001"
+            sig_output = "True"
+        }
+        [
+            position = 9000, 8160
+            rotation = right
+        ]
+
+        component "core/Resistor" R_cabo {
+            resistance = "50.0"
+        }
+        [
+            position = 9100, 8280
+            rotation = right
+        ]
+
+        component "core/Current Measurement" I_LOOP {
+            execution_rate = "0.001"
+            sig_output = "True"
+        }
+        [
+            position = 9100, 8400
+            rotation = right
+        ]
+
+        component "core/Resistor" R_L {
+            resistance = "250.0"
+        }
+        [
+            position = 9240, 8460
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_RL {
+            execution_rate = "0.001"
+            sig_output = "True"
+        }
+        [
+            position = 9360, 8460
+            rotation = right
+        ]
+
+        component "core/Ground" gnd_laco {
+        }
+        [
+            position = 8760, 8620
+        ]
+
+        component "core/Gain" A_para_uA {
+            gain = "1e6"
+        }
+        [
+            position = 8620, 8300
+        ]
+
+        component "core/Gain" A_para_mA {
+            gain = "1000"
+        }
+        [
+            position = 9240, 8300
+        ]
+
+        component "core/Probe" theta_ref {
+        }
+        [
+            position = 7960, 7700
+        ]
+
+        component "core/Probe" v_cursor {
+        }
+        [
+            position = 8160, 7760
+        ]
+
+        component "core/Probe" I_IN_uA {
+        }
+        [
+            position = 8760, 8300
+        ]
+
+        component "core/Probe" I_LOOP_mA {
+        }
+        [
+            position = 9360, 8300
+        ]
+
+        component "core/Probe" V_TX_V {
+        }
+        [
+            position = 9120, 8120
+        ]
+
+        component "core/Probe" V_RL_V {
+        }
+        [
+            position = 9500, 8460
+        ]
+
+        component "core/Probe" theta_med {
+        }
+        [
+            position = 9760, 8200
+        ]
+
+        component "core/Probe" erro_FE_pc {
+        }
+        [
+            position = 9760, 8280
+        ]
+
+        component "core/Probe" I_receptor_mA {
+        }
+        [
+            position = 9760, 8120
+        ]
+
+        component "core/Scope" Scope_cadeia {
+            selected_signals = "[\'theta_ref\', \'theta_med\', \'I_LOOP_mA\', \'V_RL_V\', \'V_TX_V\', \'I_IN_uA\', \'v_cursor\', \'erro_FE_pc\', \'I_receptor_mA\']"
+        }
+        [
+            position = 7600, 8300
+        ]
+
+        junction no_VREF pe
+        [
+            position = 7960, 8040
+        ]
+
+        junction no_VREF2 pe
+        [
+            position = 8080, 8040
+        ]
+
+        junction no_VREF3 pe
+        [
+            position = 8180, 8040
+        ]
+
+        junction no_cursor pe
+        [
+            position = 8200, 8240
+        ]
+
+        junction no_IIN pe
+        [
+            position = 8480, 8040
+        ]
+
+        junction no_IIN2 pe
+        [
+            position = 8480, 8240
+        ]
+
+        junction no_IRET pe
+        [
+            position = 8200, 8460
+        ]
+
+        junction no_V+ pe
+        [
+            position = 8900, 8040
+        ]
+
+        junction no_V+2 pe
+        [
+            position = 8760, 8040
+        ]
+
+        junction no_V+3 pe
+        [
+            position = 9000, 8040
+        ]
+
+        junction no_IO pe
+        [
+            position = 8900, 8240
+        ]
+
+        junction no_IO2 pe
+        [
+            position = 9000, 8240
+        ]
+
+        junction no_RX pe
+        [
+            position = 9240, 8400
+        ]
+
+        junction no_RX2 pe
+        [
+            position = 9360, 8400
+        ]
+
+        junction no_GND pe
+        [
+            position = 8760, 8560
+        ]
+
+        junction no_GND2 pe
+        [
+            position = 9240, 8560
+        ]
+
+        junction no_GND3 pe
+        [
+            position = 9360, 8560
+        ]
+
+        connect VREF_XTR115.p_node no_VREF as Connection1
+        connect no_VREF no_VREF2 as Connection2
+        connect no_VREF2 no_VREF3 as Connection3
+        connect R_pot.p_node no_VREF2 as Connection4
+        connect V_REF.p_node no_VREF3 as Connection5
+        connect no_VREF3 R0.p_node as Connection6
+        connect R0.n_node no_IIN as Connection7
+        connect buffer_OPA333.p_node no_cursor as Connection8
+        connect no_cursor R_IN.p_node as Connection9
+        connect R_IN.n_node no_IIN2 as Connection10
+        connect no_IIN no_IIN2 as Connection11
+        connect no_IIN2 I_IN.p_node as Connection12
+        connect VREF_XTR115.n_node no_IRET as Connection13
+        connect R_pot.n_node no_IRET as Connection14
+        connect V_REF.n_node no_IRET as Connection15
+        connect buffer_OPA333.n_node no_IRET as Connection16
+        connect I_IN.n_node no_IRET as Connection17
+        connect gnd_IRET.node no_IRET as Connection18
+        connect V_LOOP.p_node no_V+2 as Connection19
+        connect no_V+2 no_V+ as Connection20
+        connect no_V+ no_V+3 as Connection21
+        connect XTR115_Io.n_node no_V+ as Connection22
+        connect XTR115_Io.p_node no_IO as Connection23
+        connect V_TX.p_node no_V+3 as Connection24
+        connect V_TX.n_node no_IO2 as Connection25
+        connect no_IO no_IO2 as Connection26
+        connect no_IO2 R_cabo.p_node as Connection27
+        connect R_cabo.n_node I_LOOP.p_node as Connection28
+        connect I_LOOP.n_node no_RX as Connection29
+        connect no_RX no_RX2 as Connection30
+        connect no_RX R_L.p_node as Connection31
+        connect no_RX2 V_RL.p_node as Connection32
+        connect V_LOOP.n_node no_GND as Connection33
+        connect no_GND no_GND2 as Connection34
+        connect no_GND2 no_GND3 as Connection35
+        connect R_L.n_node no_GND2 as Connection36
+        connect V_RL.n_node no_GND3 as Connection37
+        connect gnd_laco.node no_GND as Connection38
+        connect relogio.out referencia.t as Connection39
+        connect referencia.theta_ref potenciometro.theta as Connection40
+        connect V_REF.out potenciometro.vref as Connection41
+        connect potenciometro.v_cursor buffer_OPA333.in as Connection42
+        connect I_IN.out XTR115_x100.in as Connection43
+        connect XTR115_x100.out XTR115_Io.in as Connection44
+        connect V_RL.out receptor.v_rl as Connection45
+        connect referencia.theta_ref receptor.theta_ref as Connection46
+        connect referencia.theta_ref theta_ref.in as Connection47
+        connect potenciometro.v_cursor v_cursor.in as Connection48
+        connect I_IN.out A_para_uA.in as Connection49
+        connect A_para_uA.out I_IN_uA.in as Connection50
+        connect I_LOOP.out A_para_mA.in as Connection51
+        connect A_para_mA.out I_LOOP_mA.in as Connection52
+        connect V_TX.out V_TX_V.in as Connection53
+        connect V_RL.out V_RL_V.in as Connection54
+        connect receptor.theta_med theta_med.in as Connection55
+        connect receptor.erro_FE erro_FE_pc.in as Connection56
+        connect receptor.i_mA I_receptor_mA.in as Connection57
+    }
+
+    default {
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/Clock" {
+            enb_reset = "False"
+            reset_at = "1.0"
+            execution_rate = "100e-6"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Voltage Source" {
+            sig_input = "False"
+            type = "signal generator"
+            param_set = "1phase"
+            parent_label = ""
+            dtsm_switch_name = ""
+            addr = "0"
+            spc_nb = "0"
+            execution_rate = "100e-6"
+            cpd_visible = "True"
+            enable_snb = "False"
+            snb_type = "R2"
+            R2 = "0.0"
+            L1 = "0.1"
+            override_signal_name = "False"
+            signal_name = ""
+            init_source_nature = "Constant"
+            init_const_value = "0.0"
+            init_rms_value = "0.0"
+            init_frequency = "50.0"
+            init_phase = "0.0"
+        }
+
+        "core/Current Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Signal Controlled Current Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Signal Controlled Voltage Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+}
