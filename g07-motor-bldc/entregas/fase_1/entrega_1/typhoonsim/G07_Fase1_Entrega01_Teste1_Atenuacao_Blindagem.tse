@@ -1,0 +1,362 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.3
+//
+
+model "G07_teste1_atenuacao" {
+    configuration {
+        hil_device = "HIL101"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = .5e-6
+        fine_auto_sim_step = False
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "single precision"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 5e-7
+        simulation_time = 0.01
+        abs_tol = 1e-6
+        rel_tol = 1e-6
+        init_sim_step = 1e-8
+        r_on_sw = 1e-3
+        v_on_diode = 0.2
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = warning
+    }
+
+    component Subsystem Root {
+        component "core/Voltage Source" G07_V_Hall {
+            init_const_value = "5"
+        }
+        [
+            position = 8000, 8060
+            rotation = right
+        ]
+
+        component "core/Voltage Source" G07_V_ruido {
+            init_frequency = "f_ruido"
+            init_phase = "0"
+            init_rms_value = "A_ruido/np.sqrt(2)"
+            init_source_nature = "Sine"
+        }
+        [
+            position = 8900, 8700
+            rotation = right
+        ]
+
+        component "core/Resistor" G07_Rpu_ref {
+            resistance = "R_pu"
+        }
+        [
+            position = 8160, 8000
+        ]
+
+        component "core/Capacitor" G07_Cc_ref {
+            capacitance = "C_c"
+        }
+        [
+            position = 8280, 8080
+            rotation = right
+        ]
+
+        component "core/Resistor" G07_Rc_ref {
+            resistance = "R_c"
+        }
+        [
+            position = 8280, 8152
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" G07_V_ref {
+        }
+        [
+            position = 8440, 8060
+            rotation = right
+        ]
+
+        component "core/Resistor" G07_Rpu_cond {
+            resistance = "R_pu"
+        }
+        [
+            position = 8160, 8240
+        ]
+
+        component "core/Capacitor" G07_C_res {
+            capacitance = "C_res"
+        }
+        [
+            position = 8280, 8320
+            rotation = right
+        ]
+
+        component "core/Resistor" G07_Rc_res {
+            resistance = "R_c"
+        }
+        [
+            position = 8280, 8392
+            rotation = right
+        ]
+
+        component "core/Capacitor" G07_C_2s {
+            capacitance = "C_2s"
+        }
+        [
+            position = 8400, 8320
+            rotation = right
+        ]
+
+        component "core/Capacitor" G07_C_1s {
+            capacitance = "C_1s"
+        }
+        [
+            position = 8520, 8472
+            rotation = right
+        ]
+
+        component "core/Resistor" G07_Rc_1s {
+            resistance = "R_c"
+        }
+        [
+            position = 8520, 8540
+            rotation = right
+        ]
+
+        component "core/Resistor" G07_R_sh {
+            resistance = "R_sh"
+        }
+        [
+            position = 8640, 8472
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" G07_V_out {
+        }
+        [
+            position = 8760, 8300
+            rotation = right
+        ]
+
+        component "core/Scope" Scope1 {
+            selected_signals = "[\'G07_V_ref\', \'G07_V_out\']"
+            signals_data = "{\"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true, \"signals_tooltips_enabled\": true}, \"signals\": {\"G07_V_ref\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#FF0000\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"G07_V_out\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#00CC00\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"4\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"5\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"6\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}}"
+            user_range_data = "{\"1\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"2\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"3\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"4\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"5\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"6\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}}"
+        }
+        [
+            position = 7736, 8548
+        ]
+
+        junction G07_J_hall pe
+        [
+            position = 8040, 8000
+        ]
+
+        junction G07_J_gnd pe
+        [
+            position = 8040, 8800
+        ]
+
+        junction G07_J_ruido pe
+        [
+            position = 8900, 8560
+        ]
+
+        junction G07_J_Lref pe
+        [
+            position = 8280, 8000
+        ]
+
+        junction G07_J_Lcond pe
+        [
+            position = 8280, 8240
+        ]
+
+        junction G07_J_out pe
+        [
+            position = 8400, 8240
+        ]
+
+        junction G07_J_blindagem pe
+        [
+            position = 8520, 8400
+        ]
+
+        connect G07_V_Hall.p_node G07_J_hall as G07_Conn23
+        connect G07_V_Hall.n_node G07_J_gnd as G07_Conn24
+        connect G07_V_ruido.p_node G07_J_ruido as G07_Conn25
+        connect G07_V_ruido.n_node G07_J_gnd as G07_Conn26
+        connect G07_J_hall G07_Rpu_ref.p_node as G07_Conn1
+        connect G07_J_hall G07_Rpu_cond.p_node as G07_Conn2
+        connect G07_Rpu_ref.n_node G07_J_Lref as G07_Conn3
+        connect G07_J_Lref G07_Cc_ref.p_node as G07_Conn4
+        connect G07_J_Lref G07_V_ref.p_node as G07_Conn5
+        connect G07_Cc_ref.n_node G07_Rc_ref.p_node as G07_Conn6
+        connect G07_Rc_ref.n_node G07_J_ruido as G07_Conn7
+        connect G07_V_ref.n_node G07_J_gnd as G07_Conn8
+        connect G07_Rpu_cond.n_node G07_J_Lcond as G07_Conn9
+        connect G07_J_Lcond G07_C_res.p_node as G07_Conn10
+        connect G07_J_Lcond G07_J_out as G07_Conn11
+        connect G07_J_out G07_C_2s.p_node as G07_Conn12
+        connect G07_J_out G07_V_out.p_node as G07_Conn13
+        connect G07_C_res.n_node G07_Rc_res.p_node as G07_Conn14
+        connect G07_Rc_res.n_node G07_J_ruido as G07_Conn15
+        connect G07_C_2s.n_node G07_J_blindagem as G07_Conn16
+        connect G07_J_blindagem G07_C_1s.p_node as G07_Conn17
+        connect G07_C_1s.n_node G07_Rc_1s.p_node as G07_Conn18
+        connect G07_Rc_1s.n_node G07_J_ruido as G07_Conn19
+        connect G07_J_blindagem G07_R_sh.p_node as G07_Conn20
+        connect G07_R_sh.n_node G07_J_gnd as G07_Conn21
+        connect G07_V_out.n_node G07_J_gnd as G07_Conn22
+    }
+
+    default {
+        "core/Capacitor" {
+            signal_access = "inherit"
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Voltage Source" {
+            sig_input = "False"
+            type = "signal generator"
+            param_set = "1phase"
+            parent_label = ""
+            dtsm_switch_name = ""
+            addr = "0"
+            spc_nb = "0"
+            execution_rate = "100e-6"
+            cpd_visible = "True"
+            enable_snb = "False"
+            snb_type = "R2"
+            R2 = "0.0"
+            L1 = "0.1"
+            override_signal_name = "False"
+            signal_name = ""
+            init_source_nature = "Constant"
+            init_const_value = "0.0"
+            init_rms_value = "0.0"
+            init_frequency = "50.0"
+            init_phase = "0.0"
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+
+    CODE model_init
+        # Numpy module is imported as 'np'
+        # Scipy module is imported as 'sp'
+        # The Schematic API is imported as 'mdl'
+        # To get the model file path, use 'mdl.get_model_file_path()'
+        # To print information to the console, use info()
+        
+        # ---- G07 - Teste 1: atenuacao do acoplamento capacitivo do ruido de chaveamento ----
+        f_pwm = 10000               # frequencia de chaveamento do modelo BLDC [Hz]
+        f_ruido = 10e3              # rodar com 10e3, 20e3 e 40e3 (faixa de chaveamento) [Hz]
+        A_ruido = 18                # amplitude do ruido [V] = Vs/2, Vs = 36 V (R42BLD30L3) - o sistema e linear
+        # ---- G07: cadeia Hall + blindagem eletrostatica (Aguirre, Secao 6.5, Fig. 6.21 e 6.26) ----
+        R_pu = 4.7e3                # pull-up / resistencia de saida do Hall [ohm]
+        C_c = 100e-12               # capacitancia parasita fase -> condutor do Hall, SEM blindagem [F] (Fig. 6.21)
+        R_c = 100                   # resistencia serie dos acoplamentos (estabilidade numerica) [ohm]
+        cobertura = 0.95            # fracao coberta pela blindagem (datasheet do cabo)
+        C_res = (1 - cobertura)*C_c # acoplamento residual fase -> condutor, COM blindagem [F]
+        C_1s = C_c                  # capacitancia fase -> blindagem [F] (C1 da Fig. 6.26)
+        C_2s = 100e-12              # capacitancia condutor -> blindagem [F] (datasheet do cabo, pF/m x comprimento)
+        R_sh = 0.1                  # resistencia da blindagem + ligacao ao terra (ponto unico) [ohm]
+        # ---- valores esperados (aparecem no console ao compilar) ----
+        w = 2*np.pi*f_ruido
+        Zr = R_c + 1/(1j*w*C_c)
+        Vref = A_ruido/Zr/(1/R_pu + 1/Zr)
+        Zres = R_c + 1/(1j*w*C_res); Z1 = R_c + 1/(1j*w*C_1s); Z2 = 1/(1j*w*C_2s)
+        Y = np.array([[1/R_pu + 1/Zres + 1/Z2, -1/Z2], [-1/Z2, 1/Z2 + 1/Z1 + 1/R_sh]])
+        Vout = np.linalg.solve(Y, np.array([A_ruido/Zres, A_ruido/Z1]))[0]
+        info("G07 esperado @ %.0f Hz: Vref = %.4f V | Vout = %.5f V | A = %.1f dB" % (f_ruido, abs(Vref), abs(Vout), 20*np.log10(abs(Vref/Vout))))
+    ENDCODE
+}
