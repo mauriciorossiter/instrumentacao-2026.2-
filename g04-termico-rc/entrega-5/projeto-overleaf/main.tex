@@ -1,0 +1,608 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{top=2.6cm,bottom=2.4cm,left=3cm,right=2cm}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{amsmath}
+\usepackage{booktabs,tabularx,array,longtable}
+\usepackage{siunitx}
+\sisetup{output-decimal-marker={,},group-separator={.},group-minimum-digits=4}
+\usepackage{xcolor}
+\definecolor{azul}{HTML}{164E8A}
+\definecolor{laranja}{HTML}{D97706}
+\definecolor{verde}{HTML}{047857}
+\definecolor{cinza}{HTML}{4B5563}
+\definecolor{fundoclaro}{HTML}{F3F6FA}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{float}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.5em}
+\pagestyle{plain}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+  pdftitle={Geração de dados para análise de desvio de zero e sensibilidade},
+  pdfauthor={Gabriela Pontes; Júlia Gonçalves; Plácido Cordeiro},
+  pdfsubject={Instrumentação Eletrônica --- Equipe 04}
+}
+
+\input{dados_derivados/resultados.tex}
+
+\newcommand{\arquivo}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\condum}{\texttt{condicao\_1}}
+\newcommand{\conddois}{\texttt{condicao\_2}}
+\newcommand{\simbolo}[1]{\ensuremath{#1}}
+\newcommand{\checkok}{\textcolor{verde}{\textbf{OK}}}
+
+\begin{document}
+
+\begin{titlepage}
+  \thispagestyle{empty}
+  \begin{center}
+    {\large UNIVERSIDADE FEDERAL DE ALAGOAS\par}
+    \vspace{0.25cm}
+    {\large INSTRUMENTAÇÃO ELETRÔNICA --- ECOM060\par}
+
+    \vfill
+
+    {\Large\bfseries GERAÇÃO DE DADOS EXPERIMENTAIS PARA ANÁLISE DE DESVIO DE ZERO E SENSIBILIDADE\par}
+    \vspace{0.55cm}
+    {\large Caracterização estática de um instrumento genérico no TyphoonSim\par}
+    \vspace{0.35cm}
+    {\normalsize Versão revisada em resposta ao parecer de 13 de setembro de 2026\par}
+
+    \vfill
+
+    \begin{tabular}{c}
+      Gabriela Pontes \\
+      Júlia Gonçalves \\
+      Plácido Cordeiro
+    \end{tabular}
+
+    \vfill
+
+    \begin{minipage}{0.78\textwidth}
+      \setstretch{1.2}
+      \small
+      Relatório técnico da Equipe 04 sobre a geração de duas curvas de calibração de faixa cheia para um instrumento com desvio de zero e sensibilidade, incluindo ruído de medição deliberado e preservação dos dados brutos.
+
+      \vspace{0.45cm}
+      Professor: Maurício Beltrão Rossiter
+    \end{minipage}
+
+    \vfill
+
+    Maceió -- AL\\
+    2026
+  \end{center}
+\end{titlepage}
+
+\pagenumbering{roman}
+
+\section*{Resumo}
+\addcontentsline{toc}{section}{Resumo}
+
+Este trabalho apresenta a geração e a validação de um conjunto de dados brutos para análise de duas características estáticas de instrumentos: desvio de zero e sensibilidade. Um instrumento genérico foi implementado no Typhoon Schematic Editor segundo o modelo $y=p+Kx+n$, no qual $p$ é o desvio de zero, $K$ é a sensibilidade e $n$ representa ruído de medição. A mesma entrada crescente, cobrindo a faixa nominal de \SIrange{0}{10}{\volt}, foi aplicada sob duas condições: $(p_1,K_1)=(\SI{0.5}{\volt},\,\num{1.2})$ e $(p_2,K_2)=(\SI{1.0}{\volt},\,\num{0.9})$. A captura executada em TyphoonSim/Virtual HIL produziu \TotalAmostras{} registros: \AmostrasUm{} na condição 1 e \AmostrasDois{} na condição 2. A regressão independente de cada condição resultou em $\widehat p_1=\BUm\pm\IncertezaBUm\,\si{\volt}$, $\widehat K_1=\KUm\pm\IncertezaKUm$, $\widehat p_2=\BDois\pm\IncertezaBDois\,\si{\volt}$ e $\widehat K_2=\KDois\pm\IncertezaKDois$, em que as parcelas após o sinal $\pm$ são incertezas padrão do ajuste. O hash do modelo, \HashModeloCurto, coincide com o arquivo de metadados. A execução analisada não provém do modo de autoteste do analisador. Os resultados evidenciam estatisticamente a mudança simultânea do intercepto e da inclinação, mantendo o ruído e todos os registros brutos.
+
+\noindent\textbf{Palavras-chave:} instrumento estático; desvio de zero; sensibilidade; curva de calibração; TyphoonSim; dados brutos.
+
+\section*{Nota sobre esta revisão}
+\addcontentsline{toc}{section}{Nota sobre esta revisão}
+
+Esta versão substitui a validação experimental da versão anteriormente avaliada. Todos os números, gráficos e conclusões foram recalculados a partir do CSV bruto entregue, com \TotalAmostras{} amostras e duas condições. Foram removidas as referências à execução de 65 amostras e ao hash divergente. A revisão também acrescenta as incertezas de $\widehat p$ e $\widehat K$, a comparação estatística entre condições e a confirmação explícita da origem dos dados.
+
+\clearpage
+\begingroup
+\small
+\tableofcontents
+\endgroup
+\clearpage
+\listoffigures
+\clearpage
+\listoftables
+
+\clearpage
+\pagenumbering{arabic}
+
+\section{Introdução}
+
+Um instrumento estático ideal associa a grandeza de entrada à indicação por uma relação conhecida e invariável. Em um instrumento real, a curva de calibração pode ser deslocada verticalmente e também pode mudar de inclinação. Esses efeitos são descritos, respectivamente, pelo desvio de zero e pela sensibilidade. A sensibilidade é a razão entre a variação da indicação e a variação correspondente da grandeza medida; o desvio de zero é a indicação não nula atribuível ao sistema quando a referência de entrada é zero \cite{vim2012}.
+
+Nesta atividade, a Equipe 04 ficou responsável por gerar dados que permitam reconhecer simultaneamente essas duas características. A exigência central é experimental: aplicar a mesma varredura de faixa cheia em duas condições distintas, registrar os pares entrada--saída, identificar cada condição e entregar os valores brutos com metadados suficientes para interpretação. Foi acrescentado ruído de medição de pequena amplitude para evitar dados artificialmente perfeitos.
+
+O presente relatório documenta o modelo, a implementação, o procedimento de aquisição e uma verificação posterior dos arquivos produzidos. A análise estatística aqui apresentada é derivada; ela não modifica nem substitui a tabela bruta entregue.
+
+\subsection{Objetivos}
+
+O objetivo geral é produzir duas curvas de calibração completas de um instrumento estático genérico em ambiente TyphoonSim. Especificamente, pretende-se:
+
+\begin{itemize}
+  \item representar matematicamente o desvio de zero, a sensibilidade e o ruído de medição;
+  \item aplicar a mesma faixa de entrada sob duas condições identificáveis;
+  \item exportar tempo, referência, indicação e condição, sem pré-processamento;
+  \item verificar cobertura, integridade, monotonicidade e coerência física dos registros;
+  \item estimar o intercepto e a inclinação de cada curva somente para demonstrar que os efeitos foram observados.
+\end{itemize}
+
+\section{Requisitos experimentais e estratégia adotada}
+
+Os requisitos foram interpretados como critérios de geração e entrega, resumidos na Tabela~\ref{tab:requisitos}. O conjunto principal é uma única tabela da equipe contendo as duas condições, acompanhada de uma tabela separada de metadados. Essa estrutura mantém cada amostra vinculada à sua condição sem criar tabelas concorrentes.
+
+\begin{table}[H]
+  \centering
+  \caption{Requisitos da atividade e evidências produzidas.}
+  \label{tab:requisitos}
+  \small
+  \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.34\textwidth} X c}
+    \toprule
+    Requisito & Evidência & Situação \\
+    \midrule
+    mesma varredura de faixa cheia em duas condições & coluna \texttt{condicao} e coberturas de aproximadamente \SIrange{0}{10}{\volt} em ambas & \checkok \\
+    duas curvas de calibração completas & \AmostrasUm{} pontos na condição 1 e \AmostrasDois{} na condição 2 & \checkok \\
+    incerteza dos parâmetros ajustados & $s(\widehat p)$ e $s(\widehat K)$ calculados separadamente para cada condição & \checkok \\
+    rastreabilidade da execução & origem, data, hash do modelo e hashes dos CSVs conferidos & \checkok \\
+    ruído de medição deliberado & dispersão residual preservada, sem saída perfeitamente colinear & \checkok \\
+    dados brutos sem pré-processamento & CSV contém leituras diretas dos probes; metadado declara \texttt{nenhum} & \checkok \\
+    identificação e unidades & cabeçalhos, rótulos de condição e metadados em volts & \checkok \\
+    tabela única em CSV ou XLSX e metadados separados & dois arquivos CSV anexos ao projeto & \checkok \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\section{Fundamentação e modelagem}
+
+\subsection{Característica estática}
+
+Para cada condição $c$, o instrumento é descrito por
+
+\begin{equation}
+  y_i = p_c + K_c x_i + n_i,
+  \label{eq:modelo}
+\end{equation}
+
+em que $x_i$ é a referência aplicada, $y_i$ é a indicação, $p_c$ é o desvio de zero, $K_c$ é a sensibilidade estática e $n_i$ é o ruído associado à amostra $i$. No código do esquemático, o mesmo parâmetro aparece com o nome \texttt{b}; portanto, $p\equiv b$. Como $x$ e $y$ estão em volts, $p_c$ tem unidade de volt e $K_c$ é expresso em \si{\volt\per\volt}, numericamente adimensional.
+
+O parâmetro $p_c$ controla o intercepto da reta. Alterá-lo desloca a curva verticalmente sem, isoladamente, alterar sua inclinação. O parâmetro $K_c$ controla a variação da indicação por unidade de entrada. Nesta atividade ambos variam entre condições, permitindo observar uma curva que sobe mais rapidamente e outra que parte de um nível maior, porém tem menor inclinação.
+
+\subsection{Condições escolhidas}
+
+Os parâmetros internos do modelo são apresentados na Tabela~\ref{tab:parametros}. A condição 1 mantém os valores do estudo anterior da equipe; a condição 2 modifica simultaneamente o desvio de zero e a sensibilidade.
+
+\begin{table}[H]
+  \centering
+  \caption{Parâmetros programados no modelo.}
+  \label{tab:parametros}
+  \begin{tabular}{lccc}
+    \toprule
+    Condição & $p_c$ [V] & $K_c$ [V/V] & Equação sem ruído \\
+    \midrule
+    \condum & \num{0.5} & \num{1.2} & $y=0{,}5+1{,}2x$ \\
+    \conddois & \num{1.0} & \num{0.9} & $y=1{,}0+0{,}9x$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Não foi aplicada saturação à saída, pois a faixa nominal informada para a atividade refere-se à entrada. Assim, na condição 1 a indicação pode alcançar aproximadamente \SI{12.5}{\volt} quando $x=\SI{10}{\volt}$; esse resultado decorre diretamente de $p_1$ e $K_1$ e não caracteriza falha de aquisição.
+
+\subsection{Diagrama funcional}
+
+A Figura~\ref{fig:diagrama} separa fonte, seleção de condição, característica estática, ruído e registro. O ruído é adicionado após a função estática, portanto a tabela preserva a indicação efetivamente observada, e não apenas a reta teórica.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+      >=Latex,
+      node distance=0.72cm and 0.66cm,
+      bloco/.style={draw=azul,rounded corners=2pt,fill=azul!5,minimum height=1.25cm,text width=2.35cm,align=center,font=\small},
+      param/.style={draw=laranja,rounded corners=2pt,fill=laranja!6,minimum height=0.9cm,text width=2.4cm,align=center,font=\footnotesize},
+      seta/.style={->,thick,draw=azul},
+      parseta/.style={->,thick,draw=laranja}
+    ]
+    \node[bloco] (rampa) {Rampa de referência\\$x:\,0\rightarrow10$ V};
+    \node[bloco,right=of rampa] (cond) {Seletor de condição\\$c\in\{1,2\}$};
+    \node[bloco,right=of cond] (estatica) {Característica estática\\$p_c+K_cx$};
+    \node[bloco,right=of estatica] (ruido) {Ruído de medição\\$+\,n$};
+    \node[bloco,right=of ruido] (probes) {Probes e exportação\\$t,x,y,c$};
+    \node[param,below=of estatica] (pars) {$p_1,K_1$ ou $p_2,K_2$};
+    \draw[seta] (rampa) -- (cond);
+    \draw[seta] (cond) -- node[above,font=\scriptsize] {$x,c$} (estatica);
+    \draw[seta] (estatica) -- node[above,font=\scriptsize] {$y_0$} (ruido);
+    \draw[seta] (ruido) -- node[above,font=\scriptsize] {$y$} (probes);
+    \draw[parseta] (pars) -- (estatica);
+  \end{tikzpicture}
+  \caption{Diagrama de blocos da geração dos dados da Equipe 04.}
+  \label{fig:diagrama}
+\end{figure}
+
+\section{Implementação no Typhoon e aquisição}
+
+\subsection{Modelo de simulação}
+
+O esquemático \arquivo{Equipe_04_Geracao_Dados_DesvioZeroSensibilidade.tse} utiliza componentes de processamento de sinais compatíveis com TyphoonSim. A fonte gera duas rampas crescentes, uma para cada condição. Uma C Function calcula $p_c+K_cx$ e outra adiciona ruído pseudoaleatório determinístico de amplitude nominal \SI{20}{\milli\volt}. O estado do ruído é atualizado por um mapa logístico, tornando a sequência reprodutível sem criar uma reta ideal.
+
+Os probes disponibilizados à API são \texttt{x\_referencia}, \texttt{y\_instrumento}, \texttt{condicao\_id} e \texttt{experimento\_concluido}. Os três primeiros originam as quatro colunas do CSV; o último atua como informação de estado para a execução.
+
+\subsection{Procedimento de aquisição}
+
+O procedimento executado foi:
+
+\begin{enumerate}
+  \item compilar o esquemático no Schematic Editor;
+  \item carregar o modelo compilado em modo TyphoonSim/Virtual HIL;
+  \item iniciar a simulação e ler os probes pela API;
+  \item manter cada leitura recebida, associando-a à condição corrente;
+  \item encerrar após a segunda condição atingir o limite superior da faixa;
+  \item gravar o CSV bruto e, separadamente, o CSV de metadados.
+\end{enumerate}
+
+O intervalo solicitado à API foi \SI{20}{\milli\second}. Os carimbos de tempo revelam mediana de aproximadamente \IntervaloPersistido\,ms entre linhas persistidas, pois a taxa efetiva também inclui o custo de cada leitura no Virtual HIL e a comunicação com a API. Isso não altera os valores medidos nem compromete a cobertura: cada rampa dura aproximadamente \SI{100}{\second} e apresenta amostras distribuídas por toda a faixa.
+
+\subsection{Rastreabilidade e exclusão do autoteste}
+
+A validação deste relatório usa exclusivamente o CSV bruto entregue. Segundo os metadados correspondentes, a aquisição ocorreu em \DataAquisicao, com origem declarada como \OrigemAquisicao. O modelo executado é o arquivo TSE da Equipe 04, cujo SHA-256 começa por \HashModeloCurto. Esse prefixo coincide com o hash completo registrado no arquivo de metadados e com o modelo anexado ao pacote de reprodutibilidade.
+
+O modo de autoteste do analisador não foi utilizado para produzir os números, gráficos ou tabelas deste relatório. As \TotalAmostras{} linhas analisadas foram lidas dos probes do modelo compilado e carregado no Virtual HIL. Não houve geração local de linhas pelo analisador, substituição por valores teóricos nem reutilização da execução antiga de 65 amostras. Essa distinção é importante: o ruído é um bloco deliberado do instrumento simulado e foi capturado pelos probes, enquanto o autoteste seria uma fonte alternativa de dados fora da execução VHIL.
+
+\subsection{Preservação dos dados}
+
+O arquivo bruto possui exatamente as colunas
+
+\begin{center}
+  \texttt{tempo, x\_referencia, y\_instrumento, condicao}.
+\end{center}
+
+Não foram aplicadas média, filtragem, suavização, remoção de pontos, interpolação ou ajuste antes da gravação. Os arquivos na pasta \arquivo{dados/} são cópias byte a byte dos anexos recebidos. Seus identificadores SHA-256, abreviados a 16 caracteres, são \HashDados{} para os dados e \HashMetadados{} para os metadados.
+
+\section{Validação experimental no VHIL}
+
+\subsection{Integridade e cobertura}
+
+Após preservar os originais, foi realizada uma auditoria reprodutível. Verificaram-se o cabeçalho, os campos numéricos, os rótulos, a contagem de linhas, a ordem crescente da referência e os extremos alcançados. A Tabela~\ref{tab:cobertura} resume os resultados.
+
+\begin{table}[H]
+  \centering
+  \caption{Cobertura observada nos dados brutos.}
+  \label{tab:cobertura}
+  \begin{tabular}{lrrrr}
+    \toprule
+    Condição & Amostras & $x_{\min}$ [V] & $x_{\max}$ [V] & Duração [s] \\
+    \midrule
+    \condum & \AmostrasUm & \XMinUm & \XMaxUm & \DuracaoUm \\
+    \conddois & \AmostrasDois & \XMinDois & \XMaxDois & \DuracaoDois \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Não existem campos numéricos ausentes, rótulos diferentes dos dois esperados ou inversões da rampa dentro de uma condição. A pequena diferença entre os mínimos e zero decorre do instante da primeira leitura, não de recorte posterior.
+
+\subsection{Ajuste linear e incertezas}
+
+Para quantificar a característica observada, ajustou-se a reta
+
+\begin{equation}
+  \widehat y_i=\widehat p+\widehat Kx_i
+\end{equation}
+
+por mínimos quadrados ordinários em cada condição. As estimativas são
+
+\begin{align}
+  \widehat K &= \frac{\sum_i(x_i-\bar{x})(y_i-\bar{y})}{\sum_i(x_i-\bar{x})^2}, \\
+  \widehat p &= \bar{y}-\widehat K\bar{x}.
+\end{align}
+
+As incertezas padrão dos coeficientes foram calculadas com as expressões usuais do ajuste linear por mínimos quadrados \cite{bentley2005}. Definindo $e_i=y_i-\widehat y_i$, $N$ como o número de amostras e $S_{xx}=\sum_i(x_i-\bar{x})^2$, obtém-se
+
+\begin{align}
+  s^2 &= \frac{\sum_i e_i^2}{N-2},
+  \label{eq:variancia_residual}\\
+  s(\widehat K) &= \frac{s}{\sqrt{S_{xx}}},
+  \label{eq:incerteza_k}\\
+  s(\widehat p) &= s\sqrt{\frac{1}{N}+\frac{\bar{x}^{,2}}{S_{xx}}}.
+  \label{eq:incerteza_p}
+\end{align}
+
+Essas expressões tratam a dispersão residual como homocedástica e as amostras como independentes. Para apresentar intervalos bilaterais de aproximadamente \SI{95}{\percent}, empregou-se $\widehat\theta\pm t_{0{,}975;N-2}s(\widehat\theta)$, com $t\simeq1{,}97$ para os tamanhos amostrais deste ensaio. O coeficiente de determinação $R^2$ e a RMSE permanecem como diagnósticos complementares. Todos os cálculos foram feitos depois da preservação dos CSVs e geram apenas arquivos em \arquivo{dados_derivados/}.
+
+\subsection{Comparação estatística entre condições}
+
+Para verificar se as mudanças de desvio de zero e sensibilidade são distinguíveis, foram calculadas
+
+\begin{align}
+  \Delta p &= \widehat p_2-\widehat p_1,
+  &s(\Delta p)&=\sqrt{s^2(\widehat p_1)+s^2(\widehat p_2)},\\
+  \Delta K &= \widehat K_2-\widehat K_1,
+  &s(\Delta K)&=\sqrt{s^2(\widehat K_1)+s^2(\widehat K_2)}.
+\end{align}
+
+Como as duas varreduras foram realizadas em condições separadas, a combinação quadrática é apropriada para a comparação. Além dos intervalos de confiança, foram avaliadas as razões $|\Delta p|/s(\Delta p)$ e $|\Delta K|/s(\Delta K)$. Valores muito maiores que dois indicam que a diferença observada não pode ser explicada pela incerteza padrão do ajuste.
+
+\subsection{Síntese completa da validação corrigida}
+
+A evidência validada contém \TotalAmostras{} amostras reais da execução VHIL: \AmostrasUm{} em \condum, na faixa $x\in[\XMinUm;\,\XMaxUm]$ V, e \AmostrasDois{} em \conddois, na faixa $x\in[\XMinDois;\,\XMaxDois]$ V. Os resultados são $(\widehat p_1,\widehat K_1)=(\BUm,\KUm)$ e $(\widehat p_2,\widehat K_2)=(\BDois,\KDois)$, com incertezas apresentadas na Seção~\ref{sec:parametros_estimados}. A fonte é \OrigemAquisicao, o hash do modelo começa por \HashModeloCurto{} e a execução não é proveniente do autoteste sintético. Esta síntese substitui integralmente os valores de 65 amostras e o hash divergente da versão anteriormente avaliada.
+
+\section{Resultados}
+
+\subsection{Varreduras registradas}
+
+A Figura~\ref{fig:temporais} apresenta as duas aquisições. Em ambas, $x$ percorre a faixa inteira de forma crescente. A diferença de inclinação e intercepto se torna visível na separação entre entrada e indicação.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=0.96\textwidth,height=6.1cm,
+      xlabel={Tempo decorrido na condição [s]},ylabel={Tensão [V]},
+      xmin=0,xmax=101,ymin=0,ymax=13,
+      grid=major,legend style={at={(0.02,0.98)},anchor=north west,draw=none,fill=white},
+      title={Condição 1: $p_1=0{,}5$ V e $K_1=1{,}2$}
+    ]
+      \addplot[cinza,thick] table[x=tempo_decorrido,y=x_referencia,col sep=comma] {dados_derivados/condicao_1_ajuste.csv};
+      \addlegendentry{$x$ --- referência}
+      \addplot[azul,thick] table[x=tempo_decorrido,y=y_instrumento,col sep=comma] {dados_derivados/condicao_1_ajuste.csv};
+      \addlegendentry{$y$ --- instrumento}
+    \end{axis}
+  \end{tikzpicture}
+
+  \vspace{0.35cm}
+
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=0.96\textwidth,height=6.1cm,
+      xlabel={Tempo decorrido na condição [s]},ylabel={Tensão [V]},
+      xmin=0,xmax=101,ymin=0,ymax=11,
+      grid=major,legend style={at={(0.02,0.98)},anchor=north west,draw=none,fill=white},
+      title={Condição 2: $p_2=1{,}0$ V e $K_2=0{,}9$}
+    ]
+      \addplot[cinza,thick] table[x=tempo_decorrido,y=x_referencia,col sep=comma] {dados_derivados/condicao_2_ajuste.csv};
+      \addlegendentry{$x$ --- referência}
+      \addplot[laranja,thick] table[x=tempo_decorrido,y=y_instrumento,col sep=comma] {dados_derivados/condicao_2_ajuste.csv};
+      \addlegendentry{$y$ --- instrumento}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Séries temporais exportadas do TyphoonSim.}
+  \label{fig:temporais}
+\end{figure}
+
+\subsection{Curvas de calibração}
+
+A Figura~\ref{fig:calibracao} reúne as duas curvas no plano entrada--saída. Os pontos são as amostras brutas e as linhas contínuas são ajustes derivados. A condição 1 apresenta maior inclinação; a condição 2 apresenta maior intercepto.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=0.96\textwidth,height=9.2cm,
+      xlabel={Entrada de referência, $x$ [V]},ylabel={Saída do instrumento, $y$ [V]},
+      xmin=0,xmax=10.2,ymin=0,ymax=13,
+      grid=major,
+      legend style={at={(0.02,0.98)},anchor=north west,draw=none,fill=white},
+      legend cell align=left
+    ]
+      \addplot[only marks,mark=*,mark size=0.75pt,azul,opacity=0.55]
+        table[x=x_referencia,y=y_instrumento,col sep=comma] {dados_derivados/condicao_1_ajuste.csv};
+      \addlegendentry{Condição 1 --- dados brutos}
+      \addplot[azul,very thick,domain=0:10,samples=2] {\BUmNum+\KUmNum*x};
+      \addlegendentry{$\widehat y=\BUm+\KUm x$}
+      \addplot[only marks,mark=square*,mark size=0.7pt,laranja,opacity=0.55]
+        table[x=x_referencia,y=y_instrumento,col sep=comma] {dados_derivados/condicao_2_ajuste.csv};
+      \addlegendentry{Condição 2 --- dados brutos}
+      \addplot[laranja,very thick,domain=0:10,samples=2] {\BDoisNum+\KDoisNum*x};
+      \addlegendentry{$\widehat y=\BDois+\KDois x$}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Curvas de calibração e ajustes lineares por condição.}
+  \label{fig:calibracao}
+\end{figure}
+
+\subsection{Parâmetros estimados e incertezas}
+\label{sec:parametros_estimados}
+
+Os resultados numéricos constam na Tabela~\ref{tab:ajustes}. O ajuste recupera os parâmetros programados com diferenças inferiores a \SI{0.6}{\percent}. As incertezas não foram definidas por uma tolerância fixa: elas resultam das Equações~\eqref{eq:variancia_residual}--\eqref{eq:incerteza_p} aplicadas separadamente a cada condição. O valor de $R^2$ muito próximo da unidade confirma a predominância da característica linear, sem implicar ausência de ruído.
+
+\begin{table}[H]
+  \centering
+  \caption{Estimativas e incertezas padrão dos ajustes lineares.}
+  \label{tab:ajustes}
+  \small
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Condição & $N$ & $\widehat p$ [V] & $s(\widehat p)$ [V] & $\widehat K$ & $s(\widehat K)$ & $R^2$ \\
+    \midrule
+    \condum & \AmostrasUm & \BUm & \IncertezaBUm & \KUm & \IncertezaKUm & \RDoisUm \\
+    \conddois & \AmostrasDois & \BDois & \IncertezaBDois & \KDois & \IncertezaKDois & \RDoisDois \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Os intervalos de aproximadamente \SI{95}{\percent} são $[\ICBUmInf;\,\ICBUmSup]$ V para $p_1$, $[\ICKUmInf;\,\ICKUmSup]$ para $K_1$, $[\ICBDoisInf;\,\ICBDoisSup]$ V para $p_2$ e $[\ICKDoisInf;\,\ICKDoisSup]$ para $K_2$. Na condição 1, as diferenças relativas do intercepto e da sensibilidade em relação aos valores programados foram, respectivamente, \BUmErro\% e \KUmErro\%. Na condição 2, foram \BDoisErro\% e \KDoisErro\%.
+
+As diferenças entre condições são $\Delta p=\DeltaB\pm\IncertezaDeltaB$ V e $\Delta K=\DeltaK\pm\IncertezaDeltaK$, com incertezas padrão combinadas. Elas correspondem, respectivamente, a \RazaoDeltaB{} e \RazaoDeltaK{} incertezas padrão. Os intervalos de confiança também não se sobrepõem. Portanto, tanto a mudança de desvio de zero quanto a mudança de sensibilidade são estatisticamente distinguíveis com ampla margem.
+
+\subsection{Ruído preservado}
+
+A Figura~\ref{fig:residuos} mostra os resíduos em função da entrada. Não se observa tendência crescente ou curvatura sistemática relevante; os pontos permanecem ao redor de zero em toda a faixa. Isso é coerente com um modelo linear acrescido de ruído aditivo.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=0.96\textwidth,height=8.0cm,
+      xlabel={Entrada de referência, $x$ [V]},ylabel={Resíduo [mV]},
+      xmin=0,xmax=10.2,ymin=-28,ymax=28,
+      grid=major,
+      legend style={at={(0.02,0.98)},anchor=north west,draw=none,fill=white}
+    ]
+      \addplot[cinza,dashed,domain=0:10.2,samples=2] {0};
+      \addplot[only marks,mark=*,mark size=0.8pt,azul,opacity=0.68]
+        table[x=x_referencia,y=residuo_mV,col sep=comma] {dados_derivados/condicao_1_ajuste.csv};
+      \addlegendentry{Condição 1}
+      \addplot[only marks,mark=square*,mark size=0.75pt,laranja,opacity=0.65]
+        table[x=x_referencia,y=residuo_mV,col sep=comma] {dados_derivados/condicao_2_ajuste.csv};
+      \addlegendentry{Condição 2}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Resíduos das duas calibrações, calculados sem modificar o CSV bruto.}
+  \label{fig:residuos}
+\end{figure}
+
+\begin{table}[H]
+  \centering
+  \caption{Dispersão residual observada.}
+  \label{tab:residuos}
+  \begin{tabular}{lrrr}
+    \toprule
+    Condição & Desvio padrão [mV] & Mínimo [mV] & Máximo [mV] \\
+    \midrule
+    \condum & \DesvioResiduoUm & \ResiduoMinUm & \ResiduoMaxUm \\
+    \conddois & \DesvioResiduoDois & \ResiduoMinDois & \ResiduoMaxDois \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Discussão}
+
+Os dados atendem ao propósito de distinguir desvio de zero e sensibilidade. A passagem da condição 1 para a condição 2 eleva o intercepto de aproximadamente \SI{0.5}{\volt} para \SI{1.0}{\volt}, ao mesmo tempo em que reduz a sensibilidade de aproximadamente \num{1.2} para \num{0.9}. Portanto, as retas não são paralelas e tampouco compartilham o mesmo intercepto. A observação conjunta das duas calibrações permite identificar os dois efeitos sem confundi-los.
+
+Essa distinção não depende somente da inspeção visual. A mudança estimada do desvio de zero é $\Delta p=\DeltaB$ V, com $s(\Delta p)=\IncertezaDeltaB$ V, enquanto a mudança de sensibilidade é $\Delta K=\DeltaK$, com $s(\Delta K)=\IncertezaDeltaK$. As razões sinal--incerteza são \RazaoDeltaB{} e \RazaoDeltaK, muito superiores ao limiar aproximado de dois. Além disso, os intervalos de \SI{95}{\percent} das duas condições não se sobrepõem para nenhum dos parâmetros. Assim, a translação vertical associada a $p$ e a rotação associada a $K$ são estatisticamente distinguíveis.
+
+A condição 1 produz $y>x$ por toda a faixa registrada, enquanto a condição 2 inicia acima da referência e se aproxima dela à medida que $x$ cresce. Pela equação sem ruído da condição 2, $y=x$ em $x=\SI{10}{\volt}$, exatamente o comportamento sugerido pelos últimos pontos. Essa concordância qualitativa reforça a interpretação física dos parâmetros.
+
+Os resíduos têm ordem de dezenas de milivolts, compatível com a pequena perturbação deliberada. Eles não foram removidos da entrega. A regressão do relatório utiliza todas as amostras e serve apenas para verificar a estrutura do conjunto. Em eventual atividade posterior de estimação ou calibração, os estudantes poderão aplicar seus próprios métodos diretamente aos mesmos registros brutos.
+
+Quanto à amostragem, o intervalo de \SI{20}{\milli\second} informado nos metadados é o intervalo nominal solicitado entre leituras. A temporização observada nas linhas é maior porque o tempo registrado é de parede e inclui a chamada de leitura do Virtual HIL. Como a atividade busca curvas estáticas e não resposta dinâmica, a densidade obtida é adequada: são mais de 240 pontos por condição, sem lacunas de faixa ou inversões.
+
+\section{Arquivos de entrega e reprodutibilidade}
+
+\subsection{Entrega corrigida}
+
+Após o parecer, a submissão corrigida deve manter a tabela bruta e os metadados e acrescentar o relatório refeito. Assim, os arquivos principais a serem enviados ao professor são:
+
+\begin{enumerate}
+  \item \arquivo{Equipe_04_DesvioZeroSensibilidade.csv};
+  \item \arquivo{Equipe_04_DesvioZeroSensibilidade_metadados.csv};
+  \item \arquivo{Relatorio_Equipe_04_DesvioZeroSensibilidade_REVISAO.pdf}.
+\end{enumerate}
+
+O modelo \texttt{.tse} e o script de aquisição são anexados ao pacote completo como evidência de reprodutibilidade e para permitir a conferência do hash, ainda que não substituam os três arquivos principais.
+
+\subsection{Estrutura do projeto Overleaf}
+
+\begin{table}[H]
+  \centering
+  \caption{Conteúdo da pasta do relatório.}
+  \label{tab:arquivos}
+  \small
+  \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.39\textwidth} X}
+    \toprule
+    Caminho & Finalidade \\
+    \midrule
+    \arquivo{main.tex} & documento principal, pronto para compilação \\
+    \path{dados/Equipe_04_DesvioZeroSensibilidade.csv} & dados brutos, preservados \\
+    \path{dados/Equipe_04_DesvioZeroSensibilidade_metadados.csv} & metadados da aquisição \\
+    \path{dados_derivados/condicao_1_ajuste.csv} & valores auxiliares do ajuste e resíduos \\
+    \path{dados_derivados/condicao_2_ajuste.csv} & valores auxiliares do ajuste e resíduos \\
+    \path{dados_derivados/resultados.tex} & macros numéricas importadas pelo relatório \\
+    \path{dados_derivados/validacao.json} & resumo reprodutível da auditoria \\
+    \path{modelo/Equipe_04_Geracao_Dados_DesvioZeroSensibilidade.tse} & modelo executado, com hash igual ao dos metadados \\
+    \path{modelo/executar_geracao_dados_equipe_04.py} & automação da captura VHIL \\
+    \path{CORRECOES_DO_PARECER.md} & mapa das correções solicitadas \\
+    \path{README.md} & instruções de importação e compilação \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Os arquivos derivados estão claramente separados dos originais. Para reproduzir o PDF no Overleaf, basta carregar o ZIP do projeto e selecionar \arquivo{main.tex} como documento principal; não há dependência de caminhos externos.
+
+\clearpage
+\section{Conclusão}
+
+Foi validado um conjunto de dados adequado à análise de desvio de zero e sensibilidade. As duas condições cobrem a faixa nominal de aproximadamente \SIrange{0}{10}{\volt}, estão explicitamente rotuladas e contêm \AmostrasUm{} e \AmostrasDois{} amostras, respectivamente. Os valores foram exportados do TyphoonSim sem pré-processamento e acompanhados de metadados independentes. A execução documentada corresponde ao timestamp dos metadados, não veio do autoteste do analisador e está vinculada ao modelo pelo hash \HashModeloCurto.
+
+Os ajustes recuperaram $(\widehat p_1,\widehat K_1)=(\BUm,\KUm)$ e $(\widehat p_2,\widehat K_2)=(\BDois,\KDois)$. As incertezas padrão foram $s(\widehat p_1)=\IncertezaBUm$ V, $s(\widehat K_1)=\IncertezaKUm$, $s(\widehat p_2)=\IncertezaBDois$ V e $s(\widehat K_2)=\IncertezaKDois$. As diferenças entre condições equivalem a mais de 200 incertezas padrão para $p$ e mais de 700 para $K$, demonstrando que o deslocamento do intercepto e a mudança da inclinação são estatisticamente distinguíveis. Esta versão corrige a contagem, a faixa, o hash e a origem da evidência apontados no parecer.
+
+\clearpage
+\appendix
+\section{Metadados da aquisição}
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.41\textwidth}>{\raggedright\arraybackslash}p{0.51\textwidth}}
+  \caption{Conteúdo do arquivo de metadados entregue.}\label{tab:metadados}\\
+  \toprule
+  Campo & Valor \\
+  \midrule
+  \endfirsthead
+  \toprule
+  Campo & Valor \\
+  \midrule
+  \endhead
+  nome da equipe & Equipe 04 --- Gabriela Pontes; Julia Goncalves; Placido Cordeiro \\
+  característica modelada & Desvio de zero e de sensibilidade \\
+  unidade de $x$ & V \\
+  unidade de $y$ & V \\
+  faixa nominal & 0 a 10 V \\
+  condições & \condum; \conddois \\
+  origem dos dados & TyphoonSim/Virtual HIL \\
+  pré-processamento & nenhum \\
+  intervalo nominal de amostragem & 20 ms \\
+  amostras na condição 1 & \AmostrasUm \\
+  amostras na condição 2 & \AmostrasDois \\
+  data e hora da aquisição & 2026-09-09T11:20:37-03:00 \\
+  modelo TSE & \path{Equipe_04_Geracao_Dados_DesvioZeroSensibilidade.tse} \\
+  SHA-256 do modelo & \texttt{d5ae377b7e2f7c4b465851493d576e512}\newline\texttt{171f995601fe02f383eab36d0747c69} \\
+  \bottomrule
+\end{longtable}
+
+\section{Amostras de conferência}
+
+A Tabela~\ref{tab:amostras} reproduz oito linhas das extremidades das duas varreduras. Ela é apenas uma visualização abreviada; o CSV anexo contém as \TotalAmostras{} linhas completas.
+
+\begin{table}[H]
+  \centering
+  \caption{Amostras selecionadas do arquivo bruto.}
+  \label{tab:amostras}
+  \small
+  \begin{tabular}{rrrrl}
+    \toprule
+    Tempo [s] & $x$ [V] & $y$ [V] & & Condição \\
+    \midrule
+    $1{,}0489$ & $0{,}1210$ & $0{,}630927$ && \condum \\
+    $1{,}3544$ & $0{,}1630$ & $0{,}678579$ && \condum \\
+    $100{,}0791$ & $9{,}9490$ & $12{,}445770$ && \condum \\
+    $100{,}4504$ & $9{,}9900$ & $12{,}469419$ && \condum \\
+    $100{,}7099$ & $0{,}0310$ & $1{,}016956$ && \conddois \\
+    $101{,}0191$ & $0{,}0720$ & $1{,}071697$ && \conddois \\
+    $200{,}2568$ & $9{,}9750$ & $9{,}987447$ && \conddois \\
+    $200{,}7025$ & $10{,}0000$ & $10{,}007343$ && \conddois \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\clearpage
+\begin{thebibliography}{9}
+
+\bibitem{vim2012}
+JOINT COMMITTEE FOR GUIDES IN METROLOGY.
+\textit{International Vocabulary of Metrology --- Basic and General Concepts and Associated Terms (VIM)}.
+3. ed. JCGM 200:2012, 2012.
+
+\bibitem{bentley2005}
+BENTLEY, J. P.
+\textit{Principles of Measurement Systems}.
+4. ed. Harlow: Pearson, 2005.
+
+\bibitem{typhoon}
+TYPHOON HIL.
+\textit{Typhoon HIL Control Center Documentation}.
+Documentação técnica do Schematic Editor, TyphoonSim e HIL API.
+
+\end{thebibliography}
+
+\end{document}

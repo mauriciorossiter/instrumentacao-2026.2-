@@ -1,0 +1,336 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{lmodern,microtype}
+\usepackage{geometry}
+\geometry{top=2.4cm,bottom=2.4cm,left=2.8cm,right=2.4cm}
+\usepackage{setspace}
+\setstretch{1.18}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,tabularx,array}
+\usepackage{siunitx}
+\sisetup{output-decimal-marker={,}}
+\usepackage{xcolor}
+\definecolor{azul}{HTML}{164E8A}
+\definecolor{laranja}{HTML}{B45309}
+\definecolor{verde}{HTML}{047857}
+\definecolor{vermelho}{HTML}{B91C1C}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit}
+\usepackage{pgfplots}
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{compat=1.18}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.5em}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Equipe 04 - Modulacao em amplitude - Capitulo 5},pdfauthor={Gabriela Pontes; Julia Goncalves; Placido Cordeiro}}
+\newif\ifcapturavhil
+\IfFileExists{resultados_vhil/medidas.tex}{\capturavhiltrue}{\capturavhilfalse}
+\newcommand{\arquivo}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\statuscaptura}{\ifcapturavhil Resultados experimentais VHIL incluídos\else Prévia técnica: captura VHIL ainda não incorporada\fi}
+
+\begin{document}
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{center}
+{\large UNIVERSIDADE FEDERAL DE ALAGOAS\par}
+\vspace{0.15cm}
+{\large INSTRUMENTAÇÃO ELETRÔNICA -- ECOM060\par}
+\vfill
+{\LARGE\bfseries MODULAÇÃO EM AMPLITUDE\par}
+\vspace{0.2cm}
+{\Large Equipe 04 -- Capítulo 5, seção 5.2\par}
+\vspace{0.35cm}
+{\large Teoria, implementação no TyphoonSim e análise espectral\par}
+\vspace{0.8cm}
+{\normalsize\color{\ifcapturavhil verde\else vermelho\fi}\bfseries\statuscaptura\par}
+\vfill
+Gabriela Pontes\\
+Júlia Gonçalves\\
+Plácido Cordeiro
+\vfill
+\begin{minipage}{0.76\textwidth}
+\small
+Relatório da atividade distribuída do Capítulo 5 de \emph{Fundamentos de Instrumentação}, de Luís Antonio Aguirre. O estudo implementa modulação AM em TyphoonSim/Virtual HIL e compara profundidades de modulação abaixo, no limite e acima da unidade.
+\par\medskip
+Professor: Maurício Beltrão Rossiter
+\end{minipage}
+\vfill
+Maceió -- AL\\2026
+\end{center}
+\end{titlepage}
+
+\pagenumbering{roman}
+\section*{Resumo}
+Este relatório apresenta a modulação em amplitude (AM) de portadora presente para um tom modulante. Partindo de uma mensagem senoidal normalizada de \SI{25}{\hertz} e de uma portadora de \SI{500}{\hertz}, demonstra-se que o produto $s(t)=[1+\mu m(t)]c(t)$ produz uma linha espectral central e duas bandas laterais em \SI{475}{\hertz} e \SI{525}{\hertz}. Foram definidos três índices, $\mu=0{,}5$, $1{,}0$ e $1{,}5$, para examinar submodulação, modulação crítica e sobremodulação. As curvas analíticas permitem antecipar a amplitude das linhas e a inversão de fase quando a envoltória assinada fica negativa. O modelo TyphoonSim e a aquisição automática de cinco probes foram preparados com passo de \SI{100}{\micro\second}.
+\ifcapturavhil
+ A seção experimental usa a captura VHIL anexada, com tabela, formas de onda, FFT e hashes de rastreabilidade.
+\else
+ Esta versão contém somente previsões analíticas: não havia Typhoon HIL instalado no computador de autoria, portanto a captura VHIL precisa ser executada antes da entrega ao professor. Nenhuma curva teórica é apresentada como medição.
+\fi
+
+\noindent\textbf{Palavras-chave:} modulação em amplitude; bandas laterais; índice de modulação; TyphoonSim; análise espectral.
+
+\clearpage
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+\section{Introdução e objetivos}
+Na modulação em amplitude, uma grandeza de interesse controla a amplitude de uma portadora mais rápida. Isso desloca informação de baixa frequência para uma vizinhança espectral da frequência da portadora, situação importante em instrumentação e em sistemas de comunicação. A Equipe 04 recebeu a seção 5.2 do Capítulo 5 de Aguirre, com a incumbência de explicar a teoria e demonstrá-la no TyphoonSim. A orientação exige forma de onda temporal, bandas laterais e comparação entre índices de modulação. Como não haverá exposição oral, apresentam-se as definições, a derivação, as escolhas numéricas, o procedimento de captura e os critérios de interpretação.
+
+O objetivo é verificar a correspondência entre (i) o sinal AM produzido pelo modelo, (ii) as três frequências previstas pela expansão trigonométrica e (iii) o comportamento da envoltória nos regimes $\mu<1$, $\mu=1$ e $\mu>1$. O modelo não contém demodulador: a demodulação constitui o subtema atribuído à Equipe 05.
+
+\section{Fundamentação teórica}
+\subsection{Equação da AM de portadora presente}
+Adota-se uma mensagem normalizada $m(t)=\cos(2\pi f_m t)$, com $|m(t)|\leq 1$, e uma portadora $c(t)=A_c\cos(2\pi f_c t)$. A modulação em amplitude convencional é
+\begin{equation}
+ u(t)=1+\mu m(t),\qquad s(t)=u(t)c(t)
+ =A_c[1+\mu\cos(2\pi f_m t)]\cos(2\pi f_c t),
+ \label{eq:am}
+\end{equation}
+em que $A_c$ é a amplitude de pico da portadora e $\mu\geq0$ é o índice de modulação. $u(t)$ é a \emph{envoltória assinada}; a envoltória geométrica superior do sinal observado é $A_c|u(t)|$. Essa distinção é essencial quando $u(t)$ cruza zero.
+
+Aplicando $\cos a\cos b=\tfrac12[\cos(a+b)+\cos(a-b)]$ à Equação~\eqref{eq:am}, obtém-se
+\begin{equation}
+ s(t)=A_c\cos(2\pi f_c t)
+ +\frac{A_c\mu}{2}\cos[2\pi(f_c-f_m)t]
+ +\frac{A_c\mu}{2}\cos[2\pi(f_c+f_m)t].
+ \label{eq:spectrum}
+\end{equation}
+Para um único tom, aparecem linhas em $f_c-f_m$, $f_c$ e $f_c+f_m$. Cada banda lateral tem amplitude de pico $A_c\mu/2$; a largura ocupada entre as bandas laterais é $2f_m$. O espectro bilateral possui também as linhas correspondentes em frequências negativas, omitidas nos gráficos unilaterais.
+
+\subsection{Profundidade de modulação e envoltória}
+Como $\min m(t)=-1$, o valor mínimo da envoltória assinada é $u_{\min}=1-\mu$. A Tabela~\ref{tab:regimes} resume os três casos. Para $\mu>1$, $u(t)<0$ em parte do ciclo: como $u(t)c(t)=-|u(t)|c(t)$ nesse intervalo, a portadora sofre inversão de fase de $\pi$ rad. Um detector de envoltória simples observa $|u(t)|$, não $u(t)$, e por isso deixa de reproduzir fielmente a mensagem nesse regime.
+
+Quando $0\leq\mu\leq1$, os extremos da envoltória geométrica são $E_{\max}=A_c(1+\mu)$ e $E_{\min}=A_c(1-\mu)$. Logo, $\mu=(E_{\max}-E_{\min})/(E_{\max}+E_{\min})$. Esta fórmula de extremos deixa de distinguir corretamente a sobremodulação: após o dobramento por valor absoluto, o mínimo geométrico passa a zero, embora a envoltória \emph{assinada} continue abaixo de zero. Por isso o relatório também inspeciona o probe $u(t)$ e estima $\mu$ pela razão entre bandas laterais.
+
+\begin{table}[htbp]
+\centering
+\caption{Critério físico para classificar a profundidade de modulação.}
+\label{tab:regimes}
+\begin{tabularx}{\textwidth}{@{}l c X@{}}
+\toprule
+Regime & Índice & Consequência para $u(t)=1+\mu m(t)$\\
+\midrule
+Submodulação & $0<\mu<1$ & $u_{\min}>0$; a envoltória não toca zero.\\
+Limite de 100\% & $\mu=1$ & $u_{\min}=0$; a envoltória toca zero.\\
+Sobremodulação & $\mu>1$ & $u_{\min}<0$; há cruzamentos por zero e inversões de fase.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\textbf{Nota importante:} no multiplicador ideal da Equação~\eqref{eq:am}, aumentar $\mu$ acima de 1 não cria, por si só, novas frequências no sinal AM. As duas bandas laterais crescem linearmente. A distorção não linear surge se se tenta recuperar a mensagem tomando o módulo da envoltória ou por um detector de envoltória convencional.
+
+\section{Modelo implementado no TyphoonSim}
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=1.1cm and 1.0cm,>=Latex,
+box/.style={draw=azul,rounded corners=2pt,fill=blue!4,align=center,minimum height=1.25cm,text width=3.15cm},
+smallbox/.style={draw=laranja,rounded corners=2pt,fill=orange!5,align=center,minimum height=1.0cm,text width=2.5cm}]
+\node[box] (src) {Fontes senoidais\\$m(t)$, $c(t)$};
+\node[smallbox,below=of src] (seq) {Sequenciador\\$\mu=0{,}5;\ 1{,}0;\ 1{,}5$};
+\node[box,right=1.35cm of src,yshift=-0.6cm] (mod) {Modulador AM\\$u=1+\mu m$\\$s=uc$};
+\node[box,right=1.35cm of mod] (probes) {Cinco probes\\mensagem, portadora,\\índice, $u$ e $s$};
+\draw[->,thick] (src.east) -- node[above,sloped,scale=.78] {$m,c$} (mod.west);
+\draw[->,thick] (seq.east) -| node[below,near start,scale=.78] {$\mu$} (mod.south);
+\draw[->,thick] (mod.east) -- (probes.west);
+\end{tikzpicture}
+\caption{Arquitetura do arquivo \arquivo{Equipe_04_ModulacaoAM.tse}. As saídas alimentam o Capture VHIL; não se utiliza leitura pontual para construir o espectro.}
+\label{fig:blocos}
+\end{figure}
+
+O esquemático usa um bloco de fontes/sequenciamento e um bloco modulador, ambos \emph{C function} genéricos, conectados a probes públicos. Não usa chaves ou diodos de potência, evitando a incompatibilidade com HIL404 Base 1 encontrada em uma atividade anterior. O tipo C \texttt{double} é empregado nas variáveis e constantes internas; a palavra \texttt{real} aparece apenas na declaração dos terminais Typhoon. Não há regulador, conversor Buck nem malha de realimentação: esta é uma atividade nova, independente daquela planta.
+
+\begin{table}[htbp]
+\centering
+\caption{Parâmetros declarados no modelo e previstos para a captura.}
+\label{tab:parametros}
+\begin{tabular}{@{}l l l@{}}
+\toprule
+Grandeza & Valor & Justificativa\\
+\midrule
+Frequência da mensagem $f_m$ & \SI{25}{\hertz} & Período de \SI{40}{\milli\second}.\\
+Frequência da portadora $f_c$ & \SI{500}{\hertz} & 20 amostras por ciclo.\\
+Amplitude da portadora $A_c$ & \SI{1}{\volt} de pico & Facilita comparação espectral.\\
+Passo do sinal $T_s$ & \SI{100}{\micro\second} & Taxa $f_s=\SI{10}{\kilo\hertz}$.\\
+Índices $\mu$ & $0{,}5;\ 1{,}0;\ 1{,}5$ & Regimes abaixo, no e acima de 100\%.\\
+Duração de cada regime & \SI{0.4}{\second} & 10 ciclos de $m$, 200 de $c$.\\
+Captura solicitada & 36000 pontos & \SI{3.6}{\second}, três ciclos de regimes.\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+O sequenciador percorre 4000 passos em cada índice e repete a sequência. Assim, mesmo que o Capture inicie no meio de um regime, uma janela de 36000 pontos contém uma passagem completa por todos eles. Com $f_s=\SI{10}{\kilo\hertz}$, a frequência de Nyquist é \SI{5}{\kilo\hertz}, muito acima da banda lateral superior de \SI{525}{\hertz}. O ensaio é inteiramente de processamento de sinais; não representa um transmissor de RF físico.
+
+\section{Procedimento de aquisição e análise}
+No computador que contém Typhoon HIL Control Center, o script \arquivo{capturar_vhil.py} abre e compila o \arquivo{.tse}, carrega o \arquivo{.cpd} em TyphoonSim/Virtual HIL e inicia uma captura forçada dos cinco probes. A chamada \texttt{hil.start\_capture} solicita 36000 amostras. A decimação inteira é calculada a partir do passo-base $T_{\mathrm{base}}$ informado pelo modelo carregado, de modo que $D\,T_{\mathrm{base}}\simeq\SI{100}{\micro\second}$; por exemplo, $T_{\mathrm{base}}=\SI{0.2}{\micro\second}$ requer $D=500$. O vetor de tempo e a matriz de canais vêm da API do Typhoon. O script confere taxa efetiva, uniformidade temporal, presença dos três índices e as identidades $u=1+\mu m$ e $s=uc$ antes de gravar CSV e metadados. Os hashes SHA-256 do modelo, do compilado e do CSV preservam a rastreabilidade.
+
+O script \arquivo{analisar_captura.py} seleciona uma janela contígua de cada regime e calcula duas representações complementares. Para os gráficos espectrais, aplica uma janela de Hann e transforma a série amostrada para obter amplitudes unilaterais; a janela reduz vazamento mas alarga os picos. Para a tabela quantitativa, ajusta simultaneamente seno e cosseno nas frequências \SI{475}{\hertz}, \SI{500}{\hertz} e \SI{525}{\hertz} por mínimos quadrados. O módulo de cada par de coeficientes fornece a amplitude de pico. O índice recuperado do espectro é
+\begin{equation}
+ \widehat\mu=\frac{\widehat A_{475}+\widehat A_{525}}{\widehat A_{500}}.
+ \label{eq:mu_est}
+\end{equation}
+O ajuste também fornece o RMS do resíduo. A função de análise recusa dados incompletos ou sem metadados VHIL e não mistura curvas teóricas com arquivos medidos.
+
+\section{Resultados previstos analiticamente}
+Com os valores da Tabela~\ref{tab:parametros}, a Equação~\eqref{eq:spectrum} prevê banda lateral inferior em \SI{475}{\hertz}, portadora em \SI{500}{\hertz} e banda lateral superior em \SI{525}{\hertz}. A largura entre as bandas laterais é \SI{50}{\hertz}. As amplitudes esperadas estão na Tabela~\ref{tab:teoria}. Elas são \emph{previsões calculadas}, não saídas do TyphoonSim.
+
+\begin{table}[htbp]
+\centering
+\caption{Previsão ideal para os três índices. Amplitudes unilaterais de pico, $A_c=\SI{1}{\volt}$.}
+\label{tab:teoria}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+$\mu$ & $A_{475}$ [V] & $A_{500}$ [V] & $A_{525}$ [V] & $u_{\min}$ [V]\\
+\midrule
+$0{,}5$ & $0{,}25$ & $1{,}00$ & $0{,}25$ & $0{,}50$\\
+$1{,}0$ & $0{,}50$ & $1{,}00$ & $0{,}50$ & $0{,}00$\\
+$1{,}5$ & $0{,}75$ & $1{,}00$ & $0{,}75$ & $-0{,}50$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[p]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[
+ group style={group size=1 by 3,vertical sep=0.9cm},
+ width=.88\textwidth,height=5.0cm,
+ xmin=0,xmax=40,ymin=-2.7,ymax=2.7,
+ xtick={0,10,20,30,40},grid=both,
+ tick label style={font=\scriptsize},label style={font=\small},title style={font=\small},
+ ylabel={Tensão (V)},xlabel={Tempo (ms)}]
+\nextgroupplot[title={$\mu=0{,}5$: envoltória estritamente positiva}]
+\addplot[azul,thin] table[x=tempo_ms,y=sinal_am,col sep=comma]{referencia_analitica/tempo_teorico_mu05.csv};
+\addplot[laranja,thick] table[x=tempo_ms,y=env_pos,col sep=comma]{referencia_analitica/tempo_teorico_mu05.csv};
+\addplot[laranja,thick] table[x=tempo_ms,y=env_neg,col sep=comma]{referencia_analitica/tempo_teorico_mu05.csv};
+\nextgroupplot[title={$\mu=1{,}0$: envoltória toca zero}]
+\addplot[azul,thin] table[x=tempo_ms,y=sinal_am,col sep=comma]{referencia_analitica/tempo_teorico_mu10.csv};
+\addplot[laranja,thick] table[x=tempo_ms,y=env_pos,col sep=comma]{referencia_analitica/tempo_teorico_mu10.csv};
+\addplot[laranja,thick] table[x=tempo_ms,y=env_neg,col sep=comma]{referencia_analitica/tempo_teorico_mu10.csv};
+\nextgroupplot[title={$\mu=1{,}5$: envoltória assinada negativa perto de 20 ms}]
+\addplot[azul,thin] table[x=tempo_ms,y=sinal_am,col sep=comma]{referencia_analitica/tempo_teorico_mu15.csv};
+\addplot[laranja,thick] table[x=tempo_ms,y=env_pos,col sep=comma]{referencia_analitica/tempo_teorico_mu15.csv};
+\addplot[laranja,thick] table[x=tempo_ms,y=env_neg,col sep=comma]{referencia_analitica/tempo_teorico_mu15.csv};
+\addplot[vermelho,densely dashed,thick] table[x=tempo_ms,y=env_abs,col sep=comma]{referencia_analitica/tempo_teorico_mu15.csv};
+\end{groupplot}
+\end{tikzpicture}
+\caption{Curvas \textbf{teóricas}, calculadas diretamente da Equação~\eqref{eq:am}, para um período da mensagem. Azul: sinal AM; laranja: $\pm u(t)$; vermelho tracejado, apenas no último painel: $|u(t)|$, envoltória geométrica superior que um detector simples seguiria. Não são capturas VHIL.}
+\label{fig:tempo_teoria}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[
+ group style={group size=1 by 3,vertical sep=0.9cm},
+ width=.88\textwidth,height=4.5cm,
+ xmin=450,xmax=550,ymin=0,ymax=1.12,
+ xtick={475,500,525},ytick={0,.25,.5,.75,1},grid=both,
+ tick label style={font=\scriptsize},label style={font=\small},title style={font=\small},
+ ylabel={Pico (V)},xlabel={Frequência (Hz)}]
+\nextgroupplot[title={$\mu=0{,}5$: bandas de 0,25 V}]
+\addplot[azul,very thick,ycomb,mark=*] table[x=frequencia_hz,y=amplitude_v,col sep=comma]{referencia_analitica/espectro_teorico_mu05.csv};
+\nextgroupplot[title={$\mu=1{,}0$: bandas de 0,50 V}]
+\addplot[azul,very thick,ycomb,mark=*] table[x=frequencia_hz,y=amplitude_v,col sep=comma]{referencia_analitica/espectro_teorico_mu10.csv};
+\nextgroupplot[title={$\mu=1{,}5$: bandas de 0,75 V}]
+\addplot[azul,very thick,ycomb,mark=*] table[x=frequencia_hz,y=amplitude_v,col sep=comma]{referencia_analitica/espectro_teorico_mu15.csv};
+\end{groupplot}
+\end{tikzpicture}
+\caption{Espectros unilaterais \textbf{teóricos} da Equação~\eqref{eq:spectrum}. A linha central não muda; as laterais crescem proporcionalmente a $\mu$. Não são FFTs do TyphoonSim.}
+\label{fig:espectro_teoria}
+\end{figure}
+
+\clearpage
+\section{Resultados obtidos no TyphoonSim}
+\ifcapturavhil
+\input{resultados_vhil/medidas.tex}
+O arquivo de dados contém \CapturaN\ amostras, capturadas em \texttt{\CapturaData}, a aproximadamente \CapturaTaxa\ amostras por segundo. O SHA-256 do modelo é \texttt{\CapturaHashModelo}; o do CSV bruto é \texttt{\CapturaHashDados}. A Tabela acima foi calculada automaticamente do CSV capturado. As frequências e amplitudes podem ser comparadas diretamente com a Tabela~\ref{tab:teoria}; o RMS do resíduo testa se as três componentes bastam para reconstruir o sinal do modelo ideal.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[
+ group style={group size=1 by 3,vertical sep=.75cm},
+ width=.85\textwidth,height=4.3cm,
+ xmin=0,xmax=40,ymin=-2.7,ymax=2.7,
+ xtick={0,10,20,30,40},grid=both,
+ tick label style={font=\scriptsize},title style={font=\small},ylabel={V},xlabel={Tempo (ms)}]
+\nextgroupplot[title={$\mu=0{,}5$}]
+\addplot[azul,thin] table[x=tempo_ms,y=sinal_am,col sep=comma]{resultados_vhil/tempo_mu05.csv};
+\addplot[laranja,thick] table[x=tempo_ms,y=env_pos,col sep=comma]{resultados_vhil/tempo_mu05.csv};
+\addplot[laranja,thick] table[x=tempo_ms,y=env_neg,col sep=comma]{resultados_vhil/tempo_mu05.csv};
+\nextgroupplot[title={$\mu=1{,}0$}]
+\addplot[azul,thin] table[x=tempo_ms,y=sinal_am,col sep=comma]{resultados_vhil/tempo_mu10.csv};
+\addplot[laranja,thick] table[x=tempo_ms,y=env_pos,col sep=comma]{resultados_vhil/tempo_mu10.csv};
+\addplot[laranja,thick] table[x=tempo_ms,y=env_neg,col sep=comma]{resultados_vhil/tempo_mu10.csv};
+\nextgroupplot[title={$\mu=1{,}5$}]
+\addplot[azul,thin] table[x=tempo_ms,y=sinal_am,col sep=comma]{resultados_vhil/tempo_mu15.csv};
+\addplot[laranja,thick] table[x=tempo_ms,y=env_pos,col sep=comma]{resultados_vhil/tempo_mu15.csv};
+\addplot[laranja,thick] table[x=tempo_ms,y=env_neg,col sep=comma]{resultados_vhil/tempo_mu15.csv};
+\addplot[vermelho,densely dashed,thick] table[x=tempo_ms,y=env_abs,col sep=comma]{resultados_vhil/tempo_mu15.csv};
+\end{groupplot}
+\end{tikzpicture}
+\caption{Formas de onda \textbf{capturadas no TyphoonSim}: sinal AM, envoltória assinada e módulo da envoltória no regime sobremodulado.}
+\label{fig:tempo_vhil}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[
+ group style={group size=1 by 3,vertical sep=.75cm},
+ width=.85\textwidth,height=4.0cm,
+ xmin=440,xmax=560,ymin=0,ymax=1.13,
+ xtick={475,500,525},ytick={0,.25,.5,.75,1},grid=both,
+ tick label style={font=\scriptsize},title style={font=\small},ylabel={Pico (V)},xlabel={Frequência (Hz)}]
+\nextgroupplot[title={$\mu=0{,}5$}]
+\addplot[azul,thick] table[x=frequencia_hz,y=amplitude_v,col sep=comma]{resultados_vhil/espectro_mu05.csv};
+\nextgroupplot[title={$\mu=1{,}0$}]
+\addplot[azul,thick] table[x=frequencia_hz,y=amplitude_v,col sep=comma]{resultados_vhil/espectro_mu10.csv};
+\nextgroupplot[title={$\mu=1{,}5$}]
+\addplot[azul,thick] table[x=frequencia_hz,y=amplitude_v,col sep=comma]{resultados_vhil/espectro_mu15.csv};
+\end{groupplot}
+\end{tikzpicture}
+\caption{Espectros \textbf{obtidos por FFT das capturas VHIL}, com janela de Hann. O alargamento local dos picos é efeito da janela; a tabela de amplitudes usa o ajuste harmônico.}
+\label{fig:espectro_vhil}
+\end{figure}
+\else
+\noindent\fcolorbox{vermelho}{red!4}{\parbox{.93\textwidth}{\textbf{Captura pendente.} O Typhoon HIL não estava instalado no ambiente de autoria. Execute \arquivo{capturar_vhil.py} e depois \arquivo{analisar_captura.py} no computador com TyphoonSim. Os programas criarão \arquivo{resultados_vhil/medidas.tex} e os CSVs de figura; ao recompilar este mesmo fonte no Overleaf, esta seção trocará automaticamente a nota por tabela, formas de onda e FFTs reais. Esta prévia não deve ser apresentada como relatório experimental concluído.}}
+\par\medskip
+Enquanto essa execução não é feita, as Figuras~\ref{fig:tempo_teoria} e~\ref{fig:espectro_teoria} servem apenas como valores de referência para a comparação posterior. O professor solicitou explicitamente resultados obtidos na demonstração simulada, portanto essa etapa é indispensável para fechar a entrega.
+\fi
+
+\section{Discussão}
+As previsões analíticas mostram duas mudanças distintas ao elevar $\mu$. No domínio da frequência, a amplitude de cada banda lateral passa de \SI{0.25}{\volt} para \SI{0.5}{\volt} e \SI{0.75}{\volt}, enquanto a portadora permanece com \SI{1}{\volt}. No tempo, o mínimo de $u$ passa de $0{,}5$ a $0$ e então a $-0{,}5$. A transição de sinal da envoltória assinada no terceiro regime explica por que uma detecção por envoltória baseada em $|u|$ distorce a mensagem. O espectro do sinal AM ideal, porém, continua restrito às três frequências da Equação~\eqref{eq:spectrum}; não se deve confundir a distorção do detector com criação de novas bandas no modulador linear.
+
+\ifcapturavhil
+Na captura real, a tabela de resultados permite testar as três relações: $A_{475}\approx A_{525}$, $A_{500}\approx\SI{1}{\volt}$ e $\widehat\mu\approx\mu$. A concordância entre as linhas previstas e os picos das FFTs associa a saída simulada à expansão trigonométrica; o cruzamento de zero de $u$ na última forma de onda associa a sobremodulação à inversão de fase. Pequenas diferenças numéricas podem decorrer do passo discreto, da janela e da representação em ponto flutuante, mas os limites de coerência foram verificados pelo script antes de gerar a tabela.
+\else
+A confirmação experimental dessas relações permanece pendente. Não foram atribuídos valores simulados às previsões da Tabela~\ref{tab:teoria} nem às figuras analíticas.
+\fi
+
+\section{Reprodutibilidade e entrega}
+O pacote contém o \arquivo{.tse}, os scripts de captura e análise, este fonte \LaTeX{} e os CSVs \emph{teóricos} usados apenas na exposição. Após a aquisição, devem ser adicionados o CSV bruto VHIL, o JSON de metadados e a pasta \arquivo{resultados_vhil}. Os dados de Capítulo 3 não são reutilizados: a orientação exige implementar um novo modulador para a Equipe 04. O arquivo PDF de submissão final deve chamar-se \arquivo{Equipe_04_ModulacaoAM.pdf}, acompanhado dos scripts e dados auxiliares novos, conforme a orientação do professor.
+
+\section{Conclusão}
+Derivou-se a AM com portadora presente e construiu-se um esquema TyphoonSim que percorre três índices de modulação. A teoria prevê bandas laterais em \SI{475}{\hertz} e \SI{525}{\hertz}, de amplitudes proporcionais a $\mu$, e esclarece que a sobremodulação se identifica pelo sinal negativo da envoltória assinada, não por novas frequências no modulador ideal.
+\ifcapturavhil
+As medições VHIL incorporadas nas seções anteriores verificam essa previsão nos domínios do tempo e da frequência, com CSV bruto, taxa de amostragem e hashes registrados para reprodução.
+\else
+A etapa experimental permanece por executar no computador com Typhoon HIL. Até que os dados VHIL sejam incorporados, esta é uma prévia técnica e não a versão final para submissão.
+\fi
+
+\section*{Referências}
+\begin{enumerate}[leftmargin=2.0em]
+\item ECOM060 -- INSTRUMENTAÇÃO ELETRÔNICA. \emph{Orientação -- Capítulo 5: Análise Espectral, Sinais Modulados e Aleatórios}. Universidade Federal de Alagoas, semestre 2026.2, 3 p.
+\item AGUIRRE, Luís Antonio. \emph{Fundamentos de Instrumentação}. São Paulo: Pearson Education do Brasil, 2013. Capítulo 5, seção 5.2. ISBN 978-85-8143-183-3.
+\item TYPHOON HIL. \emph{HIL API: funções de carga, captura e leitura de sinais}. Documentação oficial. Disponível em: \href{https://www.typhoon-hil.com/documentation/typhoon-hil-api-documentation/hil_api.html}{API HIL do Typhoon}. Acesso em: 18 set. 2026.
+\item TYPHOON HIL. \emph{Schematic Editor API: compilação de modelos}. Documentação oficial. Disponível em: \href{https://www.typhoon-hil.com/documentation/typhoon-hil-api-documentation/schematic_api.html}{API do Schematic Editor}. Acesso em: 18 set. 2026.
+\end{enumerate}
+
+\end{document}

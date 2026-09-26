@@ -1,0 +1,21 @@
+VALIDAÇÃO EXPERIMENTAL - INSTRUMENTO ESTÁTICO
+=================================================
+Aquisição: 01/09/2026 15:02:55 -0300
+Origem: Typhoon HIL API - Virtual HIL
+Modelo: instrumento_estatico_generico.tse
+SHA-256 do modelo: faf431e6cd40c2d267045761131149f64bd82382da03bf04a9bd871d37fc5f31
+Amostras: 65
+Faixa de x: 0.121000 a 2.843000
+
+p_hat = 0.500000 (esperado: 0.500000)
+K_hat = 1.200000 (esperado: 1.200000)
+Delta p = p_hat - p0 = 0.500000
+Delta K = K_hat - K0 = 0.200000
+Resultado: APROVADA
+
+AJUSTES POR CANAL
+Saida_ideal: intercepto=0.000000; inclinação=1.000000; RMSE=0.000e+00; resíduo_máx=0.000e+00
+Saida_desvio_zero: intercepto=0.500000; inclinação=1.000000; RMSE=3.194e-08; resíduo_máx=1.202e-07
+Saida_sensibilidade: intercepto=0.000000; inclinação=1.200000; RMSE=6.702e-08; resíduo_máx=2.211e-07
+Saida_real: intercepto=0.500000; inclinação=1.200000; RMSE=7.171e-08; resíduo_máx=2.171e-07
+Erro_total: intercepto=0.500000; inclinação=0.200000; RMSE=2.376e-08; resíduo_máx=7.675e-08
