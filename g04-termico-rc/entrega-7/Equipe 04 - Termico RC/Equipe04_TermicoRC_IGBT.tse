@@ -1,0 +1,349 @@
+version = 4.2
+
+// Equipe 04 - ECOM060 2026.2: sistema termico RC de semicondutor.
+// IGBT Infineon IKD04N60RF; modelo Foster reduzido a dois estados.
+// Temperatura da capsula fixa em 25 C; entrada: potencia dissipada [W].
+// Ciclo de 0.1 s: degrau, condicao inicial nao nula e pulso.
+// TyphoonSim / Virtual HIL, HIL404 Base 1; Capture com passo 10 us.
+
+model "Equipe04_TermicoRC_IGBT" {
+    configuration {
+        hil_device = "HIL404"
+        hil_configuration_id = 6
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 10e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.00001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-5
+        simulation_time = 100.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Constant" "Habilita ensaios" {
+            execution_rate = "0.00001"
+            value = "1"
+        }
+        [
+            position = 7384, 8192
+        ]
+
+        component "core/C function" "Sequenciador de ensaios" {
+            execution_rate = "0.00001"
+            global_variables = "int sample_count;"
+            init_fnc = "/*Begin code section*/
+sample_count = 0;
+/*End code section*/"
+            input_terminals = "real enable;"
+            input_terminals_dimensions = "inherit"
+            input_terminals_feedthrough = "False"
+            input_terminals_show_labels = "True"
+            output_fnc = "/*Begin code section*/
+int fase = sample_count % 10000;
+reset = (fase == 0) ? 1.0 : 0.0;
+P_degrau = (fase >= 1000 && fase < 6000) ? 10.0 : 0.0;
+P_pulso = (fase >= 1000 && fase < 2000) ? 10.0 : 0.0;
+P_zero = 0.0;
+/*End code section*/"
+            output_terminals = "real reset;real P_degrau;real P_pulso;real P_zero;"
+            output_terminals_dimensions = "inherit;inherit;inherit;inherit"
+            output_terminals_feedthrough = "True;True;True;True"
+            output_terminals_show_labels = "True;True;True;True"
+            update_fnc = "/*Begin code section*/
+if (enable >= 0.5) {
+    sample_count += 1;
+    if (sample_count >= 10000) sample_count = 0;
+} else {
+    sample_count = 0;
+}
+/*End code section*/"
+        }
+        [
+            position = 7680, 8152
+            size = 200, 144
+        ]
+
+        component "core/C function" "RC termico degrau" {
+            execution_rate = "0.00001"
+            global_variables = "real theta1;real theta2;"
+            init_fnc = "/*Begin code section*/
+theta1 = 0.0;
+theta2 = 0.0;
+/*End code section*/"
+            input_terminals = "real P;real reset;"
+            input_terminals_dimensions = "inherit;inherit"
+            input_terminals_feedthrough = "False;False"
+            input_terminals_show_labels = "True;True"
+            output_fnc = "/*Begin code section*/
+Tj = 25.0 + theta1 + theta2;
+/*End code section*/"
+            output_terminals = "real Tj;"
+            output_terminals_dimensions = "inherit"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            update_fnc = "/*Begin code section*/
+if (reset >= 0.5) {
+    theta1 = 0.0;
+    theta2 = 0.0;
+} else {
+    theta1 += 0.03414119031393059 * (1.116866866999197 * P - theta1);
+    theta2 += 0.00493544221947162 * (0.922840133000803 * P - theta2);
+}
+/*End code section*/"
+        }
+        [
+            position = 8120, 7984
+            size = 200, 120
+        ]
+
+        component "core/C function" "RC termico relaxacao" {
+            execution_rate = "0.00001"
+            global_variables = "real theta1;real theta2;"
+            init_fnc = "/*Begin code section*/
+theta1 = 11.16866866999197;
+theta2 = 9.22840133000803;
+/*End code section*/"
+            input_terminals = "real P;real reset;"
+            input_terminals_dimensions = "inherit;inherit"
+            input_terminals_feedthrough = "False;False"
+            input_terminals_show_labels = "True;True"
+            output_fnc = "/*Begin code section*/
+Tj = 25.0 + theta1 + theta2;
+/*End code section*/"
+            output_terminals = "real Tj;"
+            output_terminals_dimensions = "inherit"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            update_fnc = "/*Begin code section*/
+if (reset >= 0.5) {
+    theta1 = 11.16866866999197;
+    theta2 = 9.22840133000803;
+} else {
+    theta1 += 0.03414119031393059 * (1.116866866999197 * P - theta1);
+    theta2 += 0.00493544221947162 * (0.922840133000803 * P - theta2);
+}
+/*End code section*/"
+        }
+        [
+            position = 8120, 8168
+            size = 200, 120
+        ]
+
+        component "core/C function" "RC termico pulso" {
+            execution_rate = "0.00001"
+            global_variables = "real theta1;real theta2;"
+            init_fnc = "/*Begin code section*/
+theta1 = 0.0;
+theta2 = 0.0;
+/*End code section*/"
+            input_terminals = "real P;real reset;"
+            input_terminals_dimensions = "inherit;inherit"
+            input_terminals_feedthrough = "False;False"
+            input_terminals_show_labels = "True;True"
+            output_fnc = "/*Begin code section*/
+Tj = 25.0 + theta1 + theta2;
+/*End code section*/"
+            output_terminals = "real Tj;"
+            output_terminals_dimensions = "inherit"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            update_fnc = "/*Begin code section*/
+if (reset >= 0.5) {
+    theta1 = 0.0;
+    theta2 = 0.0;
+} else {
+    theta1 += 0.03414119031393059 * (1.116866866999197 * P - theta1);
+    theta2 += 0.00493544221947162 * (0.922840133000803 * P - theta2);
+}
+/*End code section*/"
+        }
+        [
+            position = 8120, 8352
+            size = 200, 120
+        ]
+
+        component "core/Probe" Reset_ciclo {
+            execution_rate = "0.00001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "reset_ciclo"
+        }
+        [
+            position = 7920, 7864
+        ]
+
+        component "core/Probe" Potencia_degrau {
+            execution_rate = "0.00001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "potencia_degrau_W"
+        }
+        [
+            position = 7920, 7936
+        ]
+
+        component "core/Probe" Potencia_pulso {
+            execution_rate = "0.00001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "potencia_pulso_W"
+        }
+        [
+            position = 7920, 8448
+        ]
+
+        component "core/Probe" Temperatura_degrau {
+            execution_rate = "0.00001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "Tj_degrau_C"
+        }
+        [
+            position = 8400, 7984
+        ]
+
+        component "core/Probe" Temperatura_relaxacao {
+            execution_rate = "0.00001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "Tj_relaxacao_C"
+        }
+        [
+            position = 8400, 8168
+        ]
+
+        component "core/Probe" Temperatura_pulso {
+            execution_rate = "0.00001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "Tj_pulso_C"
+        }
+        [
+            position = 8400, 8352
+        ]
+
+        connect "Habilita ensaios.out" "Sequenciador de ensaios.enable" as Connection1
+        connect "Sequenciador de ensaios.P_degrau" "RC termico degrau.P" as Connection2
+        connect "Sequenciador de ensaios.reset" "RC termico degrau.reset" as Connection3
+        connect "Sequenciador de ensaios.P_zero" "RC termico relaxacao.P" as Connection4
+        connect "Sequenciador de ensaios.reset" "RC termico relaxacao.reset" as Connection5
+        connect "Sequenciador de ensaios.P_pulso" "RC termico pulso.P" as Connection6
+        connect "Sequenciador de ensaios.reset" "RC termico pulso.reset" as Connection7
+        connect "Sequenciador de ensaios.reset" Reset_ciclo.in as Connection8
+        connect "Sequenciador de ensaios.P_degrau" Potencia_degrau.in as Connection9
+        connect "Sequenciador de ensaios.P_pulso" Potencia_pulso.in as Connection10
+        connect "RC termico degrau.Tj" Temperatura_degrau.in as Connection11
+        connect "RC termico relaxacao.Tj" Temperatura_relaxacao.in as Connection12
+        connect "RC termico pulso.Tj" Temperatura_pulso.in as Connection13
+    }
+
+    default {
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a53_file_path = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "['generic']"
+            refresh = "refresh"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "10e-6"
+            _tunable = "False"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+    }
+}

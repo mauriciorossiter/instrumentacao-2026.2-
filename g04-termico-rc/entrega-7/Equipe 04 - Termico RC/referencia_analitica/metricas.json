@@ -1,0 +1,56 @@
+{
+  "fabricante": "Infineon Technologies",
+  "dispositivo": "IKD04N60RF (IGBT; somente ramo termico IGBT juncao-capsula)",
+  "fonte": "https://www.infineon.com/dgdl/Infineon-IKD04N60RF-DS-v02_06-EN.pdf?fileId=db3a30433c5c92fb013c5d6c806d00dc",
+  "fonte_figura": "Figura 21, coeficientes Foster de Zth(j-c)",
+  "acesso": "2026-09-24",
+  "r_fabricante_k_por_w": [
+    0.492466,
+    0.884411,
+    0.589157,
+    0.073673
+  ],
+  "tau_fabricante_s": [
+    0.0002,
+    0.00054,
+    0.0021,
+    0.031658
+  ],
+  "r_fabricante_total_k_por_w": 2.039707,
+  "r_datasheet_max_jc_k_por_w": 2.0,
+  "r_reduzido_k_por_w": [
+    1.1168668669991968,
+    0.9228401330008031
+  ],
+  "tau_reduzido_s": [
+    0.0002878723810835251,
+    0.002021156766960753
+  ],
+  "c_reduzido_j_por_k": [
+    0.00025774995175296224,
+    0.0021901483200438506
+  ],
+  "polos_por_s": [
+    -3473.761519726527,
+    -494.7661736816767
+  ],
+  "autovalores_numpy_por_s": [
+    -3473.761519726527,
+    -494.7661736816767
+  ],
+  "omega_n_rad_por_s": 1310.9918746497783,
+  "zeta": 1.5135592257077741,
+  "ganho_dc_k_por_w": 2.039707,
+  "temperatura_capsula_c": 25.0,
+  "potencia_ensaio_w": 10.0,
+  "temperatura_final_degrau_c": 45.39707,
+  "tempo_amostragem_s": 1e-05,
+  "max_erro_zoh_vs_analitico_k": 2.0605739337042905e-13,
+  "max_erro_f32_vs_f64_k": 0.00010974151590659176,
+  "max_erro_rk4_vs_analitico_k": 4.995115432393504e-12,
+  "fit_t_min_s": 1e-05,
+  "fit_t_max_s": 0.24999999999999994,
+  "fit_rms_rel_percent": 1.2721325489447555,
+  "fit_max_rel_percent": 2.6786875038377245,
+  "fit_max_abs_k_per_w": 0.05284997399091185
+}
