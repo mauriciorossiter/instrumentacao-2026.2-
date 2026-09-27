@@ -1,0 +1,13 @@
+flowchart LR
+    E[Habilitação] --> G[Fontes e sequenciador<br/>T_s = 100 µs]
+    G -- "m(t) = cos(2π·25t)" --> M[Modulador AM<br/>u(t) = 1 + µm(t)<br/>s(t) = u(t)c(t)]
+    G -- "c(t) = cos(2π·500t)" --> M
+    G -- "µ = 0,5 → 1,0 → 1,5<br/>0,4 s por regime" --> M
+    M -- "s(t)" --> P[Probe sinal_am]
+    M -- "u(t)" --> U[Probe envoltoria_assinada]
+    G --> R[Probes mensagem_norm,<br/>portadora e indice_modulacao]
+    P --> C[Capture VHIL 10 kS/s]
+    U --> C
+    R --> C
+    C --> A[CSV bruto + metadados]
+    A --> F[FFT, ajuste harmônico<br/>e relatório]

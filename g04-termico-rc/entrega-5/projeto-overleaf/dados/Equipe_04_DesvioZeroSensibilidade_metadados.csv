@@ -1,0 +1,15 @@
+campo,valor
+nome_da_equipe,Equipe 04 - Gabriela Pontes; Julia Goncalves; Placido Cordeiro
+caracteristica_modelada,Desvio de zero e de sensibilidade
+unidade_de_x,V
+unidade_de_y,V
+faixa_nominal,0 a 10 V
+condicoes,condicao_1; condicao_2
+origem_dos_dados,TyphoonSim/Virtual HIL
+pre_processamento,nenhum
+intervalo_nominal_de_amostragem_ms,20
+amostras_condicao_1,241
+amostras_condicao_2,244
+data_hora_da_aquisicao,2026-09-09T11:20:37-03:00
+modelo_tse,Equipe_04_Geracao_Dados_DesvioZeroSensibilidade.tse
+sha256_do_modelo,d5ae377b7e2f7c4b465851493d576e512171f995601fe02f383eab36d0747c69
