@@ -1,0 +1,369 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "faixa_e_alcance" {
+    configuration {
+        hil_device = "HIL404"
+        hil_configuration_id = 6
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 40.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Triangular Wave Source" "Triangular Wave Source1" {
+            execution_rate = "0.0001"
+            frequency = "f_tri"
+            max_val = "x_hi"
+            min_val = "0"
+        }
+        [
+            position = 7456, 8312
+        ]
+
+        component "core/Gain" "y_id = x" {
+            execution_rate = "Ts"
+        }
+        [
+            position = 7616, 8200
+        ]
+
+        component "core/Limit" Limit1 {
+            execution_rate = "Ts"
+            lower_limit = "n_min"
+            upper_limit = "n_max"
+        }
+        [
+            position = 7808, 8156
+        ]
+
+        component "core/Constant" Constant1 {
+            execution_rate = "0.0001"
+            value = "n_max"
+        }
+        [
+            position = 7752, 8360
+        ]
+
+        component "core/Constant" Constant2 {
+            execution_rate = "0.0001"
+            value = "n_min"
+        }
+        [
+            position = 7744, 8276
+        ]
+
+        component "core/Comparator" Comparator1 {
+        }
+        [
+            position = 7908, 8252
+        ]
+
+        component "core/Comparator" Comparator2 {
+        }
+        [
+            position = 8016, 8332
+        ]
+
+        component "core/Logical operator" "Logical operator2" {
+        }
+        [
+            position = 8120, 8292
+        ]
+
+        component "core/Sum" Sum1 {
+            signs = "+-"
+        }
+        [
+            position = 8460, 8180
+        ]
+
+        component "core/Probe" x_referencia {
+        }
+        [
+            position = 8060, 8484
+        ]
+
+        component "core/Probe" y_instrumento {
+        }
+        [
+            position = 8052, 8060
+        ]
+
+        component "core/Probe" valid {
+        }
+        [
+            position = 8236, 8340
+        ]
+
+        component "core/Probe" e_dev {
+        }
+        [
+            position = 8556, 8260
+        ]
+
+        component "core/Random Source" "Random Source1" {
+            execution_rate = "0.0001"
+            mean = "-2"
+            stddev = "2"
+        }
+        [
+            position = 7740, 8068
+            size = 32, 32
+        ]
+
+        component "core/Sum" Sum2 {
+        }
+        [
+            position = 7900, 8060
+        ]
+
+        component "core/Scope" Scope1 {
+            selected_signals = "[\'y_instrumento\', \'x_referencia\', \'e_dev\', \'valid\']"
+            signals_data = "{\"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true, \"signals_tooltips_enabled\": true}, \"signals\": {\"y_instrumento\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#FF0000\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"x_referencia\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#FF0000\"}, \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"e_dev\": {\"viewports\": [3], \"type\": \"analog\", \"color\": {\"3\": \"#FF0000\"}, \"display\": {\"3\": \"solid\"}, \"is_manual\": {\"3\": false}}, \"valid\": {\"viewports\": [4], \"type\": \"analog\", \"color\": {\"4\": \"#FF0000\"}, \"display\": {\"4\": \"solid\"}, \"is_manual\": {\"4\": false}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"4\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"5\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"6\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}}"
+            user_range_data = "{\"1\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"2\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"3\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"4\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"5\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"6\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}}"
+        }
+        [
+            position = 8816, 8320
+        ]
+
+        junction Junction1 sp
+        [
+            position = 7496, 8312
+        ]
+
+        junction Junction3 sp
+        [
+            position = 7532, 8312
+        ]
+
+        junction Junction6 sp
+        [
+            position = 7652, 8200
+        ]
+
+        junction Junction7 sp
+        [
+            position = 7516, 8312
+        ]
+
+        junction Junction8 sp
+        [
+            position = 7848, 8156
+        ]
+
+        connect Comparator2.out "Logical operator2.in1" as Connection3
+        connect Comparator1.out "Logical operator2.in" as Connection4
+        connect Constant2.out Comparator1.in2 as Connection6
+        connect Comparator1.in1 Junction1 as Connection9
+        connect x_referencia.in Junction3 as Connection17
+        connect "Triangular Wave Source1.out" Junction1 as Connection29
+        connect Sum1.out e_dev.in as Connection33
+        connect "Logical operator2.out" valid.in as Connection37
+        [
+            breakpoints = 8160, 8292
+        ]
+        connect "y_id = x.out" Junction6 as Connection38
+        connect Junction6 Limit1.in as Connection39
+        connect Sum1.in1 Junction6 as Connection40
+        connect Junction3 "y_id = x.in" as Connection41
+        [
+            breakpoints = 7580, 8312
+        ]
+        connect Constant1.out Comparator2.in1 as Connection42
+        connect Junction1 Junction7 as Connection43
+        [
+            breakpoints = 7488, 8312
+        ]
+        connect Junction7 Junction3 as Connection44
+        connect Comparator2.in2 Junction7 as Connection45
+        connect Sum1.in Junction8 as Connection47
+        [
+            breakpoints = 7944, 8156
+        ]
+        connect Junction8 Limit1.out as Connection48
+        [
+            breakpoints = 7832, 8156
+        ]
+        connect Sum2.in Junction8 as Connection49
+        [
+            breakpoints = 7848, 8056
+        ]
+        connect Sum2.in1 "Random Source1.out" as Connection50
+        [
+            breakpoints = 7776, 8068
+        ]
+        connect Sum2.out y_instrumento.in as Connection51
+    }
+
+    default {
+        "core/Comparator" {
+            execution_rate = "inherit"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Limit" {
+            upper_limit = "[\'inf\']"
+            lower_limit = "[\'-inf\']"
+            execution_rate = "inherit"
+        }
+
+        "core/Logical operator" {
+            operator = "AND"
+            inputs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Triangular Wave Source" {
+            min_val = "-0.5"
+            max_val = "0.5"
+            frequency = "50"
+            duty_cycle = "0.5"
+            phase = "0"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Random Source" {
+            distribution = "Normal"
+            min = "0"
+            max = "5"
+            mean = "1"
+            stddev = "3"
+            lambd = "2"
+            k = "1"
+            rate = "1"
+            execution_rate = "100e-6"
+        }
+    }
+
+    CODE model_init
+        # Numpy module is imported as 'np'
+        # Scipy module is imported as 'sp'
+        # The Schematic API is imported as 'mdl'
+        # To get the model file path, use 'mdl.get_model_file_path()'
+        # To print information to the console, use info()
+        
+        # Cadeia de medicao (Tabela 4 do relatorio)
+        f_clk = 1.0e6          # Hz  - clock do timer de captura
+        p = 4                  # pares de polos
+        N = 6.0 * p            # 24 bordas Hall por revolucao
+        M_max = 2**16 - 1      # 65535 (contador de 16 bits)
+        
+        # Limites da faixa - DERIVADOS, nao digitados
+        n_min = 60.0 * f_clk / (N * M_max)   # ~38.15 rpm
+        n_max = 4000.0                        # rpm (velocidade nominal)
+        A = n_max - n_min                     # ~3961.85 rpm
+        
+        # Estimulo e simulacao
+        Ts = 100e-6            # passo de execucao (10 kHz)
+        x_hi = 4200.0          # varre APENAS 0 a 80 rpm
+        T_sweep = 40.0
+        f_tri = 1.0 / T_sweep
+        
+        print("n_min=%.4f  n_max=%.1f  A=%.4f" % (n_min, n_max, A))
+    ENDCODE
+}

@@ -1,0 +1,1049 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.3
+//
+
+model "G07_Fase1_Entrega02_Camadas_Lentas" {
+    configuration {
+        hil_device = "HIL101"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = .5e-6
+        fine_auto_sim_step = False
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "single precision"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 0.01
+        simulation_time = 180.0
+        abs_tol = 1e-8
+        rel_tol = 1e-7
+        init_sim_step = 1e-8
+        r_on_sw = 1e-3
+        v_on_diode = 0.2
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = warning
+    }
+
+    component Subsystem Root {
+        component "core/C function" G07_T_varredura {
+            execution_rate = "g07_dt"
+            input_terminals = ""
+            input_terminals_dimensions = ""
+            input_terminals_feedthrough = ""
+            input_terminals_show_labels = ""
+            output_terminals = "real out;"
+            output_terminals_dimensions = "1"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            global_variables = "real g07_clock;real g07_phase;"
+            parameters = "real g07_dt;int g07_ensaio;"
+            init_fnc = "g07_clock = 0.0; g07_phase = 0.0;"
+            output_fnc = "if (g07_ensaio == 1) {
+g07_phase = fmod(g07_clock,180.0);
+out = (g07_phase <= 90.0) ? 130.0*g07_phase/90.0 : 130.0*(180.0-g07_phase)/90.0;
+} else if (g07_ensaio == 2) { out = 0.0; }
+else { out = (g07_clock >= 15.0 && g07_clock < 105.0) ? 130.0 : 0.0; }"
+            update_fnc = "g07_clock = g07_clock + g07_dt;"
+        }
+        [
+            position = 8840, 7680
+        ]
+
+        component "core/Constant" G07_K_B {
+            execution_rate = "g07_dt"
+            value = "g07_B_ntc"
+        }
+        [
+            position = 8840, 7744
+        ]
+        component "core/Constant" G07_K_R25 {
+            execution_rate = "g07_dt"
+            value = "g07_R_25"
+        }
+        [
+            position = 8840, 7800
+        ]
+        component "core/Constant" G07_K_Rf {
+            execution_rate = "g07_dt"
+            value = "g07_R_f"
+        }
+        [
+            position = 8840, 7856
+        ]
+        component "core/Constant" G07_K_Vexc {
+            execution_rate = "g07_dt"
+            value = "g07_V_exc"
+        }
+        [
+            position = 8840, 7912
+        ]
+        component "core/C function" G07_NTC_divisor {
+            execution_rate = "g07_dt"
+            global_variables = "real g07_temp;real g07_t;real g07_aT;real g07_x[13];real g07_ratio[27];uint g07_seed;int g07_nc;int g07_ticks;int g07_i;int g07_j;real g07_q;real g07_Raux;real g07_u1;real g07_u2;real g07_z;"
+            parameters = "real g07_dt;real g07_tau;real g07_Tinit;real g07_sigma;int g07_every;"
+            init_fnc = "g07_temp = g07_Tinit;
+g07_t = 0.0;
+g07_nc = 0;
+g07_ticks = 0;
+g07_seed = 7032026u;
+/* Atualizacao termica de 10 ms tambem no motor, evitando perda de precisao
+   de a ~ 1 em um passo de 5 us com real de precisao simples. */
+g07_aT = exp(-0.01/g07_tau);
+g07_ratio[0] = 3.265;
+g07_ratio[1] = 2.539;
+g07_ratio[2] = 1.99;
+g07_ratio[3] = 1.571;
+g07_ratio[4] = 1.249;
+g07_ratio[5] = 1;
+g07_ratio[6] = 0.8057;
+g07_ratio[7] = 0.6531;
+g07_ratio[8] = 0.5327;
+g07_ratio[9] = 0.4369;
+g07_ratio[10] = 0.3603;
+g07_ratio[11] = 0.2986;
+g07_ratio[12] = 0.2488;
+g07_ratio[13] = 0.2083;
+g07_ratio[14] = 0.1752;
+g07_ratio[15] = 0.1481;
+g07_ratio[16] = 0.1258;
+g07_ratio[17] = 0.1072;
+g07_ratio[18] = 0.09177;
+g07_ratio[19] = 0.07885;
+g07_ratio[20] = 0.068;
+g07_ratio[21] = 0.05886;
+g07_ratio[22] = 0.05112;
+g07_ratio[23] = 0.04454;
+g07_ratio[24] = 0.03893;
+g07_ratio[25] = 0.03417;
+g07_ratio[26] = 0.03009;
+for (g07_i=0; g07_i<13; g07_i++) {
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u1 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u2 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_z = sqrt(-2.0*log(g07_u1))*cos(6.283185307179586*g07_u2);
+g07_x[g07_i] = g07_z;
+}
+"
+            output_fnc = "/* R6: curva nominal real 8016; referencia: modelo beta da Entrega 01. */
+g07_Raux = g07_R25*exp(g07_B*(1.0/(g07_TC+273.15)-1.0/298.15));
+g07_ideal = g07_Vexc*g07_Rf/(g07_Rf+g07_Raux);
+g07_q = g07_TC;
+if (g07_q < 0.0) g07_q = 0.0;
+if (g07_q > 130.0) g07_q = 130.0;
+g07_j = (int)(g07_q/5.0);
+if (g07_j > 25) g07_j = 25;
+g07_q = g07_q/5.0 - g07_j;
+g07_Raux = g07_R25*exp((1.0-g07_q)*log(g07_ratio[g07_j]) + g07_q*log(g07_ratio[g07_j+1]));
+g07_estatica = g07_Vexc*g07_Rf/(g07_Rf+g07_Raux);
+/* R7 isolada: somente atraso termico, conservando a curva beta da referencia. */
+g07_Raux = g07_R25*exp(g07_B*(1.0/(g07_temp+273.15)-1.0/298.15));
+g07_dinamica = g07_Vexc*g07_Rf/(g07_Rf+g07_Raux);
+g07_Tsensor = g07_temp;
+/* R8: banco estocastico de 13 polos, aproximadamente 1/f em 0.01--1 Hz. */
+g07_n1f = 0.0;
+for (g07_i=0; g07_i<13; g07_i++) g07_n1f = g07_n1f + g07_x[g07_i];
+g07_n1f = g07_sigma*g07_n1f/3.605551275463989;
+g07_espectral = g07_ideal + g07_n1f;
+/* Cadeia fisica: Tmotor -> atraso termico -> R/T real -> divisor -> ruido. */
+g07_q = g07_temp;
+if (g07_q < 0.0) g07_q = 0.0;
+if (g07_q > 130.0) g07_q = 130.0;
+g07_j = (int)(g07_q/5.0);
+if (g07_j > 25) g07_j = 25;
+g07_q = g07_q/5.0 - g07_j;
+g07_RNTC = g07_R25*exp((1.0-g07_q)*log(g07_ratio[g07_j]) + g07_q*log(g07_ratio[g07_j+1]));
+g07_vT = g07_Vexc*g07_Rf/(g07_Rf+g07_RNTC) + g07_n1f;
+g07_reta = g07_Vexc*g07_Rf/(g07_Rf+g07_R25*g07_ratio[0])
+ + (g07_Vexc*g07_Rf/(g07_Rf+g07_R25*g07_ratio[26])
+ - g07_Vexc*g07_Rf/(g07_Rf+g07_R25*g07_ratio[0]))*g07_TC/130.0;
+/* Limiar de partida de 1 ms; com dt=10 ms, somente a primeira amostra e zerada (0-10 ms). */
+if (g07_t < 0.001) { g07_vT = 0.0; g07_espectral = 0.0; }
+"
+            update_fnc = "/* Estados atualizados exclusivamente em update_fnc. */
+g07_ticks = g07_ticks + 1;
+g07_t = g07_ticks*g07_dt;
+g07_nc = g07_nc + 1;
+if (g07_nc >= g07_every) {
+g07_nc = 0;
+g07_temp = g07_aT*g07_temp + (1.0-g07_aT)*g07_TC;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u1 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u2 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_z = sqrt(-2.0*log(g07_u1))*cos(6.283185307179586*g07_u2);
+g07_x[0] = 0.99993717012080774*g07_x[0] + 0.011209630270032356*g07_z;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u1 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u2 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_z = sqrt(-2.0*log(g07_u1))*cos(6.283185307179586*g07_u2);
+g07_x[1] = 0.99986464203781888*g07_x[1] + 0.016452890402125633*g07_z;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u1 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u2 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_z = sqrt(-2.0*log(g07_u1))*cos(6.283185307179586*g07_u2);
+g07_x[2] = 0.99970840289508911*g07_x[2] + 0.02414765373592577*g07_z;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u1 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u2 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_z = sqrt(-2.0*log(g07_u1))*cos(6.283185307179586*g07_u2);
+g07_x[3] = 0.99937187882003486*g07_x[3] + 0.035437943277136924*g07_z;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u1 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u2 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_z = sqrt(-2.0*log(g07_u1))*cos(6.283185307179586*g07_u2);
+g07_x[4] = 0.99864724456066578*g07_x[4] + 0.051996931942085198*g07_z;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u1 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u2 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_z = sqrt(-2.0*log(g07_u1))*cos(6.283185307179586*g07_u2);
+g07_x[5] = 0.99708785227632946*g07_x[5] + 0.076261489907925764*g07_z;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u1 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u2 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_z = sqrt(-2.0*log(g07_u1))*cos(6.283185307179586*g07_u2);
+g07_x[6] = 0.99373651262477825*g07_x[6] + 0.11174857259197524*g07_z;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u1 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u2 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_z = sqrt(-2.0*log(g07_u1))*cos(6.283185307179586*g07_u2);
+g07_x[7] = 0.98655449687974939*g07_x[7] + 0.16343263042105313*g07_z;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u1 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u2 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_z = sqrt(-2.0*log(g07_u1))*cos(6.283185307179586*g07_u2);
+g07_x[8] = 0.9712572013976577*g07_x[8] + 0.23803245310921334*g07_z;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u1 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u2 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_z = sqrt(-2.0*log(g07_u1))*cos(6.283185307179586*g07_u2);
+g07_x[9] = 0.93910136742429262*g07_x[9] + 0.34364025040996549*g07_z;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u1 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u2 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_z = sqrt(-2.0*log(g07_u1))*cos(6.283185307179586*g07_u2);
+g07_x[10] = 0.87339520857027508*g07_x[10] + 0.48701212474278882*g07_z;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u1 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u2 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_z = sqrt(-2.0*log(g07_u1))*cos(6.283185307179586*g07_u2);
+g07_x[11] = 0.74703769922960794*g07_x[11] + 0.66478167538653909*g07_z;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u1 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_seed = 1664525u*g07_seed + 1013904223u;
+g07_u2 = ((g07_seed >> 8) + 0.5)/16777216.0;
+g07_z = sqrt(-2.0*log(g07_u1))*cos(6.283185307179586*g07_u2);
+g07_x[12] = 0.53348809109110329*g07_x[12] + 0.84580757661773798*g07_z;
+}
+"
+            input_terminals = "real g07_TC;inherit g07_B;inherit g07_R25;inherit g07_Rf;inherit g07_Vexc;"
+            input_terminals_dimensions = "inherit;inherit;inherit;inherit;inherit"
+            input_terminals_feedthrough = "True;True;True;True;True"
+            input_terminals_show_labels = "True;True;True;True;True"
+            output_terminals = "real g07_vT;real g07_RNTC;real g07_ideal;real g07_estatica;real g07_dinamica;real g07_n1f;real g07_Tsensor;real g07_espectral;real g07_reta;"
+            output_terminals_dimensions = "inherit;inherit;inherit;inherit;inherit;inherit;inherit;inherit;inherit"
+            output_terminals_feedthrough = "True;True;True;True;True;True;True;True;True"
+            output_terminals_show_labels = "True;True;True;True;True;True;True;True;True"
+        }
+        [
+            position = 9100, 8700
+        ]
+        component "core/Probe" G07_T_motor {
+        }
+        [
+            position = 8960, 7600
+        ]
+        component "core/Probe" G07_vT_ideal {
+        }
+        [
+            position = 9160, 7640
+        ]
+        component "core/Probe" G07_R_NTC {
+        }
+        [
+            position = 9160, 7960
+        ]
+        component "core/Signal Controlled Voltage Source" G07_V_T {
+            execution_rate = "g07_dt"
+        }
+        [
+            position = 9200, 7860
+            rotation = right
+        ]
+        component "core/Resistor" G07_Rth_ref {
+            resistance = "g07_R_th"
+        }
+        [
+            position = 9360, 7800
+        ]
+        component "core/Capacitor" G07_Cc_ref {
+            capacitance = "C_c"
+        }
+        [
+            position = 9480, 7880
+            rotation = right
+        ]
+        component "core/Resistor" G07_Rc_ref {
+            resistance = "R_c"
+        }
+        [
+            position = 9480, 7952
+            rotation = right
+        ]
+        component "core/Voltage Measurement" G07_V_ref {
+        }
+        [
+            position = 9640, 7860
+            rotation = right
+        ]
+        component "core/Resistor" G07_Rth_cond {
+            resistance = "g07_R_th"
+        }
+        [
+            position = 9360, 8040
+        ]
+        component "core/Capacitor" G07_C_res {
+            capacitance = "C_res"
+        }
+        [
+            position = 9480, 8120
+            rotation = right
+        ]
+        component "core/Resistor" G07_Rc_res {
+            resistance = "R_c"
+        }
+        [
+            position = 9480, 8192
+            rotation = right
+        ]
+        component "core/Capacitor" G07_C_2s {
+            capacitance = "C_2s"
+        }
+        [
+            position = 9600, 8120
+            rotation = right
+        ]
+        component "core/Capacitor" G07_C_1s {
+            capacitance = "C_1s"
+        }
+        [
+            position = 9720, 8272
+            rotation = right
+        ]
+        component "core/Resistor" G07_Rc_1s {
+            resistance = "R_c"
+        }
+        [
+            position = 9720, 8340
+            rotation = right
+        ]
+        component "core/Resistor" G07_R_sh {
+            resistance = "R_sh"
+        }
+        [
+            position = 9840, 8272
+            rotation = right
+        ]
+        component "core/Voltage Measurement" G07_V_out {
+        }
+        [
+            position = 9960, 8100
+            rotation = right
+        ]
+        component "core/Scope" Scope1 {
+            selected_signals = "['G07_T_motor', 'G07_T_sensor', 'G07_vT_ideal', 'G07_V_estatica', 'G07_V_dinamica', 'G07_V_reta', 'G07_V_espectral', 'G07_V_ref', 'G07_V_out', 'G07_V_serie', 'G07_ruido_1f']"
+            signals_data = "{\"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true, \"signals_tooltips_enabled\": true}, \"signals\": {\"G07_T_motor\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#444444\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"G07_T_sensor\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#1976d2\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"G07_vT_ideal\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#333333\"}, \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"G07_V_estatica\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#c23e25\"}, \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"G07_V_dinamica\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#1976d2\"}, \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"G07_V_reta\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#888888\"}, \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"G07_V_espectral\": {\"viewports\": [3], \"type\": \"analog\", \"color\": {\"3\": \"#884488\"}, \"display\": {\"3\": \"solid\"}, \"is_manual\": {\"3\": false}}, \"G07_V_ref\": {\"viewports\": [3], \"type\": \"analog\", \"color\": {\"3\": \"#c23e25\"}, \"display\": {\"3\": \"solid\"}, \"is_manual\": {\"3\": false}}, \"G07_V_out\": {\"viewports\": [3], \"type\": \"analog\", \"color\": {\"3\": \"#16803f\"}, \"display\": {\"3\": \"solid\"}, \"is_manual\": {\"3\": false}}, \"G07_V_serie\": {\"viewports\": [3], \"type\": \"analog\", \"color\": {\"3\": \"#1976d2\"}, \"display\": {\"3\": \"solid\"}, \"is_manual\": {\"3\": false}}, \"G07_ruido_1f\": {\"viewports\": [4], \"type\": \"analog\", \"color\": {\"4\": \"#884488\"}, \"display\": {\"4\": \"solid\"}, \"is_manual\": {\"4\": false}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"4\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"5\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"6\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}}"
+        }
+        [
+            position = 8450, 9000
+        ]
+
+        component "core/Signal Controlled Voltage Source" G07_V_R8 {
+            execution_rate = "g07_dt"
+        }
+        [
+            position = 9180, 9110
+            rotation = right
+        ]
+        component "core/Resistor" G07_Rth_R8 {
+            resistance = "g07_R_th"
+        }
+        [
+            position = 9380, 9050
+        ]
+        component "core/Capacitor" G07_C_R8 {
+            capacitance = "C_c"
+        }
+        [
+            position = 9500, 9130
+            rotation = right
+        ]
+        component "core/Resistor" G07_Rc_R8 {
+            resistance = "R_c"
+        }
+        [
+            position = 9500, 9220
+            rotation = right
+        ]
+        component "core/Voltage Measurement" G07_V_espectral {
+        }
+        [
+            position = 9660, 9110
+            rotation = right
+        ]
+        component "core/Probe" G07_V_estatica {
+            execution_rate = "g07_dt"
+        }
+        [
+            position = 10100, 8500
+        ]
+        component "core/Probe" G07_V_dinamica {
+            execution_rate = "g07_dt"
+        }
+        [
+            position = 10100, 8575
+        ]
+        component "core/Probe" G07_ruido_1f {
+            execution_rate = "g07_dt"
+        }
+        [
+            position = 10100, 8650
+        ]
+        component "core/Probe" G07_T_sensor {
+            execution_rate = "g07_dt"
+        }
+        [
+            position = 10100, 8725
+        ]
+        component "core/Probe" G07_V_serie {
+            execution_rate = "g07_dt"
+        }
+        [
+            position = 10100, 8800
+        ]
+        component "core/Probe" G07_V_reta {
+            execution_rate = "g07_dt"
+        }
+        [
+            position = 10100, 8875
+        ]
+        component "core/Voltage Source" G07_V_comutacao {
+            init_const_value = "0.0"
+        }
+        [
+            position = 8800, 9000
+            rotation = right
+        ]
+
+        junction G07_J_T sp
+        [
+            position = 8920, 7680
+        ]
+        junction G07_J_vTs sp
+        [
+            position = 9120, 7760
+        ]
+        junction G07_J_R8 pe
+        [
+            position = 9480, 9050
+        ]
+        junction G07_J_vT pe
+        [
+            position = 9240, 7800
+        ]
+        junction G07_J_gnd pe
+        [
+            position = 9240, 8440
+        ]
+        junction G07_J_faseA pe
+        [
+            position = 9520, 7368
+        ]
+        junction G07_J_Lref pe
+        [
+            position = 9480, 7800
+        ]
+        junction G07_J_Lcond pe
+        [
+            position = 9480, 8040
+        ]
+        junction G07_J_out pe
+        [
+            position = 9600, 8040
+        ]
+        junction G07_J_blindagem pe
+        [
+            position = 9720, 8200
+        ]
+
+        connect G07_V_T.p_node G07_J_vT as G07_Conn32
+        connect G07_V_T.n_node G07_J_gnd as G07_Conn33
+        connect G07_J_vT G07_Rth_ref.p_node as G07_Conn1
+        connect G07_J_vT G07_Rth_cond.p_node as G07_Conn2
+        connect G07_Rth_ref.n_node G07_J_Lref as G07_Conn3
+        connect G07_J_Lref G07_Cc_ref.p_node as G07_Conn4
+        connect G07_J_Lref G07_V_ref.p_node as G07_Conn5
+        connect G07_Cc_ref.n_node G07_Rc_ref.p_node as G07_Conn6
+        connect G07_Rc_ref.n_node G07_J_faseA as G07_Conn7
+        connect G07_V_ref.n_node G07_J_gnd as G07_Conn8
+        connect G07_Rth_cond.n_node G07_J_Lcond as G07_Conn9
+        connect G07_J_Lcond G07_C_res.p_node as G07_Conn10
+        connect G07_J_Lcond G07_J_out as G07_Conn11
+        connect G07_J_out G07_C_2s.p_node as G07_Conn12
+        connect G07_J_out G07_V_out.p_node as G07_Conn13
+        connect G07_C_res.n_node G07_Rc_res.p_node as G07_Conn14
+        connect G07_Rc_res.n_node G07_J_faseA as G07_Conn15
+        connect G07_C_2s.n_node G07_J_blindagem as G07_Conn16
+        connect G07_J_blindagem G07_C_1s.p_node as G07_Conn17
+        connect G07_C_1s.n_node G07_Rc_1s.p_node as G07_Conn18
+        connect G07_Rc_1s.n_node G07_J_faseA as G07_Conn19
+        connect G07_J_blindagem G07_R_sh.p_node as G07_Conn20
+        connect G07_R_sh.n_node G07_J_gnd as G07_Conn21
+        connect G07_V_out.n_node G07_J_gnd as G07_Conn22
+        connect G07_T_varredura.out G07_J_T as G07_Conn34
+        connect G07_J_T "G07_NTC_divisor.g07_TC" as G07_Conn35
+        connect G07_J_T G07_T_motor.in as G07_Conn36
+        connect G07_K_B.out "G07_NTC_divisor.g07_B" as G07_Conn37
+        connect G07_K_R25.out "G07_NTC_divisor.g07_R25" as G07_Conn38
+        connect G07_K_Rf.out "G07_NTC_divisor.g07_Rf" as G07_Conn39
+        connect G07_K_Vexc.out "G07_NTC_divisor.g07_Vexc" as G07_Conn40
+        connect "G07_NTC_divisor.g07_vT" G07_J_vTs as G07_Conn41
+        connect G07_J_vTs G07_V_T.in as G07_Conn42
+        connect "G07_NTC_divisor.g07_ideal" G07_vT_ideal.in as G07_Conn43
+        connect "G07_NTC_divisor.g07_RNTC" G07_R_NTC.in as G07_Conn44
+        connect "G07_NTC_divisor.g07_espectral" G07_V_R8.in as G07_E2_C1
+        connect G07_V_R8.p_node G07_Rth_R8.p_node as G07_E2_C2
+        connect G07_Rth_R8.n_node G07_J_R8 as G07_E2_C3
+        connect G07_J_R8 G07_C_R8.p_node as G07_E2_C4
+        connect G07_C_R8.n_node G07_Rc_R8.p_node as G07_E2_C5
+        connect G07_Rc_R8.n_node G07_J_faseA as G07_E2_C6
+        connect G07_J_R8 G07_V_espectral.p_node as G07_E2_C7
+        connect G07_V_espectral.n_node G07_J_gnd as G07_E2_C8
+        connect G07_V_R8.n_node G07_J_gnd as G07_E2_C9
+        connect "G07_NTC_divisor.g07_estatica" G07_V_estatica.in as G07_E2_P0
+        connect "G07_NTC_divisor.g07_dinamica" G07_V_dinamica.in as G07_E2_P1
+        connect "G07_NTC_divisor.g07_n1f" G07_ruido_1f.in as G07_E2_P2
+        connect "G07_NTC_divisor.g07_Tsensor" G07_T_sensor.in as G07_E2_P3
+        connect "G07_NTC_divisor.g07_vT" G07_V_serie.in as G07_E2_P4
+        connect "G07_NTC_divisor.g07_reta" G07_V_reta.in as G07_E2_P5
+        connect G07_V_comutacao.p_node G07_J_faseA as G07_E2_Z1
+        connect G07_V_comutacao.n_node G07_J_gnd as G07_E2_Z2
+    }
+
+    default {
+        "core/Bus Join" {
+            inputs = "2"
+            force_tml = "True"
+            execution_rate = "inherit"
+        }
+
+        "core/Bus Split" {
+            outputs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/CPU Marker" {
+            hil_cpu_core_id = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Capacitor" {
+            signal_access = "inherit"
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Comparator" {
+            execution_rate = "inherit"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Digital Probe" {
+            signal_access = "inherit"
+            override_signal_name = "False"
+            signal_name = ""
+            streaming_en = "False"
+            addr = "0"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Discrete Transfer Function" {
+            domain = "Z-domain"
+            method = "Zero-order hold"
+            b_coeff = "[1,1]"
+            a_coeff = "[1,1]"
+            signal_out_type = "inherit"
+            execution_rate = "inherit"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Logical operator" {
+            operator = "AND"
+            inputs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Low-Pass Filter" {
+            frequency = "500"
+            init_out = "0"
+            unit = "Hz"
+            execution_rate = "inherit"
+            _tunable = "False"
+        }
+
+        "core/Mathematical function" {
+            mathematical_fn = "exponential"
+            execution_rate = "inherit"
+        }
+
+        "core/PID controller" {
+            controller_type = "PID"
+            kp = "1"
+            kp_source = "internal"
+            ki = "1"
+            ki_source = "internal"
+            kd = "0"
+            kd_source = "internal"
+            filt_coef = "100"
+            int_init_value = "0"
+            filt_init_value = "0"
+            enb_output_limit_out = "False"
+            show_reset = "none"
+            upper_sat_lim = "1"
+            upper_sat_lim_source = "internal"
+            lower_sat_lim = "-1"
+            lower_sat_lim_source = "internal"
+            enb_anti_windup_out = "False"
+            signal_out_type = "inherit"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Product" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Relational operator" {
+            relational_op = "=="
+            execution_rate = "inherit"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/SCADA Input" {
+            signal_access = "inherit"
+            addr = "0"
+            format = "real"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "real"
+            min = "-1e6"
+            max = "1e6"
+            def_value = "0"
+            unit = " "
+            execution_rate = "100e-6"
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Triangular Wave Source" {
+            min_val = "-0.5"
+            max_val = "0.5"
+            frequency = "50"
+            duty_cycle = "0.5"
+            phase = "0"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Voltage Source" {
+            sig_input = "False"
+            type = "signal generator"
+            param_set = "1phase"
+            parent_label = ""
+            dtsm_switch_name = ""
+            addr = "0"
+            spc_nb = "0"
+            execution_rate = "100e-6"
+            cpd_visible = "True"
+            enable_snb = "False"
+            snb_type = "R2"
+            R2 = "0.0"
+            L1 = "0.1"
+            override_signal_name = "False"
+            signal_name = ""
+            init_source_nature = "Constant"
+            init_const_value = "0.0"
+            init_rms_value = "0.0"
+            init_frequency = "50.0"
+            init_phase = "0.0"
+        }
+
+        "core/Brushless DC Machine" {
+            signal_access = "inherit"
+            Rs = "0.64"
+            Ls = "24.4e-3"
+            Vpk_over_krpm = "31.4"
+            pms = "4"
+            Jm = "1e-3"
+            friction_coeff = "0"
+            load_src = "SCADA / external"
+            ext_mdl_load_type = "torque"
+            load_ai_pin_addr = "1"
+            load_ai_offset = "0"
+            load_ai_gain = "1"
+            enc_ppr = "1024"
+            encoder_Z_pulse_length = "Full period"
+            res_pole_pairs = "1"
+            res_carr_source = "internal"
+            res_carr_source_external = "single ended"
+            res_int_carr_f = "5e+3"
+            res_ai_pin_addr = "1"
+            res_ai_pin2_addr = "2"
+            res_ai_offset = "0"
+            res_ai_gain = "1"
+            absenc_type = "None"
+            singleturn_abs_enc = "0"
+            multiturn_enable = "False"
+            multiturn_abs_enc = "0"
+            endat_clock_di_addr = "1"
+            endat_clock_di_logic = "active high"
+            endat_data_di_addr = "2"
+            endat_data_di_logic = "active high"
+            biss_clock_di_addr = "1"
+            biss_clock_di_logic = "active high"
+            biss_data_di_addr = "2"
+            ssi_clock_di_addr = "1"
+            ssi_clock_di_logic = "active high"
+            ssi_data_di_addr = "2"
+            execution_rate = "100e-6"
+            el_trq_out = "False"
+            mech_speed_out = "False"
+            mech_angle_out = "False"
+            e_a = "False"
+            e_b = "False"
+            e_c = "False"
+            psi_a = "False"
+            psi_b = "False"
+            psi_c = "False"
+            is_a = "False"
+            is_b = "False"
+        }
+
+        "core/CPU Transition" {
+            init_value = "0.0"
+            execution_rate = "100e-6"
+        }
+
+        "core/Current Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Rate Transition" {
+            init_value = "0.0"
+            execution_rate = "100e-6"
+            _supported_platforms = "[\'generic\']"
+        }
+
+        "core/Signal Controlled Voltage Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Three Phase Inverter" {
+            signal_access = "inherit"
+            switches_names_at_mask = "[\'Phase A.S1\', \'Phase A.S2\', \'Phase B.S1\', \'Phase B.S2\', \'Phase C.S1\', \'Phase C.S2\']"
+            switches_names_at_mask_previous = "[\'Sa_top\', \'Sa_bot\', \'Sb_top\', \'Sb_bot\', \'Sc_top\', \'Sc_bot\']"
+            ctrl_src = "Digital input per switch"
+            op_mode = "Fixed carrier frequency"
+            carrier_freq = "10000.0"
+            carr_ph_offset = "0.0"
+            d_time = "5e-6"
+            ref_sig_min_max = "[-1.0, 1.0]"
+            load_mode = "on min"
+            execution_rate = "inherit"
+            Sa_top = "1"
+            Sa_top_logic = "active high"
+            Sa_bot = "2"
+            Sa_bot_logic = "active high"
+            Sb_top = "3"
+            Sb_top_logic = "active high"
+            Sb_bot = "4"
+            Sb_bot_logic = "active high"
+            Sc_top = "5"
+            Sc_top_logic = "active high"
+            Sc_bot = "6"
+            Sc_bot_logic = "active high"
+            _overridable_switches = "[\'Sa_top\', \'Sa_bot\', \'Sb_top\', \'Sb_bot\', \'Sc_top\', \'Sc_bot\']"
+            delay_enabled = "False"
+            fixed_delay = "1e-6"
+            var_delay_lut = "[-10.0, 1e-6, 10.0, 1e-6]"
+            preview_var_delay = "Preview"
+            Sa_top_I = "False"
+            Sa_bot_I = "False"
+            Sb_top_I = "False"
+            Sb_bot_I = "False"
+            Sc_top_I = "False"
+            Sc_bot_I = "False"
+            fvd = "False"
+            losses_estimation = "False"
+            load_xml_en = "User tables"
+            fvd_def_method = "Voltage and Resistance"
+            Switch_type = "IGBT"
+            Import_igbt_xml = "not selected"
+            Import_diode_xml = "not selected"
+            xml_data = "{}"
+            transistor_data = "{\'package_class\': \'IGBT\', \'variables\': {}, \'constants\': {}, \'custom_tables\': {}, \'turn_on_losses\': {\'type\': \'Table only\', \'formula\': None, \'current_axis\': [0.0, 400.0, 800.0, 1200.0], \'voltage_axis\': [0.0, 1800.0], \'temperature_axis\': [25.0, 125.0], \'energy\': [[[0.0, 0.0, 0.0, 0.0], [0.0, 0.4068, 1.001, 1.822]], [[0.0, 0.0, 0.0, 0.0], [0.0, 0.6317, 1.38, 1.784]]], \'parsed_formula\': \'E_turn_on_losses\'}, \'turn_off_losses\': {\'type\': \'Table only\', \'formula\': None, \'current_axis\': [0.0, 400.0, 800.0, 1200.0], \'voltage_axis\': [0.0, 1800.0], \'temperature_axis\': [25.0, 125.0], \'energy\': [[[0.0, 0.0, 0.0, 0.0], [0.0, 0.6, 0.88, 1.177]], [[0.0, 0.0, 0.0, 0.0], [0.0, 0.9094, 1.25, 1.784]]], \'parsed_formula\': \'E_turn_off_losses\'}, \'conduction_losses\': {\'type\': \'Table only\', \'formula\': None, \'current_axis\': [0.0, 100.0, 200.0, 400.0, 600.0, 700.0, 800.0, 900.0, 1000.0, 1200.0, 1400.0, 1600.0], \'temperature_axis\': [25.0, 125.0], \'voltage_drop\': [[0.0, 1.5, 1.8, 2.3, 2.69, 2.9, 3.1, 3.25, 3.41, 3.73, 4.0, 4.31], [0.0, 1.63, 2.09, 2.77, 3.37, 3.63, 3.8, 4.11, 4.37, 4.81, 5.29, 5.7]], \'parsed_formula\': \'v_conduction_losses\'}, \'c_function_code\': {\'output_fnc\': \'E_turn_on_losses = lookup3d(turn_on_losses_table, i, v, T, current_axis_turn_on_losses, voltage_axis_turn_on_losses, temperature_axis_turn_on_losses, 4, 2, 2);\nE_turn_off_losses = lookup3d(turn_off_losses_table, i, v, T,current_axis_turn_off_losses, voltage_axis_turn_off_losses, temperature_axis_turn_off_losses, 4, 2, 2);\nv_conduction_losses = lookup2d(conduction_losses_table, i, T,current_axis_conduction_losses, temperature_axis_conduction_losses, 12, 2);\ne_t_on = E_turn_on_losses;\ne_t_off = E_turn_off_losses;\nv_ce = v_conduction_losses;\n\', \'arb_defs\': \'real current_axis_turn_off_losses[4] = { 0.0, 400.0, 800.0, 1200.0 };\nreal voltage_axis_turn_off_losses[2] = { 0.0, 1800.0 };\nreal temperature_axis_turn_off_losses[2] = { 25.0, 125.0 };\nreal E_turn_off_losses;\nreal turn_off_losses_table[16] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.88, 1.177, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9094, 1.25, 1.784 };\nreal current_axis_conduction_losses[12] = { 0.0, 100.0, 200.0, 400.0, 600.0, 700.0, 800.0, 900.0, 1000.0, 1200.0, 1400.0, 1600.0 };\nreal temperature_axis_conduction_losses[2] = { 25.0, 125.0 };\nreal v_conduction_losses;\nreal conduction_losses_table[24] = { 0.0, 1.5, 1.8, 2.3, 2.69, 2.9, 3.1, 3.25, 3.41, 3.73, 4.0, 4.31, 0.0, 1.63, 2.09, 2.77, 3.37, 3.63, 3.8, 4.11, 4.37, 4.81, 5.29, 5.7 };\nreal current_axis_turn_on_losses[4] = { 0.0, 400.0, 800.0, 1200.0 };\nreal voltage_axis_turn_on_losses[2] = { 0.0, 1800.0 };\nreal temperature_axis_turn_on_losses[2] = { 25.0, 125.0 };\nreal E_turn_on_losses;\nreal turn_on_losses_table[16] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.4068, 1.001, 1.822, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6317, 1.38, 1.784 };\n\'}}"
+            diode_data = "{\'package_class\': \'Diode\', \'variables\': {}, \'constants\': {}, \'custom_tables\': {}, \'turn_on_losses\': {\'type\': \'Table only\', \'formula\': None, \'current_axis\': [0.0, 400.0, 800.0, 1200.0], \'voltage_axis\': [0.0, 1800.0], \'temperature_axis\': [25.0, 125.0], \'energy\': [[[0.0, 0.0, 0.0, 0.0], [0.0, 0.4068, 1.001, 1.822]], [[0.0, 0.0, 0.0, 0.0], [0.0, 0.6317, 1.38, 1.784]]], \'parsed_formula\': \'E_turn_on_losses\'}, \'turn_off_losses\': {\'type\': \'Table only\', \'formula\': None, \'current_axis\': [0.0, 400.0, 800.0, 1200.0], \'voltage_axis\': [0.0, 1800.0], \'temperature_axis\': [25.0, 125.0], \'energy\': [[[0.0, 0.0, 0.0, 0.0], [0.0, 0.6, 0.88, 1.177]], [[0.0, 0.0, 0.0, 0.0], [0.0, 0.9094, 1.25, 1.784]]], \'parsed_formula\': \'E_turn_off_losses\'}, \'conduction_losses\': {\'type\': \'Table only\', \'formula\': None, \'current_axis\': [0.0, 100.0, 200.0, 400.0, 600.0, 700.0, 800.0, 900.0, 1000.0, 1200.0, 1400.0, 1600.0], \'temperature_axis\': [25.0, 125.0], \'voltage_drop\': [[0.0, 1.5, 1.8, 2.3, 2.69, 2.9, 3.1, 3.25, 3.41, 3.73, 4.0, 4.31], [0.0, 1.63, 2.09, 2.77, 3.37, 3.63, 3.8, 4.11, 4.37, 4.81, 5.29, 5.7]], \'parsed_formula\': \'v_conduction_losses\'}, \'c_function_code\': {\'output_fnc\': \'E_turn_on_losses = lookup3d(turn_on_losses_table, i, v, T, current_axis_turn_on_losses, voltage_axis_turn_on_losses, temperature_axis_turn_on_losses, 4, 2, 2);\nE_turn_off_losses = lookup3d(turn_off_losses_table, i, v, T,current_axis_turn_off_losses, voltage_axis_turn_off_losses, temperature_axis_turn_off_losses, 4, 2, 2);\nv_conduction_losses = lookup2d(conduction_losses_table, i, T,current_axis_conduction_losses, temperature_axis_conduction_losses, 12, 2);\ne_t_on = E_turn_on_losses;\ne_t_off = E_turn_off_losses;\nv_ce = v_conduction_losses;\n\', \'arb_defs\': \'real current_axis_turn_off_losses[4] = { 0.0, 400.0, 800.0, 1200.0 };\nreal voltage_axis_turn_off_losses[2] = { 0.0, 1800.0 };\nreal temperature_axis_turn_off_losses[2] = { 25.0, 125.0 };\nreal E_turn_off_losses;\nreal turn_off_losses_table[16] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.88, 1.177, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9094, 1.25, 1.784 };\nreal current_axis_conduction_losses[12] = { 0.0, 100.0, 200.0, 400.0, 600.0, 700.0, 800.0, 900.0, 1000.0, 1200.0, 1400.0, 1600.0 };\nreal temperature_axis_conduction_losses[2] = { 25.0, 125.0 };\nreal v_conduction_losses;\nreal conduction_losses_table[24] = { 0.0, 1.5, 1.8, 2.3, 2.69, 2.9, 3.1, 3.25, 3.41, 3.73, 4.0, 4.31, 0.0, 1.63, 2.09, 2.77, 3.37, 3.63, 3.8, 4.11, 4.37, 4.81, 5.29, 5.7 };\nreal current_axis_turn_on_losses[4] = { 0.0, 400.0, 800.0, 1200.0 };\nreal voltage_axis_turn_on_losses[2] = { 0.0, 1800.0 };\nreal temperature_axis_turn_on_losses[2] = { 25.0, 125.0 };\nreal E_turn_on_losses;\nreal turn_on_losses_table[16] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.4068, 1.001, 1.822, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6317, 1.38, 1.784 };\n\'}}"
+            user_vars_transistor = "User variables transistor"
+            user_vars_diode = "User variables diode"
+            Vce = "1.3"
+            Rce = "0"
+            Vd = "1.2"
+            Rd = "0"
+            i_sw = "[0.0, 6.0, 12.0, 18.0, 24.0]"
+            v_sw = "[0.0, 600.0]"
+            temp_sw = "[25.0, 50.0, 75.0, 100.0, 125.0]"
+            vce_table_out = "[1.3, 1.3, 1.3, 1.3, 1.3]"
+            vd_table_out = "[1.2, 1.2, 1.2, 1.2, 1.2]"
+            et_on_table_out = "[[0.0, 0.0275e-3, 0.15e-3, 0.275e-3, 0.3e-3], [0.35*3.8e-3, 0.4*3.8e-3, 0.8*3.8e-3, 0.68*3.8e-3, 0.9*3.8e-3], [0.65*3.8e-3, 0.9*3.8e-3, 1.2*3.8e-3, 1.5*3.8e-3, 1.7*3.8e-3], [0.9*3.8e-3, 1.3*3.8e-3, 1.7*3.8e-3, 1.9*3.8e-3, 2.25*3.8e-3], [1.1*3.8e-3, 1.7*3.8e-3, 2.1*3.8e-3, 2.3*3.8e-3, 2.5*3.8e-3]]"
+            et_off_table_out = "[[0.0, 0.0275e-3, 0.15e-3, 0.275e-3, 0.3e-3], [0.35*2.1e-3, 0.4*2.1e-3, 0.8*2.1e-3, 0.68*2.1e-3, 0.9*2.1e-3], [0.65*2.1e-3, 0.9*2.1e-3, 1.2*2.1e-3, 1.5*2.1e-3, 1.7*2.1e-3], [0.9*2.1e-3, 1.3*2.1e-3, 1.7*2.1e-3, 1.9*2.1e-3, 2.25*2.1e-3], [1.1*2.1e-3, 1.7*2.1e-3, 2.1*2.1e-3, 2.3*2.1e-3, 2.5*2.1e-3]]"
+            ed_off_table_out = "[[0.0, 0.0275e-3, 0.15e-3, 0.275e-3, 0.3e-3], [0.35*2.2e-3, 0.4*2.2e-3, 0.8*2.2e-3, 0.68*2.2e-3, 0.9*2.2e-3], [0.65*2.2e-3, 0.9*2.2e-3, 1.2*2.2e-3, 1.5*2.2e-3, 1.7*2.2e-3], [0.9*2.2e-3, 1.3*2.2e-3, 1.7*2.2e-3, 1.9*2.2e-3, 2.25*2.2e-3], [1.1*2.2e-3, 1.7*2.2e-3, 2.1*2.2e-3, 2.3*2.2e-3, 2.5*2.2e-3]]"
+            load_switching_data_from_xml = "Import losses data from xml files"
+            temp_estimation = "False"
+            thermal_networks_type = "Foster"
+            switch_Rth = "[0.159, 0.133, 0.120, 0.038]"
+            switch_Tth = "[1.1e-1, 1.56e-2, 1.35e-3, 1.51e-4]"
+            switch_Cth = "[0.0029, 0.0097, 0.1068, 0.8500]"
+            diode_Rth = "[0.159, 0.133, 0.120, 0.038]"
+            diode_Tth = "[1.1e-1, 1.56e-2, 1.35e-3, 1.51e-4]"
+            diode_Cth = "[0.0029, 0.0097, 0.1068, 0.8500]"
+            loss_exec_rate = "100e-6"
+            visualize_luts = "Visualize Lookup Tables"
+            vout_cmp_pullup_mode = "False"
+            vout_cmp_timeout = "5e-6"
+            PESB_Optimization = "True"
+            show_cnt_out = "False"
+            show_monitoring = "False"
+            _control_property = "all high"
+            pwm_enabling = "False"
+            pwm_enable_di = "13"
+            pwm_enable_inv = "active high"
+            dtv_flag_en = "True"
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+
+    CODE model_init
+
+        import math as g07_math
+        g07_dt = 0.01
+        g07_Tinit = 0.0
+        g07_ensaio = 0  # 0=degraus termicos; 1=varredura estatica; 2=temperatura constante, ruido 1/f
+        g07_R_25 = 10000.0
+        g07_B_ntc = 3988.0
+        g07_V_exc = 2.5
+        g07_R_f = 1470.0
+        g07_R_ntc_Tmin = g07_R_25*g07_math.exp(g07_B_ntc*(1.0/273.15-1.0/298.15))
+        g07_R_th = g07_R_f*g07_R_ntc_Tmin/(g07_R_f+g07_R_ntc_Tmin)
+        C_c = 100e-12
+        R_c = 100.0
+        cobertura = 0.95
+        C_res = (1.0-cobertura)*C_c
+        C_1s = C_c
+        C_2s = 100e-12
+        R_sh = 0.1
+
+        # Entrega 02, G07. Curva nominal 8016: TDK S861, p.6.
+        # tau=15s em ar (p.2); valor da montagem no motor requer ensaio.
+        # sigma1f=100uV RMS NOMINAL: estimativa didatica, nao dado de catalogo.
+        g07_tau = 15.0
+        g07_sigma = 100e-6
+        g07_every = int(round(0.01/g07_dt))
+        info("G07 E2: R/T 8016 | tau=15 s (ar) | 1/f nominal=100 uV RMS (estimativa) | dt=%.6g s" % g07_dt)
+    ENDCODE
+}
