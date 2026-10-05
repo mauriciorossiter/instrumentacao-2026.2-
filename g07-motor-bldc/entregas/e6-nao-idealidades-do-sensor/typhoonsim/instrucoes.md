@@ -4,10 +4,10 @@
 
 | Arquivo | Finalidade |
 |---|---|
-| `relatorio_entrega_2.pdf` | Relatório de 3 páginas, com as seções R6-R10. |
-| `modelo_camadas_entrega_2.tse` | Ensaios lentos: curva estática, resposta térmica e ruído 1/f. |
-| `modelo_motor_entrega_2.tse` | Ensaio com motor BLDC, comutação e blindagem, com as três camadas em série. |
-| `instrucoes_entrega2.md` | Orientações para executar e visualizar os ensaios. |
+| `relatorio.pdf` | Relatório de 3 páginas, com as seções R6-R10. |
+| `modelo_camadas.tse` | Ensaios lentos: curva estática, resposta térmica e ruído 1/f. |
+| `modelo_motor.tse` | Ensaio com motor BLDC, comutação e blindagem, com as três camadas em série. |
+| `instrucoes.md` | Orientações para executar e visualizar os ensaios. |
 
 As funções C estão incorporadas aos modelos. Não é necessário importar arquivos `.c`, imagens ou dados externos.
 
