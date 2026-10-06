@@ -21,7 +21,13 @@
 
 | Entrega | Estado | Tag |
 |---|---|---|
-| e1-caracterizacao | em andamento | — |
+| e1-caracterizacao | entregue | — |
+| e2-estudo no dominio da eletricidade | entregue | — |
+| e3-instrumentos nao ideais | entregue | — |
+| e4-caracteristicas estaticas | entregue | — |
+| e5-analise espectral | entregue | — |
+| e6-cadeia ideal | entregue | — |
+| e7-sensores nao ideais | entregue | — |
 
 ## Observações
 
