@@ -1,0 +1,48 @@
+# Configuracao local de editor e sistema operacional
+.vscode/
+.idea/
+.vs/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Compilacao e arquivos gerados pela simulacao
+build/
+dist/
+*_target/
+*.cpd
+*.runx
+*.exe
+*.dll
+*.so
+*.dylib
+*.bin
+*.o
+*.obj
+*.a
+*.lib
+*.out
+*.pyd
+
+# Caches e arquivos temporarios
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+cache/
+.ipynb_checkpoints/
+tmp/
+temp/
+*.pyc
+*.pyo
+*.tmp
+
+# Backups e arquivos de recuperacao
+*.bak
+*.bak.*
+*.backup
+*.orig
+*.rej
+*~
+~$*
