@@ -1,0 +1,179 @@
+{
+  "casos": {
+    "ideal": {
+      "erro_lin_subida_pcFS": 6.650680006714536e-14,
+      "erro_lin_banda_pcFS": 6.650680006714536e-14,
+      "erro_total_pcFS": 0.12032030802000548,
+      "histerese_pcFS": 6.661338147750939e-14,
+      "histerese_graus": 2.398081733190338e-12,
+      "erro_angulo_graus": 4.331531088720112,
+      "zona_morta_reversao_graus": 0.3599999999996726,
+      "atende": true
+    },
+    "estatica": {
+      "erro_lin_subida_pcFS": 0.009999999999999627,
+      "erro_lin_banda_pcFS": 0.03499924996250671,
+      "erro_total_pcFS": 0.1552962695584803,
+      "histerese_pcFS": 0.04006410256414128,
+      "histerese_graus": 1.442307692309086,
+      "erro_angulo_graus": 5.590665704105049,
+      "zona_morta_reversao_graus": 1.4400000000000546,
+      "atende": true
+    },
+    "espectral": {
+      "erro_lin_subida_pcFS": 9.440705636658813e-07,
+      "erro_lin_banda_pcFS": 9.440705636658813e-07,
+      "erro_total_pcFS": 0.12032063930786929,
+      "histerese_pcFS": 1.2185468856173998e-06,
+      "histerese_graus": 4.386768788222639e-05,
+      "erro_angulo_graus": 4.331543015083298,
+      "zona_morta_reversao_graus": 0.3599999999996726,
+      "atende": true
+    },
+    "completa": {
+      "erro_lin_subida_pcFS": 0.010000123411236267,
+      "erro_lin_banda_pcFS": 0.034998923725246156,
+      "erro_total_pcFS": 0.15529627405292956,
+      "histerese_pcFS": 0.04006518800014347,
+      "histerese_graus": 1.442346768005165,
+      "erro_angulo_graus": 5.590665865905066,
+      "zona_morta_reversao_graus": 1.4400000000000546,
+      "atende": true
+    },
+    "so_folga": {
+      "erro_lin_subida_pcFS": 6.650680006714536e-14,
+      "erro_lin_banda_pcFS": 0.027777777777794763,
+      "erro_total_pcFS": 0.14809452454420668,
+      "histerese_pcFS": 0.027822293447354873,
+      "histerese_graus": 1.0016025641047754,
+      "erro_angulo_graus": 5.331402883591181,
+      "zona_morta_reversao_graus": 1.080000000000382,
+      "atende": true
+    },
+    "so_resolucao": {
+      "erro_lin_subida_pcFS": 0.009999999999999627,
+      "erro_lin_banda_pcFS": 0.010000000000013484,
+      "erro_total_pcFS": 0.1252962695584614,
+      "histerese_pcFS": 5.551115123125783e-14,
+      "histerese_graus": 1.9984014443252818e-12,
+      "erro_angulo_graus": 4.510665704105122,
+      "zona_morta_reversao_graus": 0.3599999999996726,
+      "atende": true
+    }
+  },
+  "casos_grade_fina": {
+    "ideal": {
+      "erro_lin_subida_pcFS": 6.650680006714536e-14,
+      "erro_lin_banda_pcFS": 6.650680006714536e-14,
+      "erro_total_pcFS": 0.12032030802000548,
+      "histerese_pcFS": 4.440892098500626e-14,
+      "histerese_graus": 1.5987211554602254e-12,
+      "erro_angulo_graus": 4.331531088720112,
+      "zona_morta_reversao_graus": 0.02160021600229811,
+      "atende": true
+    },
+    "estatica": {
+      "erro_lin_subida_pcFS": 0.014799347953476977,
+      "erro_lin_banda_pcFS": 0.03759897591972577,
+      "erro_total_pcFS": 0.15786494428364772,
+      "histerese_pcFS": 0.04006410256414128,
+      "histerese_graus": 1.442307692309086,
+      "erro_angulo_graus": 5.683137994211393,
+      "zona_morta_reversao_graus": 1.1880118801186654,
+      "atende": true
+    },
+    "so_folga": {
+      "erro_lin_subida_pcFS": 6.650680006714536e-14,
+      "erro_lin_banda_pcFS": 0.02777777777781693,
+      "erro_total_pcFS": 0.1480974087076925,
+      "histerese_pcFS": 0.027822293447354873,
+      "histerese_graus": 1.0016025641047754,
+      "erro_angulo_graus": 5.331506713476301,
+      "zona_morta_reversao_graus": 1.0152101521007353,
+      "atende": true
+    },
+    "so_resolucao": {
+      "erro_lin_subida_pcFS": 0.014799347953476977,
+      "erro_lin_banda_pcFS": 0.014799347953476977,
+      "erro_total_pcFS": 0.13003281500083563,
+      "histerese_pcFS": 0.0,
+      "histerese_graus": 0.0,
+      "erro_angulo_graus": 4.68118134002998,
+      "zona_morta_reversao_graus": 0.1944019440197735,
+      "atende": true
+    }
+  },
+  "desvio_contra_E01": {
+    "so_resolucao": {
+      "max_graus": 0.3599945999459994,
+      "max_pcFS": 0.009999849998499982
+    },
+    "so_folga": {
+      "max_graus": 1.0000000000007958,
+      "max_pcFS": 0.027777777777799884
+    },
+    "estatica": {
+      "max_graus": 1.359998199982222,
+      "max_pcFS": 0.03777772777728394
+    },
+    "espectral": {
+      "max_graus": 2.879999998484095e-05,
+      "max_pcFS": 7.999999995789153e-07
+    }
+  },
+  "r6": {
+    "resolucao_pc": 0.02,
+    "N_passos": 5000,
+    "passo_graus": 0.7200000000000001,
+    "passo_mV": 0.5,
+    "passo_uA": 3.2,
+    "erro_quantizacao_max_graus": 0.36000000000000004,
+    "erro_quantizacao_max_pcFS": 0.01,
+    "folga_graus": 1.0,
+    "folga_pcFS": 0.027777777777777776,
+    "zona_morta_min_graus": 1.0,
+    "zona_morta_max_graus": 1.7200000000000002,
+    "taxa_varredura_graus_s": 360.0,
+    "amostras_por_passo": 2.0000000000000004
+  },
+  "r7": {
+    "tau_buffer_us": 0.45472840883398674,
+    "tau_xtr_us": 0.4188287976102509,
+    "tau_entrada_ns": 10.4,
+    "tau_total_us": 0.8839572064442377,
+    "velocidade_varredura_graus_s": 360.0,
+    "rpm_varredura": 60.0,
+    "rpm_max_datasheet": 200.0,
+    "atraso_rampa_graus": 0.00031822459431992556,
+    "atraso_rampa_pcFS": 8.839572064442378e-06,
+    "atraso_rampa_rpm_max_graus": 0.0010607486477330853,
+    "razao_passo_typhoon_sobre_tau": 1131.2764834199954,
+    "atraso_numerico_typhoon_graus": 0.72,
+    "f_fundamental_varredura_Hz": 0.05,
+    "t_99_us": 2.9025000000000003
+  },
+  "r8": {
+    "ENR_ohm": 100.0,
+    "K_escala": 9.268124000249522,
+    "dRc_rms_ohm": 26.861547383136767,
+    "dRc_pico_ohm": 100.0,
+    "inclinacao_psd_dec": -0.9996989979180695,
+    "I_cursor_pA": 200.0,
+    "v_ruido_buffer_nV": 20.0,
+    "erro_buffer_pcFS": 8e-07,
+    "v_ruido_ensaio_mV": 100.0,
+    "erro_ensaio_pcFS": 4.0,
+    "erro_sem_buffer_pcFS": 0.6369426751592407,
+    "fator_buffer": 796178.343949051
+  },
+  "r8_circuito_sem_buffer": {
+    "R_min_ohm": 10.0,
+    "R_c0_ohm": 110.0,
+    "erro_lin_subida_pcFS": 8.374876578169559,
+    "erro_total_pcFS": 8.97153542045771,
+    "erro_lin_sem_ruido_pcFS": 8.220376906862846,
+    "ruido_pico_pcFS": 0.5472333717198241,
+    "ruido_rms_pcFS": 0.0807066106282265,
+    "atende": false
+  }
+}
