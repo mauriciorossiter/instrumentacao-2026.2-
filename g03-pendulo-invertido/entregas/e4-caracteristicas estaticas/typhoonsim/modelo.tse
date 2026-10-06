@@ -4,7 +4,7 @@ version = 4.2
 // Saved by sw version: 2026.3
 //
 
-model "New schematic 29-Aug-2026@22-34-31" {
+model "modelo" {
     configuration {
         hil_device = "HIL404"
         hil_configuration_id = 6
@@ -80,7 +80,8 @@ model "New schematic 29-Aug-2026@22-34-31" {
 
     component Subsystem Root {
         component "core/Ramp" Entrada_x {
-            slope = "12"
+            slope = "60"
+            start_time = "2"
         }
         [
             position = 7728, 8172
@@ -109,12 +110,12 @@ model "New schematic 29-Aug-2026@22-34-31" {
             input_terminals_feedthrough = "True"
             input_terminals_show_labels = "False"
             output_fnc = "/*Begin code section*/
-if (in > 115.0) {
-    out = 115.0; // Limite superior de saturação
-} else if (in < 5.0) {
-    out = 5.0;   // Limite inferior de saturação
+if (in > 100.0) {
+    out = 100.0; // Saturação superior
+} else if (in < 10.0) {
+    out = 10.0;  // Saturação inferior
 } else {
-    out = in;    // Região linear
+    out = in;    // Região estritamente linear
 }
 /*End code section*/"
             output_terminals_dimensions = "inherit"
