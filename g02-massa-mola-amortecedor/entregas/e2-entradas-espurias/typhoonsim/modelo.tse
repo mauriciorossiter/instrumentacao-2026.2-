@@ -1,0 +1,643 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "atv2" {
+    configuration {
+        hil_device = "VHIL+"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 1.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Scope" Scope1 {
+            selected_signals = "[\'RawOutput\', \'CorrectedRaw\', \'SpuriousOut\', \'OriginalInput\', \'CorrectedOut\']"
+            signals_data = "{\"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true, \"signals_tooltips_enabled\": true}, \"signals\": {\"RawOutput\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#00CC00\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"CorrectedRaw\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#FF0000\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"SpuriousOut\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#FF0000\"}, \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"OriginalInput\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#00CC00\"}, \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"CorrectedOut\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#0099FF\"}, \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"4\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"5\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"6\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}}"
+            user_range_data = "{\"1\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"2\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"3\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"4\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"5\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"6\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}}"
+        }
+        [
+            position = 8532, 8448
+        ]
+
+        component "core/Probe" RawOutput {
+        }
+        [
+            position = 7912, 8304
+            rotation = left
+        ]
+
+        component "core/Probe" OriginalInput {
+        }
+        [
+            position = 7688, 8300
+            rotation = left
+        ]
+
+        component Subsystem "Instrumento Real Descrito por f[]" {
+            layout = dynamic
+            component "core/C function" "f0(t)" {
+                arb_defs = "/*Begin code section*/
+
+/*End code section*/"
+                execution_rate = "0.0001"
+                init_fnc = "/*Begin code section*/
+
+/*End code section*/"
+                input_terminals = "real x;real xm;"
+                input_terminals_dimensions = "(1,);(1,)"
+                input_terminals_feedthrough = "True;True"
+                input_terminals_show_labels = "True;True"
+                output_fnc = "/*Begin code section*/
+double FS   = 500.0;      // fundo de escala, kg
+double VEXC = 10.0;       // excitacao, V
+double SENS = 3.0;        // sensibilidade, mV/V (datasheet Rev16)
+double TCAL = 20.0;       // temperatura de calibracao, degC
+double ZTC  = 0.000015;   // 0.015 %FS/10C -> fracao por C  (0.015/100/10)
+double STC  = 0.000011;   // 0.011 %FS/10C -> fracao por C
+
+double VFS   = VEXC * SENS / 1000.0;      // saida de fundo de escala = 0.030 V
+double y_id  = (x / FS) * VFS;            // saida ideal (calibrada a TCAL)
+double dT    = xm - TCAL;                  // desvio de temperatura
+
+double e_span = STC * dT * y_id;          // erro de span (modificante)
+
+y = y_id + e_span;               // saida contaminada
+/*End code section*/"
+                output_terminals = "real y;"
+                output_terminals_dimensions = "inherit"
+                output_terminals_feedthrough = "True"
+                output_terminals_show_labels = "False"
+                update_fnc = "/*Begin code section*/
+
+/*End code section*/"
+            }
+            [
+                position = 7648, 7904
+                size = 48, 48
+            ]
+
+            component "core/C function" "g0(t)" {
+                arb_defs = "/*Begin code section*/
+
+/*End code section*/"
+                execution_rate = "0.0001"
+                init_fnc = "/*Begin code section*/
+
+/*End code section*/"
+                input_terminals = "real xm;real xi;"
+                input_terminals_dimensions = "(1,);(1,)"
+                input_terminals_feedthrough = "True;True"
+                input_terminals_show_labels = "True;True"
+                output_fnc = "/*Begin code section*/
+double FS   = 500.0;      // fundo de escala, kg
+double VEXC = 10.0;       // excitacao, V
+double SENS = 3.0;        // sensibilidade, mV/V (datasheet Rev16)
+double TCAL = 20.0;       // temperatura de calibracao, degC
+double ZTC  = 0.000015;   // 0.015 %FS/10C -> fracao por C  (0.015/100/10)
+double STC  = 0.000011;   // 0.011 %FS/10C -> fracao por C
+
+double VFS   = VEXC * SENS / 1000.0;      // saida de fundo de escala = 0.030 V
+double dT    = xi - TCAL;                  // desvio de temperatura
+
+double e_zero = ZTC * dT * VFS;           // erro de zero (interferencia)
+
+y = e_zero;               // saida contaminada
+/*End code section*/"
+                output_terminals = "real y;"
+                output_terminals_dimensions = "inherit"
+                output_terminals_feedthrough = "True"
+                output_terminals_show_labels = "False"
+                update_fnc = "/*Begin code section*/
+
+/*End code section*/"
+            }
+            [
+                position = 7652, 8240
+                size = 48, 48
+            ]
+
+            component "core/Sum" Sum1 {
+            }
+            [
+                position = 7828, 8068
+            ]
+
+            port "x(t)" {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7452, 7896
+            ]
+
+            port "y(t)" {
+                position = auto:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8160, 8068
+            ]
+
+            port "xm(t)" {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7452, 8068
+            ]
+
+            port "xi(t)" {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7452, 8248
+            ]
+
+            junction Junction1 sp
+            [
+                position = 7564, 8068
+            ]
+
+            comment Comment1 START <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Sans'; font-size:12pt; font-weight:400; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">f̃0[x(t)]</p></body></html> ENDCOMMENT 
+            [
+                position = 7712, 7864
+            ]
+
+            comment Comment2 START <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Sans'; font-size:12pt; font-weight:400; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">g̃0[xi(t)]</p></body></html> ENDCOMMENT 
+            [
+                position = 7704, 8200
+            ]
+
+            comment Comment3 START <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Sans'; font-size:12pt; font-weight:400; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">y(t) = f̃0[x(t)] + g̃0[xi(t)]</p></body></html> ENDCOMMENT 
+            [
+                position = 7888, 8024
+            ]
+
+            comment Comment4 START <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Sans'; font-size:12pt; font-weight:400; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">  Modelo generalizado de instrumento</p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">  Ref.: AGUIRRE, L. A. Fundamentos de Instrumentação, Cap. 2.</p><p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">  y(t) = f0[x(t)] + g0[xi(t)]</p><p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">  x(t)  : entrada desejada (mensurando)</p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">  xm(t) : entrada modificante (ex.: temperatura) — altera f0 e g0</p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">  xi(t) : entrada de interferência (espúria) — soma-se à saída</p><p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">  f0 : resposta ao mensurando        g0 : efeito da interferência</p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">  Sum1 : combina sinal útil + parcela espúria -&gt; y(t)</p></body></html> ENDCOMMENT 
+            [
+                position = 6876, 7864
+            ]
+
+            connect "x(t)" "f0(t).x" as Connection1
+            connect "xi(t)" "g0(t).xi" as Connection3
+            connect "xm(t)" Junction1 as Connection4
+            connect Junction1 "f0(t).xm" as Connection5
+            [
+                breakpoints = 7564, 8068; 7564, 7912
+            ]
+            connect "g0(t).xm" Junction1 as Connection6
+            [
+                breakpoints = 7564, 8232; 7564, 8068
+            ]
+            connect "f0(t).y" Sum1.in as Connection7
+            connect "g0(t).y" Sum1.in1 as Connection8
+            connect "y(t)" Sum1.out as Connection9
+        }
+        [
+            position = 7808, 8376
+            size = 112, 64
+        ]
+
+        component "core/C function" Weight1 {
+            arb_defs = "/*Begin code section*/
+
+/*End code section*/"
+            execution_rate = "0.0001"
+            init_fnc = "/*Begin code section*/
+
+/*End code section*/"
+            input_terminals = ""
+            input_terminals_dimensions = ""
+            input_terminals_feedthrough = ""
+            input_terminals_show_labels = ""
+            output_fnc = "/*Begin code section*/
+w = 350.0;
+/*End code section*/"
+            output_terminals = "real w;"
+            output_terminals_dimensions = "(1,)"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            update_fnc = "/*Begin code section*/
+
+/*End code section*/"
+        }
+        [
+            position = 7552, 8316
+            size = 48, 48
+        ]
+
+        component "core/C function" "C function2" {
+            arb_defs = "/*Begin code section*/
+double t_acc = 0.0;
+/*End code section*/"
+            execution_rate = "0.0001"
+            init_fnc = "/*Begin code section*/
+
+/*End code section*/"
+            input_terminals = ""
+            input_terminals_dimensions = ""
+            input_terminals_feedthrough = ""
+            input_terminals_show_labels = ""
+            output_fnc = "/*Begin code section*/
+double TMED = 29.5;
+double AMP  = 8.5;
+double FREQ = 1.0;
+double DT = 100e-6;
+double PI = 3.14159265358979;
+
+T = TMED + AMP * sin(2.0 * PI * FREQ * t_acc);
+t_acc = t_acc + DT;
+/*End code section*/"
+            output_terminals = "real T;"
+            output_terminals_dimensions = "(1,)"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            update_fnc = "/*Begin code section*/
+
+/*End code section*/"
+        }
+        [
+            position = 7552, 8420
+            size = 48, 48
+        ]
+
+        component "core/C function" CalCorrection1 {
+            arb_defs = "/*Begin code section*/
+
+/*End code section*/"
+            init_fnc = "/*Begin code section*/
+
+/*End code section*/"
+            input_terminals = "real in;inherit sin;"
+            input_terminals_dimensions = "inherit;inherit"
+            input_terminals_feedthrough = "True;True"
+            input_terminals_show_labels = "True;True"
+            output_fnc = "/*Begin code section*/
+double FS   = 500.0;
+double VEXC = 10.0;
+double SENS = 3.0;
+double TCAL = 20.0;
+double ZTC  = 0.000015;
+double STC  = 0.000011;
+
+double VFS = VEXC * SENS / 1000.0;
+double dT  = sin - TCAL;                   // usa a temperatura medida
+
+double y = in - ZTC * dT * VFS;            // 1) remove erro de zero
+y = y / (1.0 + STC * dT);                  // 2) remove erro de span
+
+out = y;                                   // saida corrigida, em volts
+/*End code section*/"
+            output_terminals_dimensions = "inherit"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "False"
+            update_fnc = "/*Begin code section*/
+
+/*End code section*/"
+        }
+        [
+            position = 8188, 8384
+            size = 48, 48
+        ]
+
+        component "core/Probe" CorrectedRaw {
+        }
+        [
+            position = 8240, 8316
+            rotation = left
+        ]
+
+        component "core/C function" V2Kg2 {
+            arb_defs = "/*Begin code section*/
+
+/*End code section*/"
+            init_fnc = "/*Begin code section*/
+
+/*End code section*/"
+            input_terminals = "real v;"
+            input_terminals_dimensions = "inherit"
+            input_terminals_feedthrough = "True"
+            input_terminals_show_labels = "True"
+            output_fnc = "/*Begin code section*/
+double FS   = 500.0;
+double VEXC = 10.0;
+double SENS = 3.0;
+
+double VFS = VEXC * SENS / 1000.0;
+
+kg = (v / VFS) * FS;
+/*End code section*/"
+            output_terminals = "real kg;"
+            output_terminals_dimensions = "inherit"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            update_fnc = "/*Begin code section*/
+
+/*End code section*/"
+        }
+        [
+            position = 8120, 8228
+            size = 48, 48
+        ]
+
+        component "core/C function" V2Kg3 {
+            arb_defs = "/*Begin code section*/
+
+/*End code section*/"
+            init_fnc = "/*Begin code section*/
+
+/*End code section*/"
+            input_terminals = "real v;"
+            input_terminals_dimensions = "inherit"
+            input_terminals_feedthrough = "True"
+            input_terminals_show_labels = "True"
+            output_fnc = "/*Begin code section*/
+double FS   = 500.0;
+double VEXC = 10.0;
+double SENS = 3.0;
+
+double VFS = VEXC * SENS / 1000.0;
+
+kg = (v / VFS) * FS;
+/*End code section*/"
+            output_terminals = "real kg;"
+            output_terminals_dimensions = "inherit"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            update_fnc = "/*Begin code section*/
+
+/*End code section*/"
+        }
+        [
+            position = 8440, 8228
+            size = 48, 48
+        ]
+
+        component "core/Probe" SpuriousOut {
+        }
+        [
+            position = 8208, 8228
+        ]
+
+        component "core/Probe" CorrectedOut {
+        }
+        [
+            position = 8540, 8228
+        ]
+
+        component "core/C function" "TMP117 (Sensor)1" {
+            arb_defs = "/*Begin code section*/
+
+/*End code section*/"
+            init_fnc = "/*Begin code section*/
+
+/*End code section*/"
+            input_terminals_dimensions = "inherit"
+            input_terminals_feedthrough = "True"
+            input_terminals_show_labels = "True"
+            output_fnc = "/*Begin code section*/
+double LSB    = 0.0078125;   // resolucao 16 bits, degC
+double OFFSET = 0.05;        // offset de acuracia deste exemplar (<= 0.1 degC)
+double PSR    = 0.006;       // sensibilidade a fonte, degC/V (nao usado se fonte fixa)
+
+double Tm = in + OFFSET;                  // erro sistematico de acuracia
+Tm = floor(Tm / LSB + 0.5) * LSB;
+out = Tm;
+/*End code section*/"
+            output_terminals_dimensions = "inherit"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "False"
+            update_fnc = "/*Begin code section*/
+
+/*End code section*/"
+        }
+        [
+            position = 7828, 8508
+            size = 48, 48
+        ]
+
+        junction Junction9 sp
+        [
+            position = 7608, 8392
+        ]
+
+        junction Junction11 sp
+        [
+            position = 8240, 8384
+        ]
+
+        junction Junction12 sp
+        [
+            position = 8056, 8380
+        ]
+
+        junction Junction13 sp
+        [
+            position = 7912, 8376
+        ]
+
+        junction Junction14 sp
+        [
+            position = 7688, 8360
+        ]
+
+        junction Junction15 sp
+        [
+            position = 7604, 8420
+        ]
+
+        connect "Instrumento Real Descrito por f[].xi(t)" Junction9 as Connection42
+        [
+            breakpoints = 7672, 8392
+        ]
+        connect Junction9 "Instrumento Real Descrito por f[].xm(t)" as Connection43
+        [
+            breakpoints = 7608, 8392; 7608, 8376
+        ]
+        connect CalCorrection1.out Junction11 as Connection47
+        connect Junction11 CorrectedRaw.in as Connection48
+        connect V2Kg3.v Junction11 as Connection49
+        [
+            breakpoints = 8388, 8236; 8388, 8384; 8372, 8384
+        ]
+        connect V2Kg2.kg SpuriousOut.in as Connection50
+        connect V2Kg3.kg CorrectedOut.in as Connection51
+        connect V2Kg2.v Junction12 as Connection53
+        [
+            breakpoints = 8056, 8240
+        ]
+        connect Junction12 CalCorrection1.in as Connection54
+        [
+            breakpoints = 8056, 8376
+        ]
+        connect "Instrumento Real Descrito por f[].y(t)" Junction13 as Connection56
+        connect Junction13 Junction12 as Connection57
+        connect RawOutput.in Junction13 as Connection58
+        connect "Instrumento Real Descrito por f[].x(t)" Junction14 as Connection61
+        connect Junction14 Weight1.w as Connection62
+        [
+            breakpoints = 7632, 8360; 7632, 8316
+        ]
+        connect OriginalInput.in Junction14 as Connection63
+        connect "C function2.T" Junction15 as Connection64
+        connect Junction15 Junction9 as Connection65
+        connect "TMP117 (Sensor)1.in" Junction15 as Connection66
+        [
+            breakpoints = 7608, 8508; 7608, 8420
+        ]
+        connect "TMP117 (Sensor)1.out" CalCorrection1.sin as Connection67
+        [
+            breakpoints = 8076, 8396
+        ]
+    }
+
+    default {
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+    }
+}
