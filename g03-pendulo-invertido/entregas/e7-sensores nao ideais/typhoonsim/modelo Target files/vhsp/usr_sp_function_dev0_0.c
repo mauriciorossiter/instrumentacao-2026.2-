@@ -1,0 +1,644 @@
+// generated using template: cop_main.template---------------------------------------------
+/******************************************************************************************
+**
+**  Module Name: cop_main.c
+**  NOTE: Automatically generated file. DO NOT MODIFY!
+**  Description:
+**            Main file
+**
+******************************************************************************************/
+// generated using template: arm/custom_include.template-----------------------------------
+
+
+#ifdef __cplusplus
+#include <limits>
+
+extern "C" {
+#endif
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <math.h>
+#include <stdint.h>
+#include <complex.h>
+#include <time.h>
+#include <stdarg.h>
+
+// x86 libraries:
+#include "../include/sp_functions_dev0.h"
+
+
+#ifdef __cplusplus
+}
+#endif
+
+
+
+// ----------------------------------------------------------------------------------------                // generated using template:generic_macros.template-----------------------------------------
+/*********************** Macros (Inline Functions) Definitions ***************************/
+
+// ----------------------------------------------------------------------------------------
+
+#ifndef MAX
+#define MAX(value, limit) (((value) > (limit)) ? (value) : (limit))
+#endif
+#ifndef MIN
+#define MIN(value, limit) (((value) < (limit)) ? (value) : (limit))
+#endif
+
+// generated using template: VirtualHIL/custom_defines.template----------------------------
+
+typedef unsigned char X_UnInt8;
+typedef char X_Int8;
+typedef signed short X_Int16;
+typedef unsigned short X_UnInt16;
+typedef int X_Int32;
+typedef unsigned int X_UnInt32;
+typedef unsigned int uint;
+typedef double real;
+
+// ----------------------------------------------------------------------------------------
+// generated using template: custom_consts.template----------------------------------------
+
+// arithmetic constants
+#define C_SQRT_2                    1.4142135623730950488016887242097f
+#define C_SQRT_3                    1.7320508075688772935274463415059f
+#define C_PI                        3.1415926535897932384626433832795f
+#define C_E                         2.7182818284590452353602874713527f
+#define C_2PI                       6.283185307179586476925286766559f
+
+//@cmp.def.start
+//component defines
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//@cmp.def.end
+
+
+//-----------------------------------------------------------------------------------------
+// generated using template: common_variables.template-------------------------------------
+// true global variables
+
+
+
+
+
+// const variables
+
+static const real _campo__b___p_execution_rate = 0.0001;
+static const real _campo__b___p_initial_output = -17.8;
+static const real _campo__b___p_slope = 35.6;
+static const real _campo__b___p_start_time = 0.0;
+
+
+static const real _campo__b_1__p_execution_rate = 0.0001;
+static const real _campo__b_1__p_initial_output = -17.8;
+static const real _campo__b_1__p_slope = 35.6;
+static const real _campo__b_1__p_start_time = 0.0;
+
+
+static const real _gerador_de_ru_do__p_amplitude = 0.02;
+static const real _gerador_de_ru_do__p_dc_offset = 0.0;
+static const real _gerador_de_ru_do__p_execution_rate = 0.0001;
+static const real _gerador_de_ru_do__p_frequency = 60.0;
+static const real _gerador_de_ru_do__p_phase = 0.0;
+
+
+static const real _tens_o_de_repouso__vq___p_value = 1.0;
+
+
+static const real _v_ref__p_value = 0.2;
+
+
+static const real _v_ref1__p_value = 0.2;
+
+static const char* _sensibilidade__s___n_multiplication = "Element-wise(K.*u)";
+static const real _sensibilidade__s___p_gain = 0.045;
+
+static const int _sum3__n_in_size = 1;
+static const int _sum3__n_num_of_inputs = 2;
+static const unsigned char _sum3__n_signs_bool[2] = {1, 1};
+
+
+static const int _sum4__n_in_size = 1;
+static const int _sum4__n_num_of_inputs = 2;
+static const unsigned char _sum4__n_signs_bool[2] = {1, 1};
+
+
+static const int _v_sensor_real__n_out_size = 1;
+static const unsigned int _v_sensor_real__p_addr = 16387;
+
+static const int _sum1__n_in_size = 1;
+static const int _sum1__n_num_of_inputs = 2;
+static const unsigned char _sum1__n_signs_bool[2] = {1, 1};
+
+
+static const int _sum2__n_in_size = 1;
+static const int _sum2__n_num_of_inputs = 2;
+static const unsigned char _sum2__n_signs_bool[2] = {1, 0};
+
+
+static const int _v_sensor_ruido__n_out_size = 1;
+static const unsigned int _v_sensor_ruido__p_addr = 16388;
+
+static const int _sum5__n_in_size = 1;
+static const int _sum5__n_num_of_inputs = 2;
+static const unsigned char _sum5__n_signs_bool[2] = {1, 0};
+
+
+static const int _v_sensor_ideal__n_out_size = 1;
+static const unsigned int _v_sensor_ideal__p_addr = 16386;
+
+static const char* _ad__n_multiplication = "Element-wise(K.*u)";
+static const real _ad__p_gain = 3.125;
+
+static const char* _ad1__n_multiplication = "Element-wise(K.*u)";
+static const real _ad1__p_gain = 3.125;
+
+static const int _v_out_real__n_out_size = 1;
+static const unsigned int _v_out_real__p_addr = 16385;
+
+static const int _v_out_ideal__n_out_size = 1;
+static const unsigned int _v_out_ideal__p_addr = 16384;
+
+
+//@cmp.var.start
+// variables
+static real _campo__b___out;
+static real _campo__b_1__out;
+static real _gerador_de_ru_do__out;
+static real _tens_o_de_repouso__vq___out;
+static real _v_ref__out;
+static real _v_ref1__out;
+double _c_function1__B;
+
+double _c_function1__V_sensor;
+
+static real _sensibilidade__s___out;
+static real _sum3__out;
+static real _sum4__out;
+
+
+
+static real _sum1__out;
+static real _sum2__out;
+
+
+
+static real _sum5__out;
+
+
+
+static real _ad__out;
+static real _ad1__out;
+
+
+
+
+
+
+//@cmp.var.end
+
+//@cmp.svar.start
+// state variables
+real _campo__b___state;
+
+
+real _campo__b_1__state;
+
+
+real _gerador_de_ru_do__current_phase;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//@cmp.svar.end
+
+// IO shared variables
+
+//
+// Tunable parameters
+//
+static struct Tunable_params {
+} __attribute__((__packed__)) tunable_params;
+
+void *tunable_params_dev0_cpu0_ptr = &tunable_params;
+
+// Dll function pointers
+#if defined(_WIN64)
+#else
+// Define handles for loading dlls
+#endif
+
+
+
+
+
+// generated using template: \templates\virtual_hil\fmi_custom_logger_fncs.template---------------------------------
+#include <stdarg.h>
+
+
+
+//
+// DMA buffers
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// generated using template: virtual_hil/custom_functions.template---------------------------------
+void ReInit_user_sp_cpu0_dev0() {
+#if DEBUG_MODE
+    printf("\n\rReInitTimer");
+#endif
+    //@cmp.init.block.start
+    {
+        _campo__b___state = 0;
+    }
+    {
+        _campo__b_1__state = 0;
+    }
+    {
+        _gerador_de_ru_do__current_phase = 0;
+    }
+    {
+        _gerador_de_ru_do__current_phase = (_gerador_de_ru_do__p_phase / 360);
+    }
+    {
+    }
+    {
+        HIL_OutAO(0x4003, 0);
+    }
+    {
+        HIL_OutAO(0x4004, 0);
+    }
+    {
+        HIL_OutAO(0x4002, 0);
+    }
+    {
+        HIL_OutAO(0x4001, 0);
+    }
+    {
+        HIL_OutAO(0x4000, 0);
+    }
+    //@cmp.init.block.end
+}
+
+
+// Dll function pointers and dll reload function
+#if defined(_WIN64)
+// Define method for reloading dll functions
+void ReloadDllFunctions_user_sp_cpu0_dev0(void) {
+    // Load each library and setup function pointers
+}
+
+void FreeDllFunctions_user_sp_cpu0_dev0(void) {
+}
+
+#else
+// Define method for reloading dll functions
+void ReloadDllFunctions_user_sp_cpu0_dev0(void) {
+    // Load each library and setup function pointers
+}
+
+void FreeDllFunctions_user_sp_cpu0_dev0(void) {
+}
+#endif
+
+void load_fmi_libraries_user_sp_cpu0_dev0(void) {
+#if defined(_WIN64)
+#else
+#endif
+}
+
+
+void ReInit_sp_scope_user_sp_cpu0_dev0() {
+    // initialise SP Scope buffer pointer
+}
+
+
+// generated using template: virtual_hil/common_timer_counter_handler.template-------------------------
+
+/*****************************************************************************************/
+/**
+* This function is the handler which performs processing for the timer counter.
+* It is called from an interrupt context such that the amount of processing
+* performed should be minimized.  It is called when the timer counter expires
+* if interrupts are enabled.
+*
+*
+* @param    None
+*
+* @return   None
+*
+* @note     None
+*
+*****************************************************************************************/
+
+void TimerCounterHandler_0_user_sp_cpu0_dev0() {
+#if DEBUG_MODE
+    printf("\n\rTimerCounterHandler_0");
+#endif
+    //////////////////////////////////////////////////////////////////////////
+    // Output block
+    //////////////////////////////////////////////////////////////////////////
+    //@cmp.out.block.start
+    // Generated from the component: Campo (B)
+    {
+        if((_campo__b___state < _campo__b___p_start_time)) {
+            _campo__b___out = _campo__b___p_initial_output;
+        }
+        else {
+            _campo__b___out = ((_campo__b___p_slope * ((_campo__b___state - _campo__b___p_start_time))) + _campo__b___p_initial_output);
+        }
+    }
+    // Generated from the component: Campo (B)1
+    {
+        if((_campo__b_1__state < _campo__b_1__p_start_time)) {
+            _campo__b_1__out = _campo__b_1__p_initial_output;
+        }
+        else {
+            _campo__b_1__out = ((_campo__b_1__p_slope * ((_campo__b_1__state - _campo__b_1__p_start_time))) + _campo__b_1__p_initial_output);
+        }
+    }
+    // Generated from the component: Gerador de Ruído
+    {
+        _gerador_de_ru_do__out = ((_gerador_de_ru_do__p_amplitude * sin(((2 * M_PI) * _gerador_de_ru_do__current_phase))) + _gerador_de_ru_do__p_dc_offset);
+    }
+    // Generated from the component: Tensão de Repouso (Vq)
+    {
+        _tens_o_de_repouso__vq___out = _tens_o_de_repouso__vq___p_value;
+    }
+    // Generated from the component: V_ref
+    {
+        _v_ref__out = _v_ref__p_value;
+    }
+    // Generated from the component: V_ref1
+    {
+        _v_ref1__out = _v_ref1__p_value;
+    }
+    // Generated from the component: C function1
+    _c_function1__B = _campo__b___out;
+    {
+        double  VQ_nominal = 1.0;
+        double  S_nominal = 0.045;
+        double  delta_VQ = 0.15;
+        double  delta_S = 0.025;
+        double  VQ_real = VQ_nominal + delta_VQ;
+        double  S_real = S_nominal + delta_S;
+        _c_function1__V_sensor = VQ_real + ( S_real * _c_function1__B ) ;
+    }
+    // Generated from the component: Sensibilidade (S)
+    {
+        _sensibilidade__s___out = (_sensibilidade__s___p_gain * _campo__b_1__out);
+    }
+    // Generated from the component: Sum3
+    {
+        _sum3__out = 0;
+        _sum3__out += _gerador_de_ru_do__out;
+        _sum3__out += _v_ref__out;
+    }
+    // Generated from the component: Sum4
+    {
+        _sum4__out = 0;
+        _sum4__out += _gerador_de_ru_do__out;
+        _sum4__out += _c_function1__V_sensor;
+    }
+    // Generated from the component: V_sensor_real
+    {
+        HIL_OutAO(0x4003, _c_function1__V_sensor);
+    }
+    // Generated from the component: Sum1
+    {
+        _sum1__out = 0;
+        _sum1__out += _tens_o_de_repouso__vq___out;
+        _sum1__out += _sensibilidade__s___out;
+    }
+    // Generated from the component: Sum2
+    {
+        _sum2__out = 0;
+        _sum2__out += _sum4__out;
+        _sum2__out -= _sum3__out;
+    }
+    // Generated from the component: V_sensor_ruido
+    {
+        HIL_OutAO(0x4004, _sum4__out);
+    }
+    // Generated from the component: Sum5
+    {
+        _sum5__out = 0;
+        _sum5__out += _sum1__out;
+        _sum5__out -= _v_ref1__out;
+    }
+    // Generated from the component: V_sensor_ideal
+    {
+        HIL_OutAO(0x4002, _sum1__out);
+    }
+    // Generated from the component: Ad
+    {
+        _ad__out = (_ad__p_gain * _sum2__out);
+    }
+    // Generated from the component: Ad1
+    {
+        _ad1__out = (_ad1__p_gain * _sum5__out);
+    }
+    // Generated from the component: V_out_real
+    {
+        HIL_OutAO(0x4001, _ad__out);
+    }
+    // Generated from the component: V_out_ideal
+    {
+        HIL_OutAO(0x4000, _ad1__out);
+    }
+//@cmp.out.block.end
+    //////////////////////////////////////////////////////////////////////////
+    // Update block
+    //////////////////////////////////////////////////////////////////////////
+    //@cmp.update.block.start
+    // Generated from the component: Campo (B)
+    {
+        _campo__b___state += _campo__b___p_execution_rate;
+    }
+    // Generated from the component: Campo (B)1
+    {
+        _campo__b_1__state += _campo__b_1__p_execution_rate;
+    }
+    // Generated from the component: Gerador de Ruído
+    {
+        _gerador_de_ru_do__current_phase += (_gerador_de_ru_do__p_frequency * _gerador_de_ru_do__p_execution_rate);
+        {
+            if((_gerador_de_ru_do__current_phase >= 1)) {
+                _gerador_de_ru_do__current_phase -= 1;
+            }
+        }
+    }
+    // Generated from the component: Tensão de Repouso (Vq)
+    // Generated from the component: V_ref
+    // Generated from the component: V_ref1
+    // Generated from the component: C function1
+    {
+    }
+    // Generated from the component: Sensibilidade (S)
+    // Generated from the component: Sum3
+    // Generated from the component: Sum4
+    // Generated from the component: V_sensor_real
+    // Generated from the component: Sum1
+    // Generated from the component: Sum2
+    // Generated from the component: V_sensor_ruido
+    // Generated from the component: Sum5
+    // Generated from the component: V_sensor_ideal
+    // Generated from the component: Ad
+    // Generated from the component: Ad1
+    // Generated from the component: V_out_real
+    // Generated from the component: V_out_ideal
+    //@cmp.update.block.end
+}
+// ----------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------

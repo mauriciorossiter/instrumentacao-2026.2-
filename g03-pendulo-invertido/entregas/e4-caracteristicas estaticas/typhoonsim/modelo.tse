@@ -1,0 +1,279 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.3
+//
+
+model "New schematic 29-Aug-2026@22-34-31" {
+    configuration {
+        hil_device = "HIL404"
+        hil_configuration_id = 6
+        simulation_method = exact
+        simulation_time_step = auto
+        fine_auto_sim_step = False
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 1.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Ramp" Entrada_x {
+            slope = "12"
+        }
+        [
+            position = 7728, 8172
+        ]
+
+        component "core/Probe" Probe_Entrada_x {
+        }
+        [
+            position = 7840, 8064
+        ]
+
+        component "core/Gain" Gain1 {
+        }
+        [
+            position = 7920, 8172
+        ]
+
+        component "core/C function" "C function1" {
+            arb_defs = "/*Begin code section*/
+
+/*End code section*/"
+            init_fnc = "/*Begin code section*/
+
+/*End code section*/"
+            input_terminals_dimensions = "inherit"
+            input_terminals_feedthrough = "True"
+            input_terminals_show_labels = "False"
+            output_fnc = "/*Begin code section*/
+if (in > 115.0) {
+    out = 115.0; // Limite superior de saturação
+} else if (in < 5.0) {
+    out = 5.0;   // Limite inferior de saturação
+} else {
+    out = in;    // Região linear
+}
+/*End code section*/"
+            output_terminals_dimensions = "inherit"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "False"
+            update_fnc = "/*Begin code section*/
+
+/*End code section*/"
+        }
+        [
+            position = 8040, 8172
+            size = 48, 48
+        ]
+
+        component "core/Probe" Probe_Entrada_y {
+        }
+        [
+            position = 8172, 8084
+        ]
+
+        component "core/Gain" Gain2 {
+        }
+        [
+            position = 7920, 8260
+        ]
+
+        component "core/Constant" Constant1 {
+            value = "0"
+        }
+        [
+            position = 7916, 8320
+        ]
+
+        component "core/Sum" Sum1 {
+        }
+        [
+            position = 8064, 8268
+        ]
+
+        component "core/Sum" Sum2 {
+            signs = "+-"
+        }
+        [
+            position = 8216, 8180
+        ]
+
+        component "core/Probe" Probe_Erro_residuo {
+        }
+        [
+            position = 8320, 8180
+        ]
+
+        junction Junction1 sp
+        [
+            position = 7808, 8172
+        ]
+
+        junction Junction2 sp
+        [
+            position = 8096, 8172
+        ]
+
+        connect Gain1.out "C function1.in" as Connection2
+        connect Entrada_x.out Junction1 as Connection4
+        connect Junction1 Probe_Entrada_x.in as Connection5
+        connect Gain1.in Junction1 as Connection6
+        connect Junction1 Gain2.in as Connection7
+        connect Gain2.out Sum1.in as Connection8
+        connect Constant1.out Sum1.in1 as Connection9
+        [
+            breakpoints = 7992, 8320; 7992, 8276
+        ]
+        connect "C function1.out" Junction2 as Connection10
+        connect Junction2 Probe_Entrada_y.in as Connection11
+        [
+            breakpoints = 8096, 8172; 8096, 8084
+        ]
+        connect Sum2.in Junction2 as Connection12
+        connect Sum1.out Sum2.in1 as Connection13
+        [
+            breakpoints = 8136, 8268; 8136, 8188
+        ]
+        connect Sum2.out Probe_Erro_residuo.in as Connection14
+    }
+
+    default {
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Ramp" {
+            slope = "1"
+            start_time = "0"
+            initial_output = "0"
+            execution_rate = "100e-6"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+    }
+}
