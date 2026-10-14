@@ -34,6 +34,8 @@ Equacoes do Aguirre usadas aqui:
 ============================================================================
 """
 
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -41,7 +43,7 @@ import matplotlib.pyplot as plt
 # ---------------------------------------------------------------------------
 # 0) PARAMETROS
 # ---------------------------------------------------------------------------
-CSV = "HIL_260906_220904"   # arquivo de dados brutos do TyphoonSim
+CSV = Path(__file__).resolve().parent.parent / "dados" / "HIL_260906_220904.csv"   # dados brutos do TyphoonSim
 COL_X = "OriginalInput"     # x_referencia (entrada limpa, antes de fe)
 COL_Y = "DeadZoneOutput"    # y_instrumento (saida apos zona morta, com ruido)
 ZX_NOMINAL = 5.0            # largura da zona morta parametrizada no modelo
