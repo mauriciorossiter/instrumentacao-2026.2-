@@ -23,4 +23,5 @@
 | [e2-entradas-espurias](entregas/e2-entradas-espurias/) | Minimização de entradas espúrias por correções calculadas | entregue | — |
 | [e3-zona-morta](entregas/e3-zona-morta/) | Simulação da zona morta de um instrumento | entregue | — |
 | [e4-calibracao-estatica](entregas/e4-calibracao-estatica/) | Calibração estática de instrumento com zona morta | entregue | — |
+| [e6-nao-idealidades-sensor](entregas/e6-nao-idealidades-sensor/) | Não idealidades do sensor: camadas estática, dinâmica e espectral | em preparação | — |
 
