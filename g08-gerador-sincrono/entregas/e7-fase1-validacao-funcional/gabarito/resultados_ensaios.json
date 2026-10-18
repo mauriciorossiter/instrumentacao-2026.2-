@@ -1,0 +1,83 @@
+{
+  "parametros": {
+    "theta_base_graus": 0.0,
+    "amplitude_graus": 1800.0,
+    "theta0_graus": 1800.0,
+    "delta0_graus": 5.0,
+    "largura_pulso_s": 0.5,
+    "t_disparo_s": 1.0,
+    "janela_s": 3.0,
+    "dt_s": 0.001,
+    "atraso_numerico_amostras": 2,
+    "folga_graus": 1.0,
+    "passo_resolucao_graus": 0.7200000000000001
+  },
+  "ensaios": {
+    "a": {
+      "desvio_por_camada_graus": {
+        "ideal (E01)": 0.0,
+        "folga": 0.0,
+        "resolucao": 0.18028846153853584,
+        "ruido": 4.658146963265608e-06,
+        "estatica (folga + resolucao)": 0.18028846153853584,
+        "completa": 0.18028846153853584
+      },
+      "dinamica_R7_graus": 0.0,
+      "erro_vs_referencia_max_graus": 1.6272041656427518,
+      "erro_vs_referencia_E01_max_graus": 1.4469157041044127,
+      "theta_med_antes_graus": -1.257411218972615,
+      "theta_med_final_graus": 1801.6272041656425,
+      "theta_ref_final_graus": 1800.0,
+      "theta_med_final_E01_graus": 1801.4469157041046,
+      "I_final_mA": 12.00723201851397,
+      "residuo_final_vs_E01_graus": 0.1802884615383391,
+      "cursor_final_menos_eixo_graus": 0.0
+    },
+    "b": {
+      "desvio_por_camada_graus": {
+        "ideal (E01)": 0.0,
+        "folga": 1.0016025641023134,
+        "resolucao": 0.1802884615383391,
+        "ruido": 1.1718493624357507e-06,
+        "estatica (folga + resolucao)": 0.9014423076919229,
+        "completa": 0.9014424162230625
+      },
+      "dinamica_R7_graus": 0.0,
+      "erro_vs_referencia_max_graus": 2.3483581203274753,
+      "erro_vs_referencia_E01_max_graus": 1.4469157041044127,
+      "theta_med_antes_graus": 1801.627204166826,
+      "theta_med_final_graus": 1802.3483580117968,
+      "theta_ref_final_graus": 1800.0,
+      "theta_med_final_E01_graus": 1801.4469157041046,
+      "I_final_mA": 12.010437146719095,
+      "residuo_final_vs_E01_graus": 0.9014423076919229,
+      "cursor_final_menos_eixo_graus": 1.0
+    },
+    "c": {
+      "desvio_por_camada_graus": {
+        "ideal (E01)": 0.0,
+        "folga": 1.0016025641025772,
+        "resolucao": 0.18028846153853584,
+        "ruido": 4.658146963265608e-06,
+        "estatica (folga + resolucao)": 0.9014423076923794,
+        "completa": 0.9014423076923794
+      },
+      "dinamica_R7_graus": 0.0,
+      "erro_vs_referencia_max_graus": 1.6272041656427518,
+      "erro_vs_referencia_E01_max_graus": 1.4469157041044127,
+      "theta_med_antes_graus": -1.257411218972615,
+      "theta_med_final_graus": -0.5362573728187714,
+      "theta_ref_final_graus": 0.0,
+      "theta_med_final_E01_graus": -1.437699680511151,
+      "I_final_mA": 3.997616633898583,
+      "residuo_final_vs_E01_graus": 0.9014423076923794,
+      "cursor_final_menos_eixo_graus": 1.0
+    }
+  },
+  "conferencia_E02": {
+    "theta_ref": 9.094947017729282e-13,
+    "theta_cursor": 9.094947017729282e-13,
+    "v_cursor": 4.999112235282155e-12,
+    "I_loop": 4.999733960175945e-11
+  }
+}

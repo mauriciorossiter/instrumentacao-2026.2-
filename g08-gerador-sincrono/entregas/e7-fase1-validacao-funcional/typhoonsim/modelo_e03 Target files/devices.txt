@@ -1,0 +1,9 @@
+308VFybobqb74/cOXaRM8neS2HrATdt33bqsTfwpynf9OzPjwPECRC+l3Etr3/blcCmfmcS1A5JEG0s5lSxEwA==
+{
+  "compilation_timestamp": "2026-10-16 12:17:01",
+  "sw_version": "2026.2",
+  "devices": []
+}
+-----BEGIN SIGNATURE-----
+Dc9oQYfL66TbAXgN88dEyAKvMUMC7YUxPkda/grA85cfo20aaWAQhE0XyXoaA46f+VtWzyCc88Q6TXXYTDuZITJMcm/XyYk5kYDkdQAwQooNnJCuWbMnniY7HfkaZPNXMIwN4bn26gJ5f8iBODmBOdFqEMF+8JGbMW42d4kHkZXRTBwvfAmkcyQ/idj7e1G4L6LlJRhsI9w1puzNwq9dNxlsKMFxyU/RM8OBy9nzxlhnNP4RNPt0n7k9WYWNOaSKJEECIYz/EWOa/pG6IHFb8nEyaAye4wthRBmlhFJTVcly15XYmJ01Kogyfg9Dh8H1/NqHm+NpB45IO0Lng6Mzew==
+-----END SIGNATURE-----

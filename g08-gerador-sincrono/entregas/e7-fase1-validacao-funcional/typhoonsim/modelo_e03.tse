@@ -1,0 +1,1720 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "modelo_e03_tmp" {
+    configuration {
+        hil_device = "HIL101"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 0.001
+        simulation_time = 600.0
+        abs_tol = 1e-9
+        rel_tol = 1e-9
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Clock" relogio {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7600, 7800
+        ]
+
+        component "core/C function" referencia {
+            global_variables = "real THETA_FS;real T_MEIO;"
+            init_fnc = "THETA_FS = 3600.0;
+T_MEIO = 10.0000;"
+            input_terminals = "real t;"
+            input_terminals_dimensions = "inherit"
+            input_terminals_show_labels = "True;"
+            output_fnc = "/*Begin code section*/
+/* Sinal de referencia (R2): varredura triangular 0 -> THETA_FS -> 0 graus */
+if (t <= T_MEIO) {
+    theta_ref = THETA_FS * t / T_MEIO;
+} else {
+    theta_ref = THETA_FS * (2.0 * T_MEIO - t) / T_MEIO;
+}
+if (theta_ref < 0.0) theta_ref = 0.0;
+if (theta_ref > THETA_FS) theta_ref = THETA_FS;
+/*End code section*/"
+            output_terminals = "real theta_ref;"
+            output_terminals_dimensions = "inherit"
+            output_terminals_show_labels = "True;"
+        }
+        [
+            position = 7760, 7800
+        ]
+
+        component "core/C function" potenciometro {
+            global_variables = "real THETA_FS;real x;"
+            init_fnc = "THETA_FS = 3600.0;
+x = 0.0;"
+            input_terminals = "real theta;real vref;"
+            input_terminals_dimensions = "inherit;inherit"
+            input_terminals_feedthrough = "True;True;"
+            input_terminals_show_labels = "True;True;"
+            output_fnc = "/*Begin code section*/
+/* Potenciometro IDEAL (Entrega 01): divisor razao-metrico sem carga
+   (o cursor alimenta o buffer OPA333, impedancia de entrada ~infinita).
+   x = theta / THETA_FS ;  v_cursor = x * V(VREF)
+   As camadas nao ideais da Entrega 02 (resolucao, histerese, ruido de
+   contato) entram aqui, sobre x. */
+x = theta / THETA_FS;
+if (x < 0.0) x = 0.0;
+if (x > 1.0) x = 1.0;
+v_cursor = x * vref;
+/*End code section*/"
+            output_terminals = "real v_cursor;"
+            output_terminals_dimensions = "inherit"
+            output_terminals_show_labels = "True;"
+        }
+        [
+            position = 8440, 7840
+        ]
+
+        component "core/C function" receptor {
+            global_variables = "real THETA_FS;real R_L;"
+            init_fnc = "THETA_FS = 3600.0;
+R_L = 250.000;"
+            input_terminals = "real v_rl;real theta_ref;"
+            input_terminals_dimensions = "inherit;inherit"
+            input_terminals_feedthrough = "True;True;"
+            input_terminals_show_labels = "True;True;"
+            output_fnc = "/*Begin code section*/
+/* Receptor: le a tensao sobre R_L e converte em corrente e em angulo */
+i_mA = 1000.0 * v_rl / R_L;
+theta_med = THETA_FS * (i_mA - 4.0) / 16.0;
+/* erro da corrente medida contra a reta ideal 4-20 mA, em % do fundo de escala */
+erro_FE = 100.0 * (i_mA - (4.0 + 16.0 * theta_ref / THETA_FS)) / 16.0;
+/*End code section*/"
+            output_terminals = "real i_mA;real theta_med;real erro_FE;"
+            output_terminals_dimensions = "inherit;inherit;inherit"
+            output_terminals_feedthrough = "True;True;True;"
+            output_terminals_show_labels = "True;True;True;"
+        }
+        [
+            position = 9560, 8200
+        ]
+
+        component "core/SCADA Input" ens_ensaio {
+            def_value = "1.0"
+            execution_rate = "0.001"
+            max = "3.0"
+            min = "0.0"
+            unit = ""
+        }
+        [
+            position = 6640, 7400
+        ]
+
+        component "core/SCADA Input" ens_disparo {
+            def_value = "0.0"
+            execution_rate = "0.001"
+            max = "1.0"
+            min = "0.0"
+            unit = ""
+        }
+        [
+            position = 6640, 7460
+        ]
+
+        component "core/SCADA Input" ens_theta_base {
+            def_value = "0.0"
+            execution_rate = "0.001"
+            max = "3600.0"
+            min = "0.0"
+            unit = ""
+        }
+        [
+            position = 6640, 7520
+        ]
+
+        component "core/SCADA Input" ens_amplitude {
+            def_value = "1800.0"
+            execution_rate = "0.001"
+            max = "3600.0"
+            min = "-3600.0"
+            unit = ""
+        }
+        [
+            position = 6640, 7580
+        ]
+
+        component "core/SCADA Input" ens_theta0 {
+            def_value = "1800.0"
+            execution_rate = "0.001"
+            max = "3600.0"
+            min = "0.0"
+            unit = ""
+        }
+        [
+            position = 6640, 7640
+        ]
+
+        component "core/SCADA Input" ens_delta0 {
+            def_value = "5.0"
+            execution_rate = "0.001"
+            max = "20.0"
+            min = "-20.0"
+            unit = ""
+        }
+        [
+            position = 6640, 7700
+        ]
+
+        component "core/SCADA Input" ens_largura_s {
+            def_value = "0.5"
+            execution_rate = "0.001"
+            max = "10.0"
+            min = "0.001"
+            unit = ""
+        }
+        [
+            position = 6640, 7760
+        ]
+
+        component "core/SCADA Input" ens_t_auto {
+            def_value = "1000000000.0"
+            execution_rate = "0.001"
+            max = "1000000000.0"
+            min = "0.0"
+            unit = ""
+        }
+        [
+            position = 6640, 7820
+        ]
+
+        component "core/SCADA Input" folga_liga {
+            def_value = "1.0"
+            execution_rate = "0.001"
+            max = "1.0"
+            min = "0.0"
+            unit = ""
+        }
+        [
+            position = 6640, 7880
+        ]
+
+        component "core/SCADA Input" res_liga {
+            def_value = "1.0"
+            execution_rate = "0.001"
+            max = "1.0"
+            min = "0.0"
+            unit = ""
+        }
+        [
+            position = 6640, 7940
+        ]
+
+        component "core/SCADA Input" ruido_liga {
+            def_value = "1.0"
+            execution_rate = "0.001"
+            max = "1.0"
+            min = "0.0"
+            unit = ""
+        }
+        [
+            position = 6640, 8000
+        ]
+
+        component "core/Constant" ens_um {
+            execution_rate = "0.001"
+            value = "1.0"
+        }
+        [
+            position = 6800, 7300
+        ]
+
+        component "core/Constant" ens_zero {
+            execution_rate = "0.001"
+            value = "0.0"
+        }
+        [
+            position = 6800, 7260
+        ]
+
+        component "core/Constant" ens_meio_dt {
+            execution_rate = "0.001"
+            value = "0.0005"
+        }
+        [
+            position = 6800, 7220
+        ]
+
+        component "core/Constant" ens_dt {
+            execution_rate = "0.001"
+            value = "0.001"
+        }
+        [
+            position = 6800, 7180
+        ]
+
+        component "core/Sum" ens_t_menos_tauto {
+            execution_rate = "0.001"
+            signs = "+-+"
+        }
+        [
+            position = 6900, 7900
+        ]
+
+        component "core/Sign" ens_disparo_auto_sinal {
+            execution_rate = "0.001"
+        }
+        [
+            position = 6960, 7900
+        ]
+
+        component "core/Sum" ens_disparo_auto_mais1 {
+            execution_rate = "0.001"
+            signs = "++"
+        }
+        [
+            position = 7020, 7900
+        ]
+
+        component "core/Gain" ens_disparo_auto {
+            execution_rate = "0.001"
+            gain = "0.5"
+        }
+        [
+            position = 7080, 7900
+        ]
+
+        component "core/Min Max" ens_disparo_total {
+            execution_rate = "0.001"
+            operation = "max"
+        }
+        [
+            position = 7160, 7900
+        ]
+
+        component "core/Unit Delay" ens_disparo_anterior {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7240, 7960
+        ]
+
+        component "core/Sum" ens_borda_dif {
+            execution_rate = "0.001"
+            signs = "+-"
+        }
+        [
+            position = 7300, 7900
+        ]
+
+        component "core/Min Max" ens_borda {
+            execution_rate = "0.001"
+            operation = "max"
+        }
+        [
+            position = 7360, 7900
+        ]
+
+        component "core/Unit Delay" ens_cronometro_anterior {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7240, 8060
+        ]
+
+        component "core/Sum" ens_cronometro_mais_dt {
+            execution_rate = "0.001"
+            signs = "++"
+        }
+        [
+            position = 7300, 8020
+        ]
+
+        component "core/Product" ens_cronometro {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7360, 8020
+        ]
+
+        component "core/Sum" ens_pulso_resta {
+            execution_rate = "0.001"
+            signs = "++-"
+        }
+        [
+            position = 7420, 8020
+        ]
+
+        component "core/Sign" ens_pulso_ativo_sinal {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7480, 8020
+        ]
+
+        component "core/Sum" ens_pulso_ativo_mais1 {
+            execution_rate = "0.001"
+            signs = "++"
+        }
+        [
+            position = 7540, 8020
+        ]
+
+        component "core/Gain" ens_pulso_ativo {
+            execution_rate = "0.001"
+            gain = "0.5"
+        }
+        [
+            position = 7600, 8020
+        ]
+
+        component "core/Product" ens_pulso {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7660, 8020
+        ]
+
+        component "core/Constant" ens_k0 {
+            execution_rate = "0.001"
+            value = "0.0"
+        }
+        [
+            position = 6900, 7580
+        ]
+
+        component "core/Sum" ens_sel0_dif {
+            execution_rate = "0.001"
+            signs = "+-"
+        }
+        [
+            position = 6960, 7560
+        ]
+
+        component "core/Abs" ens_sel0_abs {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7020, 7560
+        ]
+
+        component "core/Sign" ens_sel0_sinal {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7080, 7560
+        ]
+
+        component "core/Sum" ens_sel0 {
+            execution_rate = "0.001"
+            signs = "+-"
+        }
+        [
+            position = 7140, 7560
+        ]
+
+        component "core/Constant" ens_k1 {
+            execution_rate = "0.001"
+            value = "1.0"
+        }
+        [
+            position = 6900, 7640
+        ]
+
+        component "core/Sum" ens_sel1_dif {
+            execution_rate = "0.001"
+            signs = "+-"
+        }
+        [
+            position = 6960, 7620
+        ]
+
+        component "core/Abs" ens_sel1_abs {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7020, 7620
+        ]
+
+        component "core/Sign" ens_sel1_sinal {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7080, 7620
+        ]
+
+        component "core/Sum" ens_sel1 {
+            execution_rate = "0.001"
+            signs = "+-"
+        }
+        [
+            position = 7140, 7620
+        ]
+
+        component "core/Constant" ens_k2 {
+            execution_rate = "0.001"
+            value = "2.0"
+        }
+        [
+            position = 6900, 7700
+        ]
+
+        component "core/Sum" ens_sel2_dif {
+            execution_rate = "0.001"
+            signs = "+-"
+        }
+        [
+            position = 6960, 7680
+        ]
+
+        component "core/Abs" ens_sel2_abs {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7020, 7680
+        ]
+
+        component "core/Sign" ens_sel2_sinal {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7080, 7680
+        ]
+
+        component "core/Sum" ens_sel2 {
+            execution_rate = "0.001"
+            signs = "+-"
+        }
+        [
+            position = 7140, 7680
+        ]
+
+        component "core/Constant" ens_k3 {
+            execution_rate = "0.001"
+            value = "3.0"
+        }
+        [
+            position = 6900, 7760
+        ]
+
+        component "core/Sum" ens_sel3_dif {
+            execution_rate = "0.001"
+            signs = "+-"
+        }
+        [
+            position = 6960, 7740
+        ]
+
+        component "core/Abs" ens_sel3_abs {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7020, 7740
+        ]
+
+        component "core/Sign" ens_sel3_sinal {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7080, 7740
+        ]
+
+        component "core/Sum" ens_sel3 {
+            execution_rate = "0.001"
+            signs = "+-"
+        }
+        [
+            position = 7140, 7740
+        ]
+
+        component "core/Sum" ens_ramo_degrau {
+            execution_rate = "0.001"
+            signs = "++"
+        }
+        [
+            position = 7300, 7720
+        ]
+
+        component "core/Product" ens_A_x_disparo {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7240, 7720
+        ]
+
+        component "core/Sum" ens_ramo_pulso {
+            execution_rate = "0.001"
+            signs = "++"
+        }
+        [
+            position = 7300, 7780
+        ]
+
+        component "core/Product" ens_A_x_pulso {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7240, 7780
+        ]
+
+        component "core/Sum" ens_theta_ref {
+            execution_rate = "0.001"
+            signs = "++++"
+        }
+        [
+            position = 7480, 7680
+        ]
+
+        component "core/Product" ens_e0_x_ramo {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7400, 7560
+        ]
+
+        component "core/Product" ens_e1_x_ramo {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7400, 7620
+        ]
+
+        component "core/Product" ens_e2_x_ramo {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7400, 7680
+        ]
+
+        component "core/Product" ens_e3_x_ramo {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7400, 7740
+        ]
+
+        component "core/Product" ens_injecao_ci {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7480, 7900
+        ]
+
+        component "core/Gain" folga_b {
+            execution_rate = "0.001"
+            gain = "1.0"
+        }
+        [
+            position = 7840, 7560
+        ]
+
+        component "core/Sum" folga_theta_mais_b {
+            execution_rate = "0.001"
+            signs = "++"
+        }
+        [
+            position = 7920, 7600
+        ]
+
+        component "core/Min Max" folga_min {
+            execution_rate = "0.001"
+        }
+        [
+            position = 8000, 7600
+        ]
+
+        component "core/Min Max" folga_max {
+            execution_rate = "0.001"
+            operation = "max"
+        }
+        [
+            position = 8080, 7640
+        ]
+
+        component "core/Unit Delay" folga_memoria {
+            execution_rate = "0.001"
+        }
+        [
+            position = 8000, 7520
+        ]
+
+        component "core/Sum" ci_alvo_menos_cursor {
+            execution_rate = "0.001"
+            signs = "++-"
+        }
+        [
+            position = 8080, 7440
+        ]
+
+        component "core/Sum" ci_memoria {
+            execution_rate = "0.001"
+            signs = "++"
+        }
+        [
+            position = 8160, 7480
+        ]
+
+        component "core/Product" ci_injecao {
+            execution_rate = "0.001"
+        }
+        [
+            position = 8120, 7440
+        ]
+
+        component "core/Gain" res_espiras_por_grau {
+            execution_rate = "0.001"
+            gain = "1.3888888888888888"
+        }
+        [
+            position = 8160, 7380
+        ]
+
+        component "core/Constant" res_meio_menos_fase {
+            execution_rate = "0.001"
+            value = "0.25"
+        }
+        [
+            position = 8160, 7320
+        ]
+
+        component "core/Sum" res_soma_a {
+            execution_rate = "0.001"
+            signs = "++"
+        }
+        [
+            position = 8240, 7380
+        ]
+
+        component "core/Round" res_espira {
+            execution_rate = "0.001"
+        }
+        [
+            position = 8320, 7380
+        ]
+
+        component "core/Constant" res_fase {
+            execution_rate = "0.001"
+            value = "0.25"
+        }
+        [
+            position = 8320, 7320
+        ]
+
+        component "core/Sum" res_soma_fase {
+            execution_rate = "0.001"
+            signs = "++"
+        }
+        [
+            position = 8400, 7380
+        ]
+
+        component "core/Gain" res_graus_por_espira {
+            execution_rate = "0.001"
+            gain = "0.72"
+        }
+        [
+            position = 8480, 7380
+        ]
+
+        component "core/Sum" res_desvio {
+            execution_rate = "0.001"
+            signs = "+-"
+        }
+        [
+            position = 8560, 7380
+        ]
+
+        component "core/Sum" res_saida {
+            execution_rate = "0.001"
+            signs = "++"
+        }
+        [
+            position = 8720, 7460
+        ]
+
+        component "core/Product" res_chave {
+            execution_rate = "0.001"
+        }
+        [
+            position = 8640, 7380
+        ]
+
+        component "core/Random Source" ruido_branco {
+            execution_rate = "0.001"
+            mean = "0.0"
+            stddev = "1.0"
+        }
+        [
+            position = 7760, 7140
+            size = 32, 32
+        ]
+
+        component "core/Sum" kellet_soma {
+            execution_rate = "0.001"
+            signs = "++++++++"
+        }
+        [
+            position = 8080, 7140
+        ]
+
+        component "core/Discrete Transfer Function" kellet_polo0 {
+            a_coeff = "[1.0, -0.99886]"
+            b_coeff = "[0.0555179, 0.0]"
+            execution_rate = "0.001"
+        }
+        [
+            position = 7920, 6900
+        ]
+
+        component "core/Discrete Transfer Function" kellet_polo1 {
+            a_coeff = "[1.0, -0.99332]"
+            b_coeff = "[0.0750759, 0.0]"
+            execution_rate = "0.001"
+        }
+        [
+            position = 7920, 6960
+        ]
+
+        component "core/Discrete Transfer Function" kellet_polo2 {
+            a_coeff = "[1.0, -0.969]"
+            b_coeff = "[0.153852, 0.0]"
+            execution_rate = "0.001"
+        }
+        [
+            position = 7920, 7020
+        ]
+
+        component "core/Discrete Transfer Function" kellet_polo3 {
+            a_coeff = "[1.0, -0.8665]"
+            b_coeff = "[0.3104856, 0.0]"
+            execution_rate = "0.001"
+        }
+        [
+            position = 7920, 7080
+        ]
+
+        component "core/Discrete Transfer Function" kellet_polo4 {
+            a_coeff = "[1.0, -0.55]"
+            b_coeff = "[0.5329522, 0.0]"
+            execution_rate = "0.001"
+        }
+        [
+            position = 7920, 7140
+        ]
+
+        component "core/Discrete Transfer Function" kellet_polo5 {
+            a_coeff = "[1.0, 0.7616]"
+            b_coeff = "[-0.016898, 0.0]"
+            execution_rate = "0.001"
+        }
+        [
+            position = 7920, 7200
+        ]
+
+        component "core/Discrete Transfer Function" kellet_atraso {
+            a_coeff = "[1.0, 0.0]"
+            b_coeff = "[0.0, 0.115926]"
+            execution_rate = "0.001"
+        }
+        [
+            position = 7920, 7260
+        ]
+
+        component "core/Gain" kellet_direto {
+            execution_rate = "0.001"
+            gain = "0.5362"
+        }
+        [
+            position = 7920, 7320
+        ]
+
+        component "core/Gain" ruido_K_ENR {
+            execution_rate = "0.001"
+            gain = "9.268124000249522"
+        }
+        [
+            position = 8160, 7140
+        ]
+
+        component "core/Unit Delay" mov_memoria {
+            execution_rate = "0.001"
+        }
+        [
+            position = 8160, 7240
+        ]
+
+        component "core/Sum" mov_desvio {
+            execution_rate = "0.001"
+            signs = "+-"
+        }
+        [
+            position = 8240, 7240
+        ]
+
+        component "core/Abs" mov_abs {
+            execution_rate = "0.001"
+        }
+        [
+            position = 8320, 7240
+        ]
+
+        component "core/Sign" mov_cursor_movendo {
+            execution_rate = "0.001"
+        }
+        [
+            position = 8400, 7240
+        ]
+
+        component "core/Product" ruido_x_movimento {
+            execution_rate = "0.001"
+        }
+        [
+            position = 8480, 7180
+        ]
+
+        component "core/Product" ruido_chave {
+            execution_rate = "0.001"
+        }
+        [
+            position = 8560, 7180
+        ]
+
+        component "core/Voltage Source" VREF_XTR115 {
+            init_const_value = "2.5"
+        }
+        [
+            position = 7960, 8160
+            rotation = right
+        ]
+
+        component "core/Resistor" R0 {
+            resistance = "62600.0"
+        }
+        [
+            position = 8340, 8040
+        ]
+
+        component "core/Resistor" R_IN {
+            resistance = "15600.0"
+        }
+        [
+            position = 8340, 8240
+        ]
+
+        component "core/Current Measurement" I_IN {
+            execution_rate = "0.001"
+            sig_output = "True"
+        }
+        [
+            position = 8480, 8160
+            rotation = right
+        ]
+
+        component "core/Ground" gnd_IRET {
+        }
+        [
+            position = 8200, 8520
+        ]
+
+        component "core/Resistor" R_pot {
+            resistance = "10000.0"
+        }
+        [
+            position = 8080, 8160
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_REF {
+            execution_rate = "0.001"
+            sig_output = "True"
+        }
+        [
+            position = 8180, 8160
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Voltage Source" buffer_OPA333 {
+        }
+        [
+            position = 8200, 8340
+            rotation = right
+        ]
+
+        component "core/Gain" ruido_x_I_cursor {
+            execution_rate = "0.001"
+            gain = "2e-10"
+        }
+        [
+            position = 8640, 7180
+        ]
+
+        component "core/Sum" v_cursor_mais_ruido {
+            execution_rate = "0.001"
+            signs = "++"
+        }
+        [
+            position = 8640, 7880
+        ]
+
+        component "core/Gain" XTR115_x100 {
+            gain = "100.0"
+        }
+        [
+            position = 8620, 8160
+        ]
+
+        component "core/Voltage Source" V_LOOP {
+            init_const_value = "24.0"
+        }
+        [
+            position = 8760, 8360
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Current Source" XTR115_Io {
+        }
+        [
+            position = 8900, 8160
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_TX {
+            execution_rate = "0.001"
+            sig_output = "True"
+        }
+        [
+            position = 9000, 8160
+            rotation = right
+        ]
+
+        component "core/Resistor" R_cabo {
+            resistance = "50.0"
+        }
+        [
+            position = 9100, 8280
+            rotation = right
+        ]
+
+        component "core/Current Measurement" I_LOOP {
+            execution_rate = "0.001"
+            sig_output = "True"
+        }
+        [
+            position = 9100, 8400
+            rotation = right
+        ]
+
+        component "core/Resistor" R_L {
+            resistance = "250.0"
+        }
+        [
+            position = 9240, 8460
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_RL {
+            execution_rate = "0.001"
+            sig_output = "True"
+        }
+        [
+            position = 9360, 8460
+            rotation = right
+        ]
+
+        component "core/Ground" gnd_laco {
+        }
+        [
+            position = 8760, 8620
+        ]
+
+        component "core/Gain" A_para_uA {
+            gain = "1e6"
+        }
+        [
+            position = 8620, 8300
+        ]
+
+        component "core/Gain" A_para_mA {
+            gain = "1000"
+        }
+        [
+            position = 9240, 8300
+        ]
+
+        component "core/Probe" theta_ref {
+        }
+        [
+            position = 7560, 7480
+        ]
+
+        component "core/Probe" theta_ref_E01 {
+        }
+        [
+            position = 7960, 7720
+        ]
+
+        component "core/Probe" ens_disparo_sinal {
+        }
+        [
+            position = 7240, 7840
+        ]
+
+        component "core/Probe" ens_pulso_sinal {
+        }
+        [
+            position = 7720, 8080
+        ]
+
+        component "core/Probe" v_cursor {
+        }
+        [
+            position = 8760, 7960
+        ]
+
+        component "core/Probe" theta_cursor {
+        }
+        [
+            position = 8160, 7680
+        ]
+
+        component "core/Probe" theta_resolucao {
+        }
+        [
+            position = 8800, 7460
+        ]
+
+        component "core/Probe" dRc_ohm {
+        }
+        [
+            position = 8240, 7060
+        ]
+
+        component "core/Probe" ruido_branco_N01 {
+        }
+        [
+            position = 7840, 7060
+        ]
+
+        component "core/Probe" I_IN_uA {
+        }
+        [
+            position = 8760, 8300
+        ]
+
+        component "core/Probe" I_LOOP_mA {
+        }
+        [
+            position = 9360, 8300
+        ]
+
+        component "core/Probe" V_TX_V {
+        }
+        [
+            position = 9120, 8120
+        ]
+
+        component "core/Probe" V_RL_V {
+        }
+        [
+            position = 9500, 8460
+        ]
+
+        component "core/Probe" theta_med {
+        }
+        [
+            position = 9760, 8200
+        ]
+
+        component "core/Probe" erro_FE_pc {
+        }
+        [
+            position = 9760, 8280
+        ]
+
+        component "core/Probe" I_receptor_mA {
+        }
+        [
+            position = 9760, 8120
+        ]
+
+        component "core/Scope" Scope_cadeia {
+            selected_signals = "[\'theta_ref\', \'theta_med\', \'I_LOOP_mA\', \'V_RL_V\', \'V_TX_V\', \'I_IN_uA\', \'v_cursor\', \'erro_FE_pc\', \'I_receptor_mA\', \'theta_cursor\', \'dRc_ohm\', \'theta_ref_E01\', \'ens_disparo_sinal\', \'ens_pulso_sinal\', \'theta_resolucao\', \'ruido_branco_N01\']"
+        }
+        [
+            position = 7600, 8300
+        ]
+
+        junction no_VREF pe
+        [
+            position = 7960, 8040
+        ]
+
+        junction no_VREF2 pe
+        [
+            position = 8080, 8040
+        ]
+
+        junction no_VREF3 pe
+        [
+            position = 8180, 8040
+        ]
+
+        junction no_cursor pe
+        [
+            position = 8200, 8240
+        ]
+
+        junction no_IIN pe
+        [
+            position = 8480, 8040
+        ]
+
+        junction no_IIN2 pe
+        [
+            position = 8480, 8240
+        ]
+
+        junction no_IRET pe
+        [
+            position = 8200, 8460
+        ]
+
+        junction no_V+ pe
+        [
+            position = 8900, 8040
+        ]
+
+        junction no_V+2 pe
+        [
+            position = 8760, 8040
+        ]
+
+        junction no_V+3 pe
+        [
+            position = 9000, 8040
+        ]
+
+        junction no_IO pe
+        [
+            position = 8900, 8240
+        ]
+
+        junction no_IO2 pe
+        [
+            position = 9000, 8240
+        ]
+
+        junction no_RX pe
+        [
+            position = 9240, 8400
+        ]
+
+        junction no_RX2 pe
+        [
+            position = 9360, 8400
+        ]
+
+        junction no_GND pe
+        [
+            position = 8760, 8560
+        ]
+
+        junction no_GND2 pe
+        [
+            position = 9240, 8560
+        ]
+
+        junction no_GND3 pe
+        [
+            position = 9360, 8560
+        ]
+
+        connect relogio.out ens_t_menos_tauto.in as Connection1
+        connect ens_t_auto.out ens_t_menos_tauto.in1 as Connection2
+        connect ens_meio_dt.out ens_t_menos_tauto.in2 as Connection3
+        connect ens_t_menos_tauto.out ens_disparo_auto_sinal.in as Connection4
+        connect ens_disparo_auto_sinal.out ens_disparo_auto_mais1.in as Connection5
+        connect ens_um.out ens_disparo_auto_mais1.in1 as Connection6
+        connect ens_disparo_auto_mais1.out ens_disparo_auto.in as Connection7
+        connect ens_disparo.out ens_disparo_total.in as Connection8
+        connect ens_disparo_auto.out ens_disparo_total.in1 as Connection9
+        connect ens_disparo_total.out ens_disparo_anterior.in as Connection10
+        connect ens_disparo_total.out ens_borda_dif.in as Connection11
+        connect ens_disparo_anterior.out ens_borda_dif.in1 as Connection12
+        connect ens_borda_dif.out ens_borda.in as Connection13
+        connect ens_zero.out ens_borda.in1 as Connection14
+        connect ens_cronometro_anterior.out ens_cronometro_mais_dt.in as Connection15
+        connect ens_dt.out ens_cronometro_mais_dt.in1 as Connection16
+        connect ens_cronometro_mais_dt.out ens_cronometro.in as Connection17
+        connect ens_disparo_total.out ens_cronometro.in1 as Connection18
+        connect ens_cronometro.out ens_cronometro_anterior.in as Connection19
+        connect ens_largura_s.out ens_pulso_resta.in as Connection20
+        connect ens_meio_dt.out ens_pulso_resta.in1 as Connection21
+        connect ens_cronometro.out ens_pulso_resta.in2 as Connection22
+        connect ens_pulso_resta.out ens_pulso_ativo_sinal.in as Connection23
+        connect ens_pulso_ativo_sinal.out ens_pulso_ativo_mais1.in as Connection24
+        connect ens_um.out ens_pulso_ativo_mais1.in1 as Connection25
+        connect ens_pulso_ativo_mais1.out ens_pulso_ativo.in as Connection26
+        connect ens_pulso_ativo.out ens_pulso.in as Connection27
+        connect ens_disparo_total.out ens_pulso.in1 as Connection28
+        connect ens_ensaio.out ens_sel0_dif.in as Connection29
+        connect ens_k0.out ens_sel0_dif.in1 as Connection30
+        connect ens_sel0_dif.out ens_sel0_abs.in as Connection31
+        connect ens_sel0_abs.out ens_sel0_sinal.in as Connection32
+        connect ens_um.out ens_sel0.in as Connection33
+        connect ens_sel0_sinal.out ens_sel0.in1 as Connection34
+        connect ens_ensaio.out ens_sel1_dif.in as Connection35
+        connect ens_k1.out ens_sel1_dif.in1 as Connection36
+        connect ens_sel1_dif.out ens_sel1_abs.in as Connection37
+        connect ens_sel1_abs.out ens_sel1_sinal.in as Connection38
+        connect ens_um.out ens_sel1.in as Connection39
+        connect ens_sel1_sinal.out ens_sel1.in1 as Connection40
+        connect ens_ensaio.out ens_sel2_dif.in as Connection41
+        connect ens_k2.out ens_sel2_dif.in1 as Connection42
+        connect ens_sel2_dif.out ens_sel2_abs.in as Connection43
+        connect ens_sel2_abs.out ens_sel2_sinal.in as Connection44
+        connect ens_um.out ens_sel2.in as Connection45
+        connect ens_sel2_sinal.out ens_sel2.in1 as Connection46
+        connect ens_ensaio.out ens_sel3_dif.in as Connection47
+        connect ens_k3.out ens_sel3_dif.in1 as Connection48
+        connect ens_sel3_dif.out ens_sel3_abs.in as Connection49
+        connect ens_sel3_abs.out ens_sel3_sinal.in as Connection50
+        connect ens_um.out ens_sel3.in as Connection51
+        connect ens_sel3_sinal.out ens_sel3.in1 as Connection52
+        connect ens_theta_base.out ens_ramo_degrau.in as Connection53
+        connect ens_amplitude.out ens_A_x_disparo.in as Connection54
+        connect ens_disparo_total.out ens_A_x_disparo.in1 as Connection55
+        connect ens_A_x_disparo.out ens_ramo_degrau.in1 as Connection56
+        connect ens_theta_base.out ens_ramo_pulso.in as Connection57
+        connect ens_amplitude.out ens_A_x_pulso.in as Connection58
+        connect ens_pulso.out ens_A_x_pulso.in1 as Connection59
+        connect ens_A_x_pulso.out ens_ramo_pulso.in1 as Connection60
+        connect ens_sel0.out ens_e0_x_ramo.in as Connection61
+        connect referencia.theta_ref ens_e0_x_ramo.in1 as Connection62
+        connect ens_e0_x_ramo.out ens_theta_ref.in as Connection63
+        connect ens_sel1.out ens_e1_x_ramo.in as Connection64
+        connect ens_ramo_degrau.out ens_e1_x_ramo.in1 as Connection65
+        connect ens_e1_x_ramo.out ens_theta_ref.in1 as Connection66
+        connect ens_sel2.out ens_e2_x_ramo.in as Connection67
+        connect ens_theta0.out ens_e2_x_ramo.in1 as Connection68
+        connect ens_e2_x_ramo.out ens_theta_ref.in2 as Connection69
+        connect ens_sel3.out ens_e3_x_ramo.in as Connection70
+        connect ens_ramo_pulso.out ens_e3_x_ramo.in1 as Connection71
+        connect ens_e3_x_ramo.out ens_theta_ref.in3 as Connection72
+        connect ens_borda.out ens_injecao_ci.in as Connection73
+        connect ens_sel2.out ens_injecao_ci.in1 as Connection74
+        connect folga_liga.out folga_b.in as Connection75
+        connect ens_theta_ref.out folga_theta_mais_b.in as Connection76
+        connect folga_b.out folga_theta_mais_b.in1 as Connection77
+        connect folga_theta_mais_b.out folga_min.in as Connection78
+        connect folga_memoria.out folga_min.in1 as Connection79
+        connect ens_theta_ref.out folga_max.in as Connection80
+        connect folga_min.out folga_max.in1 as Connection81
+        connect ens_theta_ref.out ci_alvo_menos_cursor.in as Connection82
+        connect ens_delta0.out ci_alvo_menos_cursor.in1 as Connection83
+        connect folga_max.out ci_alvo_menos_cursor.in2 as Connection84
+        connect folga_max.out ci_memoria.in as Connection85
+        connect ci_alvo_menos_cursor.out ci_injecao.in as Connection86
+        connect ens_injecao_ci.out ci_injecao.in1 as Connection87
+        connect ci_injecao.out ci_memoria.in1 as Connection88
+        connect ci_memoria.out folga_memoria.in as Connection89
+        connect folga_max.out res_espiras_por_grau.in as Connection90
+        connect res_espiras_por_grau.out res_soma_a.in as Connection91
+        connect res_meio_menos_fase.out res_soma_a.in1 as Connection92
+        connect res_soma_a.out res_espira.in as Connection93
+        connect res_espira.out res_soma_fase.in as Connection94
+        connect res_fase.out res_soma_fase.in1 as Connection95
+        connect res_soma_fase.out res_graus_por_espira.in as Connection96
+        connect res_graus_por_espira.out res_desvio.in as Connection97
+        connect folga_max.out res_desvio.in1 as Connection98
+        connect folga_max.out res_saida.in as Connection99
+        connect res_desvio.out res_chave.in as Connection100
+        connect res_liga.out res_chave.in1 as Connection101
+        connect res_chave.out res_saida.in1 as Connection102
+        connect ruido_branco.out kellet_polo0.in as Connection103
+        connect kellet_polo0.out kellet_soma.in as Connection104
+        connect ruido_branco.out kellet_polo1.in as Connection105
+        connect kellet_polo1.out kellet_soma.in1 as Connection106
+        connect ruido_branco.out kellet_polo2.in as Connection107
+        connect kellet_polo2.out kellet_soma.in2 as Connection108
+        connect ruido_branco.out kellet_polo3.in as Connection109
+        connect kellet_polo3.out kellet_soma.in3 as Connection110
+        connect ruido_branco.out kellet_polo4.in as Connection111
+        connect kellet_polo4.out kellet_soma.in4 as Connection112
+        connect ruido_branco.out kellet_polo5.in as Connection113
+        connect kellet_polo5.out kellet_soma.in5 as Connection114
+        connect ruido_branco.out kellet_atraso.in as Connection115
+        connect kellet_atraso.out kellet_soma.in6 as Connection116
+        connect ruido_branco.out kellet_direto.in as Connection117
+        connect kellet_direto.out kellet_soma.in7 as Connection118
+        connect kellet_soma.out ruido_K_ENR.in as Connection119
+        connect folga_max.out mov_memoria.in as Connection120
+        connect folga_max.out mov_desvio.in as Connection121
+        connect mov_memoria.out mov_desvio.in1 as Connection122
+        connect mov_desvio.out mov_abs.in as Connection123
+        connect mov_abs.out mov_cursor_movendo.in as Connection124
+        connect ruido_K_ENR.out ruido_x_movimento.in as Connection125
+        connect mov_cursor_movendo.out ruido_x_movimento.in1 as Connection126
+        connect ruido_x_movimento.out ruido_chave.in as Connection127
+        connect ruido_liga.out ruido_chave.in1 as Connection128
+        connect VREF_XTR115.p_node no_VREF as Connection129
+        connect no_VREF no_VREF2 as Connection130
+        connect no_VREF2 no_VREF3 as Connection131
+        connect no_VREF3 R0.p_node as Connection132
+        connect R0.n_node no_IIN as Connection133
+        connect no_cursor R_IN.p_node as Connection134
+        connect R_IN.n_node no_IIN2 as Connection135
+        connect no_IIN no_IIN2 as Connection136
+        connect no_IIN2 I_IN.p_node as Connection137
+        connect VREF_XTR115.n_node no_IRET as Connection138
+        connect I_IN.n_node no_IRET as Connection139
+        connect gnd_IRET.node no_IRET as Connection140
+        connect R_pot.p_node no_VREF2 as Connection141
+        connect V_REF.p_node no_VREF3 as Connection142
+        connect buffer_OPA333.p_node no_cursor as Connection143
+        connect R_pot.n_node no_IRET as Connection144
+        connect V_REF.n_node no_IRET as Connection145
+        connect buffer_OPA333.n_node no_IRET as Connection146
+        connect V_REF.out potenciometro.vref as Connection147
+        connect res_saida.out potenciometro.theta as Connection148
+        connect ruido_chave.out ruido_x_I_cursor.in as Connection149
+        connect potenciometro.v_cursor v_cursor_mais_ruido.in as Connection150
+        connect ruido_x_I_cursor.out v_cursor_mais_ruido.in1 as Connection151
+        connect v_cursor_mais_ruido.out buffer_OPA333.in as Connection152
+        connect V_LOOP.p_node no_V+2 as Connection153
+        connect no_V+2 no_V+ as Connection154
+        connect no_V+ no_V+3 as Connection155
+        connect XTR115_Io.n_node no_V+ as Connection156
+        connect XTR115_Io.p_node no_IO as Connection157
+        connect V_TX.p_node no_V+3 as Connection158
+        connect V_TX.n_node no_IO2 as Connection159
+        connect no_IO no_IO2 as Connection160
+        connect no_IO2 R_cabo.p_node as Connection161
+        connect R_cabo.n_node I_LOOP.p_node as Connection162
+        connect I_LOOP.n_node no_RX as Connection163
+        connect no_RX no_RX2 as Connection164
+        connect no_RX R_L.p_node as Connection165
+        connect no_RX2 V_RL.p_node as Connection166
+        connect V_LOOP.n_node no_GND as Connection167
+        connect no_GND no_GND2 as Connection168
+        connect no_GND2 no_GND3 as Connection169
+        connect R_L.n_node no_GND2 as Connection170
+        connect V_RL.n_node no_GND3 as Connection171
+        connect gnd_laco.node no_GND as Connection172
+        connect relogio.out referencia.t as Connection173
+        connect I_IN.out XTR115_x100.in as Connection174
+        connect XTR115_x100.out XTR115_Io.in as Connection175
+        connect V_RL.out receptor.v_rl as Connection176
+        connect ens_theta_ref.out receptor.theta_ref as Connection177
+        connect ens_theta_ref.out theta_ref.in as Connection178
+        connect referencia.theta_ref theta_ref_E01.in as Connection179
+        connect ens_disparo_total.out ens_disparo_sinal.in as Connection180
+        connect ens_pulso.out ens_pulso_sinal.in as Connection181
+        connect v_cursor_mais_ruido.out v_cursor.in as Connection182
+        connect folga_max.out theta_cursor.in as Connection183
+        connect res_saida.out theta_resolucao.in as Connection184
+        connect ruido_K_ENR.out dRc_ohm.in as Connection185
+        connect ruido_branco.out ruido_branco_N01.in as Connection186
+        connect I_IN.out A_para_uA.in as Connection187
+        connect A_para_uA.out I_IN_uA.in as Connection188
+        connect I_LOOP.out A_para_mA.in as Connection189
+        connect A_para_mA.out I_LOOP_mA.in as Connection190
+        connect V_TX.out V_TX_V.in as Connection191
+        connect V_RL.out V_RL_V.in as Connection192
+        connect receptor.theta_med theta_med.in as Connection193
+        connect receptor.erro_FE erro_FE_pc.in as Connection194
+        connect receptor.i_mA I_receptor_mA.in as Connection195
+    }
+
+    default {
+        "core/Abs" {
+            execution_rate = "inherit"
+        }
+
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/Clock" {
+            enb_reset = "False"
+            reset_at = "1.0"
+            execution_rate = "100e-6"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Discrete Transfer Function" {
+            domain = "Z-domain"
+            method = "Zero-order hold"
+            b_coeff = "[1,1]"
+            a_coeff = "[1,1]"
+            signal_out_type = "inherit"
+            execution_rate = "inherit"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Min Max" {
+            operation = "min"
+            inputs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Product" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/Round" {
+            round_fn = "floor"
+            execution_rate = "inherit"
+        }
+
+        "core/SCADA Input" {
+            signal_access = "inherit"
+            addr = "0"
+            format = "real"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "real"
+            min = "-1e6"
+            max = "1e6"
+            def_value = "0"
+            unit = " "
+            execution_rate = "100e-6"
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Sign" {
+            execution_rate = "inherit"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Unit Delay" {
+            init_value = "0"
+            signal_out_type = "inherit"
+            execution_rate = "inherit"
+        }
+
+        "core/Voltage Source" {
+            sig_input = "False"
+            type = "signal generator"
+            param_set = "1phase"
+            parent_label = ""
+            dtsm_switch_name = ""
+            addr = "0"
+            spc_nb = "0"
+            execution_rate = "100e-6"
+            cpd_visible = "True"
+            enable_snb = "False"
+            snb_type = "R2"
+            R2 = "0.0"
+            L1 = "0.1"
+            override_signal_name = "False"
+            signal_name = ""
+            init_source_nature = "Constant"
+            init_const_value = "0.0"
+            init_rms_value = "0.0"
+            init_frequency = "50.0"
+            init_phase = "0.0"
+        }
+
+        "core/Current Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Random Source" {
+            distribution = "Normal"
+            min = "0"
+            max = "5"
+            mean = "1"
+            stddev = "3"
+            lambd = "2"
+            k = "1"
+            rate = "1"
+            execution_rate = "100e-6"
+        }
+
+        "core/Signal Controlled Current Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Signal Controlled Voltage Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+}
