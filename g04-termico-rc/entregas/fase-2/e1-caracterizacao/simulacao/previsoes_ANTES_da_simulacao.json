@@ -1,0 +1,18 @@
+{
+  "R1": {
+    "pergunta": "E se a resistência do ramo rápido cair para 20% ou subir para cinco vezes?",
+    "previsao": "Com C1 fixa, aumentar R1 aumenta o ganho DC, aumenta tau1 e aproxima o polo1 de zero. A temperatura final sobe. Não há oscilação nem perda de estabilidade para R1>0."
+  },
+  "C1": {
+    "pergunta": "E se a capacidade térmica equivalente rápida cair para 20% ou subir cinco vezes?",
+    "previsao": "Com R1 fixa, C1 altera tau1 e o polo1, mas não o ganho DC nem a temperatura de equilíbrio. Capacidade maior reduz a taxa inicial de aquecimento."
+  },
+  "R4": {
+    "pergunta": "E se a resistência do ramo lento cair para 20% ou subir cinco vezes?",
+    "previsao": "Com C4 fixa, aumentar R4 amplia a cauda lenta e a temperatura final. Seu polo aproxima-se de zero. O ganho pode mudar menos que ao variar R1, mas o tempo de acomodação pode mudar muito."
+  },
+  "potencia_100W": {
+    "pergunta": "E se a potência subir de 10 para 100 W?",
+    "previsao": "A equação linear prevê temperatura acima do limite de 175 graus Celsius. A estabilidade matemática permanece, mas a extrapolação não representa operação física admissível."
+  }
+}

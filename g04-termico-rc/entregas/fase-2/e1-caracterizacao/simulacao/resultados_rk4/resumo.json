@@ -1,0 +1,694 @@
+{
+  "solver": "RK4 explícito fixo nas EDOs, Python 3.12.14",
+  "passo_s": 2e-06,
+  "periodo_registro_s": 1e-05,
+  "casos": {
+    "degrau_4r": {
+      "algebra": {
+        "gain_K_W": 2.039707,
+        "poles_s_1": [
+          -5000.0,
+          -1851.8518518518517,
+          -476.1904761904762,
+          -31.58759239370775
+        ],
+        "tau_s": [
+          0.0002,
+          0.00054,
+          0.0021,
+          0.031658
+        ],
+        "T_equilibrio_K": 318.54706999999996,
+        "referencia_tempos": "Resposta ao degrau unitario; ganho e polos pertencem a planta",
+        "t10_s": 5.077304434090552e-05,
+        "t90_s": 0.0031041665361142686,
+        "subida_10_90_s": 0.003053393491773363,
+        "acomodacao_2pct_s": 0.018772977934004786,
+        "sobressinal_pct": 0.0
+      },
+      "medido": {
+        "erro_max_K": 1.5580425838379597e-10,
+        "gain_K_W": 2.0396778145951657,
+        "T_equilibrio_K": 318.54677814595163,
+        "t10_s": 5.078513953058177e-05,
+        "t90_s": 0.0031041733876801866,
+        "subida_10_90_s": 0.003053388248149605,
+        "acomodacao_2pct_s": 0.01877297839347982,
+        "sobressinal_pct": 0.0
+      },
+      "diferenca_pct": {
+        "gain_K_W": 0.0014308626108656213,
+        "T_equilibrio_K": 9.16203838659943e-05,
+        "t10_s": 0.0238220690393092,
+        "t90_s": 0.00022072159590044108,
+        "subida_10_90_s": 0.0001717310190258072,
+        "acomodacao_2pct_s": 2.447534088753327e-06,
+        "sobressinal_pct": null
+      },
+      "amostras": 25001,
+      "tempo_real_s": 0.7970000000000255
+    },
+    "livre_4r": {
+      "algebra": {
+        "gain_K_W": 2.039707,
+        "poles_s_1": [
+          -5000.0,
+          -1851.8518518518517,
+          -476.1904761904762,
+          -31.58759239370775
+        ],
+        "tau_s": [
+          0.0002,
+          0.00054,
+          0.0021,
+          0.031658
+        ],
+        "T_equilibrio_K": 298.15,
+        "referencia_tempos": "Resposta ao degrau unitario; ganho e polos pertencem a planta",
+        "t10_s": 5.077304434090552e-05,
+        "t90_s": 0.0031041665361142686,
+        "subida_10_90_s": 0.003053393491773363,
+        "acomodacao_2pct_s": 0.018772977934004786,
+        "sobressinal_pct": 0.0
+      },
+      "medido": {
+        "erro_max_K": 1.5579715295643837e-10,
+        "T_final_K": 298.15027398645077
+      },
+      "diferenca_pct": {},
+      "amostras": 25001,
+      "tempo_real_s": 0.8899999999998727
+    },
+    "pulso_4r": {
+      "algebra": {
+        "gain_K_W": 2.039707,
+        "poles_s_1": [
+          -5000.0,
+          -1851.8518518518517,
+          -476.1904761904762,
+          -31.58759239370775
+        ],
+        "tau_s": [
+          0.0002,
+          0.00054,
+          0.0021,
+          0.031658
+        ],
+        "T_equilibrio_K": 298.15,
+        "referencia_tempos": "Resposta ao degrau unitario; ganho e polos pertencem a planta",
+        "t10_s": 5.077304434090552e-05,
+        "t90_s": 0.0031041665361142686,
+        "subida_10_90_s": 0.003053393491773363,
+        "acomodacao_2pct_s": 0.018772977934004786,
+        "sobressinal_pct": 0.0
+      },
+      "medido": {
+        "erro_max_K": 1.5580425838379597e-10,
+        "T_final_K": 298.15010841212774
+      },
+      "diferenca_pct": {},
+      "amostras": 25001,
+      "tempo_real_s": 1.0630000000001019
+    },
+    "degrau_2r": {
+      "algebra": {
+        "gain_K_W": 2.039707,
+        "poles_s_1": [
+          -3473.761519726527,
+          -494.7661736816767
+        ],
+        "tau_s": [
+          0.0002878723810835251,
+          0.002021156766960753
+        ],
+        "T_equilibrio_K": 318.54706999999996,
+        "referencia_tempos": "Resposta ao degrau unitario; ganho e polos pertencem a planta",
+        "t10_s": 5.090424796744405e-05,
+        "t90_s": 0.003051171060232836,
+        "subida_10_90_s": 0.0030002668122653922,
+        "acomodacao_2pct_s": 0.006303821373687676,
+        "sobressinal_pct": 0.0
+      },
+      "medido": {
+        "erro_max_K": 8.026290743146092e-11,
+        "gain_K_W": 2.039706999999896,
+        "T_equilibrio_K": 318.54706999999894,
+        "t10_s": 5.091710148545604e-05,
+        "t90_s": 0.0030511736342566757,
+        "subida_10_90_s": 0.0030002565327712197,
+        "acomodacao_2pct_s": 0.0063038272157450535,
+        "sobressinal_pct": 0.0
+      },
+      "diferenca_pct": {
+        "gain_K_W": 5.094696204156512e-12,
+        "T_equilibrio_K": 3.21202621482139e-13,
+        "t10_s": 0.025250383858358434,
+        "t90_s": 8.436183316985474e-05,
+        "subida_10_90_s": 0.00034261933407104145,
+        "acomodacao_2pct_s": 9.26748559560061e-05,
+        "sobressinal_pct": null
+      },
+      "amostras": 25001,
+      "tempo_real_s": 0.6869999999998981
+    },
+    "livre_2r": {
+      "algebra": {
+        "gain_K_W": 2.039707,
+        "poles_s_1": [
+          -3473.761519726527,
+          -494.7661736816767
+        ],
+        "tau_s": [
+          0.0002878723810835251,
+          0.002021156766960753
+        ],
+        "T_equilibrio_K": 298.15,
+        "referencia_tempos": "Resposta ao degrau unitario; ganho e polos pertencem a planta",
+        "t10_s": 5.090424796744405e-05,
+        "t90_s": 0.003051171060232836,
+        "subida_10_90_s": 0.0030002668122653922,
+        "acomodacao_2pct_s": 0.006303821373687676,
+        "sobressinal_pct": 0.0
+      },
+      "medido": {
+        "erro_max_K": 8.025047293358512e-11,
+        "T_final_K": 298.15
+      },
+      "diferenca_pct": {},
+      "amostras": 25001,
+      "tempo_real_s": 0.8130000000001019
+    },
+    "pulso_2r": {
+      "algebra": {
+        "gain_K_W": 2.039707,
+        "poles_s_1": [
+          -3473.761519726527,
+          -494.7661736816767
+        ],
+        "tau_s": [
+          0.0002878723810835251,
+          0.002021156766960753
+        ],
+        "T_equilibrio_K": 298.15,
+        "referencia_tempos": "Resposta ao degrau unitario; ganho e polos pertencem a planta",
+        "t10_s": 5.090424796744405e-05,
+        "t90_s": 0.003051171060232836,
+        "subida_10_90_s": 0.0030002668122653922,
+        "acomodacao_2pct_s": 0.006303821373687676,
+        "sobressinal_pct": 0.0
+      },
+      "medido": {
+        "erro_max_K": 8.026290743146092e-11,
+        "T_final_K": 298.15
+      },
+      "diferenca_pct": {},
+      "amostras": 25001,
+      "tempo_real_s": 0.8910000000000764
+    },
+    "R1_x0.2": {
+      "algebra": {
+        "gain_K_W": 1.6457342,
+        "poles_s_1": [
+          -24999.999999999996,
+          -1851.8518518518517,
+          -476.1904761904762,
+          -31.58759239370775
+        ],
+        "tau_s": [
+          4e-05,
+          0.00054,
+          0.0021,
+          0.031658
+        ],
+        "T_equilibrio_K": 314.60734199999996,
+        "referencia_tempos": "Resposta ao degrau unitario; ganho e polos pertencem a planta",
+        "t10_s": 5.0854749762124725e-05,
+        "t90_s": 0.0037600984122357654,
+        "subida_10_90_s": 0.0037092436624736407,
+        "acomodacao_2pct_s": 0.025510408093403998,
+        "sobressinal_pct": 0.0
+      },
+      "medido": {
+        "erro_max_K": 1.967601792607354e-08,
+        "gain_K_W": 1.6457094854617424,
+        "T_equilibrio_K": 314.6070948546174,
+        "t10_s": 5.0885987324624914e-05,
+        "t90_s": 0.003760098656056958,
+        "subida_10_90_s": 0.003709212668732333,
+        "acomodacao_2pct_s": 0.02551040815649889,
+        "sobressinal_pct": 0.0
+      },
+      "diferenca_pct": {
+        "gain_K_W": 0.0015017332846018138,
+        "T_equilibrio_K": 7.855677524500072e-05,
+        "t10_s": 0.06142506382649489,
+        "t90_s": 6.484436460740426e-06,
+        "subida_10_90_s": 0.0008355811623101746,
+        "acomodacao_2pct_s": 2.4732999249728526e-07,
+        "sobressinal_pct": null
+      },
+      "amostras": 25528,
+      "tempo_real_s": 1.1089999999999236
+    },
+    "R1_x1": {
+      "algebra": {
+        "gain_K_W": 2.039707,
+        "poles_s_1": [
+          -5000.0,
+          -1851.8518518518517,
+          -476.1904761904762,
+          -31.58759239370775
+        ],
+        "tau_s": [
+          0.0002,
+          0.00054,
+          0.0021,
+          0.031658
+        ],
+        "T_equilibrio_K": 318.54706999999996,
+        "referencia_tempos": "Resposta ao degrau unitario; ganho e polos pertencem a planta",
+        "t10_s": 5.077304434090552e-05,
+        "t90_s": 0.0031041665361142686,
+        "subida_10_90_s": 0.003053393491773363,
+        "acomodacao_2pct_s": 0.018772977934004786,
+        "sobressinal_pct": 0.0
+      },
+      "medido": {
+        "erro_max_K": 1.5580425838379597e-10,
+        "gain_K_W": 2.039682285461737,
+        "T_equilibrio_K": 318.54682285461735,
+        "t10_s": 5.078513953058177e-05,
+        "t90_s": 0.0031041733876801866,
+        "subida_10_90_s": 0.003053388248149605,
+        "acomodacao_2pct_s": 0.01877297839347982,
+        "sobressinal_pct": 0.0
+      },
+      "diferenca_pct": {
+        "gain_K_W": 0.0012116710028953423,
+        "T_equilibrio_K": 7.75852003963038e-05,
+        "t10_s": 0.0238220690393092,
+        "t90_s": 0.00022072159590044108,
+        "subida_10_90_s": 0.0001717310190258072,
+        "acomodacao_2pct_s": 2.447534088753327e-06,
+        "sobressinal_pct": null
+      },
+      "amostras": 25528,
+      "tempo_real_s": 1.1720000000000255
+    },
+    "R1_x5": {
+      "algebra": {
+        "gain_K_W": 4.009571,
+        "poles_s_1": [
+          -999.9999999999998,
+          -1851.8518518518517,
+          -476.1904761904762,
+          -31.58759239370775
+        ],
+        "tau_s": [
+          0.0010000000000000002,
+          0.00054,
+          0.0021,
+          0.031658
+        ],
+        "T_equilibrio_K": 338.24571,
+        "referencia_tempos": "Resposta ao degrau unitario; ganho e polos pertencem a planta",
+        "t10_s": 9.728259121898444e-05,
+        "t90_s": 0.002703943248951346,
+        "subida_10_90_s": 0.0026066606577323614,
+        "acomodacao_2pct_s": 0.007156911549843084,
+        "sobressinal_pct": 0.0
+      },
+      "medido": {
+        "erro_max_K": 6.192379942149273e-12,
+        "gain_K_W": 4.009546285461653,
+        "T_equilibrio_K": 338.2454628546165,
+        "t10_s": 9.729509039928166e-05,
+        "t90_s": 0.0027039536360961795,
+        "subida_10_90_s": 0.002606658545696898,
+        "acomodacao_2pct_s": 0.007156916781798733,
+        "sobressinal_pct": 0.0
+      },
+      "diferenca_pct": {
+        "gain_K_W": 0.0006163885948746997,
+        "T_equilibrio_K": 7.30668198182633e-05,
+        "t10_s": 0.012848321719849946,
+        "t90_s": 0.0003841480340802787,
+        "subida_10_90_s": 8.102456517901821e-05,
+        "acomodacao_2pct_s": 7.310353931019647e-05,
+        "sobressinal_pct": null
+      },
+      "amostras": 25528,
+      "tempo_real_s": 1.1399999999998727
+    },
+    "C1_x0.2": {
+      "algebra": {
+        "gain_K_W": 2.039707,
+        "poles_s_1": [
+          -24999.999999999993,
+          -1851.8518518518517,
+          -476.1904761904762,
+          -31.58759239370775
+        ],
+        "tau_s": [
+          4.000000000000001e-05,
+          0.00054,
+          0.0021,
+          0.031658
+        ],
+        "T_equilibrio_K": 318.54706999999996,
+        "referencia_tempos": "Resposta ao degrau unitario; ganho e polos pertencem a planta",
+        "t10_s": 1.7127787606554886e-05,
+        "t90_s": 0.0031041652812232885,
+        "subida_10_90_s": 0.0030870374936167334,
+        "acomodacao_2pct_s": 0.018772977934004786,
+        "sobressinal_pct": 0.0
+      },
+      "medido": {
+        "erro_max_K": 9.837641723464685e-08,
+        "gain_K_W": 2.0396822854617427,
+        "T_equilibrio_K": 318.5468228546174,
+        "t10_s": 1.7336506577331472e-05,
+        "t90_s": 0.0031041721318638927,
+        "subida_10_90_s": 0.0030868356252865613,
+        "acomodacao_2pct_s": 0.018772978393476802,
+        "sobressinal_pct": 0.0
+      },
+      "diferenca_pct": {
+        "gain_K_W": 0.0012116710026123035,
+        "T_equilibrio_K": 7.758520037845921e-05,
+        "t10_s": 1.2185985462401958,
+        "t90_s": 0.00022069187635440622,
+        "subida_10_90_s": 0.006539225085199822,
+        "acomodacao_2pct_s": 2.447518010223544e-06,
+        "sobressinal_pct": null
+      },
+      "amostras": 25528,
+      "tempo_real_s": 1.1410000000000764
+    },
+    "C1_x1": {
+      "algebra": {
+        "gain_K_W": 2.039707,
+        "poles_s_1": [
+          -5000.0,
+          -1851.8518518518517,
+          -476.1904761904762,
+          -31.58759239370775
+        ],
+        "tau_s": [
+          0.0002,
+          0.00054,
+          0.0021,
+          0.031658
+        ],
+        "T_equilibrio_K": 318.54706999999996,
+        "referencia_tempos": "Resposta ao degrau unitario; ganho e polos pertencem a planta",
+        "t10_s": 5.077304434090552e-05,
+        "t90_s": 0.0031041665361142686,
+        "subida_10_90_s": 0.003053393491773363,
+        "acomodacao_2pct_s": 0.018772977934004786,
+        "sobressinal_pct": 0.0
+      },
+      "medido": {
+        "erro_max_K": 1.5580425838379597e-10,
+        "gain_K_W": 2.039682285461737,
+        "T_equilibrio_K": 318.54682285461735,
+        "t10_s": 5.078513953058177e-05,
+        "t90_s": 0.0031041733876801866,
+        "subida_10_90_s": 0.003053388248149605,
+        "acomodacao_2pct_s": 0.01877297839347982,
+        "sobressinal_pct": 0.0
+      },
+      "diferenca_pct": {
+        "gain_K_W": 0.0012116710028953423,
+        "T_equilibrio_K": 7.75852003963038e-05,
+        "t10_s": 0.0238220690393092,
+        "t90_s": 0.00022072159590044108,
+        "subida_10_90_s": 0.0001717310190258072,
+        "acomodacao_2pct_s": 2.447534088753327e-06,
+        "sobressinal_pct": null
+      },
+      "amostras": 25528,
+      "tempo_real_s": 1.1410000000000764
+    },
+    "C1_x5": {
+      "algebra": {
+        "gain_K_W": 2.039707,
+        "poles_s_1": [
+          -1000.0,
+          -1851.8518518518517,
+          -476.1904761904762,
+          -31.58759239370775
+        ],
+        "tau_s": [
+          0.001,
+          0.00054,
+          0.0021,
+          0.031658
+        ],
+        "T_equilibrio_K": 318.54706999999996,
+        "referencia_tempos": "Resposta ao degrau unitario; ganho e polos pertencem a planta",
+        "t10_s": 9.042060496851074e-05,
+        "t90_s": 0.003361186395757443,
+        "subida_10_90_s": 0.003270765790788932,
+        "acomodacao_2pct_s": 0.01877298055120781,
+        "sobressinal_pct": 0.0
+      },
+      "medido": {
+        "erro_max_K": 5.337952302397753e-12,
+        "gain_K_W": 2.03968228546172,
+        "T_equilibrio_K": 318.5468228546172,
+        "t10_s": 9.042361663387033e-05,
+        "t90_s": 0.003361189712169521,
+        "subida_10_90_s": 0.0032707660955356506,
+        "acomodacao_2pct_s": 0.018772981010937967,
+        "sobressinal_pct": 0.0
+      },
+      "diferenca_pct": {
+        "gain_K_W": 0.001211671003722686,
+        "T_equilibrio_K": 7.758520044983758e-05,
+        "t10_s": 0.0033307290530052384,
+        "t90_s": 9.86679013786303e-05,
+        "subida_10_90_s": 9.317289535180678e-06,
+        "acomodacao_2pct_s": 2.4488927342520157e-06,
+        "sobressinal_pct": null
+      },
+      "amostras": 25528,
+      "tempo_real_s": 1.1399999999998727
+    },
+    "R4_x0.2": {
+      "algebra": {
+        "gain_K_W": 1.9807686,
+        "poles_s_1": [
+          -5000.0,
+          -1851.8518518518517,
+          -476.1904761904762,
+          -157.93796196853876
+        ],
+        "tau_s": [
+          0.0002,
+          0.00054,
+          0.0021,
+          0.0063316
+        ],
+        "T_equilibrio_K": 317.95768599999997,
+        "referencia_tempos": "Resposta ao degrau unitario; ganho e polos pertencem a planta",
+        "t10_s": 4.917469354007955e-05,
+        "t90_s": 0.0024964278750828706,
+        "subida_10_90_s": 0.002447253181542791,
+        "acomodacao_2pct_s": 0.005996873266440595,
+        "sobressinal_pct": 0.0
+      },
+      "medido": {
+        "erro_max_K": 1.5581314016799297e-10,
+        "gain_K_W": 1.9807685999999194,
+        "T_equilibrio_K": 317.95768599999917,
+        "t10_s": 4.918749231942179e-05,
+        "t90_s": 0.002496435755353585,
+        "subida_10_90_s": 0.0024472482630341634,
+        "acomodacao_2pct_s": 0.00599687822243224,
+        "sobressinal_pct": 0.0
+      },
+      "diferenca_pct": {
+        "gain_K_W": 4.06923815269418e-12,
+        "T_equilibrio_K": 2.5028734925794884e-13,
+        "t10_s": 0.026027166456690003,
+        "t90_s": 0.00031566186202558065,
+        "subida_10_90_s": 0.00020098078387727818,
+        "acomodacao_2pct_s": 8.264292781681704e-05,
+        "sobressinal_pct": null
+      },
+      "amostras": 25001,
+      "tempo_real_s": 1.125
+    },
+    "R4_x1": {
+      "algebra": {
+        "gain_K_W": 2.039707,
+        "poles_s_1": [
+          -5000.0,
+          -1851.8518518518517,
+          -476.1904761904762,
+          -31.58759239370775
+        ],
+        "tau_s": [
+          0.0002,
+          0.00054,
+          0.0021,
+          0.031658
+        ],
+        "T_equilibrio_K": 318.54706999999996,
+        "referencia_tempos": "Resposta ao degrau unitario; ganho e polos pertencem a planta",
+        "t10_s": 5.077304434090552e-05,
+        "t90_s": 0.0031041665361142686,
+        "subida_10_90_s": 0.003053393491773363,
+        "acomodacao_2pct_s": 0.018772977934004786,
+        "sobressinal_pct": 0.0
+      },
+      "medido": {
+        "erro_max_K": 1.5580425838379597e-10,
+        "gain_K_W": 2.039682285461737,
+        "T_equilibrio_K": 318.54682285461735,
+        "t10_s": 5.078513953058177e-05,
+        "t90_s": 0.0031041733876801866,
+        "subida_10_90_s": 0.003053388248149605,
+        "acomodacao_2pct_s": 0.01877297839347982,
+        "sobressinal_pct": 0.0
+      },
+      "diferenca_pct": {
+        "gain_K_W": 0.0012116710028953423,
+        "T_equilibrio_K": 7.75852003963038e-05,
+        "t10_s": 0.0238220690393092,
+        "t90_s": 0.00022072159590044108,
+        "subida_10_90_s": 0.0001717310190258072,
+        "acomodacao_2pct_s": 2.447534088753327e-06,
+        "sobressinal_pct": null
+      },
+      "amostras": 25528,
+      "tempo_real_s": 1.1100000000001273
+    },
+    "R4_x5": {
+      "algebra": {
+        "gain_K_W": 2.334399,
+        "poles_s_1": [
+          -5000.0,
+          -1851.8518518518517,
+          -476.1904761904762,
+          -6.317518478741551
+        ],
+        "tau_s": [
+          0.0002,
+          0.00054,
+          0.0021,
+          0.15829
+        ],
+        "T_equilibrio_K": 321.49399,
+        "referencia_tempos": "Resposta ao degrau unitario; ganho e polos pertencem a planta",
+        "t10_s": 5.889730488316303e-05,
+        "t90_s": 0.07220392620538096,
+        "subida_10_90_s": 0.0721450289004978,
+        "acomodacao_2pct_s": 0.32696185336457273,
+        "sobressinal_pct": 0.0
+      },
+      "medido": {
+        "erro_max_K": 1.5577139578226706e-10,
+        "gain_K_W": 2.334275427309001,
+        "T_equilibrio_K": 321.49275427309,
+        "t10_s": 5.891375112285907e-05,
+        "t90_s": 0.07220392628075964,
+        "subida_10_90_s": 0.07214501252963679,
+        "acomodacao_2pct_s": 0.32696185341252515,
+        "sobressinal_pct": 0.0
+      },
+      "diferenca_pct": {
+        "gain_K_W": 0.005293554829270445,
+        "T_equilibrio_K": 0.0003843701432834642,
+        "t10_s": 0.027923586195779268,
+        "t90_s": 1.0439692061791827e-07,
+        "subida_10_90_s": 2.269159949551655e-05,
+        "acomodacao_2pct_s": 1.4666059455943296e-08,
+        "sobressinal_pct": null
+      },
+      "amostras": 126833,
+      "tempo_real_s": 5.514999999999873
+    },
+    "potencia_100W": {
+      "algebra": {
+        "gain_K_W": 2.039707,
+        "poles_s_1": [
+          -5000.0,
+          -1851.8518518518517,
+          -476.1904761904762,
+          -31.58759239370775
+        ],
+        "tau_s": [
+          0.0002,
+          0.00054,
+          0.0021,
+          0.031658
+        ],
+        "T_equilibrio_K": 502.12069999999994,
+        "referencia_tempos": "Resposta ao degrau unitario; ganho e polos pertencem a planta",
+        "t10_s": 5.077304434090552e-05,
+        "t90_s": 0.0031041665361142686,
+        "subida_10_90_s": 0.003053393491773363,
+        "acomodacao_2pct_s": 0.018772977934004786,
+        "sobressinal_pct": 0.0
+      },
+      "medido": {
+        "erro_max_K": 1.5579217915728805e-09,
+        "gain_K_W": 2.0396778145951795,
+        "T_equilibrio_K": 502.1177814595179,
+        "t10_s": 5.078513953058134e-05,
+        "t90_s": 0.003104173387680126,
+        "subida_10_90_s": 0.0030533882481495445,
+        "acomodacao_2pct_s": 0.018772978393472937,
+        "sobressinal_pct": 0.0
+      },
+      "diferenca_pct": {
+        "gain_K_W": 0.001430862610190683,
+        "T_equilibrio_K": 0.0005812428131380006,
+        "t10_s": 0.023822069038455043,
+        "t90_s": 0.0002207215939445112,
+        "subida_10_90_s": 0.00017173102100005784,
+        "acomodacao_2pct_s": 2.447497422312995e-06,
+        "sobressinal_pct": null
+      },
+      "amostras": 25001,
+      "tempo_real_s": 1.1720000000000255
+    }
+  },
+  "convergencia": [
+    {
+      "h_s": 2e-06,
+      "erro_max_K": 1.5580425838379597e-10,
+      "gain_K_W": 2.0396778145951657,
+      "T_equilibrio_K": 318.54677814595163,
+      "t10_s": 5.078513953058177e-05,
+      "t90_s": 0.0031041733876801866,
+      "subida_10_90_s": 0.003053388248149605,
+      "acomodacao_2pct_s": 0.01877297839347982,
+      "sobressinal_pct": 0.0
+    },
+    {
+      "h_s": 1e-06,
+      "erro_max_K": 9.71667191151937e-12,
+      "gain_K_W": 2.039677814595092,
+      "T_equilibrio_K": 318.5467781459509,
+      "t10_s": 5.0785139528444594e-05,
+      "t90_s": 0.0031041733876798344,
+      "subida_10_90_s": 0.00305338824815139,
+      "acomodacao_2pct_s": 0.018772978393502587,
+      "sobressinal_pct": 0.0
+    },
+    {
+      "h_s": 5e-07,
+      "erro_max_K": 3.0411229090532288e-12,
+      "gain_K_W": 2.0396778145949384,
+      "T_equilibrio_K": 318.54677814594936,
+      "t10_s": 5.0785139528311454e-05,
+      "t90_s": 0.0031041733876798344,
+      "subida_10_90_s": 0.003053388248151523,
+      "acomodacao_2pct_s": 0.01877297839354556,
+      "sobressinal_pct": 0.0
+    }
+  ]
+}
