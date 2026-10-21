@@ -1,0 +1,4810 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "Equipe04_Entrega02_Capacitivo_RC_AM" {
+    configuration {
+        hil_device = "HIL404"
+        hil_configuration_id = 6
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = True
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 1.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Ground" GND_A {
+        }
+        [
+            position = 6800, 9600
+        ]
+
+        component "core/Ground" GND_B {
+        }
+        [
+            position = 6800, 9800
+        ]
+
+        component "core/Core Marker" Nucleo_A {
+            marker_id = "G04_A"
+        }
+        [
+            position = 6900, 9600
+        ]
+
+        component "core/Core Marker" Nucleo_B {
+            marker_id = "G04_B"
+        }
+        [
+            position = 6900, 9800
+        ]
+
+        component "core/Voltage Source" RH_DC {
+            execution_rate = "0.0001"
+            init_const_value = "0.33"
+        }
+        [
+            position = 6700, 6800
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Voltage Source" RH_AC {
+            execution_rate = "0.001"
+        }
+        [
+            position = 6848, 6800
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Sinusoidal Source" Umidade_lenta {
+            amplitude = "0.05"
+            execution_rate = "0.001"
+            frequency = "0.01"
+        }
+        [
+            position = 6600, 6500
+        ]
+
+        component "core/SCADA Input" RH_AC_enable {
+            execution_rate = "0.001"
+            max = "1"
+            min = "0"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "RH_AC_enable"
+            unit = ""
+        }
+        [
+            position = 6600, 6580
+        ]
+
+        component "core/Product" Umidade_lenta_habilitado {
+            execution_rate = "0.001"
+        }
+        [
+            position = 6760, 6500
+        ]
+
+        component "core/Voltage Measurement" RH_ref {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "RH_ref"
+        }
+        [
+            position = 7000, 6800
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Probe" P_RH_fracao {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "RH_fracao"
+        }
+        [
+            position = 7120, 6760
+        ]
+
+        component "core/C function" Lei_estatica_HS1101LF {
+            execution_rate = "0.001"
+            input_terminals = "real rh;"
+            input_terminals_dimensions = "inherit"
+            input_terminals_feedthrough = "True"
+            output_fnc = "/*Begin code section*/
+double h = 100.0 * rh; /* entrada adimensional; h e usado pela equacao do fabricante */
+if (h < 1.0) h = 1.0;
+if (h > 99.0) h = 99.0;
+C_ideal_F = 180e-12 + 0.31e-12 * (h - 55.0);
+C_nao_linear_F = 180e-12 * (3.903e-8*h*h*h - 8.294e-6*h*h + 2.188e-3*h + 0.898);
+/*End code section*/"
+            output_terminals = "real C_ideal_F;real C_nao_linear_F;"
+            output_terminals_dimensions = "inherit;inherit"
+            output_terminals_feedthrough = "True;True"
+            output_terminals_show_labels = "True;True"
+        }
+        [
+            position = 7340, 6808
+            size = 48, 48
+        ]
+
+        component "core/Probe" P_C_ideal_F {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "C_ideal_F"
+        }
+        [
+            position = 7648, 6740
+        ]
+
+        component "core/Probe" P_C_nao_linear_F {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "C_nao_linear_F"
+        }
+        [
+            position = 7648, 6800
+        ]
+
+        component "core/Voltage Source" AM_DC {
+            execution_rate = "0.0001"
+            init_const_value = "1"
+        }
+        [
+            position = 6700, 7040
+            rotation = right
+        ]
+
+        component "core/Voltage Source" AM_AC {
+            execution_rate = "0.0001"
+            init_frequency = "1"
+            init_phase = "90"
+            init_rms_value = "0.07071067811865475"
+            init_source_nature = "Sine"
+        }
+        [
+            position = 6848, 7040
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" Amplitude_AM {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "Amplitude_AM"
+        }
+        [
+            position = 7000, 7040
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Gain" Pico_para_RMS_AM {
+            execution_rate = "0.001"
+            gain = "0.7071067811865475"
+        }
+        [
+            position = 7180, 7040
+        ]
+
+        component "core/Constant" RMS_ideal {
+            execution_rate = "0.001"
+            value = "0.7071067811865475"
+        }
+        [
+            position = 7352, 7100
+        ]
+
+        component "core/Constant" F_carrier {
+            execution_rate = "0.001"
+            value = "10000"
+        }
+        [
+            position = 7480, 7100
+        ]
+
+        component "core/Constant" Phase_carrier {
+            execution_rate = "0.001"
+            value = "0"
+        }
+        [
+            position = 7608, 7100
+        ]
+
+        component "core/Signal Controlled Sinusoidal Voltage Source" Carrier_Ideal {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7800, 7420
+            rotation = right
+            size = 64, 80
+        ]
+
+        component "core/Variable Capacitor" HS1101_Ideal {
+            resistance = "5000"
+        }
+        [
+            position = 7992, 7420
+            size = 64, 48
+        ]
+
+        component "core/Capacitor" Cref_Ideal {
+            capacitance = "180e-12"
+        }
+        [
+            position = 8152, 7484
+            rotation = right
+        ]
+
+        component Subsystem Fuga_Ideal {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "1e12"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "1e12"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "1000000000000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 8232, 7540
+            rotation = right
+            size = 96, 48
+        ]
+
+        component "core/Voltage Measurement" AC_Ideal {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_name = "AC_Ideal"
+        }
+        [
+            position = 8260, 7484
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Buffer_AC_Ideal {
+            control_gain = "[1]"
+            control_label = "[\'AC_Ideal\']"
+        }
+        [
+            position = 8400, 7420
+            rotation = right
+            size = 64, 48
+        ]
+
+        component "core/Diode" Retificador_Ideal {
+            model_load_legacy = "1"
+            resistance = "1"
+            switches_option = "True"
+        }
+        [
+            position = 8560, 7420
+            size = 64, 32
+        ]
+
+        component Subsystem Carga_ret_Ideal {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "1e5"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "1e5"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "100000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 8660, 7484
+            rotation = right
+            size = 96, 48
+        ]
+
+        component "core/Voltage Measurement" Meia_onda_Ideal {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_name = "Meia_onda_Ideal"
+        }
+        [
+            position = 8780, 7484
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Calibracao_PI_Ideal {
+            control_gain = "[3.141592653589793]"
+            control_label = "[\'Meia_onda_Ideal\']"
+        }
+        [
+            position = 8912, 7420
+            rotation = right
+            size = 64, 48
+        ]
+
+        component Subsystem R_Detector_Ideal {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "1000"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "1000"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "1000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 9072, 7420
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Detector_Ideal {
+            capacitance = "1e-06"
+        }
+        [
+            position = 9168, 7484
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Detector_Ideal {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "V_Detector_Ideal"
+        }
+        [
+            position = 9232, 7484
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Probe" P_V_pre_Ideal_V {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "V_pre_Ideal_V"
+        }
+        [
+            position = 9240, 7568
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Buffer_Det_Ideal {
+            control_gain = "[1]"
+            control_label = "[\'V_Detector_Ideal\']"
+        }
+        [
+            position = 9340, 7420
+            rotation = right
+            size = 64, 48
+        ]
+
+        component Subsystem R_Filtro1_Ideal {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "100000"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "100000"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "100000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 9500, 7420
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Filtro1_Ideal {
+            capacitance = "6e-06"
+        }
+        [
+            position = 9596, 7484
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Filtro1_Ideal {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_name = "V_Filtro1_Ideal"
+        }
+        [
+            position = 9660, 7484
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Buffer_F1_Ideal {
+            control_gain = "[1]"
+            control_label = "[\'V_Filtro1_Ideal\']"
+        }
+        [
+            position = 9760, 7420
+            rotation = right
+            size = 64, 48
+        ]
+
+        component Subsystem R_Filtro2_Ideal {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "100000"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "100000"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "100000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 9920, 7420
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Filtro2_Ideal {
+            capacitance = "6e-06"
+        }
+        [
+            position = 10016, 7484
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Filtro2_Ideal {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "V_Filtro2_Ideal"
+        }
+        [
+            position = 10080, 7484
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Probe" P_V_out_Ideal_V {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "V_out_Ideal_V"
+        }
+        [
+            position = 10180, 7568
+        ]
+
+        component "core/Signal Controlled Sinusoidal Voltage Source" Carrier_Estatica {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7800, 7880
+            rotation = right
+            size = 64, 80
+        ]
+
+        component "core/Variable Capacitor" HS1101_Estatica {
+            resistance = "5000"
+        }
+        [
+            position = 7992, 7880
+            size = 64, 48
+        ]
+
+        component "core/Capacitor" Cref_Estatica {
+            capacitance = "180e-12"
+        }
+        [
+            position = 8152, 7944
+            rotation = right
+        ]
+
+        component Subsystem Fuga_Estatica {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "1e12"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "1e12"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "1000000000000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 8232, 8000
+            rotation = right
+            size = 96, 48
+        ]
+
+        component "core/Voltage Measurement" AC_Estatica {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_name = "AC_Estatica"
+        }
+        [
+            position = 8260, 7944
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Buffer_AC_Estatica {
+            control_gain = "[1]"
+            control_label = "[\'AC_Estatica\']"
+        }
+        [
+            position = 8400, 7880
+            rotation = right
+            size = 64, 48
+        ]
+
+        component "core/Diode" Retificador_Estatica {
+            model_load_legacy = "1"
+            resistance = "1"
+            switches_option = "True"
+        }
+        [
+            position = 8560, 7880
+            size = 64, 32
+        ]
+
+        component Subsystem Carga_ret_Estatica {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "1e5"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "1e5"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "100000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 8660, 7944
+            rotation = right
+            size = 96, 48
+        ]
+
+        component "core/Voltage Measurement" Meia_onda_Estatica {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_name = "Meia_onda_Estatica"
+        }
+        [
+            position = 8780, 7944
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Calibracao_PI_Estatica {
+            control_gain = "[3.141592653589793]"
+            control_label = "[\'Meia_onda_Estatica\']"
+        }
+        [
+            position = 8912, 7880
+            rotation = right
+            size = 64, 48
+        ]
+
+        component Subsystem R_Detector_Estatica {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "1000"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "1000"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "1000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 9072, 7880
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Detector_Estatica {
+            capacitance = "1e-06"
+        }
+        [
+            position = 9168, 7944
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Detector_Estatica {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "V_Detector_Estatica"
+        }
+        [
+            position = 9232, 7944
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Probe" P_V_pre_Estatica_V {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "V_pre_Estatica_V"
+        }
+        [
+            position = 9240, 8032
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Buffer_Det_Estatica {
+            control_gain = "[1]"
+            control_label = "[\'V_Detector_Estatica\']"
+        }
+        [
+            position = 9340, 7880
+            rotation = right
+            size = 64, 48
+        ]
+
+        component Subsystem R_Filtro1_Estatica {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "100000"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "100000"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "100000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 9500, 7880
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Filtro1_Estatica {
+            capacitance = "6e-06"
+        }
+        [
+            position = 9596, 7944
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Filtro1_Estatica {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_name = "V_Filtro1_Estatica"
+        }
+        [
+            position = 9660, 7944
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Buffer_F1_Estatica {
+            control_gain = "[1]"
+            control_label = "[\'V_Filtro1_Estatica\']"
+        }
+        [
+            position = 9760, 7880
+            rotation = right
+            size = 64, 48
+        ]
+
+        component Subsystem R_Filtro2_Estatica {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "100000"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "100000"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "100000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 9920, 7880
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Filtro2_Estatica {
+            capacitance = "6e-06"
+        }
+        [
+            position = 10016, 7944
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Filtro2_Estatica {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "V_Filtro2_Estatica"
+        }
+        [
+            position = 10080, 7944
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Probe" P_V_out_Estatica_V {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "V_out_Estatica_V"
+        }
+        [
+            position = 10180, 8032
+        ]
+
+        component "core/Gain" Escala_C_Dinamica {
+            execution_rate = "0.001"
+            gain = "10000000000.0"
+        }
+        [
+            position = 6848, 8340
+        ]
+
+        component "core/Signal Controlled Voltage Source" Entrada_C_Dinamica {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7048, 8340
+            rotation = right
+            size = 64, 32
+        ]
+
+        component Subsystem R_Sensor_Dinamica {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "1000000.0"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "1000000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 7220, 8340
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Sensor_Dinamica {
+            capacitance = "3e-06"
+            initial_voltage = "1.7318"
+        }
+        [
+            position = 7316, 8404
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Sensor_Dinamica {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "V_Sensor_Dinamica"
+        }
+        [
+            position = 7380, 8404
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Gain" Retorno_F_Dinamica {
+            execution_rate = "0.001"
+            gain = "1e-10"
+        }
+        [
+            position = 7480, 8460
+        ]
+
+        component "core/Probe" P_C_dinamica_Dinamica_F {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "C_dinamica_Dinamica_F"
+        }
+        [
+            position = 7680, 8460
+        ]
+
+        component "core/Limit" Protecao_C_Dinamica {
+            execution_rate = "0.001"
+            lower_limit = "160e-12"
+            upper_limit = "200e-12"
+        }
+        [
+            position = 7720, 8520
+        ]
+
+        component "core/Signal Controlled Sinusoidal Voltage Source" Carrier_Dinamica {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7800, 8340
+            rotation = right
+            size = 64, 80
+        ]
+
+        component "core/Variable Capacitor" HS1101_Dinamica {
+            resistance = "5000"
+        }
+        [
+            position = 7992, 8340
+            size = 64, 48
+        ]
+
+        component "core/Capacitor" Cref_Dinamica {
+            capacitance = "180e-12"
+        }
+        [
+            position = 8152, 8404
+            rotation = right
+        ]
+
+        component Subsystem Fuga_Dinamica {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "1e12"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "1e12"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "1000000000000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 8232, 8460
+            rotation = right
+            size = 96, 48
+        ]
+
+        component "core/Voltage Measurement" AC_Dinamica {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_name = "AC_Dinamica"
+        }
+        [
+            position = 8260, 8404
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Buffer_AC_Dinamica {
+            control_gain = "[1]"
+            control_label = "[\'AC_Dinamica\']"
+        }
+        [
+            position = 8400, 8340
+            rotation = right
+            size = 64, 48
+        ]
+
+        component "core/Diode" Retificador_Dinamica {
+            model_load_legacy = "1"
+            resistance = "1"
+            switches_option = "True"
+        }
+        [
+            position = 8560, 8340
+            size = 64, 32
+        ]
+
+        component Subsystem Carga_ret_Dinamica {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "1e5"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "1e5"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "100000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 8660, 8404
+            rotation = right
+            size = 96, 48
+        ]
+
+        component "core/Voltage Measurement" Meia_onda_Dinamica {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_name = "Meia_onda_Dinamica"
+        }
+        [
+            position = 8780, 8404
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Calibracao_PI_Dinamica {
+            control_gain = "[3.141592653589793]"
+            control_label = "[\'Meia_onda_Dinamica\']"
+        }
+        [
+            position = 8912, 8340
+            rotation = right
+            size = 64, 48
+        ]
+
+        component Subsystem R_Detector_Dinamica {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "1000"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "1000"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "1000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 9072, 8340
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Detector_Dinamica {
+            capacitance = "1e-06"
+        }
+        [
+            position = 9168, 8404
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Detector_Dinamica {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "V_Detector_Dinamica"
+        }
+        [
+            position = 9232, 8404
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Probe" P_V_pre_Dinamica_V {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "V_pre_Dinamica_V"
+        }
+        [
+            position = 9240, 8488
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Buffer_Det_Dinamica {
+            control_gain = "[1]"
+            control_label = "[\'V_Detector_Dinamica\']"
+        }
+        [
+            position = 9340, 8340
+            rotation = right
+            size = 64, 48
+        ]
+
+        component Subsystem R_Filtro1_Dinamica {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "100000"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "100000"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "100000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 9500, 8340
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Filtro1_Dinamica {
+            capacitance = "6e-06"
+        }
+        [
+            position = 9596, 8404
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Filtro1_Dinamica {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_name = "V_Filtro1_Dinamica"
+        }
+        [
+            position = 9660, 8404
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Buffer_F1_Dinamica {
+            control_gain = "[1]"
+            control_label = "[\'V_Filtro1_Dinamica\']"
+        }
+        [
+            position = 9760, 8340
+            rotation = right
+            size = 64, 48
+        ]
+
+        component Subsystem R_Filtro2_Dinamica {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "100000"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "100000"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "100000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 9920, 8340
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Filtro2_Dinamica {
+            capacitance = "6e-06"
+        }
+        [
+            position = 10016, 8404
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Filtro2_Dinamica {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "V_Filtro2_Dinamica"
+        }
+        [
+            position = 10080, 8404
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Probe" P_V_out_Dinamica_V {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "V_out_Dinamica_V"
+        }
+        [
+            position = 10180, 8488
+        ]
+
+        component "core/Signal Controlled Sinusoidal Voltage Source" Carrier_Espectral {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7800, 8800
+            rotation = right
+            size = 64, 80
+        ]
+
+        component "core/Variable Capacitor" HS1101_Espectral {
+            resistance = "5000"
+        }
+        [
+            position = 7992, 8800
+            size = 64, 48
+        ]
+
+        component "core/Capacitor" Cref_Espectral {
+            capacitance = "180e-12"
+        }
+        [
+            position = 8152, 8864
+            rotation = right
+        ]
+
+        component Subsystem Fuga_Espectral {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "1e12"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "1e12"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "1000000000000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 8232, 8920
+            rotation = right
+            size = 96, 48
+        ]
+
+        component "core/Voltage Measurement" AC_Espectral {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_name = "AC_Espectral"
+        }
+        [
+            position = 8260, 8864
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Buffer_AC_Espectral {
+            control_gain = "[1]"
+            control_label = "[\'AC_Espectral\']"
+        }
+        [
+            position = 8400, 8800
+            rotation = right
+            size = 64, 48
+        ]
+
+        component "core/Diode" Retificador_Espectral {
+            model_load_legacy = "1"
+            resistance = "1"
+            switches_option = "True"
+        }
+        [
+            position = 8560, 8800
+            size = 64, 32
+        ]
+
+        component Subsystem Carga_ret_Espectral {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "1e5"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "1e5"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "100000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 8660, 8864
+            rotation = right
+            size = 96, 48
+        ]
+
+        component "core/Voltage Measurement" Meia_onda_Espectral {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_name = "Meia_onda_Espectral"
+        }
+        [
+            position = 8780, 8864
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Calibracao_PI_Espectral {
+            control_gain = "[3.141592653589793]"
+            control_label = "[\'Meia_onda_Espectral\']"
+        }
+        [
+            position = 8912, 8800
+            rotation = right
+            size = 64, 48
+        ]
+
+        component Subsystem R_Detector_Espectral {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "1000"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "1000"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "1000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 9072, 8800
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Detector_Espectral {
+            capacitance = "1e-06"
+        }
+        [
+            position = 9168, 8864
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Detector_Espectral {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "V_Detector_Espectral"
+        }
+        [
+            position = 9232, 8864
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Probe" P_V_pre_Espectral_V {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "V_pre_Espectral_V"
+        }
+        [
+            position = 9240, 8952
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Buffer_Det_Espectral {
+            control_gain = "[1]"
+            control_label = "[\'V_Detector_Espectral\']"
+        }
+        [
+            position = 9340, 8800
+            rotation = right
+            size = 64, 48
+        ]
+
+        component Subsystem R_Filtro1_Espectral {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "100000"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "100000"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "100000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 9500, 8800
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Filtro1_Espectral {
+            capacitance = "6e-06"
+        }
+        [
+            position = 9596, 8864
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Filtro1_Espectral {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_name = "V_Filtro1_Espectral"
+        }
+        [
+            position = 9660, 8864
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Buffer_F1_Espectral {
+            control_gain = "[1]"
+            control_label = "[\'V_Filtro1_Espectral\']"
+        }
+        [
+            position = 9760, 8800
+            rotation = right
+            size = 64, 48
+        ]
+
+        component Subsystem R_Filtro2_Espectral {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "100000"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "100000"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "100000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 9920, 8800
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Filtro2_Espectral {
+            capacitance = "6e-06"
+        }
+        [
+            position = 10016, 8864
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Filtro2_Espectral {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "V_Filtro2_Espectral"
+        }
+        [
+            position = 10080, 8864
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Probe" P_V_out_Espectral_V {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "V_out_Espectral_V"
+        }
+        [
+            position = 10180, 8952
+        ]
+
+        component "core/Gain" Escala_C_Completa {
+            execution_rate = "0.001"
+            gain = "10000000000.0"
+        }
+        [
+            position = 6848, 9260
+        ]
+
+        component "core/Signal Controlled Voltage Source" Entrada_C_Completa {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7048, 9260
+            rotation = right
+            size = 64, 32
+        ]
+
+        component Subsystem R_Sensor_Completa {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "1000000.0"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "1000000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 7220, 9260
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Sensor_Completa {
+            capacitance = "3e-06"
+            initial_voltage = "1.7326340191979999"
+        }
+        [
+            position = 7316, 9324
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Sensor_Completa {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "V_Sensor_Completa"
+        }
+        [
+            position = 7380, 9324
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Gain" Retorno_F_Completa {
+            execution_rate = "0.001"
+            gain = "1e-10"
+        }
+        [
+            position = 7480, 9380
+        ]
+
+        component "core/Probe" P_C_dinamica_Completa_F {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "C_dinamica_Completa_F"
+        }
+        [
+            position = 7680, 9380
+        ]
+
+        component "core/Limit" Protecao_C_Completa {
+            execution_rate = "0.001"
+            lower_limit = "160e-12"
+            upper_limit = "200e-12"
+        }
+        [
+            position = 7720, 9440
+        ]
+
+        component "core/Signal Controlled Sinusoidal Voltage Source" Carrier_Completa {
+            execution_rate = "0.001"
+        }
+        [
+            position = 7800, 9260
+            rotation = right
+            size = 64, 80
+        ]
+
+        component "core/Variable Capacitor" HS1101_Completa {
+            resistance = "5000"
+        }
+        [
+            position = 7992, 9260
+            size = 64, 48
+        ]
+
+        component "core/Capacitor" Cref_Completa {
+            capacitance = "180e-12"
+        }
+        [
+            position = 8152, 9324
+            rotation = right
+        ]
+
+        component Subsystem Fuga_Completa {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "1e12"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "1e12"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "1000000000000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 8232, 9380
+            rotation = right
+            size = 96, 48
+        ]
+
+        component "core/Voltage Measurement" AC_Completa {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_name = "AC_Completa"
+        }
+        [
+            position = 8260, 9324
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Buffer_AC_Completa {
+            control_gain = "[1]"
+            control_label = "[\'AC_Completa\']"
+        }
+        [
+            position = 8400, 9260
+            rotation = right
+            size = 64, 48
+        ]
+
+        component "core/Diode" Retificador_Completa {
+            model_load_legacy = "1"
+            resistance = "1"
+            switches_option = "True"
+        }
+        [
+            position = 8560, 9260
+            size = 64, 32
+        ]
+
+        component Subsystem Carga_ret_Completa {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "1e5"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "1e5"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "100000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 8660, 9324
+            rotation = right
+            size = 96, 48
+        ]
+
+        component "core/Voltage Measurement" Meia_onda_Completa {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_name = "Meia_onda_Completa"
+        }
+        [
+            position = 8780, 9324
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Calibracao_PI_Completa {
+            control_gain = "[3.141592653589793]"
+            control_label = "[\'Meia_onda_Completa\']"
+        }
+        [
+            position = 8912, 9260
+            rotation = right
+            size = 64, 48
+        ]
+
+        component Subsystem R_Detector_Completa {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "1000"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "1000"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "1000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 9072, 9260
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Detector_Completa {
+            capacitance = "1e-06"
+        }
+        [
+            position = 9168, 9324
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Detector_Completa {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "V_Detector_Completa"
+        }
+        [
+            position = 9232, 9324
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Probe" P_V_pre_Completa_V {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "V_pre_Completa_V"
+        }
+        [
+            position = 9240, 9408
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Buffer_Det_Completa {
+            control_gain = "[1]"
+            control_label = "[\'V_Detector_Completa\']"
+        }
+        [
+            position = 9340, 9260
+            rotation = right
+            size = 64, 48
+        ]
+
+        component Subsystem R_Filtro1_Completa {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "100000"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "100000"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "100000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 9500, 9260
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Filtro1_Completa {
+            capacitance = "6e-06"
+        }
+        [
+            position = 9596, 9324
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Filtro1_Completa {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_name = "V_Filtro1_Completa"
+        }
+        [
+            position = 9660, 9324
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Buffer_F1_Completa {
+            control_gain = "[1]"
+            control_label = "[\'V_Filtro1_Completa\']"
+        }
+        [
+            position = 9760, 9260
+            rotation = right
+            size = 64, 48
+        ]
+
+        component Subsystem R_Filtro2_Completa {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "100000"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "100000"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "100000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 9920, 9260
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Filtro2_Completa {
+            capacitance = "6e-06"
+        }
+        [
+            position = 10016, 9324
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Filtro2_Completa {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "V_Filtro2_Completa"
+        }
+        [
+            position = 10080, 9324
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Probe" P_V_out_Completa_V {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "V_out_Completa_V"
+        }
+        [
+            position = 10180, 9408
+        ]
+
+        component "core/Signal Controlled Voltage Source" Teste_filtro {
+            execution_rate = "0.001"
+        }
+        [
+            position = 10600, 7200
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Sinusoidal Source" Filtro_1Hz {
+            amplitude = "0.01"
+            execution_rate = "0.001"
+            frequency = "1"
+        }
+        [
+            position = 10400, 6700
+        ]
+
+        component "core/SCADA Input" Filtro_1Hz_enable {
+            def_value = "1"
+            execution_rate = "0.001"
+            max = "1"
+            min = "0"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "Filtro_1Hz_enable"
+            unit = ""
+        }
+        [
+            position = 10400, 6780
+        ]
+
+        component "core/Product" Filtro_1Hz_habilitado {
+            execution_rate = "0.001"
+        }
+        [
+            position = 10560, 6700
+        ]
+
+        component "core/Signal Controlled Voltage Source" Teste_filtro_lento {
+            execution_rate = "0.001"
+        }
+        [
+            position = 10600, 7100
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Sinusoidal Source" Filtro_0p1Hz {
+            amplitude = "0.01"
+            execution_rate = "0.001"
+            frequency = "0.1"
+        }
+        [
+            position = 10800, 6700
+        ]
+
+        component "core/SCADA Input" Filtro_0p1Hz_enable {
+            execution_rate = "0.001"
+            max = "1"
+            min = "0"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "Filtro_0p1Hz_enable"
+            unit = ""
+        }
+        [
+            position = 10800, 6780
+        ]
+
+        component "core/Product" Filtro_0p1Hz_habilitado {
+            execution_rate = "0.001"
+        }
+        [
+            position = 10960, 6700
+        ]
+
+        component "core/Voltage Measurement" V_teste_in {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "V_teste_in"
+        }
+        [
+            position = 10752, 7200
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Probe" P_Filtro_entrada_V {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "Filtro_entrada_V"
+        }
+        [
+            position = 10900, 7140
+        ]
+
+        component Subsystem R_Teste1 {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "100000"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "100000"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "100000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 10800, 7340
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Teste1 {
+            capacitance = "6e-06"
+        }
+        [
+            position = 10896, 7404
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Teste1 {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_name = "V_Teste1"
+        }
+        [
+            position = 10960, 7404
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Controlled Voltage Source" Buffer_Teste1 {
+            control_gain = "[1]"
+            control_label = "[\'V_Teste1\']"
+        }
+        [
+            position = 11060, 7340
+            rotation = right
+            size = 64, 48
+        ]
+
+        component Subsystem R_Teste2 {
+            layout = dynamic
+            component "core/Resistor" R_nativo {
+                resistance = "100000"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port p_node {
+                position = left:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8096, 8192
+                hide_name = True
+            ]
+
+            port n_node {
+                position = right:1
+                kind = pe
+                direction =  in
+            }
+            [
+                position = 8288, 8192
+                hide_name = True
+            ]
+
+            connect p_node R_nativo.p_node as Connection1
+            connect n_node R_nativo.n_node as Connection2
+
+            resistance = "100000"
+
+            mask {
+                description = "Resistor eletrico nativo, resistencia em ohms. Zigue-zague ANSI por preferencia visual do usuario; nao e uma unidade SI. Dentro: um core/Resistor e duas portas eletricas, sem C function."
+
+                resistance {
+                    label = "Resistance"
+                    widget = edit
+                    type = generic
+                    default_value = "100000.0"
+                    unit = "Ohm"
+                    min_width = False
+                    min_value = 0
+
+                    CODE property_value_changed
+                        import math
+                        value = float(new_value)
+                        if not math.isfinite(value) or value <= 0:
+                            raise ValueError('Resistance deve ser positiva, em ohms.')
+                        container = mdl.get_parent(mdl.get_parent(item_handle))
+                        r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                        if r is None:
+                            raise RuntimeError('Resistor nativo interno ausente.')
+                        mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                    ENDCODE
+                }
+
+                CODE open
+                    from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                
+                    dialog = RegularComponentPropertiesDialog(
+                        component=component,
+                        property_container=component.masks[-1],
+                        current_diagram=current_diagram
+                    )
+                    dialog.exec()
+                    
+                ENDCODE
+
+                CODE define_icon
+                    from pathlib import Path
+                    asset = Path(mdl.get_model_file_path()).parent/'simbolos'/'resistor_zigzag.svg'
+                    if not asset.is_file():
+                        asset = Path('C:\\Users\\Júlia\\OneDrive\\Área de Trabalho\\entrega 2 - instrumentação\\Entrega02_G04_Professor\\Projeto_Typhoon_G04\\simbolos\\resistor_zigzag.svg')
+                    if not asset.is_file():
+                        raise RuntimeError('Mantenha simbolos/resistor_zigzag.svg junto do TSE.')
+                    mdl.set_component_icon_image(item_handle, str(asset), rotate='rotate')
+                ENDCODE
+
+                CODE pre_compile
+                    import math
+                    container = mdl.get_parent(item_handle)
+                    value = float(mdl.get_property_value(mdl.prop(item_handle, 'resistance')))
+                    if not math.isfinite(value) or value <= 0:
+                        raise ValueError('Resistance deve ser positiva, em ohms.')
+                    r = mdl.get_item('R_nativo', parent=container, item_type='component')
+                    if r is None:
+                        raise RuntimeError('Resistor nativo interno ausente.')
+                    mdl.set_property_value(mdl.prop(r, 'resistance'), value)
+                ENDCODE
+            }
+        }
+        [
+            position = 11220, 7340
+            size = 96, 48
+        ]
+
+        component "core/Capacitor" C_Teste2 {
+            capacitance = "6e-06"
+        }
+        [
+            position = 11316, 7404
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_Teste2 {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "V_Teste2"
+        }
+        [
+            position = 11380, 7404
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Probe" P_Filtro_saida_V {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "Filtro_saida_V"
+        }
+        [
+            position = 11460, 7472
+        ]
+
+        comment Comment1 START G04 Entrega02: lei estatica em C; demais blocos eletricos em SI.Cinco ramos: Ideal / Estatica / Dinamica / Espectral / Completa.Din: R=1e6 ohm,C=3e-6 F. Filtro: 2x R=1e5 ohm,C=6e-6 F.AM: excitacao 1 V pico,10 kHz,m=0.10,fm=1 Hz didatico.Interface: divisor capacitivo, buffer ideal, meia onda e media calibrada.Gerador/captura/analise: scripts da mesma pasta. ENDCOMMENT 
+        [
+            position = 7900, 6552
+        ]
+
+        connect Nucleo_A.node GND_A.node as Connection1
+        connect Nucleo_B.node GND_B.node as Connection2
+        connect Umidade_lenta.out Umidade_lenta_habilitado.in as Connection3
+        connect RH_AC_enable.out Umidade_lenta_habilitado.in1 as Connection4
+        connect Umidade_lenta_habilitado.out RH_AC.in as Connection5
+        connect RH_DC.n_node GND_A.node as Connection6
+        connect RH_DC.p_node RH_AC.n_node as Connection7
+        connect RH_ref.p_node RH_AC.p_node as Connection8
+        connect RH_ref.n_node GND_A.node as Connection9
+        connect RH_ref.out P_RH_fracao.in as Connection10
+        connect RH_ref.out Lei_estatica_HS1101LF.rh as Connection11
+        connect Lei_estatica_HS1101LF.C_ideal_F P_C_ideal_F.in as Connection12
+        connect Lei_estatica_HS1101LF.C_nao_linear_F P_C_nao_linear_F.in as Connection13
+        connect AM_DC.n_node GND_A.node as Connection14
+        connect AM_DC.p_node AM_AC.n_node as Connection15
+        connect Amplitude_AM.p_node AM_AC.p_node as Connection16
+        connect Amplitude_AM.n_node GND_A.node as Connection17
+        connect Amplitude_AM.out Pico_para_RMS_AM.in as Connection18
+        connect RMS_ideal.out Carrier_Ideal.Rms as Connection19
+        connect F_carrier.out Carrier_Ideal.f as Connection20
+        connect Phase_carrier.out Carrier_Ideal.Ph as Connection21
+        connect Carrier_Ideal.n GND_A.node as Connection22
+        connect Lei_estatica_HS1101LF.C_ideal_F HS1101_Ideal.In as Connection23
+        connect Carrier_Ideal.p HS1101_Ideal.p_node as Connection24
+        connect HS1101_Ideal.n_node Cref_Ideal.p_node as Connection25
+        connect Cref_Ideal.n_node GND_A.node as Connection26
+        connect Fuga_Ideal.p_node Cref_Ideal.p_node as Connection27
+        connect Fuga_Ideal.n_node GND_A.node as Connection28
+        connect AC_Ideal.p_node Cref_Ideal.p_node as Connection29
+        connect AC_Ideal.n_node GND_A.node as Connection30
+        connect Buffer_AC_Ideal.n_node GND_A.node as Connection31
+        connect Buffer_AC_Ideal.p_node Retificador_Ideal.A as Connection32
+        connect Retificador_Ideal.K Carga_ret_Ideal.p_node as Connection33
+        connect Carga_ret_Ideal.n_node GND_A.node as Connection34
+        connect Meia_onda_Ideal.p_node Carga_ret_Ideal.p_node as Connection35
+        connect Meia_onda_Ideal.n_node GND_A.node as Connection36
+        connect Calibracao_PI_Ideal.n_node GND_A.node as Connection37
+        connect Calibracao_PI_Ideal.p_node R_Detector_Ideal.p_node as Connection38
+        connect R_Detector_Ideal.n_node C_Detector_Ideal.p_node as Connection39
+        connect C_Detector_Ideal.n_node GND_A.node as Connection40
+        connect V_Detector_Ideal.p_node C_Detector_Ideal.p_node as Connection41
+        connect V_Detector_Ideal.n_node GND_A.node as Connection42
+        connect V_Detector_Ideal.out P_V_pre_Ideal_V.in as Connection43
+        connect Buffer_Det_Ideal.n_node GND_A.node as Connection44
+        connect Buffer_Det_Ideal.p_node R_Filtro1_Ideal.p_node as Connection45
+        connect R_Filtro1_Ideal.n_node C_Filtro1_Ideal.p_node as Connection46
+        connect C_Filtro1_Ideal.n_node GND_A.node as Connection47
+        connect V_Filtro1_Ideal.p_node C_Filtro1_Ideal.p_node as Connection48
+        connect V_Filtro1_Ideal.n_node GND_A.node as Connection49
+        connect Buffer_F1_Ideal.n_node GND_A.node as Connection50
+        connect Buffer_F1_Ideal.p_node R_Filtro2_Ideal.p_node as Connection51
+        connect R_Filtro2_Ideal.n_node C_Filtro2_Ideal.p_node as Connection52
+        connect C_Filtro2_Ideal.n_node GND_A.node as Connection53
+        connect V_Filtro2_Ideal.p_node C_Filtro2_Ideal.p_node as Connection54
+        connect V_Filtro2_Ideal.n_node GND_A.node as Connection55
+        connect V_Filtro2_Ideal.out P_V_out_Ideal_V.in as Connection56
+        connect RMS_ideal.out Carrier_Estatica.Rms as Connection57
+        connect F_carrier.out Carrier_Estatica.f as Connection58
+        connect Phase_carrier.out Carrier_Estatica.Ph as Connection59
+        connect Carrier_Estatica.n GND_A.node as Connection60
+        connect Lei_estatica_HS1101LF.C_nao_linear_F HS1101_Estatica.In as Connection61
+        connect Carrier_Estatica.p HS1101_Estatica.p_node as Connection62
+        connect HS1101_Estatica.n_node Cref_Estatica.p_node as Connection63
+        connect Cref_Estatica.n_node GND_A.node as Connection64
+        connect Fuga_Estatica.p_node Cref_Estatica.p_node as Connection65
+        connect Fuga_Estatica.n_node GND_A.node as Connection66
+        connect AC_Estatica.p_node Cref_Estatica.p_node as Connection67
+        connect AC_Estatica.n_node GND_A.node as Connection68
+        connect Buffer_AC_Estatica.n_node GND_A.node as Connection69
+        connect Buffer_AC_Estatica.p_node Retificador_Estatica.A as Connection70
+        connect Retificador_Estatica.K Carga_ret_Estatica.p_node as Connection71
+        connect Carga_ret_Estatica.n_node GND_A.node as Connection72
+        connect Meia_onda_Estatica.p_node Carga_ret_Estatica.p_node as Connection73
+        connect Meia_onda_Estatica.n_node GND_A.node as Connection74
+        connect Calibracao_PI_Estatica.n_node GND_A.node as Connection75
+        connect Calibracao_PI_Estatica.p_node R_Detector_Estatica.p_node as Connection76
+        connect R_Detector_Estatica.n_node C_Detector_Estatica.p_node as Connection77
+        connect C_Detector_Estatica.n_node GND_A.node as Connection78
+        connect V_Detector_Estatica.p_node C_Detector_Estatica.p_node as Connection79
+        connect V_Detector_Estatica.n_node GND_A.node as Connection80
+        connect V_Detector_Estatica.out P_V_pre_Estatica_V.in as Connection81
+        connect Buffer_Det_Estatica.n_node GND_A.node as Connection82
+        connect Buffer_Det_Estatica.p_node R_Filtro1_Estatica.p_node as Connection83
+        connect R_Filtro1_Estatica.n_node C_Filtro1_Estatica.p_node as Connection84
+        connect C_Filtro1_Estatica.n_node GND_A.node as Connection85
+        connect V_Filtro1_Estatica.p_node C_Filtro1_Estatica.p_node as Connection86
+        connect V_Filtro1_Estatica.n_node GND_A.node as Connection87
+        connect Buffer_F1_Estatica.n_node GND_A.node as Connection88
+        connect Buffer_F1_Estatica.p_node R_Filtro2_Estatica.p_node as Connection89
+        connect R_Filtro2_Estatica.n_node C_Filtro2_Estatica.p_node as Connection90
+        connect C_Filtro2_Estatica.n_node GND_A.node as Connection91
+        connect V_Filtro2_Estatica.p_node C_Filtro2_Estatica.p_node as Connection92
+        connect V_Filtro2_Estatica.n_node GND_A.node as Connection93
+        connect V_Filtro2_Estatica.out P_V_out_Estatica_V.in as Connection94
+        connect Lei_estatica_HS1101LF.C_ideal_F Escala_C_Dinamica.in as Connection95
+        connect Escala_C_Dinamica.out Entrada_C_Dinamica.in as Connection96
+        connect Entrada_C_Dinamica.n_node GND_A.node as Connection97
+        connect Entrada_C_Dinamica.p_node R_Sensor_Dinamica.p_node as Connection98
+        connect R_Sensor_Dinamica.n_node C_Sensor_Dinamica.p_node as Connection99
+        connect C_Sensor_Dinamica.n_node GND_A.node as Connection100
+        connect V_Sensor_Dinamica.p_node C_Sensor_Dinamica.p_node as Connection101
+        connect V_Sensor_Dinamica.n_node GND_A.node as Connection102
+        connect V_Sensor_Dinamica.out Retorno_F_Dinamica.in as Connection103
+        connect Retorno_F_Dinamica.out P_C_dinamica_Dinamica_F.in as Connection104
+        connect Retorno_F_Dinamica.out Protecao_C_Dinamica.in as Connection105
+        connect RMS_ideal.out Carrier_Dinamica.Rms as Connection106
+        connect F_carrier.out Carrier_Dinamica.f as Connection107
+        connect Phase_carrier.out Carrier_Dinamica.Ph as Connection108
+        connect Carrier_Dinamica.n GND_A.node as Connection109
+        connect Protecao_C_Dinamica.out HS1101_Dinamica.In as Connection110
+        connect Carrier_Dinamica.p HS1101_Dinamica.p_node as Connection111
+        connect HS1101_Dinamica.n_node Cref_Dinamica.p_node as Connection112
+        connect Cref_Dinamica.n_node GND_A.node as Connection113
+        connect Fuga_Dinamica.p_node Cref_Dinamica.p_node as Connection114
+        connect Fuga_Dinamica.n_node GND_A.node as Connection115
+        connect AC_Dinamica.p_node Cref_Dinamica.p_node as Connection116
+        connect AC_Dinamica.n_node GND_A.node as Connection117
+        connect Buffer_AC_Dinamica.n_node GND_A.node as Connection118
+        connect Buffer_AC_Dinamica.p_node Retificador_Dinamica.A as Connection119
+        connect Retificador_Dinamica.K Carga_ret_Dinamica.p_node as Connection120
+        connect Carga_ret_Dinamica.n_node GND_A.node as Connection121
+        connect Meia_onda_Dinamica.p_node Carga_ret_Dinamica.p_node as Connection122
+        connect Meia_onda_Dinamica.n_node GND_A.node as Connection123
+        connect Calibracao_PI_Dinamica.n_node GND_A.node as Connection124
+        connect Calibracao_PI_Dinamica.p_node R_Detector_Dinamica.p_node as Connection125
+        connect R_Detector_Dinamica.n_node C_Detector_Dinamica.p_node as Connection126
+        connect C_Detector_Dinamica.n_node GND_A.node as Connection127
+        connect V_Detector_Dinamica.p_node C_Detector_Dinamica.p_node as Connection128
+        connect V_Detector_Dinamica.n_node GND_A.node as Connection129
+        connect V_Detector_Dinamica.out P_V_pre_Dinamica_V.in as Connection130
+        connect Buffer_Det_Dinamica.n_node GND_A.node as Connection131
+        connect Buffer_Det_Dinamica.p_node R_Filtro1_Dinamica.p_node as Connection132
+        connect R_Filtro1_Dinamica.n_node C_Filtro1_Dinamica.p_node as Connection133
+        connect C_Filtro1_Dinamica.n_node GND_A.node as Connection134
+        connect V_Filtro1_Dinamica.p_node C_Filtro1_Dinamica.p_node as Connection135
+        connect V_Filtro1_Dinamica.n_node GND_A.node as Connection136
+        connect Buffer_F1_Dinamica.n_node GND_A.node as Connection137
+        connect Buffer_F1_Dinamica.p_node R_Filtro2_Dinamica.p_node as Connection138
+        connect R_Filtro2_Dinamica.n_node C_Filtro2_Dinamica.p_node as Connection139
+        connect C_Filtro2_Dinamica.n_node GND_A.node as Connection140
+        connect V_Filtro2_Dinamica.p_node C_Filtro2_Dinamica.p_node as Connection141
+        connect V_Filtro2_Dinamica.n_node GND_A.node as Connection142
+        connect V_Filtro2_Dinamica.out P_V_out_Dinamica_V.in as Connection143
+        connect Pico_para_RMS_AM.out Carrier_Espectral.Rms as Connection144
+        connect F_carrier.out Carrier_Espectral.f as Connection145
+        connect Phase_carrier.out Carrier_Espectral.Ph as Connection146
+        connect Carrier_Espectral.n GND_B.node as Connection147
+        connect Lei_estatica_HS1101LF.C_ideal_F HS1101_Espectral.In as Connection148
+        connect Carrier_Espectral.p HS1101_Espectral.p_node as Connection149
+        connect HS1101_Espectral.n_node Cref_Espectral.p_node as Connection150
+        connect Cref_Espectral.n_node GND_B.node as Connection151
+        connect Fuga_Espectral.p_node Cref_Espectral.p_node as Connection152
+        connect Fuga_Espectral.n_node GND_B.node as Connection153
+        connect AC_Espectral.p_node Cref_Espectral.p_node as Connection154
+        connect AC_Espectral.n_node GND_B.node as Connection155
+        connect Buffer_AC_Espectral.n_node GND_B.node as Connection156
+        connect Buffer_AC_Espectral.p_node Retificador_Espectral.A as Connection157
+        connect Retificador_Espectral.K Carga_ret_Espectral.p_node as Connection158
+        connect Carga_ret_Espectral.n_node GND_B.node as Connection159
+        connect Meia_onda_Espectral.p_node Carga_ret_Espectral.p_node as Connection160
+        connect Meia_onda_Espectral.n_node GND_B.node as Connection161
+        connect Calibracao_PI_Espectral.n_node GND_B.node as Connection162
+        connect Calibracao_PI_Espectral.p_node R_Detector_Espectral.p_node as Connection163
+        connect R_Detector_Espectral.n_node C_Detector_Espectral.p_node as Connection164
+        connect C_Detector_Espectral.n_node GND_B.node as Connection165
+        connect V_Detector_Espectral.p_node C_Detector_Espectral.p_node as Connection166
+        connect V_Detector_Espectral.n_node GND_B.node as Connection167
+        connect V_Detector_Espectral.out P_V_pre_Espectral_V.in as Connection168
+        connect Buffer_Det_Espectral.n_node GND_B.node as Connection169
+        connect Buffer_Det_Espectral.p_node R_Filtro1_Espectral.p_node as Connection170
+        connect R_Filtro1_Espectral.n_node C_Filtro1_Espectral.p_node as Connection171
+        connect C_Filtro1_Espectral.n_node GND_B.node as Connection172
+        connect V_Filtro1_Espectral.p_node C_Filtro1_Espectral.p_node as Connection173
+        connect V_Filtro1_Espectral.n_node GND_B.node as Connection174
+        connect Buffer_F1_Espectral.n_node GND_B.node as Connection175
+        connect Buffer_F1_Espectral.p_node R_Filtro2_Espectral.p_node as Connection176
+        connect R_Filtro2_Espectral.n_node C_Filtro2_Espectral.p_node as Connection177
+        connect C_Filtro2_Espectral.n_node GND_B.node as Connection178
+        connect V_Filtro2_Espectral.p_node C_Filtro2_Espectral.p_node as Connection179
+        connect V_Filtro2_Espectral.n_node GND_B.node as Connection180
+        connect V_Filtro2_Espectral.out P_V_out_Espectral_V.in as Connection181
+        connect Lei_estatica_HS1101LF.C_nao_linear_F Escala_C_Completa.in as Connection182
+        connect Escala_C_Completa.out Entrada_C_Completa.in as Connection183
+        connect Entrada_C_Completa.n_node GND_B.node as Connection184
+        connect Entrada_C_Completa.p_node R_Sensor_Completa.p_node as Connection185
+        connect R_Sensor_Completa.n_node C_Sensor_Completa.p_node as Connection186
+        connect C_Sensor_Completa.n_node GND_B.node as Connection187
+        connect V_Sensor_Completa.p_node C_Sensor_Completa.p_node as Connection188
+        connect V_Sensor_Completa.n_node GND_B.node as Connection189
+        connect V_Sensor_Completa.out Retorno_F_Completa.in as Connection190
+        connect Retorno_F_Completa.out P_C_dinamica_Completa_F.in as Connection191
+        connect Retorno_F_Completa.out Protecao_C_Completa.in as Connection192
+        connect Pico_para_RMS_AM.out Carrier_Completa.Rms as Connection193
+        connect F_carrier.out Carrier_Completa.f as Connection194
+        connect Phase_carrier.out Carrier_Completa.Ph as Connection195
+        connect Carrier_Completa.n GND_B.node as Connection196
+        connect Protecao_C_Completa.out HS1101_Completa.In as Connection197
+        connect Carrier_Completa.p HS1101_Completa.p_node as Connection198
+        connect HS1101_Completa.n_node Cref_Completa.p_node as Connection199
+        connect Cref_Completa.n_node GND_B.node as Connection200
+        connect Fuga_Completa.p_node Cref_Completa.p_node as Connection201
+        connect Fuga_Completa.n_node GND_B.node as Connection202
+        connect AC_Completa.p_node Cref_Completa.p_node as Connection203
+        connect AC_Completa.n_node GND_B.node as Connection204
+        connect Buffer_AC_Completa.n_node GND_B.node as Connection205
+        connect Buffer_AC_Completa.p_node Retificador_Completa.A as Connection206
+        connect Retificador_Completa.K Carga_ret_Completa.p_node as Connection207
+        connect Carga_ret_Completa.n_node GND_B.node as Connection208
+        connect Meia_onda_Completa.p_node Carga_ret_Completa.p_node as Connection209
+        connect Meia_onda_Completa.n_node GND_B.node as Connection210
+        connect Calibracao_PI_Completa.n_node GND_B.node as Connection211
+        connect Calibracao_PI_Completa.p_node R_Detector_Completa.p_node as Connection212
+        connect R_Detector_Completa.n_node C_Detector_Completa.p_node as Connection213
+        connect C_Detector_Completa.n_node GND_B.node as Connection214
+        connect V_Detector_Completa.p_node C_Detector_Completa.p_node as Connection215
+        connect V_Detector_Completa.n_node GND_B.node as Connection216
+        connect V_Detector_Completa.out P_V_pre_Completa_V.in as Connection217
+        connect Buffer_Det_Completa.n_node GND_B.node as Connection218
+        connect Buffer_Det_Completa.p_node R_Filtro1_Completa.p_node as Connection219
+        connect R_Filtro1_Completa.n_node C_Filtro1_Completa.p_node as Connection220
+        connect C_Filtro1_Completa.n_node GND_B.node as Connection221
+        connect V_Filtro1_Completa.p_node C_Filtro1_Completa.p_node as Connection222
+        connect V_Filtro1_Completa.n_node GND_B.node as Connection223
+        connect Buffer_F1_Completa.n_node GND_B.node as Connection224
+        connect Buffer_F1_Completa.p_node R_Filtro2_Completa.p_node as Connection225
+        connect R_Filtro2_Completa.n_node C_Filtro2_Completa.p_node as Connection226
+        connect C_Filtro2_Completa.n_node GND_B.node as Connection227
+        connect V_Filtro2_Completa.p_node C_Filtro2_Completa.p_node as Connection228
+        connect V_Filtro2_Completa.n_node GND_B.node as Connection229
+        connect V_Filtro2_Completa.out P_V_out_Completa_V.in as Connection230
+        connect Filtro_1Hz.out Filtro_1Hz_habilitado.in as Connection231
+        connect Filtro_1Hz_enable.out Filtro_1Hz_habilitado.in1 as Connection232
+        connect Filtro_1Hz_habilitado.out Teste_filtro.in as Connection233
+        connect Filtro_0p1Hz.out Filtro_0p1Hz_habilitado.in as Connection234
+        connect Filtro_0p1Hz_enable.out Filtro_0p1Hz_habilitado.in1 as Connection235
+        connect Filtro_0p1Hz_habilitado.out Teste_filtro_lento.in as Connection236
+        connect Teste_filtro.p_node Teste_filtro_lento.n_node as Connection237
+        connect Teste_filtro.n_node GND_A.node as Connection238
+        connect V_teste_in.p_node Teste_filtro_lento.p_node as Connection239
+        connect V_teste_in.n_node GND_A.node as Connection240
+        connect V_teste_in.out P_Filtro_entrada_V.in as Connection241
+        connect Teste_filtro_lento.p_node R_Teste1.p_node as Connection242
+        connect R_Teste1.n_node C_Teste1.p_node as Connection243
+        connect C_Teste1.n_node GND_A.node as Connection244
+        connect V_Teste1.p_node C_Teste1.p_node as Connection245
+        connect V_Teste1.n_node GND_A.node as Connection246
+        connect Buffer_Teste1.n_node GND_A.node as Connection247
+        connect Buffer_Teste1.p_node R_Teste2.p_node as Connection248
+        connect R_Teste2.n_node C_Teste2.p_node as Connection249
+        connect C_Teste2.n_node GND_A.node as Connection250
+        connect V_Teste2.p_node C_Teste2.p_node as Connection251
+        connect V_Teste2.n_node GND_A.node as Connection252
+        connect V_Teste2.out P_Filtro_saida_V.in as Connection253
+    }
+
+    default {
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/Capacitor" {
+            signal_access = "inherit"
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Core Marker" {
+            marker_id = "id0"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Limit" {
+            upper_limit = "[\'inf\']"
+            lower_limit = "[\'-inf\']"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Product" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/SCADA Input" {
+            signal_access = "inherit"
+            addr = "0"
+            format = "real"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "real"
+            min = "-1e6"
+            max = "1e6"
+            def_value = "0"
+            unit = " "
+            execution_rate = "100e-6"
+        }
+
+        "core/Sinusoidal Source" {
+            amplitude = "1"
+            dc_offset = "0"
+            frequency = "50"
+            phase = "0"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Voltage Source" {
+            sig_input = "False"
+            type = "signal generator"
+            param_set = "1phase"
+            parent_label = ""
+            dtsm_switch_name = ""
+            addr = "0"
+            spc_nb = "0"
+            execution_rate = "100e-6"
+            cpd_visible = "True"
+            enable_snb = "False"
+            snb_type = "R2"
+            R2 = "0.0"
+            L1 = "0.1"
+            override_signal_name = "False"
+            signal_name = ""
+            init_source_nature = "Constant"
+            init_const_value = "0.0"
+            init_rms_value = "0.0"
+            init_frequency = "50.0"
+            init_phase = "0.0"
+        }
+
+        "core/Diode" {
+            signal_access = "inherit"
+            switches_names_at_mask = "[]"
+            switches_names_at_mask_previous = "[]"
+            switches_option = "False"
+            resistance = "1.0"
+            snb_type = "none"
+            R = "100e3"
+            C = "1e-6"
+            show_monitoring = "False"
+            losses_estimation = "False"
+            load_xml_en = "User tables"
+            Import_diode_xml = "not selected"
+            xml_data = "{}"
+            diode_data = "{\'package_class\': \'Diode\', \'variables\': {}, \'constants\': {}, \'custom_tables\': {}, \'turn_on_losses\': {\'type\': \'Table only\', \'formula\': None, \'current_axis\': [0.0, 400.0, 800.0, 1200.0], \'voltage_axis\': [0.0, 1800.0], \'temperature_axis\': [25.0, 125.0], \'energy\': [[[0.0, 0.0, 0.0, 0.0], [0.0, 0.4068, 1.001, 1.822]], [[0.0, 0.0, 0.0, 0.0], [0.0, 0.6317, 1.38, 1.784]]], \'parsed_formula\': \'E_turn_on_losses\'}, \'turn_off_losses\': {\'type\': \'Table only\', \'formula\': None, \'current_axis\': [0.0, 400.0, 800.0, 1200.0], \'voltage_axis\': [0.0, 1800.0], \'temperature_axis\': [25.0, 125.0], \'energy\': [[[0.0, 0.0, 0.0, 0.0], [0.0, 0.6, 0.88, 1.177]], [[0.0, 0.0, 0.0, 0.0], [0.0, 0.9094, 1.25, 1.784]]], \'parsed_formula\': \'E_turn_off_losses\'}, \'conduction_losses\': {\'type\': \'Table only\', \'formula\': None, \'current_axis\': [0.0, 100.0, 200.0, 400.0, 600.0, 700.0, 800.0, 900.0, 1000.0, 1200.0, 1400.0, 1600.0], \'temperature_axis\': [25.0, 125.0], \'voltage_drop\': [[0.0, 1.5, 1.8, 2.3, 2.69, 2.9, 3.1, 3.25, 3.41, 3.73, 4.0, 4.31], [0.0, 1.63, 2.09, 2.77, 3.37, 3.63, 3.8, 4.11, 4.37, 4.81, 5.29, 5.7]], \'parsed_formula\': \'v_conduction_losses\'}, \'c_function_code\': {\'output_fnc\': \'E_turn_on_losses = lookup3d(turn_on_losses_table, i, v, T, current_axis_turn_on_losses, voltage_axis_turn_on_losses, temperature_axis_turn_on_losses, 4, 2, 2);\nE_turn_off_losses = lookup3d(turn_off_losses_table, i, v, T,current_axis_turn_off_losses, voltage_axis_turn_off_losses, temperature_axis_turn_off_losses, 4, 2, 2);\nv_conduction_losses = lookup2d(conduction_losses_table, i, T,current_axis_conduction_losses, temperature_axis_conduction_losses, 12, 2);\ne_t_on = E_turn_on_losses;\ne_t_off = E_turn_off_losses;\nv_ce = v_conduction_losses;\n\', \'arb_defs\': \'real current_axis_turn_off_losses[4] = { 0.0, 400.0, 800.0, 1200.0 };\nreal voltage_axis_turn_off_losses[2] = { 0.0, 1800.0 };\nreal temperature_axis_turn_off_losses[2] = { 25.0, 125.0 };\nreal E_turn_off_losses;\nreal turn_off_losses_table[16] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.88, 1.177, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9094, 1.25, 1.784 };\nreal current_axis_conduction_losses[12] = { 0.0, 100.0, 200.0, 400.0, 600.0, 700.0, 800.0, 900.0, 1000.0, 1200.0, 1400.0, 1600.0 };\nreal temperature_axis_conduction_losses[2] = { 25.0, 125.0 };\nreal v_conduction_losses;\nreal conduction_losses_table[24] = { 0.0, 1.5, 1.8, 2.3, 2.69, 2.9, 3.1, 3.25, 3.41, 3.73, 4.0, 4.31, 0.0, 1.63, 2.09, 2.77, 3.37, 3.63, 3.8, 4.11, 4.37, 4.81, 5.29, 5.7 };\nreal current_axis_turn_on_losses[4] = { 0.0, 400.0, 800.0, 1200.0 };\nreal voltage_axis_turn_on_losses[2] = { 0.0, 1800.0 };\nreal temperature_axis_turn_on_losses[2] = { 25.0, 125.0 };\nreal E_turn_on_losses;\nreal turn_on_losses_table[16] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.4068, 1.001, 1.822, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6317, 1.38, 1.784 };\n\'}}"
+            transistor_data = "{\'package_class\': \'IGBT\', \'variables\': {}, \'constants\': {}, \'custom_tables\': {}, \'turn_on_losses\': {\'type\': \'Table only\', \'formula\': None, \'current_axis\': [0.0, 400.0, 800.0, 1200.0], \'voltage_axis\': [0.0, 1800.0], \'temperature_axis\': [25.0, 125.0], \'energy\': [[[0.0, 0.0, 0.0, 0.0], [0.0, 0.4068, 1.001, 1.822]], [[0.0, 0.0, 0.0, 0.0], [0.0, 0.6317, 1.38, 1.784]]], \'parsed_formula\': \'E_turn_on_losses\'}, \'turn_off_losses\': {\'type\': \'Table only\', \'formula\': None, \'current_axis\': [0.0, 400.0, 800.0, 1200.0], \'voltage_axis\': [0.0, 1800.0], \'temperature_axis\': [25.0, 125.0], \'energy\': [[[0.0, 0.0, 0.0, 0.0], [0.0, 0.6, 0.88, 1.177]], [[0.0, 0.0, 0.0, 0.0], [0.0, 0.9094, 1.25, 1.784]]], \'parsed_formula\': \'E_turn_off_losses\'}, \'conduction_losses\': {\'type\': \'Table only\', \'formula\': None, \'current_axis\': [0.0, 100.0, 200.0, 400.0, 600.0, 700.0, 800.0, 900.0, 1000.0, 1200.0, 1400.0, 1600.0], \'temperature_axis\': [25.0, 125.0], \'voltage_drop\': [[0.0, 1.5, 1.8, 2.3, 2.69, 2.9, 3.1, 3.25, 3.41, 3.73, 4.0, 4.31], [0.0, 1.63, 2.09, 2.77, 3.37, 3.63, 3.8, 4.11, 4.37, 4.81, 5.29, 5.7]], \'parsed_formula\': \'v_conduction_losses\'}, \'c_function_code\': {\'output_fnc\': \'E_turn_on_losses = lookup3d(turn_on_losses_table, i, v, T, current_axis_turn_on_losses, voltage_axis_turn_on_losses, temperature_axis_turn_on_losses, 4, 2, 2);\nE_turn_off_losses = lookup3d(turn_off_losses_table, i, v, T,current_axis_turn_off_losses, voltage_axis_turn_off_losses, temperature_axis_turn_off_losses, 4, 2, 2);\nv_conduction_losses = lookup2d(conduction_losses_table, i, T,current_axis_conduction_losses, temperature_axis_conduction_losses, 12, 2);\ne_t_on = E_turn_on_losses;\ne_t_off = E_turn_off_losses;\nv_ce = v_conduction_losses;\n\', \'arb_defs\': \'real current_axis_turn_off_losses[4] = { 0.0, 400.0, 800.0, 1200.0 };\nreal voltage_axis_turn_off_losses[2] = { 0.0, 1800.0 };\nreal temperature_axis_turn_off_losses[2] = { 25.0, 125.0 };\nreal E_turn_off_losses;\nreal turn_off_losses_table[16] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.88, 1.177, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9094, 1.25, 1.784 };\nreal current_axis_conduction_losses[12] = { 0.0, 100.0, 200.0, 400.0, 600.0, 700.0, 800.0, 900.0, 1000.0, 1200.0, 1400.0, 1600.0 };\nreal temperature_axis_conduction_losses[2] = { 25.0, 125.0 };\nreal v_conduction_losses;\nreal conduction_losses_table[24] = { 0.0, 1.5, 1.8, 2.3, 2.69, 2.9, 3.1, 3.25, 3.41, 3.73, 4.0, 4.31, 0.0, 1.63, 2.09, 2.77, 3.37, 3.63, 3.8, 4.11, 4.37, 4.81, 5.29, 5.7 };\nreal current_axis_turn_on_losses[4] = { 0.0, 400.0, 800.0, 1200.0 };\nreal voltage_axis_turn_on_losses[2] = { 0.0, 1800.0 };\nreal temperature_axis_turn_on_losses[2] = { 25.0, 125.0 };\nreal E_turn_on_losses;\nreal turn_on_losses_table[16] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.4068, 1.001, 1.822, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6317, 1.38, 1.784 };\n\'}}"
+            user_vars_diode = "User variables diode"
+            Vd = "1.2"
+            Rd = "0"
+            i_sw = "[0.0, 6.0, 12.0, 18.0, 24.0]"
+            v_sw = "[0.0, 600.0]"
+            temp_sw = "[25.0, 50.0, 75.0, 100.0, 125.0]"
+            vd_table_out = "[1.2, 1.2, 1.2, 1.2, 1.2]"
+            ed_off_table_out = "[[0.0, 0.0275e-3, 0.15e-3, 0.275e-3, 0.3e-3], [0.35*2.2e-3, 0.4*2.2e-3, 0.8*2.2e-3, 0.68*2.2e-3, 0.9*2.2e-3], [0.65*2.2e-3, 0.9*2.2e-3, 1.2*2.2e-3, 1.5*2.2e-3, 1.7*2.2e-3], [0.9*2.2e-3, 1.3*2.2e-3, 1.7*2.2e-3, 1.9*2.2e-3, 2.25*2.2e-3], [1.1*2.2e-3, 1.7*2.2e-3, 2.1*2.2e-3, 2.3*2.2e-3, 2.5*2.2e-3]]"
+            load_switching_data_from_xml = "Import losses data from xml files"
+            temp_estimation = "False"
+            thermal_networks_type = "Foster"
+            diode_Rth = "[0.159, 0.133, 0.120, 0.038]"
+            diode_Tth = "[1.1e-1, 1.56e-2, 1.35e-3, 1.51e-4]"
+            diode_Cth = "[0.0029, 0.0097, 0.1068, 0.8500]"
+            loss_exec_rate = "100e-6"
+            dtsm_switch_name = ""
+            model_load_legacy = "0"
+        }
+
+        "core/Signal Controlled Sinusoidal Voltage Source" {
+            phase_number = "1"
+            execution_rate = "inherit"
+        }
+
+        "core/Signal Controlled Voltage Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Variable Capacitor" {
+            initial_charge = "0"
+            enb_resistance = "True"
+            resistance = "0.01"
+            hide_int_meas = "False"
+        }
+
+        "core/Voltage Controlled Voltage Source" {
+            signal_access = "inherit"
+            choose_signal = "False"
+            control_label = ".control_component_name"
+            control_label_signal_chooser = ""
+            control_gain = "1.0"
+            measurement_enable = "True"
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+}

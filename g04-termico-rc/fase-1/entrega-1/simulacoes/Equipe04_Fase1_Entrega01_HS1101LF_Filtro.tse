@@ -1,0 +1,376 @@
+version = 4.2
+
+// ECOM060 Fase 1 - Entrega 01 - Equipe G04.
+// Sensor capacitivo HS1101LF (MEAS/TE), idealizado em torno de 55% UR.
+// C55=180 pF; S=0.31 pF/%UR para 33..75% UR (datasheet HPC052_I).
+// Interface ideal: excitacao AC 10 kHz, 1 V e extracao ideal da envoltoria
+// de um divisor capacitivo com Cref=180 pF. A envoltoria e o sinal de base.
+// Condicionamento atribuido: dois RC passa-baixas com buffers ideais.
+// R1=R2=100 kohm, C1=C2=6 uF; tau=0.6 s; fp=0.265258 Hz.
+// Capturar probes pelo recurso Capture, nao por polling.
+
+model "Equipe04_Fase1_Entrega01_HS1101LF_Filtro" {
+    configuration {
+        hil_device = "HIL404"
+        hil_configuration_id = 6
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 1e-3, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-3
+        simulation_time = 100.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Constant" "Habilitar sequencia" {
+            execution_rate = "0.001"
+            value = "1"
+        }
+        [
+            position = 7344, 8152
+        ]
+
+        component "core/C function" "Excitacao de umidade" {
+            execution_rate = "0.001"
+            global_variables = "int sample_count;"
+            init_fnc = "/*Begin code section*/
+sample_count = 0;
+/*End code section*/"
+            input_terminals = "real enable;"
+            input_terminals_dimensions = "inherit"
+            input_terminals_feedthrough = "False"
+            input_terminals_show_labels = "True"
+            output_fnc = "/*Begin code section*/
+int in_cycle = sample_count % 20000;
+double t = 0.001 * (double)in_cycle;
+double pi_local = 3.14159265358979323846;
+reset = (in_cycle < 10) ? 1.0 : 0.0;
+RH_step = (in_cycle < 2000) ? 33.0 : 75.0;
+RH_pass = 55.0 + 5.0 * sin(2.0 * pi_local * 0.1 * t);
+RH_stop = 55.0 + 5.0 * sin(2.0 * pi_local * 1.0 * t);
+/*End code section*/"
+            output_terminals = "real reset;real RH_step;real RH_pass;real RH_stop;"
+            output_terminals_dimensions = "inherit;inherit;inherit;inherit"
+            output_terminals_feedthrough = "True;True;True;True"
+            output_terminals_show_labels = "True;True;True;True"
+            update_fnc = "/*Begin code section*/
+if (enable >= 0.5) {
+    sample_count += 1;
+    if (sample_count >= 20000) sample_count = 0;
+} else {
+    sample_count = 0;
+}
+/*End code section*/"
+        }
+        [
+            position = 7624, 8112
+            size = 216, 144
+        ]
+
+        component "core/C function" "Sensor capacitivo ideal e interface" {
+            execution_rate = "0.001"
+            input_terminals = "real RH_step;real RH_pass;real RH_stop;"
+            input_terminals_dimensions = "inherit;inherit;inherit"
+            input_terminals_feedthrough = "True;True;True"
+            input_terminals_show_labels = "True;True;True"
+            output_fnc = "/*Begin code section*/
+double c_step = 180.0 + 0.31 * (RH_step - 55.0);
+double c_pass = 180.0 + 0.31 * (RH_pass - 55.0);
+double c_stop = 180.0 + 0.31 * (RH_stop - 55.0);
+C_sensor_pF = c_step;
+V_step = c_step / (c_step + 180.0);
+V_pass = c_pass / (c_pass + 180.0);
+V_stop = c_stop / (c_stop + 180.0);
+/*End code section*/"
+            output_terminals = "real C_sensor_pF;real V_step;real V_pass;real V_stop;"
+            output_terminals_dimensions = "inherit;inherit;inherit;inherit"
+            output_terminals_feedthrough = "True;True;True;True"
+            output_terminals_show_labels = "True;True;True;True"
+        }
+        [
+            position = 8056, 8104
+            size = 240, 160
+        ]
+
+        component "core/C function" "Filtro RC duplo degrau" {
+            execution_rate = "0.001"
+            global_variables = "real x1;real x2;"
+            init_fnc = "/*Begin code section*/
+x1 = 0.49034486664024013;
+x2 = 0.49034486664024013;
+/*End code section*/"
+            input_terminals = "real V_in;real reset;"
+            input_terminals_dimensions = "inherit;inherit"
+            input_terminals_feedthrough = "False;False"
+            input_terminals_show_labels = "True;True"
+            output_fnc = "/*Begin code section*/
+V_out = x2;
+/*End code section*/"
+            output_terminals = "real V_out;"
+            output_terminals_dimensions = "inherit"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            update_fnc = "/*Begin code section*/
+if (reset >= 0.5) {
+    x1 = 0.49034486664024013;
+    x2 = 0.49034486664024013;
+} else {
+    double old_x1 = x1;
+    x1 = V_in + 0.9983347214509387 * (old_x1 - V_in);
+    x2 = V_in + 0.9983347214509387 *
+         ((x2 - V_in) + 0.0016666666666666668 * (old_x1 - V_in));
+}
+/*End code section*/"
+        }
+        [
+            position = 8472, 7952
+            size = 208, 120
+        ]
+
+        component "core/C function" "Filtro RC duplo frequencias" {
+            execution_rate = "0.001"
+            global_variables = "real p1;real p2;real s1;real s2;"
+            init_fnc = "/*Begin code section*/
+p1 = 0.5;
+p2 = 0.5;
+s1 = 0.5;
+s2 = 0.5;
+/*End code section*/"
+            input_terminals = "real V_pass;real V_stop;real reset;"
+            input_terminals_dimensions = "inherit;inherit;inherit"
+            input_terminals_feedthrough = "False;False;False"
+            input_terminals_show_labels = "True;True;True"
+            output_fnc = "/*Begin code section*/
+V_pass_out = p2;
+V_stop_out = s2;
+/*End code section*/"
+            output_terminals = "real V_pass_out;real V_stop_out;"
+            output_terminals_dimensions = "inherit;inherit"
+            output_terminals_feedthrough = "True;True"
+            output_terminals_show_labels = "True;True"
+            update_fnc = "/*Begin code section*/
+if (reset >= 0.5) {
+    p1 = 0.5;
+    p2 = 0.5;
+    s1 = 0.5;
+    s2 = 0.5;
+} else {
+    double old_p1 = p1;
+    double old_s1 = s1;
+    p1 = V_pass + 0.9983347214509387 * (old_p1 - V_pass);
+    p2 = V_pass + 0.9983347214509387 *
+         ((p2 - V_pass) + 0.0016666666666666668 * (old_p1 - V_pass));
+    s1 = V_stop + 0.9983347214509387 * (old_s1 - V_stop);
+    s2 = V_stop + 0.9983347214509387 *
+         ((s2 - V_stop) + 0.0016666666666666668 * (old_s1 - V_stop));
+}
+/*End code section*/"
+        }
+        [
+            position = 8472, 8304
+            size = 224, 136
+        ]
+
+        component "core/Probe" Probe_reset {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "reset_ciclo"
+        }
+        [ position = 7896, 7896 ]
+
+        component "core/Probe" Probe_RH {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "RH_step_pct"
+        }
+        [ position = 7896, 7960 ]
+
+        component "core/Probe" Probe_C {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "C_sensor_pF"
+        }
+        [ position = 8344, 7896 ]
+
+        component "core/Probe" Probe_V_sensor_step {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "V_sensor_step_V"
+        }
+        [ position = 8344, 7976 ]
+
+        component "core/Probe" Probe_V_filtro_step {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "V_filtro_step_V"
+        }
+        [ position = 8784, 7976 ]
+
+        component "core/Probe" Probe_V_sensor_pass {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "V_sensor_pass_V"
+        }
+        [ position = 8344, 8424 ]
+
+        component "core/Probe" Probe_V_filtro_pass {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "V_filtro_pass_V"
+        }
+        [ position = 8784, 8352 ]
+
+        component "core/Probe" Probe_V_sensor_stop {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "V_sensor_stop_V"
+        }
+        [ position = 8344, 8520 ]
+
+        component "core/Probe" Probe_V_filtro_stop {
+            execution_rate = "0.001"
+            override_signal_name = "True"
+            signal_access = "Public"
+            signal_name = "V_filtro_stop_V"
+        }
+        [ position = 8784, 8440 ]
+
+        connect "Habilitar sequencia.out" "Excitacao de umidade.enable" as Connection1
+        connect "Excitacao de umidade.RH_step" "Sensor capacitivo ideal e interface.RH_step" as Connection2
+        connect "Excitacao de umidade.RH_pass" "Sensor capacitivo ideal e interface.RH_pass" as Connection3
+        connect "Excitacao de umidade.RH_stop" "Sensor capacitivo ideal e interface.RH_stop" as Connection4
+        connect "Sensor capacitivo ideal e interface.V_step" "Filtro RC duplo degrau.V_in" as Connection5
+        connect "Excitacao de umidade.reset" "Filtro RC duplo degrau.reset" as Connection6
+        connect "Sensor capacitivo ideal e interface.V_pass" "Filtro RC duplo frequencias.V_pass" as Connection7
+        connect "Sensor capacitivo ideal e interface.V_stop" "Filtro RC duplo frequencias.V_stop" as Connection8
+        connect "Excitacao de umidade.reset" "Filtro RC duplo frequencias.reset" as Connection9
+        connect "Excitacao de umidade.reset" Probe_reset.in as Connection10
+        connect "Excitacao de umidade.RH_step" Probe_RH.in as Connection11
+        connect "Sensor capacitivo ideal e interface.C_sensor_pF" Probe_C.in as Connection12
+        connect "Sensor capacitivo ideal e interface.V_step" Probe_V_sensor_step.in as Connection13
+        connect "Filtro RC duplo degrau.V_out" Probe_V_filtro_step.in as Connection14
+        connect "Sensor capacitivo ideal e interface.V_pass" Probe_V_sensor_pass.in as Connection15
+        connect "Filtro RC duplo frequencias.V_pass_out" Probe_V_filtro_pass.in as Connection16
+        connect "Sensor capacitivo ideal e interface.V_stop" Probe_V_sensor_stop.in as Connection17
+        connect "Filtro RC duplo frequencias.V_stop_out" Probe_V_filtro_stop.in as Connection18
+    }
+
+    default {
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a53_file_path = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "['generic']"
+            refresh = "refresh"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "1e-3"
+            _tunable = "False"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+    }
+}

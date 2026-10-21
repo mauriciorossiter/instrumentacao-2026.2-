@@ -1,0 +1,255 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "Modelo de primeira ordem - 1(Schematic Editor)" {
+    configuration {
+        hil_device = "HIL404"
+        hil_configuration_id = 6
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 1.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Resistor" "R θJA" {
+            resistance = "62"
+        }
+        [
+            position = 7960, 8232
+            rotation = right
+        ]
+
+        component "core/Capacitor" "C th" {
+            capacitance = "1.51"
+        }
+        [
+            position = 8072, 8232
+            rotation = right
+        ]
+
+        component "core/Current Source" "P(t)" {
+            execution_rate = "0.0001"
+            init_const_value = "10"
+        }
+        [
+            position = 7852, 8232
+            rotation = right
+        ]
+
+        component "core/Ground" gnd {
+        }
+        [
+            position = 8008, 8328
+        ]
+
+        component "core/Voltage Measurement" V_Measurement {
+            execution_rate = "0.0001"
+        }
+        [
+            position = 8232, 8232
+            rotation = right
+            size = 64, 32
+        ]
+
+        junction Junction1 pe
+        [
+            position = 7960, 8156
+        ]
+
+        junction Junction2 pe
+        [
+            position = 7960, 8300
+        ]
+
+        junction Junction3 pe
+        [
+            position = 8008, 8300
+        ]
+
+        junction Junction4 pe
+        [
+            position = 8072, 8156
+        ]
+
+        junction Junction5 pe
+        [
+            position = 8072, 8300
+        ]
+
+        comment Comment1 START <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Sans'; font-size:12pt; font-weight:400; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Tj - Ta</p></body></html> ENDCOMMENT 
+        [
+            position = 8240, 8124
+            box_outline = False
+        ]
+
+        connect "P(t).p_node" Junction1 as Connection3
+        [
+            breakpoints = 7872, 8156
+        ]
+        connect "R θJA.p_node" Junction1 as Connection5
+        connect "P(t).n_node" Junction2 as Connection6
+        [
+            breakpoints = 7876, 8300
+        ]
+        connect "R θJA.n_node" Junction2 as Connection8
+        connect Junction2 Junction3 as Connection9
+        connect Junction3 gnd.node as Connection10
+        connect Junction1 Junction4 as Connection12
+        [
+            breakpoints = 7960, 8156
+        ]
+        connect Junction4 "C th.p_node" as Connection13
+        [
+            breakpoints = 8072, 8156
+        ]
+        connect V_Measurement.p_node Junction4 as Connection14
+        [
+            breakpoints = 8180, 8156
+        ]
+        connect "C th.n_node" Junction5 as Connection19
+        connect Junction5 Junction3 as Connection20
+        [
+            breakpoints = 8072, 8300; 8008, 8300
+        ]
+        connect V_Measurement.n_node Junction5 as Connection21
+        [
+            breakpoints = 8160, 8300
+        ]
+    }
+
+    default {
+        "core/Capacitor" {
+            signal_access = "inherit"
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Current Source" {
+            sig_input = "False"
+            type = "signal generator"
+            param_set = "1phase"
+            parent_label = ""
+            dtsm_switch_name = ""
+            addr = "0"
+            spc_nb = "0"
+            execution_rate = "100e-6"
+            cpd_visible = "True"
+            enable_snb = "False"
+            snb_type = "R1"
+            R1 = "inf"
+            C1 = "1e-06"
+            override_signal_name = "False"
+            signal_name = ""
+            init_source_nature = "Constant"
+            init_const_value = "0.0"
+            init_rms_value = "0.0"
+            init_frequency = "50.0"
+            init_phase = "0.0"
+            dtsm_nb = "0"
+            dtsm_switch_ctrl = ""
+            pwm_enabling = "False"
+            pwm_enable_di = "13"
+            pwm_enable_inv = "active high"
+            enable_fb_out = "False"
+            fb_out_type = "real"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+}
