@@ -1,0 +1,46 @@
+=== PARÂMETROS NOMINAIS ===
+m = 0.500 kg | l = 1.000 m | J = 0.5000 kg·m² | b = 0.0500 N·m·s/rad | g = 9.81 m/s²
+mgL = 4.9050 N·m | mgL/J = 9.8100 s⁻² | b/J = 0.1000 s⁻¹
+
+=== R2 — ANÁLISE ALGÉBRICA ===
+λ₁ (instável) = +3.0825 s⁻¹ ; τ₁ = 1/λ₁ = 0.3244 s
+λ₂ (estável)   = -3.1825 s⁻¹ ; τ₂ = 1/|λ₂| = 0.3142 s
+tempo de duplicação do modo instável: ln2/λ₁ = 0.2249 s
+ganho DC formal (topo): G(0) = -1/(mgL) = -0.2039 rad/(N·m)
+Equilíbrio inferior (θ=π): ωn = 3.1321 rad/s | ζ = 0.01596 | ωd = 3.1317 rad/s
+  polos = -0.0500 ± j3.1317 s⁻¹ | Td = 2.0063 s | tp = 1.0032 s
+  Mp = 95.11 % | ts(2%) = 80.00 s | K = 1/mgL = 0.2039 rad/(N·m)
+
+=== R4 — VALIDAÇÃO CRUZADA (algébrico × simulado) ===
+λ₁ (s⁻¹)                         alg =    3.08249 | sim =    3.08128 | dif =  -0.039 %
+saída do domínio — degrau (s)    alg =    1.54721 | sim =    1.54949 | dif =  +0.148 %
+saída do domínio — CI 0,30 rad (s) (não comparável)
+saída do domínio — pulso (s)     (não comparável)
+θ=π: valor final (rad)           alg =    0.01019 | sim =    0.01019 | dif =  +0.000 %
+θ=π: Td (s)                      alg =    2.00632 | sim =    2.01000 | dif =  +0.183 %
+θ=π: tp (s)                      alg =    1.00316 | sim =    1.00000 | dif =  -0.315 %
+θ=π: Mp (%)                      alg =   95.10791 | sim =   95.10957 | dif =  +0.002 %
+θ=π: ts 2% (s)                   alg =   80.00000 | sim =   77.34000 | dif =  -3.325 %
+
+=== R5 — SENSIBILIDADE PARAMÉTRICA (resumo) ===
+
+-- m --
+fator  0.25 | valor  0.1250 | λ₁ =   2.9385 | t_saída degrau =  1.154 s | t_saída livre =  1.375 s
+fator  0.50 | valor  0.2500 | λ₁ =   3.0337 | t_saída degrau =  1.346 s | t_saída livre =  1.342 s
+fator  1.00 | valor  0.5000 | λ₁ =   3.0825 | t_saída degrau =  1.549 s | t_saída livre =  1.326 s
+fator  2.00 | valor  1.0000 | λ₁ =   3.1072 | t_saída degrau =  1.760 s | t_saída livre =  1.318 s
+fator 10.00 | valor  5.0000 | λ₁ =   3.1271 | t_saída degrau =  2.264 s | t_saída livre =  1.311 s
+
+-- l --
+fator  0.25 | valor  0.2500 | λ₁ =   5.5151 | t_saída degrau =  0.605 s | t_saída livre =  0.722 s
+fator  0.50 | valor  0.5000 | λ₁ =   4.2340 | t_saída degrau =  0.962 s | t_saída livre =  0.958 s
+fator  1.00 | valor  1.0000 | λ₁ =   3.0825 | t_saída degrau =  1.549 s | t_saída livre =  1.326 s
+fator  2.00 | valor  2.0000 | λ₁ =   2.2023 | t_saída degrau =  2.485 s | t_saída livre =  1.860 s
+fator 10.00 | valor 10.0000 | λ₁ =   0.9900 | t_saída degrau =  7.151 s | t_saída livre =  4.143 s
+
+-- b --
+fator  0.25 | valor  0.0125 | λ₁ =   3.1196 | t_saída degrau =  1.535 s | t_saída livre =  1.314 s
+fator  0.50 | valor  0.0250 | λ₁ =   3.1072 | t_saída degrau =  1.540 s | t_saída livre =  1.318 s
+fator  1.00 | valor  0.0500 | λ₁ =   3.0825 | t_saída degrau =  1.549 s | t_saída livre =  1.326 s
+fator  2.00 | valor  0.1000 | λ₁ =   3.0337 | t_saída degrau =  1.569 s | t_saída livre =  1.342 s
+fator 10.00 | valor  0.5000 | λ₁ =   2.6718 | t_saída degrau =  1.739 s | t_saída livre =  1.481 s
