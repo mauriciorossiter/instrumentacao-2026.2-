@@ -26,8 +26,10 @@
 | e3-instrumentos nao ideais | entregue | — |
 | e4-caracteristicas estaticas | entregue | — |
 | e5-analise espectral | entregue | — |
-| e6-cadeia ideal | entregue | — |
-| e7-sensores nao ideais | entregue | — |
+| f1-e1-cadeia ideal | entregue | — |
+| f1-e2-sensores nao ideais | entregue | — |
+| f1-e3-validacao funcional | em andamento | — | 
+| f2-e1-caracterizacao | parcialmente entregue | — |
 
 ## Observações
 
