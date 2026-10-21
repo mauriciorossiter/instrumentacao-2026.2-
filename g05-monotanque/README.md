@@ -17,7 +17,7 @@
 
 | Entrega | Estado | Tag |
 |---|---|---|
-| e1-caracterizacao | em andamento | — |
+| e1-caracterizacao | entregue | — |
 
 ## Observações
 
