@@ -15,16 +15,32 @@
 
 ## Entregas
 
-Cada pasta contém o PDF do relatório e os modelos `.tse` (e `.cus` quando aplicável) do TyphoonSim.
+| Fase | Entrega | Pasta | Estado |
+|---|---|---|---|
+| — | 1 — Caracterização 1ª/2ª ordem | `entregas/e1-caracterizacao/` | Entregue |
+| — | 2 — Análise de sinais espúrios e Buck | `entregas/e2-analise-sinais-buck/` | Entregue |
+| — | 3 — Instrumento estático genérico | `entregas/e3-instrumento-estatico/` | Entregue |
+| — | 4 — Geração de dados desvio zero/sensibilidade | `entregas/e4-geracao-dados-desvio-zero-sensibilidade/` | Entregue |
+| — | 5 — Relatório final desvio zero/sensibilidade | `entregas/e5-relatorio-final-desvio-zero-sensibilidade/` | Entregue |
+| — | 6 — Modulação em amplitude | `entregas/e6-modulacao-am/` | Entregue |
+| 1 | 1 — Sensor capacitivo e filtro | `entregas/fase-1/e1-sensor-capacitivo-filtro/` | Entregue |
+| 1 | 2 — Não linearidade, dinâmica e AM | `entregas/fase-1/e2-nao-linearidade-dinamica-am/` | Entregue |
+| 2 | 1 — Caracterização da planta | `entregas/fase-2/e1-caracterizacao/` | Pronto para PR |
+| 2 | 2–5 | a definir | Pendente |
 
-- `entrega-1/`: caracterização — modelos de 1ª e 2ª ordem
-- `entrega-2/`: análise de sinais espúrios e realimentação negativa em conversor CC-CC Buck
-- `entrega-3/`: instrumento estático genérico
-- `entrega-4/`: geração de dados de desvio zero e sensibilidade
-- `entrega-5/`: relatório final revisado de desvio zero e sensibilidade
-- `entrega-6/`: modulação em amplitude
+Estrutura padrão de cada entrega:
 
-Cada subpasta `simulacoes/` (ou `typhoonsim/`) traz um `instructions.md` resumido com orientações de abertura no TyphoonSim.
+```text
+entregas/<caminho-da-entrega>/
+├── relatorio/
+│   ├── relatorio.pdf
+│   └── figuras/        (quando houver figuras separadas)
+├── simulacao/
+│   ├── instrucoes.md
+│   └── *.tse / *.py / outros arquivos de reprodução
+└── apresentacao/       (quando houver slides)
+    └── apresentacao.pdf / .pptx / .typ
+```
 
 ## Observação
 
