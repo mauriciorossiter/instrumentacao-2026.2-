@@ -1,0 +1,691 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "entrega2_E02_R6" {
+    configuration {
+        hil_device = "VHIL+"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 10.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Scope" Scope1 {
+            selected_signals = "[\'OutputVoltage\', \'preAmp\', \'ButterWorthOut\', \'deMod\', \'Videal\', \'F_inst\', \'vctrl\']"
+            signals_data = "{\"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true, \"signals_tooltips_enabled\": true}, \"signals\": {\"OutputVoltage\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#FF0000\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"preAmp\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#FF0000\"}, \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"ButterWorthOut\": {\"viewports\": [3], \"type\": \"analog\", \"color\": {\"3\": \"#FF0000\"}, \"display\": {\"3\": \"solid\"}, \"is_manual\": {\"3\": false}}, \"deMod\": {\"viewports\": [], \"type\": \"analog\", \"color\": {\"4\": \"#FF0000\"}, \"display\": {\"4\": \"solid\"}, \"is_manual\": {\"4\": false}}, \"F_inst\": {\"viewports\": [], \"type\": \"analog\", \"color\": {\"4\": \"#0000FF\"}, \"display\": {\"4\": \"solid\"}, \"is_manual\": {\"4\": false}}, \"vctrl\": {\"viewports\": [], \"type\": \"analog\", \"color\": {\"4\": \"#0000FF\"}, \"display\": {\"4\": \"solid\"}, \"is_manual\": {\"4\": false}}, \"Videal\": {\"viewports\": [1, 2, 3], \"type\": \"analog\", \"color\": {\"1\": \"#00CC00\", \"2\": \"#00CC00\", \"3\": \"#00CC00\"}, \"display\": {\"1\": \"solid\", \"2\": \"solid\", \"3\": \"solid\"}, \"is_manual\": {\"1\": false, \"2\": false, \"3\": false}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"4\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"5\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"6\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}}"
+            user_range_data = "{\"1\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"2\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"3\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"4\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"5\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"6\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}}"
+        }
+        [
+            position = 7700, 7512
+        ]
+
+        component "core/Signal Controlled Voltage Source" Vsp1 {
+        }
+        [
+            position = 7604, 7812
+            rotation = right
+            scale = -1, 1
+            size = 64, 32
+        ]
+
+        component "core/Capacitor" Ct {
+            capacitance = "10e-9"
+        }
+        [
+            position = 7712, 7752
+        ]
+
+        component "core/Resistor" Rin {
+            resistance = "10000000"
+        }
+        [
+            position = 7840, 7816
+            rotation = right
+        ]
+
+        component "core/Ground" gnd1 {
+        }
+        [
+            position = 7728, 7936
+        ]
+
+        component "core/Voltage Measurement" OutputVoltage {
+            execution_rate = "0.0001"
+            sig_output = "True"
+        }
+        [
+            position = 7992, 7824
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Product" Product1 {
+        }
+        [
+            position = 7348, 7812
+        ]
+
+        component "core/Step" "0,2" {
+            execution_rate = "1e-06"
+            final_value = "0.2"
+        }
+        [
+            position = 7100, 7716
+        ]
+
+        component "core/Sum" Sum1 {
+            signs = "5"
+        }
+        [
+            position = 7204, 7612
+        ]
+
+        component "core/Step" "0,4" {
+            execution_rate = "1e-06"
+            final_value = "0.2"
+            step_time = "3"
+        }
+        [
+            position = 7100, 7664
+        ]
+
+        component "core/Step" "0,6" {
+            execution_rate = "1e-06"
+            final_value = "0.2"
+            step_time = "5"
+        }
+        [
+            position = 7100, 7612
+        ]
+
+        component "core/Step" "0,8" {
+            execution_rate = "1e-06"
+            final_value = "0.2"
+            step_time = "7"
+        }
+        [
+            position = 7100, 7560
+        ]
+
+        component "core/Step" "1,0" {
+            execution_rate = "1e-06"
+            final_value = "0.2"
+            step_time = "9"
+        }
+        [
+            position = 7100, 7508
+        ]
+
+        component "core/Sinusoidal Source" 100Hz {
+            amplitude = "1.4142"
+            execution_rate = "1e-06"
+            frequency = "100"
+        }
+        [
+            position = 7100, 7820
+        ]
+
+        component "core/C function" camada_estatica {
+            arb_defs = "/*Begin code section*/
+/* Chaves das não idealidades: 1 = liga, 0 = desliga */
+int EN_SENS = 1;          /* desvio de sensibilidade */
+int EN_LIM  = 1;          /* limiar                  */
+int EN_RES  = 1;          /* resolução               */
+
+/* Sensibilidade nominal (Entrega 01): S = d33/Ct = 400 pC/N / 10 nF */
+double S_NOM = 0.04;      /* V/N */
+
+/* Sensibilidade real: extremos das tolerâncias de catálogo
+ *   d33 = 400 pC/N ±20 %  (APC International, APC 850)
+ *   Ct  = 10 nF   ±30 %   (Murata, 7BB-20-6, a 1 kHz)
+ * Caso mínimo (padrão): 320 pC/N / 13 nF = 24,6 mV/N  (-38 %)
+ * Caso máximo:          480 pC/N /  7 nF = 68,6 mV/N  (+71 %)        */
+double D33_REAL = 320e-12;   /* C/N */
+double CT_REAL  = 13e-9;     /* F   */
+
+/* Limiar e resolução: ESTIMATIVAS DA EQUIPE (não tabeladas pelo fabricante) */
+double F_LIM = 0.02;      /* N: |F| abaixo disto não produz saída       */
+double F_RES = 0.01;      /* N: menor variação de força que muda a saída */
+
+/* Variáveis de trabalho */
+double S_use;
+double F_a;
+/*End code section*/"
+            execution_rate = "1e-06"
+            init_fnc = "/*Begin code section*/
+S_use = S_NOM;
+F_a = 0.0;
+/*End code section*/"
+            input_terminals = "real F;"
+            input_terminals_dimensions = "inherit"
+            input_terminals_feedthrough = "True"
+            input_terminals_show_labels = "True"
+            output_fnc = "/*Begin code section*/
+/* 1) Sensibilidade */
+if (EN_SENS) {
+    S_use = D33_REAL / CT_REAL;
+} else {
+    S_use = S_NOM;
+}
+
+F_a = F;
+
+/* 2) Limiar: abaixo de F_LIM a saída é nula; acima, segue a entrada */
+if (EN_LIM) {
+    if (fabs(F_a) < F_LIM) {
+        F_a = 0.0;
+    }
+}
+
+/* 3) Resolução: a força só é \"vista\" em múltiplos de F_RES */
+if (EN_RES) {
+    F_a = F_RES * floor(F_a / F_RES + 0.5);
+}
+
+vctrl = S_use * F_a;
+/*End code section*/"
+            output_terminals = "real vctrl;"
+            output_terminals_dimensions = "1"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            update_fnc = "/*Begin code section*/
+/* (vazio: o bloco é estático, sem estados) */
+/*End code section*/"
+        }
+        [
+            position = 7460, 7812
+            size = 48, 48
+        ]
+
+        component "core/Gain" "gain = (1+24e3*1e-3)" {
+            gain = "25"
+        }
+        [
+            position = 8288, 7824
+        ]
+
+        component "core/Product" Product2 {
+        }
+        [
+            position = 8392, 7816
+        ]
+
+        component "core/Sinusoidal Source" 100Hz1 {
+            amplitude = "1.4142"
+            frequency = "100"
+        }
+        [
+            position = 8296, 7696
+        ]
+
+        component "core/Discrete Transfer Function" "ButterWorth fc = 1Hz" {
+            a_coeff = "[0.025538, 0.226, 1]"
+            b_coeff = "[1]"
+            domain = "S-domain"
+        }
+        [
+            position = 8520, 7816
+        ]
+
+        component "core/Probe" deMod {
+        }
+        [
+            position = 8456, 7748
+            rotation = left
+        ]
+
+        component "core/Probe" ButterWorthOut {
+        }
+        [
+            position = 8576, 7752
+            rotation = left
+        ]
+
+        component "core/Probe" Videal {
+        }
+        [
+            position = 7376, 7612
+        ]
+
+        component "core/Probe" preAmp {
+        }
+        [
+            position = 8264, 7768
+            rotation = left
+        ]
+
+        component "core/Sum" Sum2 {
+        }
+        [
+            position = 8160, 7816
+        ]
+
+        component "core/C function" WhiteNoise {
+            arb_defs = "/*Begin code section*/
+unsigned int x_rng;      /* estado do xorshift32 (32 bits)  */
+double g_n;              /* amostra gaussiana N(0,1) atual  */
+double u1_n;             /* uniforme 1                      */
+double u2_n;             /* uniforme 2                      */
+double SIGMA_N = 0.02;   /* desvio-padrão do ruído, em V    */
+double PI_N = 3.14159265358979323846;
+/*End code section*/"
+            execution_rate = "1e-4"
+            init_fnc = "/*Begin code section*/
+x_rng = 610839777u;      /* semente fixa: mesmo ruído a cada execução */
+
+x_rng ^= x_rng << 13;
+x_rng ^= x_rng >> 17;
+x_rng ^= x_rng << 5;
+u1_n = ((x_rng >> 8) + 0.5) / 16777216.0;   /* uniforme em (0,1), nunca 0 */
+
+x_rng ^= x_rng << 13;
+x_rng ^= x_rng >> 17;
+x_rng ^= x_rng << 5;
+u2_n = ((x_rng >> 8) + 0.5) / 16777216.0;
+
+g_n = sqrt(-2.0 * log(u1_n)) * cos(2.0 * PI_N * u2_n);   /* Box-Muller */
+/*End code section*/"
+            input_terminals = ""
+            input_terminals_dimensions = ""
+            input_terminals_feedthrough = ""
+            input_terminals_show_labels = ""
+            output_fnc = "/*Begin code section*/
+n = SIGMA_N * g_n;
+/*End code section*/"
+            output_terminals = "real n;"
+            output_terminals_dimensions = "1"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            update_fnc = "/*Begin code section*/
+x_rng ^= x_rng << 13;
+x_rng ^= x_rng >> 17;
+x_rng ^= x_rng << 5;
+u1_n = ((x_rng >> 8) + 0.5) / 16777216.0;
+
+x_rng ^= x_rng << 13;
+x_rng ^= x_rng >> 17;
+x_rng ^= x_rng << 5;
+u2_n = ((x_rng >> 8) + 0.5) / 16777216.0;
+
+g_n = sqrt(-2.0 * log(u1_n)) * cos(2.0 * PI_N * u2_n);
+/*End code section*/"
+        }
+        [
+            position = 8080, 7744
+            size = 48, 48
+        ]
+
+        component "core/Probe" F_inst {
+        }
+        [
+            position = 7404, 7748
+            rotation = left
+        ]
+
+        component "core/Probe" vctrl {
+        }
+        [
+            position = 7532, 7748
+            rotation = left
+        ]
+
+        junction JunctionF sp
+        [
+            position = 7404, 7812
+        ]
+
+        junction JunctionV sp
+        [
+            position = 7532, 7812
+        ]
+
+        junction Junction2 pe
+        [
+            position = 7840, 7752
+        ]
+
+        junction Junction3 pe
+        [
+            position = 7728, 7896
+        ]
+
+        junction Junction4 pe
+        [
+            position = 7840, 7896
+        ]
+
+        junction Junction5 sp
+        [
+            position = 8456, 7816
+        ]
+
+        junction Junction6 sp
+        [
+            position = 7300, 7612
+        ]
+
+        junction Junction7 sp
+        [
+            position = 8336, 7824
+        ]
+
+        scheme_area Area1 {
+            title = <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Tahoma'; font-size:14pt; font-weight:100; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;text-indent:0px;">Piezo Model</p></body></html>
+        }
+        [
+            position = 7784, 7800
+            size = 492, 380
+        ]
+
+        scheme_area Area2 {
+            title = <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Tahoma'; font-size:14pt; font-weight:100; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;text-indent:0px;">Force Input Signal (N)</p></body></html>
+        }
+        [
+            position = 7264, 7716
+            size = 516, 548
+            background_color = #0effff00
+        ]
+
+        scheme_area Area3 {
+            title = <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Tahoma'; font-size:14pt; font-weight:100; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;text-indent:0px;">Amplifier Lock In</p></body></html>
+        }
+        [
+            position = 8456, 7800
+            size = 500, 380
+            background_color = #0eff0000
+        ]
+
+        scheme_area Area4 {
+            title = <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Tahoma'; font-size:14pt; font-weight:100; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;text-indent:0px;">Noise</p></body></html>
+        }
+        [
+            position = 8116, 7800
+            size = 156, 380
+            background_color = #0e00ff7f
+        ]
+
+        connect Vsp1.p_node Ct.p_node as Connection2
+        [
+            breakpoints = 7616, 7752
+        ]
+        connect Ct.n_node Junction2 as Connection8
+        connect Junction2 Rin.p_node as Connection9
+        connect OutputVoltage.p_node Junction2 as Connection10
+        [
+            breakpoints = 7992, 7756
+        ]
+        connect Vsp1.n_node Junction3 as Connection15
+        [
+            breakpoints = 7604, 7896
+        ]
+        connect Junction3 gnd1.node as Connection16
+        [
+            breakpoints = 7728, 7896
+        ]
+        connect OutputVoltage.n_node Junction4 as Connection18
+        [
+            breakpoints = 7992, 7864; 7992, 7896; 7988, 7896
+        ]
+        connect Junction4 Junction3 as Connection19
+        connect Rin.n_node Junction4 as Connection20
+        connect "0,6.out" Sum1.in2 as Connection21
+        connect "0,8.out" Sum1.in1 as Connection3
+        [
+            breakpoints = 7132, 7560; 7132, 7592
+        ]
+        connect Sum1.in "1,0.out" as Connection4
+        [
+            breakpoints = 7148, 7580
+        ]
+        connect "0,4.out" Sum1.in3 as Connection5
+        [
+            breakpoints = 7132, 7664; 7132, 7628
+        ]
+        connect "0,2.out" Sum1.in4 as Connection6
+        [
+            breakpoints = 7148, 7712; 7148, 7644
+        ]
+        connect 100Hz.out Product1.in1 as Connection22
+        [
+            breakpoints = 7132, 7820; 7308, 7820
+        ]
+        connect Product1.out JunctionF as Connection23
+        connect JunctionF camada_estatica.F as Connection50
+        connect F_inst.in JunctionF as Connection51
+        connect camada_estatica.vctrl JunctionV as Connection24
+        connect JunctionV Vsp1.in as Connection52
+        connect vctrl.in JunctionV as Connection53
+        connect 100Hz1.out Product2.in as Connection27
+        connect Product2.out Junction5 as Connection29
+        connect Junction5 "ButterWorth fc = 1Hz.in" as Connection30
+        connect deMod.in Junction5 as Connection31
+        connect "ButterWorth fc = 1Hz.out" ButterWorthOut.in as Connection32
+        connect Sum1.out Junction6 as Connection33
+        connect Junction6 Product1.in as Connection34
+        [
+            breakpoints = 7300, 7632; 7300, 7728
+        ]
+        connect Videal.in Junction6 as Connection35
+        connect "gain = (1+24e3*1e-3).out" Junction7 as Connection36
+        connect Junction7 Product2.in1 as Connection37
+        connect preAmp.in Junction7 as Connection38
+        [
+            breakpoints = 8264, 7800; 8336, 7800
+        ]
+        connect Sum2.out "gain = (1+24e3*1e-3).in" as Connection39
+        [
+            breakpoints = 8208, 7816; 8208, 7824
+        ]
+        connect OutputVoltage.out Sum2.in1 as Connection40
+        connect WhiteNoise.n Sum2.in as Connection41
+    }
+
+    default {
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/Capacitor" {
+            signal_access = "inherit"
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Discrete Transfer Function" {
+            domain = "Z-domain"
+            method = "Zero-order hold"
+            b_coeff = "[1,1]"
+            a_coeff = "[1,1]"
+            signal_out_type = "inherit"
+            execution_rate = "inherit"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Product" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Sinusoidal Source" {
+            amplitude = "1"
+            dc_offset = "0"
+            frequency = "50"
+            phase = "0"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Step" {
+            step_time = "1"
+            initial_value = "0"
+            final_value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Signal Controlled Voltage Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+}
