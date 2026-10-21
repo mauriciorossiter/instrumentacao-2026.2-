@@ -1603,21 +1603,99 @@ S_state[5] = Sc_bot;
             position = 10104, 6816
         ]
 
-        component "core/Gain" G07_Gain_5V {
+        component "core/Triangular Wave Source" G07_T_varredura {
             execution_rate = "Ts"
-            gain = "5"
+            frequency = "g07_f_varredura"
+            max_val = "g07_T_max"
+            min_val = "g07_T_min"
         }
         [
-            position = 9060, 7680
+            position = 8840, 7680
         ]
 
-        component "core/Probe" G07_Hall_A_ideal {
+        component "core/Constant" G07_K_B {
+            execution_rate = "Ts"
+            value = "g07_B_ntc"
         }
         [
-            position = 9160, 7600
+            position = 8840, 7744
         ]
 
-        component "core/Signal Controlled Voltage Source" G07_V_Hall {
+        component "core/Constant" G07_K_R25 {
+            execution_rate = "Ts"
+            value = "g07_R_25"
+        }
+        [
+            position = 8840, 7800
+        ]
+
+        component "core/Constant" G07_K_Rf {
+            execution_rate = "Ts"
+            value = "g07_R_f"
+        }
+        [
+            position = 8840, 7856
+        ]
+
+        component "core/Constant" G07_K_Vexc {
+            execution_rate = "Ts"
+            value = "g07_V_exc"
+        }
+        [
+            position = 8840, 7912
+        ]
+
+        component "core/C function" G07_NTC_divisor {
+            execution_rate = "Ts"
+            global_variables = "real g07_TK;int g07_k;"
+            init_fnc = "/*Begin code section*/
+g07_TK = 273.15;
+g07_k = 0;
+/*End code section*/"
+            input_terminals = "real g07_TC;inherit g07_B;inherit g07_R25;inherit g07_Rf;inherit g07_Vexc;"
+            input_terminals_dimensions = "inherit;inherit;inherit;inherit;inherit"
+            input_terminals_feedthrough = "True;True;True;True;True"
+            input_terminals_show_labels = "True;True;True;True;True"
+            output_fnc = "/*Begin code section*/
+g07_TK = g07_TC + 273.15;
+g07_RNTC = g07_R25*exp(g07_B*(1.0/g07_TK - 1.0/298.15));
+g07_vT = g07_Vexc*g07_Rf/(g07_Rf + g07_RNTC);
+// G07: fonte do sensor em 0 V no primeiro 1 ms (200 passos de Ts). Uma fonte nao nula em t = 0
+// impede a partida do motor no TyphoonSim (verificado: S2 com 0 V gira, S3/S4 com 0,1036 V nao giram).
+if (g07_k < 200) {
+    g07_k = g07_k + 1;
+    g07_vT = 0.0;
+}
+/*End code section*/"
+            output_terminals = "real g07_vT;inherit g07_RNTC;"
+            output_terminals_dimensions = "inherit;inherit"
+            output_terminals_feedthrough = "True;True"
+            output_terminals_show_labels = "True;True"
+        }
+        [
+            position = 9024, 7800
+            size = 112, 192
+        ]
+
+        component "core/Probe" G07_T_motor {
+        }
+        [
+            position = 8960, 7600
+        ]
+
+        component "core/Probe" G07_vT_ideal {
+        }
+        [
+            position = 9160, 7640
+        ]
+
+        component "core/Probe" G07_R_NTC {
+        }
+        [
+            position = 9160, 7960
+        ]
+
+        component "core/Signal Controlled Voltage Source" G07_V_T {
             execution_rate = "Ts"
         }
         [
@@ -1625,8 +1703,8 @@ S_state[5] = Sc_bot;
             rotation = right
         ]
 
-        component "core/Resistor" G07_Rpu_ref {
-            resistance = "R_pu"
+        component "core/Resistor" G07_Rth_ref {
+            resistance = "g07_R_th"
         }
         [
             position = 9360, 7800
@@ -1655,8 +1733,8 @@ S_state[5] = Sc_bot;
             rotation = right
         ]
 
-        component "core/Resistor" G07_Rpu_cond {
-            resistance = "R_pu"
+        component "core/Resistor" G07_Rth_cond {
+            resistance = "g07_R_th"
         }
         [
             position = 9360, 8040
@@ -1718,8 +1796,8 @@ S_state[5] = Sc_bot;
         ]
 
         component "core/Scope" Scope1 {
-            selected_signals = "[\'G07_V_ref\', \'G07_V_out\', \'n\', \'omega\', \'G07_Hall_A_ideal\']"
-            signals_data = "{\"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true, \"signals_tooltips_enabled\": true}, \"signals\": {\"G07_V_ref\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#00CC00\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"G07_V_out\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#FF0000\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"n\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#FF0000\"}, \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"omega\": {\"viewports\": [], \"type\": \"analog\", \"color\": {\"1\": \"#FFCC00\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"G07_Hall_A_ideal\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#FF00FF\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"4\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"5\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"6\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}}"
+            selected_signals = "[\'G07_V_ref\', \'G07_V_out\', \'G07_vT_ideal\', \'n\', \'omega\', \'G07_T_motor\']"
+            signals_data = "{\"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true, \"signals_tooltips_enabled\": true}, \"signals\": {\"G07_V_ref\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#00CC00\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"G07_V_out\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#FF0000\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"G07_vT_ideal\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#0000FF\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"n\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#FF0000\"}, \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"omega\": {\"viewports\": [], \"type\": \"analog\", \"color\": {\"1\": \"#FFCC00\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"G07_T_motor\": {\"viewports\": [3], \"type\": \"analog\", \"color\": {\"3\": \"#FF8800\"}, \"display\": {\"3\": \"solid\"}, \"is_manual\": {\"3\": false}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"4\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"5\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"6\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}}"
             user_range_data = "{\"1\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"2\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"3\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"4\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"5\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"6\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}}"
         }
         [
@@ -2015,24 +2093,19 @@ S_state[5] = Sc_bot;
             size = 60, 20
         ]
 
-        tag G07_From_HallA {
-            value = "Hall_A"
-            scope = local
-            kind = sp
-            direction = out
-        }
+
+
+        junction G07_J_T sp
         [
-            position = 8960, 7680
-            hide_name = True
-            size = 60, 20
+            position = 8920, 7680
         ]
 
-        junction G07_J_sp sp
+        junction G07_J_vTs sp
         [
-            position = 9140, 7680
+            position = 9120, 7760
         ]
 
-        junction G07_J_hall pe
+        junction G07_J_vT pe
         [
             position = 9240, 7800
         ]
@@ -2294,21 +2367,17 @@ S_state[5] = Sc_bot;
         connect Vsource.n_node G07_J_DCneg as G07_Conn25
         connect G07_J_DCneg "Three Phase Inverter.neg_out" as G07_Conn26
         connect G07_J_DCneg G07_J_gnd as G07_Conn27
-        connect G07_From_HallA G07_Gain_5V.in as G07_Conn28
-        connect G07_Gain_5V.out G07_J_sp as G07_Conn29
-        connect G07_J_sp G07_V_Hall.in as G07_Conn30
-        connect G07_J_sp G07_Hall_A_ideal.in as G07_Conn31
-        connect G07_V_Hall.p_node G07_J_hall as G07_Conn32
-        connect G07_V_Hall.n_node G07_J_gnd as G07_Conn33
-        connect G07_J_hall G07_Rpu_ref.p_node as G07_Conn1
-        connect G07_J_hall G07_Rpu_cond.p_node as G07_Conn2
-        connect G07_Rpu_ref.n_node G07_J_Lref as G07_Conn3
+        connect G07_V_T.p_node G07_J_vT as G07_Conn32
+        connect G07_V_T.n_node G07_J_gnd as G07_Conn33
+        connect G07_J_vT G07_Rth_ref.p_node as G07_Conn1
+        connect G07_J_vT G07_Rth_cond.p_node as G07_Conn2
+        connect G07_Rth_ref.n_node G07_J_Lref as G07_Conn3
         connect G07_J_Lref G07_Cc_ref.p_node as G07_Conn4
         connect G07_J_Lref G07_V_ref.p_node as G07_Conn5
         connect G07_Cc_ref.n_node G07_Rc_ref.p_node as G07_Conn6
         connect G07_Rc_ref.n_node G07_J_faseA as G07_Conn7
         connect G07_V_ref.n_node G07_J_gnd as G07_Conn8
-        connect G07_Rpu_cond.n_node G07_J_Lcond as G07_Conn9
+        connect G07_Rth_cond.n_node G07_J_Lcond as G07_Conn9
         connect G07_J_Lcond G07_C_res.p_node as G07_Conn10
         connect G07_J_Lcond G07_J_out as G07_Conn11
         connect G07_J_out G07_C_2s.p_node as G07_Conn12
@@ -2322,6 +2391,17 @@ S_state[5] = Sc_bot;
         connect G07_J_blindagem G07_R_sh.p_node as G07_Conn20
         connect G07_R_sh.n_node G07_J_gnd as G07_Conn21
         connect G07_V_out.n_node G07_J_gnd as G07_Conn22
+        connect G07_T_varredura.out G07_J_T as G07_Conn34
+        connect G07_J_T "G07_NTC_divisor.g07_TC" as G07_Conn35
+        connect G07_J_T G07_T_motor.in as G07_Conn36
+        connect G07_K_B.out "G07_NTC_divisor.g07_B" as G07_Conn37
+        connect G07_K_R25.out "G07_NTC_divisor.g07_R25" as G07_Conn38
+        connect G07_K_Rf.out "G07_NTC_divisor.g07_Rf" as G07_Conn39
+        connect G07_K_Vexc.out "G07_NTC_divisor.g07_Vexc" as G07_Conn40
+        connect "G07_NTC_divisor.g07_vT" G07_J_vTs as G07_Conn41
+        connect G07_J_vTs G07_V_T.in as G07_Conn42
+        connect G07_J_vTs G07_vT_ideal.in as G07_Conn43
+        connect "G07_NTC_divisor.g07_RNTC" G07_R_NTC.in as G07_Conn44
     }
 
     default {
@@ -2781,14 +2861,26 @@ S_state[5] = Sc_bot;
         a2=4.485e-4                 # thrust polynomial coefficient 
         a1=0.3360                   # thrust polynomial coefficient 
         a0=0                        # thrust polynomial coefficient 
-        # ---- G07: cadeia Hall + blindagem eletrostatica (Aguirre, Secao 6.5, Fig. 6.21 e 6.26) ----
-        R_pu = 4.7e3                # pull-up / resistencia de saida do Hall [ohm]
-        C_c = 100e-12               # capacitancia parasita fase -> condutor do Hall, SEM blindagem [F] (Fig. 6.21)
+        # ---- G07: cadeia NTC + blindagem eletrostatica (Aguirre, Secao 6.5, Fig. 6.21 e 6.26) ----
+        # Sensor: termistor NTC TDK/EPCOS B57861S0103F040 no enrolamento/carcaca do R42BLD30L3
+        # (todas as variaveis do grupo usam o prefixo g07_ e valores float simples)
+        import math as g07_math
+        g07_T_min = 0.0             # limite inferior da faixa nominal [degC]
+        g07_T_max = 130.0           # limite superior [degC] (isolacao classe B do R42BLD30L3)
+        g07_f_varredura = 1.0       # varredura triangular T_min <-> T_max, periodo = tempo de simulacao (1 s) [Hz]
+        g07_R_25 = 10e3             # resistencia nominal do NTC a 25 degC [ohm]
+        g07_B_ntc = 3988.0          # constante B25/100 [K] (Aguirre, Eq. 7.23)
+        g07_V_exc = 2.5             # excitacao do divisor [V]
+        g07_R_f = 1470.0            # resistor fixo do divisor [ohm]
+        g07_R_ntc_Tmin = float(g07_R_25*g07_math.exp(g07_B_ntc*(1.0/(g07_T_min + 273.15) - 1.0/298.15)))
+        g07_R_th = float(g07_R_f*g07_R_ntc_Tmin/(g07_R_f + g07_R_ntc_Tmin))   # R Thevenin maxima (T_min): pior caso [ohm]
+        C_c = 100e-12               # capacitancia parasita fase -> condutor do NTC, SEM blindagem [F] (Fig. 6.21)
         R_c = 100                   # resistencia serie dos acoplamentos (estabilidade numerica) [ohm]
-        cobertura = 0.95            # fracao coberta pela blindagem (datasheet do cabo)
+        cobertura = 0.95            # fracao coberta pela blindagem (Belden 8219: 95 %)
         C_res = (1 - cobertura)*C_c # acoplamento residual fase -> condutor, COM blindagem [F]
         C_1s = C_c                  # capacitancia fase -> blindagem [F] (C1 da Fig. 6.26)
-        C_2s = 100e-12              # capacitancia condutor -> blindagem [F] (datasheet do cabo, pF/m x comprimento)
+        C_2s = 100e-12              # capacitancia condutor -> blindagem [F] (85,3 pF/m x 1,2 m)
         R_sh = 0.1                  # resistencia da blindagem + ligacao ao terra (ponto unico) [ohm]
+        info("G07: R_th = %.1f ohm | picos esperados: Vref = %.2f V, Vout = %.3f V" % (g07_R_th, Vs*g07_R_th/(g07_R_th + R_c), Vs*C_res/(C_res + C_2s)))
     ENDCODE
 }

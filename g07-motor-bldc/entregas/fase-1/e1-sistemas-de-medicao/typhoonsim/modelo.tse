@@ -4,7 +4,7 @@ version = 4.2
 // Saved by sw version: 2026.3
 //
 
-model "G07_teste1_atenuacao" {
+model "G07_Fase1_Entrega01_Teste1_Atenuacao_Blindagem" {
     configuration {
         hil_device = "HIL101"
         hil_configuration_id = 1
@@ -79,8 +79,8 @@ model "G07_teste1_atenuacao" {
     }
 
     component Subsystem Root {
-        component "core/Voltage Source" G07_V_Hall {
-            init_const_value = "5"
+        component "core/Voltage Source" G07_V_exc {
+            init_const_value = "V_exc"
         }
         [
             position = 8000, 8060
@@ -98,8 +98,8 @@ model "G07_teste1_atenuacao" {
             rotation = right
         ]
 
-        component "core/Resistor" G07_Rpu_ref {
-            resistance = "R_pu"
+        component "core/Resistor" G07_Rntc_ref {
+            resistance = "R_ntc"
         }
         [
             position = 8160, 8000
@@ -109,7 +109,7 @@ model "G07_teste1_atenuacao" {
             capacitance = "C_c"
         }
         [
-            position = 8280, 8080
+            position = 8244, 8080
             rotation = right
         ]
 
@@ -117,7 +117,7 @@ model "G07_teste1_atenuacao" {
             resistance = "R_c"
         }
         [
-            position = 8280, 8152
+            position = 8244, 8164
             rotation = right
         ]
 
@@ -128,8 +128,24 @@ model "G07_teste1_atenuacao" {
             rotation = right
         ]
 
-        component "core/Resistor" G07_Rpu_cond {
-            resistance = "R_pu"
+        component "core/Resistor" G07_Rf_ref {
+            resistance = "R_f"
+        }
+        [
+            position = 8360, 8080
+            rotation = right
+        ]
+
+        component "core/Resistor" G07_Rf_cond {
+            resistance = "R_f"
+        }
+        [
+            position = 8340, 8408
+            rotation = right
+        ]
+
+        component "core/Resistor" G07_Rntc_cond {
+            resistance = "R_ntc"
         }
         [
             position = 8160, 8240
@@ -139,7 +155,7 @@ model "G07_teste1_atenuacao" {
             capacitance = "C_res"
         }
         [
-            position = 8280, 8320
+            position = 8200, 8332
             rotation = right
         ]
 
@@ -147,7 +163,7 @@ model "G07_teste1_atenuacao" {
             resistance = "R_c"
         }
         [
-            position = 8280, 8392
+            position = 8200, 8424
             rotation = right
         ]
 
@@ -155,7 +171,7 @@ model "G07_teste1_atenuacao" {
             capacitance = "C_2s"
         }
         [
-            position = 8400, 8320
+            position = 8400, 8332
             rotation = right
         ]
 
@@ -163,7 +179,7 @@ model "G07_teste1_atenuacao" {
             capacitance = "C_1s"
         }
         [
-            position = 8520, 8472
+            position = 8532, 8468
             rotation = right
         ]
 
@@ -171,7 +187,7 @@ model "G07_teste1_atenuacao" {
             resistance = "R_c"
         }
         [
-            position = 8520, 8540
+            position = 8532, 8540
             rotation = right
         ]
 
@@ -196,10 +212,10 @@ model "G07_teste1_atenuacao" {
             user_range_data = "{\"1\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"2\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"3\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"4\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"5\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"6\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}}"
         }
         [
-            position = 7736, 8548
+            position = 7852, 8532
         ]
 
-        junction G07_J_hall pe
+        junction G07_J_exc pe
         [
             position = 8040, 8000
         ]
@@ -234,19 +250,19 @@ model "G07_teste1_atenuacao" {
             position = 8520, 8400
         ]
 
-        connect G07_V_Hall.p_node G07_J_hall as G07_Conn23
-        connect G07_V_Hall.n_node G07_J_gnd as G07_Conn24
+        connect G07_V_exc.p_node G07_J_exc as G07_Conn23
+        connect G07_V_exc.n_node G07_J_gnd as G07_Conn24
         connect G07_V_ruido.p_node G07_J_ruido as G07_Conn25
         connect G07_V_ruido.n_node G07_J_gnd as G07_Conn26
-        connect G07_J_hall G07_Rpu_ref.p_node as G07_Conn1
-        connect G07_J_hall G07_Rpu_cond.p_node as G07_Conn2
-        connect G07_Rpu_ref.n_node G07_J_Lref as G07_Conn3
+        connect G07_J_exc G07_Rntc_ref.p_node as G07_Conn1
+        connect G07_J_exc G07_Rntc_cond.p_node as G07_Conn2
+        connect G07_Rntc_ref.n_node G07_J_Lref as G07_Conn3
         connect G07_J_Lref G07_Cc_ref.p_node as G07_Conn4
         connect G07_J_Lref G07_V_ref.p_node as G07_Conn5
         connect G07_Cc_ref.n_node G07_Rc_ref.p_node as G07_Conn6
         connect G07_Rc_ref.n_node G07_J_ruido as G07_Conn7
         connect G07_V_ref.n_node G07_J_gnd as G07_Conn8
-        connect G07_Rpu_cond.n_node G07_J_Lcond as G07_Conn9
+        connect G07_Rntc_cond.n_node G07_J_Lcond as G07_Conn9
         connect G07_J_Lcond G07_C_res.p_node as G07_Conn10
         connect G07_J_Lcond G07_J_out as G07_Conn11
         connect G07_J_out G07_C_2s.p_node as G07_Conn12
@@ -260,6 +276,10 @@ model "G07_teste1_atenuacao" {
         connect G07_J_blindagem G07_R_sh.p_node as G07_Conn20
         connect G07_R_sh.n_node G07_J_gnd as G07_Conn21
         connect G07_V_out.n_node G07_J_gnd as G07_Conn22
+        connect G07_J_Lref G07_Rf_ref.p_node as G07_Conn27
+        connect G07_Rf_ref.n_node G07_J_gnd as G07_Conn28
+        connect G07_J_out G07_Rf_cond.p_node as G07_Conn29
+        connect G07_Rf_cond.n_node G07_J_gnd as G07_Conn30
     }
 
     default {
@@ -338,25 +358,44 @@ model "G07_teste1_atenuacao" {
         # To print information to the console, use info()
         
         # ---- G07 - Teste 1: atenuacao do acoplamento capacitivo do ruido de chaveamento ----
+        # Sensor: termistor NTC TDK/EPCOS B57861S0103F040 (R25 = 10 kohm, B25/100 = 3988 K)
+        # Circuito: 6.5 Aterramento e blindagem (Aguirre, Fig. 6.21 e 6.26), divisor NTC/R_f
+        # Rodar: T_teste = 0 (pior caso) com f_ruido = 10e3, 20e3, 40e3; cobertura = 0 (controle);
+        #        T_teste = 65 e 130 com f_ruido = 10e3 (atenuacao independente de T)
+        T_teste = 0                 # temperatura do enrolamento no ensaio [degC] (faixa 0...130 degC, classe B)
         f_pwm = 10000               # frequencia de chaveamento do modelo BLDC [Hz]
         f_ruido = 10e3              # rodar com 10e3, 20e3 e 40e3 (faixa de chaveamento) [Hz]
         A_ruido = 18                # amplitude do ruido [V] = Vs/2, Vs = 36 V (R42BLD30L3) - o sistema e linear
-        # ---- G07: cadeia Hall + blindagem eletrostatica (Aguirre, Secao 6.5, Fig. 6.21 e 6.26) ----
-        R_pu = 4.7e3                # pull-up / resistencia de saida do Hall [ohm]
-        C_c = 100e-12               # capacitancia parasita fase -> condutor do Hall, SEM blindagem [F] (Fig. 6.21)
+        # ---- NTC (datasheet TDK B57861S, R/T 8016) e condicionamento (divisor) ----
+        R_25 = 10e3                 # resistencia nominal a 25 degC [ohm]
+        B_ntc = 3988                # constante B25/100 [K] (Aguirre, Eq. 7.23)
+        T_0 = 298.15                # temperatura de referencia [K]
+        R_ntc = R_25*np.exp(B_ntc*(1/(T_teste + 273.15) - 1/T_0))   # R do NTC em T_teste [ohm]
+        V_exc = 2.5                 # excitacao do divisor [V] (autoaquecimento <= 1 K)
+        R_f = 1470                  # resistor fixo do divisor [ohm] (inflexao em 65 degC, E96)
+        R_th = R_f*R_ntc/(R_f + R_ntc)                               # R Thevenin do no de medicao [ohm]
+        v_T = V_exc*R_f/(R_f + R_ntc)                                # tensao de saida ideal [V]
+        S_T = V_exc*B_ntc*R_f*R_ntc/((T_teste + 273.15)**2*(R_f + R_ntc)**2)  # sensibilidade [V/K]
+        # ---- blindagem eletrostatica (Aguirre, Secao 6.5, Fig. 6.21 e 6.26) ----
+        C_c = 100e-12               # capacitancia parasita fase -> condutor do NTC, SEM blindagem [F] (Fig. 6.21)
         R_c = 100                   # resistencia serie dos acoplamentos (estabilidade numerica) [ohm]
-        cobertura = 0.95            # fracao coberta pela blindagem (datasheet do cabo)
+        cobertura = 0.95            # fracao coberta pela blindagem (Belden 8219: 95 %)
         C_res = (1 - cobertura)*C_c # acoplamento residual fase -> condutor, COM blindagem [F]
         C_1s = C_c                  # capacitancia fase -> blindagem [F] (C1 da Fig. 6.26)
-        C_2s = 100e-12              # capacitancia condutor -> blindagem [F] (datasheet do cabo, pF/m x comprimento)
+        C_2s = 100e-12              # capacitancia condutor -> blindagem [F] (85,3 pF/m x 1,2 m)
         R_sh = 0.1                  # resistencia da blindagem + ligacao ao terra (ponto unico) [ohm]
         # ---- valores esperados (aparecem no console ao compilar) ----
         w = 2*np.pi*f_ruido
         Zr = R_c + 1/(1j*w*C_c)
-        Vref = A_ruido/Zr/(1/R_pu + 1/Zr)
-        Zres = R_c + 1/(1j*w*C_res); Z1 = R_c + 1/(1j*w*C_1s); Z2 = 1/(1j*w*C_2s)
-        Y = np.array([[1/R_pu + 1/Zres + 1/Z2, -1/Z2], [-1/Z2, 1/Z2 + 1/Z1 + 1/R_sh]])
+        Vref = A_ruido/Zr/(1/R_th + 1/Zr)
+        if cobertura < 1:
+            Zres = R_c + 1/(1j*w*C_res)
+        else:
+            Zres = 1e30
+        Z1 = R_c + 1/(1j*w*C_1s); Z2 = 1/(1j*w*C_2s)
+        Y = np.array([[1/R_th + 1/Zres + 1/Z2, -1/Z2], [-1/Z2, 1/Z2 + 1/Z1 + 1/R_sh]])
         Vout = np.linalg.solve(Y, np.array([A_ruido/Zres, A_ruido/Z1]))[0]
-        info("G07 esperado @ %.0f Hz: Vref = %.4f V | Vout = %.5f V | A = %.1f dB" % (f_ruido, abs(Vref), abs(Vout), 20*np.log10(abs(Vref/Vout))))
+        info("G07 NTC @ %.0f degC: R_ntc = %.1f ohm | R_th = %.1f ohm | v_T (DC) = %.4f V | S = %.2f mV/K" % (T_teste, R_ntc, R_th, v_T, 1e3*S_T))
+        info("G07 esperado @ %.0f Hz: |Vref| = %.4f V | |Vout| = %.5f V | A = %.1f dB | erro equiv.: %.2f K -> %.3f K" % (f_ruido, abs(Vref), abs(Vout), 20*np.log10(abs(Vref/Vout)), abs(Vref)/S_T, abs(Vout)/S_T))
     ENDCODE
 }
