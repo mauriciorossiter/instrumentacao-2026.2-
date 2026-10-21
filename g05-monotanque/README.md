@@ -9,9 +9,9 @@
 
 | Nome completo | Matrícula |
 |---|---|
-| | |
-| | |
-| | |
+| Carlos Vinicius de Souza Cassimiro | 22110833 |
+| Nelson Alves Sousa Moreira | 22210731 |
+| Pedro Henrique Santos Resende | 20113988 |
 
 ## Entregas
 
