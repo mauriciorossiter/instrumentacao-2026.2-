@@ -1,0 +1,440 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "New schematic 05-Oct-2026@19-37-06" {
+    configuration {
+        hil_device = "VHIL+"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 1.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Discrete Transfer Function" TF_tau {
+            a_coeff = "[0.5,1]"
+            b_coeff = "[1]"
+        }
+        [
+            position = 8176, 8216
+        ]
+
+        component "core/Ramp" T_sweep {
+            slope = "25"
+            start_time = "1"
+        }
+        [
+            position = 7820, 8200
+        ]
+
+        component "core/Min Max" "Min Sat" {
+        }
+        [
+            position = 7956, 8208
+        ]
+
+        component "core/Min Max" "Max Sat" {
+            operation = "max"
+        }
+        [
+            position = 8084, 8216
+        ]
+
+        component "core/Constant" Constant_0 {
+            execution_rate = "0.0001"
+            value = "0"
+        }
+        [
+            position = 8044, 8288
+            rotation = left
+        ]
+
+        component "core/Constant" Constant_250 {
+            execution_rate = "0.0001"
+            value = "250"
+        }
+        [
+            position = 7916, 8288
+            rotation = left
+        ]
+
+        component "core/C function" CF_estatica {
+            input_terminals_dimensions = "inherit"
+            output_terminals_dimensions = "inherit"
+        }
+        [
+            position = 8312, 8216
+            size = 48, 48
+        ]
+
+        component "core/Random Source" n_bl {
+        }
+        [
+            position = 7736, 8508
+            size = 32, 32
+        ]
+
+        component "core/Sinusoidal Source" n_comm {
+            amplitude = "2e-3"
+            frequency = "573"
+        }
+        [
+            position = 7800, 8576
+        ]
+
+        component "core/Sum" Sum_ncm {
+        }
+        [
+            position = 7912, 8516
+        ]
+
+        component "core/Sum" Sum_out {
+        }
+        [
+            position = 8292, 8388
+        ]
+
+        component "core/Sum" Sum_in {
+        }
+        [
+            position = 7920, 8380
+        ]
+
+        component "core/Gain" Gain_bl {
+            gain = "0.2e-3"
+        }
+        [
+            position = 7808, 8508
+        ]
+
+        component "core/Gain" Gain_dm {
+            gain = "0.1"
+        }
+        [
+            position = 7780, 8388
+        ]
+
+        component "core/Gain" Gain_stage1 {
+            gain = "494.07"
+        }
+        [
+            position = 8084, 8380
+        ]
+
+        component "core/Gain" Gain_stage2 {
+        }
+        [
+            position = 8172, 8380
+        ]
+
+        component "core/Gain" Gain_cm {
+            gain = "494.07e-6"
+        }
+        [
+            position = 8184, 8452
+        ]
+
+        component "core/Min Max" "Min Sat1" {
+        }
+        [
+            position = 8392, 8396
+        ]
+
+        component "core/Min Max" "Max Sat1" {
+            operation = "max"
+        }
+        [
+            position = 8520, 8404
+        ]
+
+        component "core/Constant" Constant_0V {
+            execution_rate = "0.0001"
+            value = "0"
+        }
+        [
+            position = 8480, 8480
+            rotation = left
+        ]
+
+        component "core/Constant" Constant_5V {
+            execution_rate = "0.0001"
+            value = "5"
+        }
+        [
+            position = 8352, 8480
+            rotation = left
+        ]
+
+        component "core/Probe" T {
+        }
+        [
+            position = 7892, 8136
+        ]
+
+        component "core/Probe" Tj {
+        }
+        [
+            position = 8276, 8136
+        ]
+
+        component "core/Probe" v_in {
+        }
+        [
+            position = 8072, 8456
+        ]
+
+        component "core/Probe" v_out {
+        }
+        [
+            position = 8624, 8404
+        ]
+
+        junction Junction1 sp
+        [
+            position = 7852, 8200
+        ]
+
+        junction Junction2 sp
+        [
+            position = 8224, 8216
+        ]
+
+        junction Junction3 sp
+        [
+            position = 7988, 8516
+        ]
+
+        junction Junction4 sp
+        [
+            position = 8016, 8380
+        ]
+
+        connect "Min Sat.out" "Max Sat.in" as Connection3
+        connect Constant_250.out "Min Sat.in1" as Connection4
+        connect Constant_0.out "Max Sat.in1" as Connection5
+        connect "Max Sat.out" TF_tau.in as Connection7
+        connect Gain_stage2.out Sum_out.in as Connection9
+        connect Gain_cm.out Sum_out.in1 as Connection10
+        [
+            breakpoints = 8236, 8404
+        ]
+        connect Gain_bl.out Sum_ncm.in as Connection11
+        connect n_comm.out Sum_ncm.in1 as Connection12
+        connect CF_estatica.out Sum_in.in as Connection13
+        [
+            breakpoints = 8380, 8220; 7812, 8328; 7816, 8372
+        ]
+        connect Gain_dm.out Sum_in.in1 as Connection14
+        connect "Min Sat1.out" "Max Sat1.in" as Connection17
+        connect Constant_5V.out "Min Sat1.in1" as Connection18
+        connect Constant_0V.out "Max Sat1.in1" as Connection19
+        connect Sum_out.out "Min Sat1.in" as Connection20
+        connect n_bl.out Gain_bl.in as Connection21
+        connect T_sweep.out Junction1 as Connection23
+        connect Junction1 "Min Sat.in" as Connection24
+        connect T.in Junction1 as Connection25
+        [
+            breakpoints = 7852, 8136
+        ]
+        connect TF_tau.out Junction2 as Connection26
+        connect Junction2 CF_estatica.in as Connection27
+        connect Tj.in Junction2 as Connection28
+        [
+            breakpoints = 8224, 8136
+        ]
+        connect Sum_ncm.out Junction3 as Connection29
+        connect Junction3 Gain_cm.in as Connection30
+        connect Gain_dm.in Junction3 as Connection31
+        [
+            breakpoints = 7720, 8388; 7724, 8440
+        ]
+        connect "Max Sat1.out" v_out.in as Connection35
+        connect Gain_stage2.in Gain_stage1.out as Connection36
+        connect Sum_in.out Junction4 as Connection37
+        connect Junction4 Gain_stage1.in as Connection38
+        connect v_in.in Junction4 as Connection39
+        [
+            breakpoints = 8016, 8444
+        ]
+    }
+
+    default {
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Discrete Transfer Function" {
+            domain = "Z-domain"
+            method = "Zero-order hold"
+            b_coeff = "[1,1]"
+            a_coeff = "[1,1]"
+            signal_out_type = "inherit"
+            execution_rate = "inherit"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Min Max" {
+            operation = "min"
+            inputs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Ramp" {
+            slope = "1"
+            start_time = "0"
+            initial_output = "0"
+            execution_rate = "100e-6"
+        }
+
+        "core/Sinusoidal Source" {
+            amplitude = "1"
+            dc_offset = "0"
+            frequency = "50"
+            phase = "0"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Random Source" {
+            distribution = "Normal"
+            min = "0"
+            max = "5"
+            mean = "1"
+            stddev = "3"
+            lambd = "2"
+            k = "1"
+            rate = "1"
+            execution_rate = "100e-6"
+        }
+    }
+}
