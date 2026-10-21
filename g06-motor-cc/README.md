@@ -17,7 +17,10 @@
 
 | Entrega | Estado | Tag |
 |---|---|---|
-| e1-caracterizacao | em andamento | — |
+| e1-caracterizacao | entregue | — |
+| e2-estudo no dominio da eletricidade | entregue | — |
+| e3-instrumentos nao ideias | entregue | — |
+| e4-caracteristicas estaticas | entregue | — |
 
 ## Observações
 

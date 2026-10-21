@@ -1,0 +1,725 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.3
+//
+
+model "schematic_fase1_entrega3" {
+    configuration {
+        hil_device = "VHIL+"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = auto
+        fine_auto_sim_step = False
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 1.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Min Max" "Min Sat" {
+        }
+        [
+            position = 7732, 7856
+        ]
+
+        component "core/Min Max" "Max Sat" {
+            operation = "max"
+        }
+        [
+            position = 7860, 7864
+        ]
+
+        component "core/Constant" Constant_0 {
+            execution_rate = "0.0001"
+            value = "0"
+        }
+        [
+            position = 7820, 7936
+            rotation = left
+        ]
+
+        component "core/Constant" Constant_250 {
+            execution_rate = "0.0001"
+            value = "250"
+        }
+        [
+            position = 7692, 7936
+            rotation = left
+        ]
+
+        component "core/C function" CF_estatica {
+            arb_defs = "/*Begin code section*/
+
+/*End code section*/"
+            init_fnc = "/*Begin code section*/
+
+/*End code section*/"
+            input_terminals = "real Tj;inherit dT_cj;"
+            input_terminals_dimensions = "inherit;inherit"
+            input_terminals_feedthrough = "True;True"
+            input_terminals_show_labels = "False;False"
+            output_fnc = "/*Begin code section*/
+const double c[10] = {
+    -0.176004136860e-01,  0.389212049750e-01,  0.185587700320e-04,
+    -0.994575928740e-07,  0.318409457190e-09, -0.560728448890e-12,
+     0.560750590590e-15, -0.320207200030e-18,  0.971511471520e-22,
+    -0.121047212750e-25 };
+const double a0 =  0.118597600000e+00;
+const double a1 = -0.118343200000e-03;
+const double a2 =  0.126968600000e+03;
+
+double t_in[2];
+double E_mV[2];
+int k, i;
+
+t_in[0] = Tj;        /* juncao de medicao */
+t_in[1] = dT_cj;     /* deriva da junta fria */
+
+for (k = 0; k < 2; k++) {
+    double t = t_in[k];
+    if (t < 0.0) t = 0.0;              /* polinomio valido de 0 a 1372 C */
+    double p = c[9];
+    for (i = 8; i >= 0; i--) p = p * t + c[i];          /* Horner */
+    E_mV[k] = p + a0 * exp(a1 * (t - a2) * (t - a2));
+}
+
+v_s = (E_mV[0] - E_mV[1]) * 1.0e-3;   /* nao linearidade + desvio de zero, V */
+/*End code section*/"
+            output_terminals = "real v_s;"
+            output_terminals_dimensions = "inherit"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "False"
+            update_fnc = "/*Begin code section*/
+
+/*End code section*/"
+        }
+        [
+            position = 8352, 7880
+            size = 48, 48
+        ]
+
+        component "core/Random Source" n_bl {
+        }
+        [
+            position = 7512, 8156
+        ]
+
+        component "core/Sinusoidal Source" n_comm {
+            amplitude = "2e-3"
+            frequency = "573"
+        }
+        [
+            position = 7576, 8224
+        ]
+
+        component "core/Sum" Sum_ncm {
+        }
+        [
+            position = 7688, 8164
+        ]
+
+        component "core/Sum" Sum_out {
+        }
+        [
+            position = 8068, 8036
+        ]
+
+        component "core/Sum" Sum_in {
+        }
+        [
+            position = 7696, 8028
+        ]
+
+        component "core/Gain" Gain_bl {
+            gain = "0.2e-3"
+        }
+        [
+            position = 7584, 8156
+        ]
+
+        component "core/Gain" Gain_dm {
+            gain = "0.1"
+        }
+        [
+            position = 7432, 8024
+        ]
+
+        component "core/Gain" Gain_stage1 {
+            gain = "494.07"
+        }
+        [
+            position = 7860, 8028
+        ]
+
+        component "core/Gain" Gain_stage2 {
+        }
+        [
+            position = 7948, 8028
+        ]
+
+        component "core/Gain" Gain_cm {
+            gain = "494.07e-6"
+        }
+        [
+            position = 7960, 8100
+        ]
+
+        component "core/Min Max" "Min Sat1" {
+        }
+        [
+            position = 8168, 8044
+        ]
+
+        component "core/Min Max" "Max Sat1" {
+            operation = "max"
+        }
+        [
+            position = 8296, 8052
+        ]
+
+        component "core/Constant" Constant_0V {
+            execution_rate = "0.0001"
+            value = "0"
+        }
+        [
+            position = 8256, 8128
+            rotation = left
+        ]
+
+        component "core/Constant" Constant_5V {
+            execution_rate = "0.0001"
+            value = "5"
+        }
+        [
+            position = 8128, 8128
+            rotation = left
+        ]
+
+        component "core/Probe" T {
+        }
+        [
+            position = 7668, 7784
+        ]
+
+        component "core/Probe" Tj {
+        }
+        [
+            position = 8316, 7800
+        ]
+
+        component "core/Probe" v_in {
+        }
+        [
+            position = 7848, 8104
+        ]
+
+        component "core/Probe" v_out {
+        }
+        [
+            position = 8400, 8052
+        ]
+
+        component "core/SCADA Input" SI_T0 {
+            def_value = "25"
+            unit = ""
+        }
+        [
+            position = 7440, 7888
+        ]
+
+        component "core/SCADA Input" SI_dT {
+            def_value = "225"
+            unit = ""
+        }
+        [
+            position = 7332, 7780
+        ]
+
+        component "core/SCADA Input" SI_pulso {
+            unit = ""
+        }
+        [
+            position = 7044, 7888
+        ]
+
+        component "core/SCADA Input" SI_Tj0 {
+            def_value = "25"
+            unit = ""
+        }
+        [
+            position = 7892, 7788
+        ]
+
+        component "core/SCADA Input" SI_dTcj {
+            def_value = "10"
+            unit = ""
+        }
+        [
+            position = 8244, 7916
+        ]
+
+        component "core/SCADA Input" SI_esp {
+            def_value = "1"
+            unit = ""
+        }
+        [
+            position = 7432, 7960
+        ]
+
+        component "core/Sum" Sum_ref {
+        }
+        [
+            position = 7536, 7844
+        ]
+
+        component "core/Product" Prod_dT {
+        }
+        [
+            position = 7424, 7800
+        ]
+
+        component "core/Sum" Sum_s {
+            signs = "+-"
+        }
+        [
+            position = 7288, 7864
+        ]
+
+        component "core/Step" Step_A {
+        }
+        [
+            position = 7196, 7848
+        ]
+
+        component "core/Step" Step_B {
+            step_time = "1.5"
+        }
+        [
+            position = 7044, 7952
+        ]
+
+        component "core/Product" Prod_p {
+        }
+        [
+            position = 7128, 7908
+        ]
+
+        component "core/Sum" Sum_dev {
+            signs = "-+"
+        }
+        [
+            position = 7984, 7800
+        ]
+
+        component "core/Discrete Transfer Function" TF_tau1 {
+            a_coeff = "[0.5,1]"
+            b_coeff = "[1]"
+            domain = "S-domain"
+        }
+        [
+            position = 8072, 7800
+        ]
+
+        component "core/Sum" Sum_back {
+        }
+        [
+            position = 8164, 7812
+        ]
+
+        component "core/Product" Prod_p1 {
+        }
+        [
+            position = 7532, 7984
+        ]
+
+        component "core/Gain" Gain_TC {
+            gain = "40.6e-6"
+        }
+        [
+            position = 8088, 7524
+        ]
+
+        component "core/Gain" Gain_stage3 {
+            gain = "494.07"
+        }
+        [
+            position = 8180, 7524
+        ]
+
+        component "core/Gain" Gain_stage4 {
+        }
+        [
+            position = 8264, 7524
+        ]
+
+        component "core/Min Max" "Min Sat2" {
+        }
+        [
+            position = 8348, 7532
+        ]
+
+        component "core/Min Max" "Max Sat2" {
+            operation = "max"
+        }
+        [
+            position = 8452, 7540
+        ]
+
+        component "core/Constant" Constant1 {
+            value = "0"
+        }
+        [
+            position = 8412, 7612
+            rotation = left
+        ]
+
+        component "core/Constant" Constant2 {
+            value = "5"
+        }
+        [
+            position = 8308, 7612
+            rotation = left
+        ]
+
+        component "core/Probe" v_ideal {
+        }
+        [
+            position = 8532, 7540
+        ]
+
+        component "core/Probe" V_in {
+        }
+        [
+            position = 8168, 7600
+        ]
+
+        junction Junction3 sp
+        [
+            position = 7764, 8164
+        ]
+
+        junction Junction4 sp
+        [
+            position = 7792, 8028
+        ]
+
+        junction Junction5 sp
+        [
+            position = 7628, 7844
+        ]
+
+        junction Junction6 sp
+        [
+            position = 8264, 7880
+        ]
+
+        junction Junction7 sp
+        [
+            position = 7936, 7792
+        ]
+
+        junction Junction2 sp
+        [
+            position = 8124, 7524
+        ]
+
+        junction Junction8 sp
+        [
+            position = 7912, 7864
+        ]
+
+        comment Comment1 START <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Sans'; font-size:12pt; font-weight:400; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">CADEIA IDEAL</p><p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p></body></html> ENDCOMMENT 
+        [
+            position = 8172, 7424
+        ]
+
+        connect "Min Sat.out" "Max Sat.in" as Connection3
+        connect Constant_250.out "Min Sat.in1" as Connection4
+        connect Constant_0.out "Max Sat.in1" as Connection5
+        connect Gain_stage2.out Sum_out.in as Connection9
+        connect Gain_cm.out Sum_out.in1 as Connection10
+        [
+            breakpoints = 8012, 8052
+        ]
+        connect Gain_bl.out Sum_ncm.in as Connection11
+        connect n_comm.out Sum_ncm.in1 as Connection12
+        connect CF_estatica.v_s Sum_in.in as Connection13
+        [
+            breakpoints = 8156, 7960; 7592, 7960; 7592, 7976; 7592, 8020
+        ]
+        connect "Min Sat1.out" "Max Sat1.in" as Connection17
+        connect Constant_5V.out "Min Sat1.in1" as Connection18
+        connect Constant_0V.out "Max Sat1.in1" as Connection19
+        connect Sum_out.out "Min Sat1.in" as Connection20
+        connect n_bl.out Gain_bl.in as Connection21
+        connect Sum_ncm.out Junction3 as Connection29
+        connect Junction3 Gain_cm.in as Connection30
+        connect Gain_dm.in Junction3 as Connection31
+        [
+            breakpoints = 7368, 8036; 7368, 8088; 7500, 8088; 7500, 8088; 7764, 8088
+        ]
+        connect "Max Sat1.out" v_out.in as Connection35
+        connect Gain_stage2.in Gain_stage1.out as Connection36
+        connect Sum_in.out Junction4 as Connection37
+        connect Junction4 Gain_stage1.in as Connection38
+        connect v_in.in Junction4 as Connection39
+        [
+            breakpoints = 7792, 8092
+        ]
+        connect SI_dT.out Prod_dT.in as Connection45
+        connect Sum_s.out Prod_dT.in1 as Connection46
+        connect Step_A.out Sum_s.in as Connection47
+        connect SI_pulso.out Prod_p.in as Connection48
+        connect Step_B.out Prod_p.in1 as Connection49
+        connect Prod_p.out Sum_s.in1 as Connection50
+        connect Prod_dT.out Sum_ref.in as Connection51
+        connect SI_T0.out Sum_ref.in1 as Connection52
+        connect T.in Junction5 as Connection53
+        [
+            breakpoints = 7628, 7784
+        ]
+        connect Junction5 "Min Sat.in" as Connection54
+        [
+            breakpoints = 7628, 7848; 7632, 7848
+        ]
+        connect Sum_ref.out Junction5 as Connection55
+        connect Sum_dev.out TF_tau1.in as Connection57
+        connect Tj.in Junction6 as Connection65
+        [
+            breakpoints = 8264, 7800
+        ]
+        connect Junction6 CF_estatica.Tj as Connection66
+        connect Sum_back.out Junction6 as Connection67
+        [
+            breakpoints = 8204, 7880; 8264, 7880
+        ]
+        connect SI_Tj0.out Junction7 as Connection69
+        connect Junction7 Sum_dev.in as Connection70
+        connect Sum_back.in Junction7 as Connection71
+        [
+            breakpoints = 8124, 7804; 8124, 7756; 7936, 7756
+        ]
+        connect Sum_back.in1 TF_tau1.out as Connection72
+        connect SI_dTcj.out CF_estatica.dT_cj as Connection73
+        connect SI_esp.out Prod_p1.in as Connection74
+        connect Gain_dm.out Prod_p1.in1 as Connection75
+        connect Prod_p1.out Sum_in.in1 as Connection76
+        [
+            breakpoints = 7572, 7988; 7576, 8036
+        ]
+        connect Gain_stage4.out "Min Sat2.in" as Connection1
+        connect "Min Sat2.out" "Max Sat2.in" as Connection77
+        connect Constant2.out "Min Sat2.in1" as Connection78
+        connect Constant1.out "Max Sat2.in1" as Connection79
+        connect "Max Sat2.out" v_ideal.in as Connection6
+        connect Gain_stage3.out Gain_stage4.in as Connection80
+        connect Gain_TC.out Junction2 as Connection81
+        connect Junction2 Gain_stage3.in as Connection14
+        connect V_in.in Junction2 as Connection15
+        [
+            breakpoints = 8124, 7600; 8124, 7524
+        ]
+        connect Sum_dev.in1 Junction8 as Connection86
+        connect "Max Sat.out" Junction8 as Connection88
+        connect Junction8 Gain_TC.in as Connection92
+        [
+            breakpoints = 7912, 7832; 7844, 7832; 7844, 7524; 7884, 7524; 7884, 7524; 7984, 7524; 7984, 7524
+        ]
+    }
+
+    default {
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Discrete Transfer Function" {
+            domain = "Z-domain"
+            method = "Zero-order hold"
+            b_coeff = "[1,1]"
+            a_coeff = "[1,1]"
+            signal_out_type = "inherit"
+            execution_rate = "inherit"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Min Max" {
+            operation = "min"
+            inputs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Product" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/SCADA Input" {
+            signal_access = "inherit"
+            addr = "0"
+            format = "real"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "real"
+            min = "-1e6"
+            max = "1e6"
+            def_value = "0"
+            unit = " "
+            execution_rate = "100e-6"
+        }
+
+        "core/Sinusoidal Source" {
+            amplitude = "1"
+            dc_offset = "0"
+            frequency = "50"
+            phase = "0"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Step" {
+            step_time = "1"
+            initial_value = "0"
+            final_value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Random Source" {
+            distribution = "Normal"
+            min = "0"
+            max = "5"
+            mean = "1"
+            stddev = "3"
+            lambd = "2"
+            k = "1"
+            rate = "1"
+            execution_rate = "100e-6"
+        }
+    }
+}
