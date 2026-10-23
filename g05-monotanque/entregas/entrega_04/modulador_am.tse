@@ -1,0 +1,275 @@
+version = 4.2
+
+//
+// Modelo: modulador AM (DSB-LC) para estudo de demodulacao
+// ECOM060 - Instrumentacao Eletronica - UFAL - 2026.2
+//
+
+model "modulador_am" {
+    configuration {
+        hil_device = "HIL402"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = 1e-6
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        dae_solver = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 0.2
+        abs_tol = 1e-6
+        rel_tol = 1e-6
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.2
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Sinusoidal Source" msg1 {
+            amplitude = "0.7"
+            execution_rate = "Ts"
+            frequency = "fm1"
+            phase = "0"
+        }
+        [
+            position = 8080, 8060
+        ]
+
+        component "core/Sinusoidal Source" msg2 {
+            amplitude = "0.3"
+            execution_rate = "Ts"
+            frequency = "fm2"
+            phase = "0"
+        }
+        [
+            position = 8080, 8160
+        ]
+
+        component "core/Sum" SUM_msg {
+            signs = "++"
+        }
+        [
+            position = 8240, 8110
+        ]
+
+        component "core/Probe" p1_mensagem {
+        }
+        [
+            position = 8520, 8010
+        ]
+
+        component "core/Sinusoidal Source" portadora {
+            amplitude = "1.0"
+            execution_rate = "Ts"
+            frequency = "fc"
+            phase = "0"
+        }
+        [
+            position = 8080, 8320
+        ]
+
+        component "core/Probe" p2_portadora {
+        }
+        [
+            position = 8520, 8420
+        ]
+
+        component "core/Constant" idx_mod {
+            execution_rate = "Ts"
+            value = "ma"
+        }
+        [
+            position = 8080, 8460
+        ]
+
+        component "core/Constant" amp_port {
+            execution_rate = "Ts"
+            value = "Ac"
+        }
+        [
+            position = 8080, 8560
+        ]
+
+        component "core/Constant" sigma_canal {
+            execution_rate = "Ts"
+            value = "sigma"
+        }
+        [
+            position = 8080, 8660
+        ]
+
+        component "core/C function" MOD_AM {
+            arb_defs = "/*Begin code section*/
+/* Modulador AM (DSB-LC) com ruido de canal.
+   s_AM(t) = (1 + ma*m_norm(t)) * Ac * cos(wc t)  +  ruido.
+   m_norm ja chega normalizado em [-1, 1]. */
+double env;        /* envoltoria instantanea (1 + ma*m_norm)          */
+double s_clean;    /* sinal AM sem ruido                               */
+double s_noisy;    /* sinal AM com ruido (escrito na saida)            */
+double u1, u2, g;  /* gerador gaussiano (Box-Muller)                   */
+int    seeded;
+/*End code section*/"
+            execution_rate = "Ts"
+            init_fnc = "/*Begin code section*/
+env = 0.0; s_clean = 0.0; s_noisy = 0.0; u1 = u2 = g = 0.0; seeded = 0;
+/*End code section*/"
+            input_terminals = "real in_mnorm;real in_carrier;real in_ma;real in_Ac;real in_sigma;"
+            input_terminals_dimensions = "inherit;inherit;inherit;inherit;inherit"
+            input_terminals_feedthrough = "True;True;True;True;True"
+            input_terminals_show_labels = "True;True;True;True;True"
+            output_fnc = "/*Begin code section*/
+out_env = env;
+out_am  = s_noisy;
+/*End code section*/"
+            output_terminals = "real out_env;real out_am;"
+            output_terminals_dimensions = "inherit;inherit"
+            output_terminals_feedthrough = "True;True"
+            output_terminals_show_labels = "True;True"
+            update_fnc = "/*Begin code section*/
+if (seeded == 0) { srand(2025u); seeded = 1; }
+
+/* envoltoria e sinal AM limpo */
+env     = 1.0 + in_ma * in_mnorm;
+s_clean = in_Ac * env * in_carrier;
+
+/* ruido de canal gaussiano.
+   Valor padrao do rand() de 32 bits (2^31 - 1) usado diretamente. */
+u1 = ((double)rand() + 1.0) / (2147483647.0 + 2.0);
+u2 = ((double)rand() + 1.0) / (2147483647.0 + 2.0);
+g  = sqrt(-2.0*log(u1)) * cos(6.283185307179586*u2);
+
+/* sinal AM ja com ruido, guardado em variavel interna;
+   os terminais de saida (direct-feedthrough) sao escritos apenas
+   na output_fnc, como o TyphoonSim exige. */
+s_noisy = s_clean + in_sigma * g;
+/*End code section*/"
+        }
+        [
+            position = 8620, 8240
+        ]
+
+        component "core/Probe" p3_envoltoria {
+        }
+        [
+            position = 9040, 8120
+        ]
+
+        component "core/Probe" p4_sinal_am {
+        }
+        [
+            position = 9040, 8420
+        ]
+
+        junction J_M sp
+        [
+            position = 8380, 8110
+        ]
+
+        junction J_C sp
+        [
+            position = 8380, 8320
+        ]
+
+        junction J_ENV sp
+        [
+            position = 8900, 8220
+        ]
+
+        junction J_AM sp
+        [
+            position = 8900, 8320
+        ]
+
+        connect msg1.out SUM_msg.in as Connection1
+        connect msg2.out SUM_msg.in1 as Connection2
+        connect SUM_msg.out J_M as Connection3
+        connect J_M p1_mensagem.in as Connection4
+        connect portadora.out J_C as Connection5
+        connect J_C p2_portadora.in as Connection6
+        connect J_M MOD_AM.in_mnorm as Connection7
+        [
+            breakpoints = 8380, 8180; 8580, 8180
+        ]
+        connect J_C MOD_AM.in_carrier as Connection8
+        [
+            breakpoints = 8380, 8260; 8580, 8260
+        ]
+        connect idx_mod.out MOD_AM.in_ma as Connection9
+        [
+            breakpoints = 8300, 8460; 8580, 8300
+        ]
+        connect amp_port.out MOD_AM.in_Ac as Connection10
+        [
+            breakpoints = 8320, 8560; 8580, 8340
+        ]
+        connect sigma_canal.out MOD_AM.in_sigma as Connection11
+        [
+            breakpoints = 8340, 8660; 8580, 8380
+        ]
+        connect MOD_AM.out_env J_ENV as Connection12
+        connect MOD_AM.out_am J_AM as Connection13
+        connect J_ENV p3_envoltoria.in as Connection14
+        connect J_AM p4_sinal_am.in as Connection15
+    }
+
+    CODE model_init
+        # =====================================================================
+        #  MODULADOR AM (DSB-LC)  -  ECOM060 / Cap. 5.3 - Demodulacao
+        #  UFAL - 2026.2
+        #
+        #  s_AM(t) = (1 + ma*m_norm(t)) * Ac * cos(2*pi*fc*t)  + ruido
+        #
+        #  A mensagem e a soma de dois tons normalizada a [-1,1] (amp 0,7+0,3).
+        #  Portadora em fc, indice de modulacao ma (ma<1: sem sobremodulacao).
+        # =====================================================================
+
+        # ---- taxa de execucao -----------------------------------------------
+        Ts = 1e-5                # 100 kHz  (portadora bem amostrada)
+
+        # ---- mensagem (banda-base) ------------------------------------------
+        fm1 = 50.0               # Hz  (tom principal)
+        fm2 = 120.0              # Hz  (segundo tom)
+
+        # ---- portadora ------------------------------------------------------
+        fc = 2000.0              # Hz
+        Ac = 1.0                 # amplitude da portadora
+
+        # ---- indice de modulacao --------------------------------------------
+        ma = 0.5                 # 50%  (0<ma<1 -> AM convencional sem sobremod.)
+
+        # ---- ruido de canal -------------------------------------------------
+        sigma = 0.02             # desvio-padrao do ruido aditivo
+    ENDCODE
+}

@@ -1,0 +1,242 @@
+version = 4.2
+
+//
+// Modelo: calibracao estatica de instrumento com histerese
+// ECOM060 - Instrumentacao Eletronica - UFAL - 2026.2
+// Compativel com TyphoonSim / Typhoon HIL Schematic Editor
+//
+
+model "instrumento_calibracao_histerese" {
+    configuration {
+        hil_device = "HIL402"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = 1e-6
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        dae_solver = "BDF"
+        max_sim_step = 1e-3
+        simulation_time = 40.0
+        abs_tol = 1e-6
+        rel_tol = 1e-6
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.2
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Constant" H_folga {
+            execution_rate = "Ts"
+            value = "H"
+        }
+        [
+            position = 8100, 8360
+        ]
+
+        component "core/Constant" sigma_ruido {
+            execution_rate = "Ts"
+            value = "sigma"
+        }
+        [
+            position = 8100, 8480
+        ]
+
+        component "core/Triangular Wave Source" x_calib {
+            execution_rate = "Ts"
+            frequency = "f_cal"
+            max_val = "FE"
+            min_val = "-FE"
+        }
+        [
+            position = 8100, 8140
+        ]
+
+        component "core/Probe" p1_x_ref {
+        }
+        [
+            position = 8460, 8040
+        ]
+
+        component "core/C function" INSTRUMENTO {
+            arb_defs = "/*Begin code section*/
+/* Instrumento com histerese (folga/backlash) + ruido de medicao.
+   A histerese exige memoria: y_ant guarda y(t-).
+   O ruido gaussiano e gerado por Box-Muller a partir de rand(). */
+#include <stdlib.h>
+#include <math.h>
+double y_ant;      /* y(t-)  : ultima indicacao verdadeira (sem ruido)   */
+double y_hist;     /* saida do modelo de histerese (limpa)               */
+double half;       /* H/2                                                */
+double d;          /* in_x - y(t-)                                       */
+double u1, u2, g;  /* auxiliares do gerador gaussiano                    */
+int    seeded;     /* flag de inicializacao da semente                   */
+/*End code section*/"
+            execution_rate = "Ts"
+            init_fnc = "/*Begin code section*/
+y_ant  = 0.0;
+y_hist = 0.0;
+half   = 0.0;
+d      = 0.0;
+seeded = 0;
+/*End code section*/"
+            input_terminals = "real in_x;real in_H;real in_sigma;"
+            input_terminals_dimensions = "inherit;inherit;inherit"
+            input_terminals_feedthrough = "True;True;True"
+            input_terminals_show_labels = "True;True;True"
+            output_fnc = "/*Begin code section*/
+out_yhist = y_hist;
+out_ymeas = y_hist + in_sigma * g;
+/*End code section*/"
+            output_terminals = "real out_yhist;real out_ymeas;"
+            output_terminals_dimensions = "inherit;inherit"
+            output_terminals_feedthrough = "True;True"
+            output_terminals_show_labels = "True;True"
+            update_fnc = "/*Begin code section*/
+/* ---- semente do gerador (uma unica vez) ---- */
+if (seeded == 0) { srand(12345u); seeded = 1; }
+
+/* ---- 1) modelo de histerese (folga de largura in_H) ---- */
+half = in_H / 2.0;
+d    = in_x - y_ant;
+if (d > half) {
+    y_hist = in_x - half;        /* subindo  */
+} else if (d < -half) {
+    y_hist = in_x + half;        /* descendo */
+} else {
+    y_hist = y_ant;              /* congelada */
+}
+y_ant = y_hist;
+
+/* ---- 2) ruido gaussiano de medicao (Box-Muller) ---- */
+u1 = ((double)rand() + 1.0) / ((double)RAND_MAX + 2.0);
+u2 = ((double)rand() + 1.0) / ((double)RAND_MAX + 2.0);
+g  = sqrt(-2.0*log(u1)) * cos(6.283185307179586*u2);
+
+/* ---- 3) saidas ---- */
+out_yhist  = y_hist;                 /* indicacao verdadeira (sem ruido) */
+out_ymeas  = y_hist + in_sigma * g;  /* indicacao medida (com ruido)     */
+/*End code section*/"
+        }
+        [
+            position = 8600, 8180
+        ]
+
+        component "core/Probe" p2_y_verdadeiro {
+        }
+        [
+            position = 9020, 8060
+        ]
+
+        component "core/Probe" p3_y_medido {
+        }
+        [
+            position = 9020, 8320
+        ]
+
+        junction J_H sp
+        [
+            position = 8320, 8360
+        ]
+
+        junction J_S sp
+        [
+            position = 8320, 8480
+        ]
+
+        junction J_X sp
+        [
+            position = 8320, 8140
+        ]
+
+        junction J_YH sp
+        [
+            position = 8880, 8160
+        ]
+
+        junction J_YM sp
+        [
+            position = 8880, 8260
+        ]
+
+        connect H_folga.out J_H as Connection1
+        connect sigma_ruido.out J_S as Connection2
+        connect x_calib.out J_X as Connection3
+        connect J_X p1_x_ref.in as Connection4
+        connect J_X INSTRUMENTO.in_x as Connection5
+        connect J_H INSTRUMENTO.in_H as Connection6
+        [
+            breakpoints = 8320, 8220
+        ]
+        connect J_S INSTRUMENTO.in_sigma as Connection7
+        [
+            breakpoints = 8320, 8300; 8560, 8300
+        ]
+        connect INSTRUMENTO.out_yhist J_YH as Connection8
+        connect INSTRUMENTO.out_ymeas J_YM as Connection9
+        connect J_YH p2_y_verdadeiro.in as Connection10
+        connect J_YM p3_y_medido.in as Connection11
+    }
+
+    CODE model_init
+        # =====================================================================
+        #  CALIBRACAO ESTATICA DE UM INSTRUMENTO COM HISTERESE
+        #  ECOM060 - Instrumentacao Eletronica - UFAL - 2026.2
+        #
+        #  Fluxo: gerar dados de entrada (varredura up-down) -> instrumento
+        #  real (histerese de folga H) -> somar ruido de medicao gaussiano
+        #  -> registrar (x_ref, y_medido) como DADOS DE CALIBRACAO (3.2.1).
+        #  O processamento (curva de calibracao, incertezas, caracteristicas
+        #  estaticas 3.3) e feito offline a partir dos sinais das probes.
+        # =====================================================================
+
+        # ---- taxa de execucao -----------------------------------------------
+        Ts = 1e-3                # 1 kHz
+
+        # ---- faixa do instrumento (fundo de escala) -------------------------
+        FE = 20.0                # unidades de entrada  (faixa: -20 a +20)
+
+        # ---- caracteristica estatica atribuida: HISTERESE -------------------
+        H = 5.0                  # largura da folga [unidades de entrada]
+
+        # ---- ruido de medicao (gaussiano, aditivo na saida) -----------------
+        # sigma ~ 2,5% do alcance (alcance = 2*FE = 40)  ->  1,0 unidade
+        sigma = 1.0
+
+        # ---- varredura de calibracao: triangular lenta up-down --------------
+        # periodo de 20 s  ->  duas subidas e duas descidas em 40 s de ensaio
+        f_cal = 0.05             # Hz
+    ENDCODE
+}

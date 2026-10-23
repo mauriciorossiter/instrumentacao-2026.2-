@@ -1,0 +1,1710 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "cadeia_completa_E03" {
+    configuration {
+        hil_device = "HIL402"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = 1e-5
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-05
+        simulation_time = 2.0
+        abs_tol = 1e-6
+        rel_tol = 1e-6
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/SCADA Input" ensaio {
+            def_value = "1.0"
+            execution_rate = "Ts"
+            max = "3"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 7000, 7300
+        ]
+
+        component "core/SCADA Input" disparo {
+            def_value = "0.0"
+            execution_rate = "Ts"
+            max = "1"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 7000, 7360
+        ]
+
+        component "core/SCADA Input" A_degrau_ue {
+            def_value = "1000.0"
+            execution_rate = "Ts"
+            max = "2000"
+            min = "0"
+            unit = "ue"
+        }
+        [
+            position = 7000, 7420
+        ]
+
+        component "core/SCADA Input" eps0_ue {
+            def_value = "1000.0"
+            execution_rate = "Ts"
+            max = "2000"
+            min = "0"
+            unit = "ue"
+        }
+        [
+            position = 7000, 7480
+        ]
+
+        component "core/SCADA Input" dur_pulso_ms {
+            def_value = "500.0"
+            execution_rate = "Ts"
+            max = "2000"
+            min = "1"
+            unit = "ms"
+        }
+        [
+            position = 7000, 7540
+        ]
+
+        component "core/SCADA Input" liga_dinamica {
+            def_value = "1.0"
+            execution_rate = "Ts"
+            max = "1"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 7000, 7700
+        ]
+
+        component "core/SCADA Input" T_op_C {
+            def_value = "53.0"
+            execution_rate = "Ts"
+            max = "120"
+            min = "-5"
+            unit = "C"
+        }
+        [
+            position = 7000, 7760
+        ]
+
+        component "core/SCADA Input" liga_estatica {
+            def_value = "1.0"
+            execution_rate = "Ts"
+            max = "1"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 7000, 7820
+        ]
+
+        component "core/SCADA Input" liga_espectral {
+            def_value = "1.0"
+            execution_rate = "Ts"
+            max = "1"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 7000, 7880
+        ]
+
+        component "core/SCADA Input" ganho_ruido {
+            def_value = "1.0"
+            execution_rate = "Ts"
+            max = "100000"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 7000, 7940
+        ]
+
+        component Subsystem Gerador_ensaios {
+            layout = dynamic
+            component "core/Constant" um {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7152, 7340
+            ]
+
+            component "core/Integrator" relogio_ensaio {
+                show_reset = "rising"
+            }
+            [
+                position = 7280, 7400
+            ]
+
+            component "core/Gain" A_degrau {
+                gain = "1e-6"
+            }
+            [
+                position = 7152, 7500
+            ]
+
+            component "core/Gain" eps0 {
+                gain = "1e-6"
+            }
+            [
+                position = 7152, 7600
+            ]
+
+            component "core/Gain" dur_pulso {
+                gain = "1e-3"
+            }
+            [
+                position = 7152, 7700
+            ]
+
+            component "core/Constant" zero {
+                execution_rate = "Ts"
+                value = "0"
+            }
+            [
+                position = 7152, 7800
+            ]
+
+            component "core/Signal switch" degrau {
+                threshold = "t_ev"
+            }
+            [
+                position = 7648, 7480
+            ]
+
+            component "core/Signal switch" condicao_inicial {
+                threshold = "t_ev"
+            }
+            [
+                position = 7648, 7620
+            ]
+
+            component "core/Sum" t_menos_dur {
+                signs = "+-"
+            }
+            [
+                position = 7448, 7700
+            ]
+
+            component "core/Signal switch" fim_pulso {
+                threshold = "t_ev"
+            }
+            [
+                position = 7648, 7760
+            ]
+
+            component "core/Sum" pulso {
+                signs = "+-"
+            }
+            [
+                position = 7820, 7740
+            ]
+
+            component "core/Triangular Wave Source" varredura_E01 {
+                execution_rate = "Ts"
+                frequency = "f_sweep"
+                max_val = "eps_max"
+                min_val = "0"
+            }
+            [
+                position = 7648, 7360
+            ]
+
+            component "core/Constant" um_ensaio {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7152, 7200
+            ]
+
+            component "core/Sum" indice_1_a_4 {
+            }
+            [
+                position = 7300, 7240
+            ]
+
+            component "core/Multiport signal switch" seletor_ensaio {
+                number_of_input_terminals = "4"
+            }
+            [
+                position = 8100, 7480
+            ]
+
+            port ensaio {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7000, 7300
+            ]
+
+            port disparo {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7000, 7400
+            ]
+
+            port A_ue {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7000, 7500
+            ]
+
+            port eps0_ue {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7000, 7600
+            ]
+
+            port dur_ms {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7000, 7700
+            ]
+
+            port eps_ref {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8448, 7400
+            ]
+
+            port t_ensaio {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8448, 7500
+            ]
+
+            junction j_t sp
+            [
+                position = 7400, 7400
+            ]
+
+            junction j_A sp
+            [
+                position = 7448, 7500
+            ]
+
+            junction j_zero sp
+            [
+                position = 7500, 7800
+            ]
+
+            junction j_deg sp
+            [
+                position = 7760, 7480
+            ]
+
+            connect um.out relogio_ensaio.in as Connection1
+            connect disparo relogio_ensaio.reset as Connection2
+            connect relogio_ensaio.out j_t as Connection3
+            connect j_t t_ensaio as Connection4
+            connect A_ue A_degrau.in as Connection5
+            connect eps0_ue eps0.in as Connection6
+            connect dur_ms dur_pulso.in as Connection7
+            connect A_degrau.out j_A as Connection8
+            connect zero.out j_zero as Connection9
+            connect j_A degrau.in as Connection10
+            connect j_zero degrau.in1 as Connection11
+            connect j_t degrau.in2 as Connection12
+            connect j_zero condicao_inicial.in as Connection13
+            connect eps0.out condicao_inicial.in1 as Connection14
+            connect j_t condicao_inicial.in2 as Connection15
+            connect j_t t_menos_dur.in as Connection16
+            connect dur_pulso.out t_menos_dur.in1 as Connection17
+            connect j_A fim_pulso.in as Connection18
+            connect j_zero fim_pulso.in1 as Connection19
+            connect t_menos_dur.out fim_pulso.in2 as Connection20
+            connect degrau.out j_deg as Connection21
+            connect j_deg pulso.in as Connection22
+            connect fim_pulso.out pulso.in1 as Connection23
+            connect ensaio indice_1_a_4.in as Connection24
+            connect um_ensaio.out indice_1_a_4.in1 as Connection25
+            connect indice_1_a_4.out seletor_ensaio.ctrl as Connection26
+            connect varredura_E01.out seletor_ensaio.in as Connection27
+            connect j_deg seletor_ensaio.in1 as Connection28
+            connect condicao_inicial.out seletor_ensaio.in2 as Connection29
+            connect pulso.out seletor_ensaio.in3 as Connection30
+            connect seletor_ensaio.out eps_ref as Connection31
+        }
+        [
+            position = 7248, 7420
+            size = 130, 200
+        ]
+
+        component "core/Probe" t_ensaio {
+        }
+        [
+            position = 7448, 7528
+        ]
+
+        component "core/Gain" para_ue {
+            gain = "1e6"
+        }
+        [
+            position = 7552, 7232
+        ]
+
+        component "core/Probe" eps_ref_ue {
+        }
+        [
+            position = 7648, 7232
+        ]
+
+        component Subsystem Ponte_ideal_E01 {
+            layout = dynamic
+            component "core/Voltage Source" Vex {
+                execution_rate = "Ts"
+                init_const_value = "Vex"
+            }
+            [
+                position = 8200, 8048
+                rotation = right
+            ]
+
+            component "core/Resistor" R1 {
+                resistance = "R0"
+            }
+            [
+                position = 8400, 7880
+                rotation = right
+            ]
+
+            component "core/Current Measurement" i_g {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8400, 8024
+                rotation = right
+            ]
+
+            component "core/Resistor" Rg_R0 {
+                resistance = "R0"
+            }
+            [
+                position = 8400, 8120
+                rotation = right
+            ]
+
+            component "core/Voltage Source" Rg_dR {
+                execution_rate = "Ts"
+                sig_input = "True"
+                type = "signal controlled"
+            }
+            [
+                position = 8400, 8224
+                rotation = left
+            ]
+
+            component "core/Resistor" R3 {
+                resistance = "R0"
+            }
+            [
+                position = 8704, 7880
+                rotation = right
+            ]
+
+            component "core/Resistor" R4 {
+                resistance = "R0"
+            }
+            [
+                position = 8704, 8120
+                rotation = right
+            ]
+
+            component "core/Voltage Measurement" e0 {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8552, 7960
+            ]
+
+            component "core/Ground" GND {
+            }
+            [
+                position = 8552, 8376
+            ]
+
+            component "core/Product" dR_vezes_i {
+            }
+            [
+                position = 8264, 8224
+            ]
+
+            port dR {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7800, 8224
+            ]
+
+            port saida_e0 {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 9000, 7960
+            ]
+
+            junction no_A pe
+            [
+                position = 8400, 7800
+            ]
+
+            junction no_A0 pe
+            [
+                position = 8200, 7800
+            ]
+
+            junction no_A2 pe
+            [
+                position = 8704, 7800
+            ]
+
+            junction no_B pe
+            [
+                position = 8400, 7960
+            ]
+
+            junction no_C pe
+            [
+                position = 8704, 7960
+            ]
+
+            junction no_D pe
+            [
+                position = 8400, 8304
+            ]
+
+            junction no_D0 pe
+            [
+                position = 8200, 8304
+            ]
+
+            junction no_D2 pe
+            [
+                position = 8704, 8304
+            ]
+
+            junction no_D3 pe
+            [
+                position = 8552, 8304
+            ]
+
+            connect Vex.p_node no_A0 as Connection1
+            connect no_A0 no_A as Connection2
+            connect Vex.n_node no_D0 as Connection3
+            connect no_D0 no_D as Connection4
+            connect no_A R1.p_node as Connection5
+            connect R1.n_node no_B as Connection6
+            connect no_B i_g.p_node as Connection7
+            connect i_g.n_node Rg_R0.p_node as Connection8
+            connect Rg_R0.n_node Rg_dR.p_node as Connection9
+            connect Rg_dR.n_node no_D as Connection10
+            connect no_A no_A2 as Connection11
+            connect no_A2 R3.p_node as Connection12
+            connect R3.n_node no_C as Connection13
+            connect no_C R4.p_node as Connection14
+            connect R4.n_node no_D2 as Connection15
+            connect no_D no_D3 as Connection16
+            connect no_D3 no_D2 as Connection17
+            connect no_D3 GND.node as Connection18
+            connect no_B e0.p_node as Connection19
+            connect no_C e0.n_node as Connection20
+            connect dR dR_vezes_i.in as Connection21
+            connect i_g.out dR_vezes_i.in1 as Connection22
+            connect dR_vezes_i.out Rg_dR.in as Connection23
+            connect e0.out saida_e0 as Connection24
+        }
+        [
+            position = 7800, 7320
+            size = 110, 70
+        ]
+
+        component "core/Gain" dR_ideal {
+            gain = "R0*GF"
+        }
+        [
+            position = 7600, 7320
+        ]
+
+        component "core/Gain" para_mV_ideal {
+            gain = "1e3"
+        }
+        [
+            position = 7980, 7320
+        ]
+
+        component "core/Probe" e0_ideal_mV {
+        }
+        [
+            position = 8200, 7260
+        ]
+
+        component Subsystem Camada_dinamica {
+            layout = dynamic
+            component "core/Gain" ordem_zero {
+                gain = "K_din"
+            }
+            [
+                position = 7500, 7248
+            ]
+
+            component "core/Signal switch" liga_din {
+            }
+            [
+                position = 7800, 7352
+            ]
+
+            port eps {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7000, 7300
+            ]
+
+            port liga {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7000, 7400
+            ]
+
+            port eps_d {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8448, 7400
+            ]
+
+            junction j_eps sp
+            [
+                position = 7248, 7300
+            ]
+
+            connect eps j_eps as Connection1
+            connect j_eps ordem_zero.in as Connection2
+            connect ordem_zero.out liga_din.in as Connection3
+            connect j_eps liga_din.in1 as Connection4
+            connect liga liga_din.in2 as Connection5
+            connect liga_din.out eps_d as Connection6
+        }
+        [
+            position = 7580, 7632
+            size = 130, 90
+        ]
+
+        component Subsystem Camada_estatica {
+            layout = dynamic
+            component "core/Constant" T_ref_ {
+                execution_rate = "Ts"
+                value = "T_ref"
+            }
+            [
+                position = 7152, 7480
+            ]
+
+            component "core/Sum" delta_T {
+                signs = "+-"
+            }
+            [
+                position = 7272, 7420
+            ]
+
+            component "core/Gain" alpha_GF_dT {
+                gain = "alpha_GF"
+            }
+            [
+                position = 7472, 7420
+            ]
+
+            component "core/Constant" um_ {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7472, 7360
+            ]
+
+            component "core/Sum" um_mais_alpha_dT {
+            }
+            [
+                position = 7592, 7400
+            ]
+
+            component "core/Gain" GF_real {
+                gain = "GF*(1+tol_GF)"
+            }
+            [
+                position = 7712, 7400
+            ]
+
+            component "core/Constant" GF_nominal {
+                execution_rate = "Ts"
+                value = "GF"
+            }
+            [
+                position = 7712, 7328
+            ]
+
+            component "core/Signal switch" liga_est_GF {
+            }
+            [
+                position = 7860, 7400
+            ]
+
+            component "core/Gain" eps_aparente {
+                gain = "beta_TO"
+            }
+            [
+                position = 7472, 7520
+            ]
+
+            component "core/Constant" zero {
+                execution_rate = "Ts"
+                value = "0"
+            }
+            [
+                position = 7712, 7580
+            ]
+
+            component "core/Signal switch" liga_est_zero {
+            }
+            [
+                position = 7860, 7540
+            ]
+
+            component "core/Product" GF_vezes_eps {
+            }
+            [
+                position = 8060, 7320
+            ]
+
+            component "core/Sum" eps_total {
+            }
+            [
+                position = 8180, 7340
+            ]
+
+            component "core/Gain" GF_eps_ap {
+                gain = "GF"
+            }
+            [
+                position = 8060, 7540
+            ]
+
+            component "core/Gain" dR_medido {
+                gain = "R0"
+            }
+            [
+                position = 8300, 7340
+            ]
+
+            port eps_d {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7000, 7300
+            ]
+
+            port T_op {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7000, 7400
+            ]
+
+            port liga {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7000, 7500
+            ]
+
+            port dR {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8448, 7400
+            ]
+
+            port GF_usado {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8448, 7500
+            ]
+
+            port eps_ap {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8448, 7600
+            ]
+
+            junction j_dT sp
+            [
+                position = 7368, 7420
+            ]
+
+            junction j_liga sp
+            [
+                position = 7368, 7600
+            ]
+
+            junction j_GF sp
+            [
+                position = 7960, 7400
+            ]
+
+            junction j_ap sp
+            [
+                position = 7960, 7540
+            ]
+
+            connect T_op delta_T.in as Connection1
+            connect T_ref_.out delta_T.in1 as Connection2
+            connect delta_T.out j_dT as Connection3
+            connect j_dT alpha_GF_dT.in as Connection4
+            connect um_.out um_mais_alpha_dT.in as Connection5
+            connect alpha_GF_dT.out um_mais_alpha_dT.in1 as Connection6
+            connect um_mais_alpha_dT.out GF_real.in as Connection7
+            connect liga j_liga as Connection8
+            connect GF_real.out liga_est_GF.in as Connection9
+            connect GF_nominal.out liga_est_GF.in1 as Connection10
+            connect j_liga liga_est_GF.in2 as Connection11
+            connect j_dT eps_aparente.in as Connection12
+            connect eps_aparente.out liga_est_zero.in as Connection13
+            connect zero.out liga_est_zero.in1 as Connection14
+            connect j_liga liga_est_zero.in2 as Connection15
+            connect liga_est_GF.out j_GF as Connection16
+            connect j_GF GF_usado as Connection17
+            connect liga_est_zero.out j_ap as Connection18
+            connect j_ap eps_ap as Connection19
+            connect eps_d GF_vezes_eps.in as Connection20
+            connect j_GF GF_vezes_eps.in1 as Connection21
+            connect GF_vezes_eps.out eps_total.in as Connection22
+            connect j_ap GF_eps_ap.in as Connection23
+            connect GF_eps_ap.out eps_total.in1 as Connection24
+            connect eps_total.out dR_medido.in as Connection25
+            connect dR_medido.out dR as Connection26
+        }
+        [
+            position = 7800, 7640
+            size = 130, 110
+        ]
+
+        component Subsystem Camada_espectral {
+            layout = dynamic
+            component "core/Constant" zero_cf {
+                execution_rate = "Ts"
+                value = "0"
+            }
+            [
+                position = 7152, 7200
+            ]
+
+            component "core/C function" ruido_gaussiano {
+                execution_rate = "Ts"
+                global_variables = "real s;
+real u1;
+real u2;"
+                init_fnc = "s = 20261005.0;"
+                input_terminals_dimensions = "inherit"
+                output_fnc = "s = fmod(16807.0 * s, 2147483647.0);
+u1 = s / 2147483647.0;
+s = fmod(16807.0 * s, 2147483647.0);
+u2 = s / 2147483647.0;
+out = sqrt(-2.0 * log(u1)) * cos(6.283185307179586 * u2);"
+                output_terminals_dimensions = "inherit"
+            }
+            [
+                position = 7300, 7200
+            ]
+
+            component "core/Gain" sigma_n {
+                gain = "sigma_n"
+            }
+            [
+                position = 7448, 7200
+            ]
+
+            component "core/Product" intensidade_ruido {
+            }
+            [
+                position = 7600, 7232
+            ]
+
+            component "core/Constant" zero {
+                execution_rate = "Ts"
+                value = "0"
+            }
+            [
+                position = 7600, 7480
+            ]
+
+            component "core/Signal switch" liga_esp {
+            }
+            [
+                position = 7800, 7400
+            ]
+
+            port liga {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7000, 7300
+            ]
+
+            port ganho {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7000, 7400
+            ]
+
+            port vn {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8448, 7400
+            ]
+
+            connect zero_cf.out ruido_gaussiano.in as Connection1
+            connect ruido_gaussiano.out sigma_n.in as Connection2
+            connect sigma_n.out intensidade_ruido.in as Connection3
+            connect ganho intensidade_ruido.in1 as Connection4
+            connect intensidade_ruido.out liga_esp.in as Connection5
+            connect zero.out liga_esp.in1 as Connection6
+            connect liga liga_esp.in2 as Connection7
+            connect liga_esp.out vn as Connection8
+        }
+        [
+            position = 7800, 7860
+            size = 130, 90
+        ]
+
+        component Subsystem Ponte_medida {
+            layout = dynamic
+            component "core/Voltage Source" Vex {
+                execution_rate = "Ts"
+                init_const_value = "Vex"
+            }
+            [
+                position = 8200, 8048
+                rotation = right
+            ]
+
+            component "core/Resistor" R1 {
+                resistance = "R0"
+            }
+            [
+                position = 8400, 7880
+                rotation = right
+            ]
+
+            component "core/Current Measurement" i_g {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8400, 8024
+                rotation = right
+            ]
+
+            component "core/Resistor" Rg_R0 {
+                resistance = "R0"
+            }
+            [
+                position = 8400, 8120
+                rotation = right
+            ]
+
+            component "core/Voltage Source" Rg_dR {
+                execution_rate = "Ts"
+                sig_input = "True"
+                type = "signal controlled"
+            }
+            [
+                position = 8400, 8224
+                rotation = left
+            ]
+
+            component "core/Resistor" R3 {
+                resistance = "R0"
+            }
+            [
+                position = 8704, 7880
+                rotation = right
+            ]
+
+            component "core/Resistor" R4 {
+                resistance = "R0"
+            }
+            [
+                position = 8704, 8120
+                rotation = right
+            ]
+
+            component "core/Voltage Measurement" e0 {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8552, 7960
+            ]
+
+            component "core/Ground" GND {
+            }
+            [
+                position = 8552, 8376
+            ]
+
+            component "core/Voltage Source" v_ruido_termico {
+                execution_rate = "Ts"
+                sig_input = "True"
+                type = "signal controlled"
+            }
+            [
+                position = 8476, 7960
+                rotation = down
+            ]
+
+            component "core/Product" dR_vezes_i {
+            }
+            [
+                position = 8264, 8224
+            ]
+
+            port dR {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7800, 8224
+            ]
+
+            port saida_e0 {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 9000, 7960
+            ]
+
+            port vn {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8476, 8056
+            ]
+
+            junction no_A pe
+            [
+                position = 8400, 7800
+            ]
+
+            junction no_A0 pe
+            [
+                position = 8200, 7800
+            ]
+
+            junction no_A2 pe
+            [
+                position = 8704, 7800
+            ]
+
+            junction no_B pe
+            [
+                position = 8400, 7960
+            ]
+
+            junction no_C pe
+            [
+                position = 8704, 7960
+            ]
+
+            junction no_D pe
+            [
+                position = 8400, 8304
+            ]
+
+            junction no_D0 pe
+            [
+                position = 8200, 8304
+            ]
+
+            junction no_D2 pe
+            [
+                position = 8704, 8304
+            ]
+
+            junction no_D3 pe
+            [
+                position = 8552, 8304
+            ]
+
+            connect Vex.p_node no_A0 as Connection1
+            connect no_A0 no_A as Connection2
+            connect Vex.n_node no_D0 as Connection3
+            connect no_D0 no_D as Connection4
+            connect no_A R1.p_node as Connection5
+            connect R1.n_node no_B as Connection6
+            connect no_B i_g.p_node as Connection7
+            connect i_g.n_node Rg_R0.p_node as Connection8
+            connect Rg_R0.n_node Rg_dR.p_node as Connection9
+            connect Rg_dR.n_node no_D as Connection10
+            connect no_A no_A2 as Connection11
+            connect no_A2 R3.p_node as Connection12
+            connect R3.n_node no_C as Connection13
+            connect no_C R4.p_node as Connection14
+            connect R4.n_node no_D2 as Connection15
+            connect no_D no_D3 as Connection16
+            connect no_D3 no_D2 as Connection17
+            connect no_D3 GND.node as Connection18
+            connect no_B v_ruido_termico.n_node as Connection19
+            connect v_ruido_termico.p_node e0.p_node as Connection20
+            connect vn v_ruido_termico.in as Connection21
+            connect no_C e0.n_node as Connection22
+            connect dR dR_vezes_i.in as Connection23
+            connect i_g.out dR_vezes_i.in1 as Connection24
+            connect dR_vezes_i.out Rg_dR.in as Connection25
+            connect e0.out saida_e0 as Connection26
+        }
+        [
+            position = 8048, 7648
+            size = 110, 70
+        ]
+
+        component "core/Gain" para_mV_medido {
+            gain = "1e3"
+        }
+        [
+            position = 8200, 7648
+        ]
+
+        component "core/Probe" e0_medido_mV {
+        }
+        [
+            position = 8380, 7592
+        ]
+
+        component "core/Probe" GF_usado {
+        }
+        [
+            position = 8100, 7728
+        ]
+
+        component "core/Gain" para_ue_ap {
+            gain = "1e6"
+        }
+        [
+            position = 8000, 7800
+        ]
+
+        component "core/Probe" eps_aparente_ue {
+        }
+        [
+            position = 8100, 7800
+        ]
+
+        component "core/Gain" para_uV_ruido {
+            gain = "1e6"
+        }
+        [
+            position = 8000, 7888
+        ]
+
+        component "core/Probe" ruido_uV {
+        }
+        [
+            position = 8100, 7888
+        ]
+
+        component "core/Sum" medido_menos_ideal {
+            signs = "+-"
+        }
+        [
+            position = 8448, 7480
+        ]
+
+        component "core/Gain" para_uV_erro {
+            gain = "1e3"
+        }
+        [
+            position = 8552, 7480
+        ]
+
+        component "core/Probe" erro_uV {
+        }
+        [
+            position = 8648, 7480
+        ]
+
+        component "core/Gain" eps_lido {
+            gain = "k_eps*1e-3"
+        }
+        [
+            position = 8448, 7648
+        ]
+
+        component "core/Probe" eps_lido_ue {
+        }
+        [
+            position = 8552, 7648
+        ]
+
+        component "core/Scope" Scope_E03 {
+            selected_signals = "[\'eps_ref_ue\', \'e0_ideal_mV\', \'e0_medido_mV\', \'erro_uV\']"
+            signals_data = "{\"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true, \"signals_tooltips_enabled\": true}, \"signals\": {\"eps_ref_ue\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#C00000\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"e0_ideal_mV\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#000000\"}, \"display\": {\"2\": \"dash\"}, \"is_manual\": {\"2\": false}}, \"e0_medido_mV\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#1F4E79\"}, \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"erro_uV\": {\"viewports\": [3], \"type\": \"analog\", \"color\": {\"3\": \"#C55A11\"}, \"display\": {\"3\": \"solid\"}, \"is_manual\": {\"3\": false}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}}"
+        }
+        [
+            position = 8700, 7832
+        ]
+
+        junction j_eps_ref sp
+        [
+            position = 7448, 7420
+        ]
+
+        junction j_eps_ideal sp
+        [
+            position = 7448, 7320
+        ]
+
+        junction j_e0_ideal sp
+        [
+            position = 8100, 7320
+        ]
+
+        junction j_eps_medida sp
+        [
+            position = 7448, 7632
+        ]
+
+        junction j_vn sp
+        [
+            position = 7952, 7860
+        ]
+
+        junction j_e0_medido sp
+        [
+            position = 8300, 7648
+        ]
+
+        comment Comment1 START Entradas SCADA - ensaio: 0 varredura E01, 1 (a) degrau, 2 (b) cond. inicial, 3 (c) pulso ENDCOMMENT 
+        [
+            position = 7120, 7192
+        ]
+
+        comment Comment2 START Referencia ideal: extensometro ideal + ponte da Entrega 01 ENDCOMMENT 
+        [
+            position = 7900, 7220
+        ]
+
+        comment Comment3 START Cadeia completa: tres camadas da Entrega 02 + mesma ponte da Entrega 01 (circuito de condicionamento) ENDCOMMENT 
+        [
+            position = 7552, 7540
+        ]
+
+        connect ensaio.out Gerador_ensaios.ensaio as Connection1
+        connect disparo.out Gerador_ensaios.disparo as Connection2
+        connect A_degrau_ue.out Gerador_ensaios.A_ue as Connection3
+        connect eps0_ue.out Gerador_ensaios.eps0_ue as Connection4
+        connect dur_pulso_ms.out Gerador_ensaios.dur_ms as Connection5
+        connect Gerador_ensaios.eps_ref j_eps_ref as Connection6
+        connect j_eps_ref j_eps_ideal as Connection7
+        connect Gerador_ensaios.t_ensaio t_ensaio.in as Connection8
+        connect j_eps_ideal para_ue.in as Connection9
+        connect para_ue.out eps_ref_ue.in as Connection10
+        connect j_eps_ideal dR_ideal.in as Connection11
+        connect dR_ideal.out Ponte_ideal_E01.dR as Connection12
+        connect Ponte_ideal_E01.saida_e0 para_mV_ideal.in as Connection13
+        connect para_mV_ideal.out j_e0_ideal as Connection14
+        connect j_e0_ideal e0_ideal_mV.in as Connection15
+        connect j_eps_ref j_eps_medida as Connection16
+        connect j_eps_medida Camada_dinamica.eps as Connection17
+        connect liga_dinamica.out Camada_dinamica.liga as Connection18
+        connect Camada_dinamica.eps_d Camada_estatica.eps_d as Connection19
+        connect T_op_C.out Camada_estatica.T_op as Connection20
+        connect liga_estatica.out Camada_estatica.liga as Connection21
+        connect liga_espectral.out Camada_espectral.liga as Connection22
+        connect ganho_ruido.out Camada_espectral.ganho as Connection23
+        connect Camada_estatica.dR Ponte_medida.dR as Connection24
+        connect Camada_espectral.vn j_vn as Connection25
+        connect j_vn Ponte_medida.vn as Connection26
+        connect Ponte_medida.saida_e0 para_mV_medido.in as Connection27
+        connect para_mV_medido.out j_e0_medido as Connection28
+        connect j_e0_medido e0_medido_mV.in as Connection29
+        connect Camada_estatica.GF_usado GF_usado.in as Connection30
+        connect Camada_estatica.eps_ap para_ue_ap.in as Connection31
+        connect para_ue_ap.out eps_aparente_ue.in as Connection32
+        connect j_vn para_uV_ruido.in as Connection33
+        connect para_uV_ruido.out ruido_uV.in as Connection34
+        connect j_e0_medido medido_menos_ideal.in as Connection35
+        connect j_e0_ideal medido_menos_ideal.in1 as Connection36
+        connect medido_menos_ideal.out para_uV_erro.in as Connection37
+        connect para_uV_erro.out erro_uV.in as Connection38
+        connect j_e0_medido eps_lido.in as Connection39
+        connect eps_lido.out eps_lido_ue.in as Connection40
+    }
+
+    default {
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Integrator" {
+            show_reset = "none"
+            reset_type = "asynchronous"
+            show_init_condition = "internal"
+            init_value = "0"
+            limit_output = "False"
+            limit_upper = "inf"
+            limit_lower = "-inf"
+            show_state = "False"
+            state_port_type = "inherit"
+            tml_file = "gen_accumulator_integrator"
+            mode = "integrator"
+            execution_rate = "inherit"
+        }
+
+        "core/Multiport signal switch" {
+            number_of_input_terminals = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Product" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/SCADA Input" {
+            signal_access = "inherit"
+            addr = "0"
+            format = "real"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "real"
+            min = "-1e6"
+            max = "1e6"
+            def_value = "0"
+            unit = " "
+            execution_rate = "100e-6"
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Signal switch" {
+            criterion = "ctrl > threshold"
+            threshold = "0.5"
+            execution_rate = "inherit"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Triangular Wave Source" {
+            min_val = "-0.5"
+            max_val = "0.5"
+            frequency = "50"
+            duty_cycle = "0.5"
+            phase = "0"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Voltage Source" {
+            sig_input = "False"
+            type = "signal generator"
+            param_set = "1phase"
+            parent_label = ""
+            dtsm_switch_name = ""
+            addr = "0"
+            spc_nb = "0"
+            execution_rate = "100e-6"
+            cpd_visible = "True"
+            enable_snb = "False"
+            snb_type = "R2"
+            R2 = "0.0"
+            L1 = "0.1"
+            override_signal_name = "False"
+            signal_name = ""
+            init_source_nature = "Constant"
+            init_const_value = "0.0"
+            init_rms_value = "0.0"
+            init_frequency = "50.0"
+            init_phase = "0.0"
+        }
+
+        "core/Current Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+
+    CODE model_init
+        # =====================================================================
+        #  ECOM060 - Instrumentacao Eletronica - UFAL - 2026.2
+        #  Fase 1 / Entrega 03 - Equipe G05 - Validacao funcional
+        #  Cadeia completa: extensometro OMEGA SGD-3/350-LY11 com as tres camadas
+        #  da Entrega 02 + ponte de Wheatstone de 1/4 da Entrega 01
+        # =====================================================================
+        Ts      = 1e-4        # s   - passo dos blocos de sinal
+        R0      = 350.0       # ohm - resistencia nominal
+        GF      = 2.0         # gauge factor nominal
+        Vex     = 5.0         # V   - excitacao da ponte
+        eps_max = 2000e-6     # fundo de escala (2000 microstrain)
+        f_sweep = 0.5         # Hz  - varredura triangular da Entrega 01 (0 -> eps_max -> 0 em 2 s)
+        
+        # ---- ensaios-padrao (R11): instante do evento no relogio do ensaio
+        t_ev    = 1.0         # s   - degrau / liberacao da condicao inicial / inicio do pulso
+        
+        # ---- camada estatica (Cap. 3) - OMEGA Strain Gage Technical Data
+        T_ref    = 23.0       # C   - temperatura de referencia do datasheet
+        tol_GF   = -0.01      # tolerancia do GF por lote: -1 % (pior caso)
+        alpha_GF = 1.0e-4     # 1/K - variacao do GF com a temperatura
+        beta_TO  = 2.0e-6     # 1/K - tolerancia da compensacao de temperatura (2 ppm/C)
+        # T_op (temperatura do ensaio) e ajustada no SCADA; padrao 53 C
+        
+        # ---- camada dinamica (Cap. 4)
+        K_din    = 1.0        # ordem zero: e(t) = K*eps(t), sem atraso
+        
+        # ---- camada espectral (Cap. 5) - ruido termico (Johnson) da ponte, a 53 C
+        kB      = 1.380649e-23
+        T_K     = 53.0 + 273.15
+        R_out   = R0          # resistencia de saida da ponte = R0
+        B_n     = 1/(2*Ts)    # banda do ruido amostrado a 1/Ts
+        sigma_n = (4*kB*T_K*R_out*B_n)**0.5   # V rms na saida (~0,18 uV)
+        
+        # ---- conversao de e0 para deformacao lida (sensibilidade linear GF/4)
+        k_eps   = 4/(Vex*GF)*1e6                # V -> microstrain
+    ENDCODE
+}
