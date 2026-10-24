@@ -1,0 +1,29 @@
+# ============================================================
+# .gitignore — ECOM060 2026.2
+# Versiona apenas g03-pendulo-invertido/
+# ============================================================
+
+# 1) Ignora tudo por padrão
+*
+
+# 2) Reabre a pasta do grupo (o "!" desfaz o "*")
+!g03-pendulo-invertido/
+!g03-pendulo-invertido/**
+
+# 3) Mantém arquivos de controle na raiz (opcional, mas recomendado)
+!.gitignore
+!README.md
+
+# 4) Permite versionar pastas vazias com .gitkeep
+!**/.gitkeep
+
+# 5) Nunca versionar caches, builds ou configs de editor dentro do grupo
+g03-pendulo-invertido/**/__pycache__/
+g03-pendulo-invertido/**/*.pyc
+g03-pendulo-invertido/**/.DS_Store
+g03-pendulo-invertido/**/Thumbs.db
+g03-pendulo-invertido/**/.vscode/
+g03-pendulo-invertido/**/.idea/
+g03-pendulo-invertido/**/build/
+g03-pendulo-invertido/**/dist/
+g03-pendulo-invertido/**/.ipynb_checkpoints/
