@@ -1,0 +1,372 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.3
+//
+
+model "ECOM060_G01_Entrega02_degrau" {
+    configuration {
+        hil_device = "VHIL+"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = auto
+        fine_auto_sim_step = False
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 1.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Step" Comando_Deslocamento_mm {
+            execution_rate = "1e-05"
+            final_value = "10.0"
+            initial_value = "0.0"
+            step_time = "0.05"
+        }
+        [
+            position = 7000, 8192
+        ]
+
+        component "core/Probe" Comando_mm {
+            execution_rate = "1e-05"
+        }
+        [
+            position = 7000, 7992
+        ]
+
+        component "core/Discrete Transfer Function" Processo_1aOrdem_tau_100ms {
+            a_coeff = "[1.0, -0.9999000049998333]"
+            b_coeff = "[9.999500016666385e-05]"
+            execution_rate = "1e-05"
+            signal_out_type = "real"
+        }
+        [
+            position = 7260, 8192
+        ]
+
+        component "core/Probe" Posicao_Mecanica_mm {
+            execution_rate = "1e-05"
+        }
+        [
+            position = 7260, 7992
+        ]
+
+        component "core/Gain" Referencia_Ideal_V_por_mm {
+            execution_rate = "1e-05"
+            gain = "0.5"
+        }
+        [
+            position = 7480, 7792
+        ]
+
+        component "core/Probe" Vout_Ideal {
+            execution_rate = "1e-05"
+        }
+        [
+            position = 7700, 7792
+        ]
+
+        component "core/Gain" LVDT_Ks_Adotado {
+            execution_rate = "1e-05"
+            gain = "0.1"
+        }
+        [
+            position = 7500, 8192
+        ]
+
+        component "core/Offset" Desvio_Zero_Sensor {
+            const_val = "0.0"
+            execution_rate = "1e-05"
+        }
+        [
+            position = 7720, 8192
+            size = 48, 48
+        ]
+
+        component "core/Probe" Envoltoria_Sensor_V {
+            execution_rate = "1e-05"
+        }
+        [
+            position = 7720, 7992
+        ]
+
+        component "core/Sinusoidal Source" Portadora_Excitacao {
+            amplitude = "1.0"
+            dc_offset = "0.0"
+            execution_rate = "1e-05"
+            frequency = "1000.0"
+            phase = "0.0"
+        }
+        [
+            position = 7800, 8492
+        ]
+
+        component "core/Probe" Portadora_1kHz {
+            execution_rate = "1e-05"
+        }
+        [
+            position = 7800, 8692
+        ]
+
+        component "core/Product" Modulador_AM {
+            execution_rate = "1e-05"
+            signs = "**"
+        }
+        [
+            position = 8000, 8192
+        ]
+
+        component "core/Probe" Sinal_AM {
+            execution_rate = "1e-05"
+        }
+        [
+            position = 8000, 7992
+        ]
+
+        component "core/Product" Demodulador_Sincrono {
+            execution_rate = "1e-05"
+            signs = "**"
+        }
+        [
+            position = 8260, 8192
+        ]
+
+        component "core/Probe" Mixer_Sem_Compensacao_V {
+            execution_rate = "1e-05"
+        }
+        [
+            position = 8260, 7992
+        ]
+
+        component "core/Gain" Compensacao_2_sobre_A2 {
+            execution_rate = "1e-05"
+            gain = "2.0"
+        }
+        [
+            position = 8480, 8192
+        ]
+
+        component "core/Probe" Demod_Antes_Filtro_V {
+            execution_rate = "1e-05"
+        }
+        [
+            position = 8480, 7992
+        ]
+
+        component "core/Discrete Transfer Function" Filtro_Demod_1aOrdem {
+            a_coeff = "[1.0, -0.9987441521762864]"
+            b_coeff = "[0.001255847823713574]"
+            execution_rate = "1e-05"
+            signal_out_type = "real"
+        }
+        [
+            position = 8720, 8192
+        ]
+
+        component "core/Probe" Demod_Depois_Filtro_V {
+            execution_rate = "1e-05"
+        }
+        [
+            position = 8720, 7992
+        ]
+
+        component "core/Gain" NaoInversor_1_mais_Rf_sobre_Rin {
+            execution_rate = "1e-05"
+            gain = "5.0"
+        }
+        [
+            position = 8980, 8192
+        ]
+
+        component "core/Probe" Vout_Condicionada {
+            execution_rate = "1e-05"
+        }
+        [
+            position = 9200, 8192
+        ]
+
+        component "core/Sum" Erro_Dinamico_V {
+            execution_rate = "1e-05"
+            signs = "+-"
+        }
+        [
+            position = 8980, 8544
+        ]
+
+        component "core/Probe" Erro_Vout_menos_Ideal_V {
+            execution_rate = "1e-05"
+        }
+        [
+            position = 9200, 8544
+        ]
+
+        component "core/Scope" Scope_G01 {
+            signals_data = "{\"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true, \"signals_tooltips_enabled\": true}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"4\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"5\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"6\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}}"
+            user_range_data = "{\"1\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"2\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"3\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"4\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"5\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"6\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}}"
+        }
+        [
+            position = 9460, 8192
+        ]
+
+        comment Leia_me_G01 START G01 / ECOM060 — AM de LVDT (modelo didatico)Ensaio: degrau; tau processo=0.1 sKs=0.1 V/mm; Av=5; Rin=10000 ohm; Rf=40000 ohmPortadora=1000 Hz; filtro=20 Hz; Ts=1e-05 sConfigurar Stop time=1.5 s e Data sampling rate=1e-05 s.Scope: selecionar as sondas na janela Signals. Sem HIL SCADA.Parametros mecanicos/eletricos adotados pelo grupo; nao sao o datasheet LD620. ENDCOMMENT 
+        [
+            position = 7060, 7440
+        ]
+
+        connect Comando_Deslocamento_mm.out Comando_mm.in as Connection1
+        connect Comando_Deslocamento_mm.out Processo_1aOrdem_tau_100ms.in as Connection2
+        connect Processo_1aOrdem_tau_100ms.out Posicao_Mecanica_mm.in as Connection3
+        connect Processo_1aOrdem_tau_100ms.out Referencia_Ideal_V_por_mm.in as Connection4
+        connect Referencia_Ideal_V_por_mm.out Vout_Ideal.in as Connection5
+        connect Processo_1aOrdem_tau_100ms.out LVDT_Ks_Adotado.in as Connection6
+        connect LVDT_Ks_Adotado.out Desvio_Zero_Sensor.in as Connection7
+        connect Desvio_Zero_Sensor.out Envoltoria_Sensor_V.in as Connection8
+        connect Portadora_Excitacao.out Portadora_1kHz.in as Connection9
+        connect Desvio_Zero_Sensor.out Modulador_AM.in as Connection10
+        connect Portadora_Excitacao.out Modulador_AM.in1 as Connection11
+        connect Modulador_AM.out Sinal_AM.in as Connection12
+        connect Modulador_AM.out Demodulador_Sincrono.in as Connection13
+        connect Portadora_Excitacao.out Demodulador_Sincrono.in1 as Connection14
+        connect Demodulador_Sincrono.out Mixer_Sem_Compensacao_V.in as Connection15
+        connect Demodulador_Sincrono.out Compensacao_2_sobre_A2.in as Connection16
+        connect Compensacao_2_sobre_A2.out Demod_Antes_Filtro_V.in as Connection17
+        connect Compensacao_2_sobre_A2.out Filtro_Demod_1aOrdem.in as Connection18
+        connect Filtro_Demod_1aOrdem.out Demod_Depois_Filtro_V.in as Connection19
+        connect Filtro_Demod_1aOrdem.out NaoInversor_1_mais_Rf_sobre_Rin.in as Connection20
+        connect NaoInversor_1_mais_Rf_sobre_Rin.out Vout_Condicionada.in as Connection21
+        connect NaoInversor_1_mais_Rf_sobre_Rin.out Erro_Dinamico_V.in as Connection22
+        connect Referencia_Ideal_V_por_mm.out Erro_Dinamico_V.in1 as Connection23
+        connect Erro_Dinamico_V.out Erro_Vout_menos_Ideal_V.in as Connection24
+    }
+
+    default {
+        "core/Discrete Transfer Function" {
+            domain = "Z-domain"
+            method = "Zero-order hold"
+            b_coeff = "[1,1]"
+            a_coeff = "[1,1]"
+            signal_out_type = "inherit"
+            execution_rate = "inherit"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Product" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Sinusoidal Source" {
+            amplitude = "1"
+            dc_offset = "0"
+            frequency = "50"
+            phase = "0"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Step" {
+            step_time = "1"
+            initial_value = "0"
+            final_value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Offset" {
+            const_val = "0"
+            const_val_type = "real"
+            execution_rate = "inherit"
+        }
+    }
+}

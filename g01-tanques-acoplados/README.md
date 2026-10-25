@@ -28,9 +28,11 @@ de Torricelli.
 | e3-correcoes-calculadas | Versão submetida não disponível nesta pasta | Modelo não disponível nesta pasta | [e3-correcoes-calculadas.pdf](devolutiva/e3-correcoes-calculadas.pdf) |
 | e4-serie-fourier | [relatorio.pdf](entregas/e4-serie-fourier/relatorio/relatorio.pdf) | [modelo.tse](entregas/e4-serie-fourier/typhoonsim/modelo.tse) e [instruções](entregas/e4-serie-fourier/typhoonsim/instrucoes.md) | — |
 | e5-cadeia-ideal | [relatorio.pdf](entregas/e5-cadeia-ideal/relatorio/relatorio.pdf) | [modelo.tse](entregas/e5-cadeia-ideal/typhoonsim/modelo.tse) e [instruções](entregas/e5-cadeia-ideal/typhoonsim/instrucoes.md) | — |
+| e6-dinamica-modulacao-am | [relatorio.pdf](entregas/e6-dinamica-modulacao-am/relatorio/relatorio.pdf) | [modelo.tse](entregas/e6-dinamica-modulacao-am/typhoonsim/modelo.tse) e [instruções](entregas/e6-dinamica-modulacao-am/typhoonsim/instrucoes.md) | — |
 
 Na reorganização, a numeração adotada é caracterização (1), sensibilidade (2),
-correções calculadas (3), série de Fourier (4) e projeto da cadeia ideal (5).
+correções calculadas (3), série de Fourier (4), projeto da cadeia ideal (5) e
+dinâmica, modulação AM e condicionamento (6).
 O PDF de correções calculadas é
 armazenado como devolutiva, conforme a orientação recebida.
 
@@ -62,6 +64,11 @@ use `g01 — Devolutiva N: Nome da Entrega` e preserve o relatório submetido em
 
 Para a entrega da cadeia ideal, use o título
 `g01 — Entrega 5: Projeto da Cadeia Ideal`.
+
+Para a entrega de dinâmica e AM, use o título
+`g01 — Entrega 6: Dinâmica de primeira ordem, modulação AM e condicionamento`.
+O [circuito equivalente](entregas/e6-dinamica-modulacao-am/relatorio/figuras/circuito-equivalente.png)
+fica junto ao relatório, com uma versão SVG na mesma pasta de figuras.
 
 ## Observações
 

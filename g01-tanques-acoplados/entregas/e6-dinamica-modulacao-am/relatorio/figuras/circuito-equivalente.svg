@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1500" viewBox="0 0 2200 1500" role="img" aria-labelledby="title description">
+  <title id="title">Circuito elétrico equivalente da entrega 6: dinâmica, AM e condicionamento</title>
+  <desc id="description">Equivalente comportamental contínuo. Uma fonte em degrau de zero a dez volts representa o comando de zero a dez milímetros, na escala de um volt por milímetro. Um resistor de dez quilohms e um capacitor de dez microfarads reproduzem a constante de tempo de cem milissegundos. A fonte comportamental BAM gera 0,10 Vp vezes a portadora normalizada de um quilohertz. BDET multiplica esse sinal pela mesma portadora e aplica compensação dois. O nó d liga as duas partes do desenho. Um filtro com resistor de dez quilohms e capacitor de 795,8 nanofarads tem corte próximo de vinte hertz. A tensão filtrada alimenta um amplificador não inversor com Rf de quarenta quilohms e Rin de dez quilohms, ganho cinco e saída próxima de cinco volts no fundo de escala.</desc>
+  <rect width="2200" height="1500" fill="white"/>
+  <style>
+    text { font-family: 'Segoe UI', Arial, sans-serif; fill: #17202a; }
+    .wire { fill: none; stroke: #17202a; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+    .control { fill: none; stroke: #64727f; stroke-width: 2.5; stroke-dasharray: 9 7; stroke-linejoin: round; }
+    .device { fill: white; stroke: #17202a; stroke-width: 3.2; stroke-linejoin: round; }
+    .label { font-size: 28px; }
+    .small { font-size: 23px; fill: #46515d; }
+    .section { font-size: 30px; font-weight: 600; }
+    .node { fill: #17202a; }
+  </style>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M1 1 L10 6 L1 11" fill="none" stroke="#17202a" stroke-width="2"/>
+    </marker>
+    <marker id="control-arrow" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M1 1 L10 5.5 L1 10" fill="none" stroke="#64727f" stroke-width="2"/>
+    </marker>
+    <g id="ground" class="wire">
+      <path d="M-23 0 H23 M-15 10 H15 M-7 20 H7"/>
+    </g>
+    <g id="voltage-source">
+      <circle r="42" class="device"/>
+      <text x="0" y="-8" class="label" text-anchor="middle">+</text>
+      <text x="0" y="26" class="label" text-anchor="middle">−</text>
+    </g>
+    <g id="behavioral-source">
+      <path d="M0 -65 L70 0 L0 65 L-70 0 Z" class="device"/>
+      <text x="0" y="-25" class="label" text-anchor="middle">+</text>
+      <text x="0" y="39" class="label" text-anchor="middle">−</text>
+    </g>
+    <g id="net-d">
+      <path d="M0 -16 H63 L80 0 L63 16 H0 Z" class="device"/>
+      <text x="33" y="8" font-size="24" text-anchor="middle">d</text>
+    </g>
+  </defs>
+
+  <text x="70" y="66" font-size="40" font-weight="600">Circuito elétrico equivalente · Entrega 6</text>
+  <text x="70" y="108" class="small">Dinâmica de primeira ordem, modulação AM, detecção síncrona e condicionamento</text>
+  <text x="70" y="166" class="section">1. Processo normalizado e LVDT genérico com AM</text>
+
+  <use href="#voltage-source" x="140" y="350"/>
+  <path d="M140 308 V270 H275 M425 270 H530" class="wire"/>
+  <rect x="275" y="252" width="150" height="36" class="device"/>
+  <text x="350" y="231" class="label" text-anchor="middle">Rp = 10 kΩ</text>
+  <path d="M140 392 V450" class="wire"/>
+  <use href="#ground" x="140" y="452"/>
+  <text x="140" y="511" class="label" text-anchor="middle">Vcmd: 0 → 10 V</text>
+  <text x="140" y="546" class="small" text-anchor="middle">degrau em 0,05 s</text>
+
+  <circle cx="530" cy="270" r="5.5" class="node"/>
+  <text x="530" y="230" class="label" text-anchor="middle">Vp ≡ x(t)</text>
+  <path d="M530 270 V365 M500 365 H560 M500 382 H560 M530 382 V450" class="wire"/>
+  <use href="#ground" x="530" y="452"/>
+  <text x="578" y="380" class="label">Cp = 10 µF</text>
+  <text x="530" y="511" class="small" text-anchor="middle">escala: 1 V ↔ 1 mm</text>
+  <text x="405" y="585" class="label" text-anchor="middle">τp = Rp·Cp = 0,10 s</text>
+
+  <path d="M530 270 H755 V350 H830" class="control" marker-end="url(#control-arrow)"/>
+  <use href="#behavioral-source" x="900" y="350"/>
+  <path d="M900 285 V240 H1120 M900 415 V450" class="wire"/>
+  <use href="#ground" x="900" y="452"/>
+  <circle cx="1050" cy="240" r="5.5" class="node"/>
+  <text x="1040" y="190" class="label" text-anchor="middle">vAM</text>
+  <text x="1040" y="224" class="small" text-anchor="middle">≈ −1 a +1 V em FS</text>
+  <text x="900" y="511" class="label" text-anchor="middle">BAM · LVDT ideal</text>
+  <text x="900" y="548" class="label" text-anchor="middle">vAM = 0,10·Vp·c(t)</text>
+  <text x="900" y="583" class="small" text-anchor="middle">AM por produto (DSB-SC)</text>
+
+  <path d="M1120 240 V350 H1355" class="control" marker-end="url(#control-arrow)"/>
+  <use href="#behavioral-source" x="1425" y="350"/>
+  <path d="M1425 285 V240 H1970 M1425 415 V450" class="wire"/>
+  <use href="#ground" x="1425" y="452"/>
+  <use href="#net-d" x="1970" y="240"/>
+  <text x="1740" y="205" class="label" text-anchor="middle">d(t) = e(t)·[1 − cos(2π·2000t)]</text>
+  <text x="1800" y="284" class="small" text-anchor="middle">≈ 0 a 2 V em fundo de escala</text>
+  <text x="1425" y="511" class="label" text-anchor="middle">BDET · detector síncrono</text>
+  <text x="1425" y="548" class="label" text-anchor="middle">d(t) = 2·vAM·c(t)</text>
+  <text x="1425" y="583" class="small" text-anchor="middle">compensação 2/A² incluída</text>
+
+  <circle cx="1240" cy="665" r="36" class="device"/>
+  <path d="M1218 665 C1226 636 1233 636 1240 665 C1247 694 1255 694 1262 665" class="wire"/>
+  <path d="M1240 629 V480 H1000 V350 H970 M1240 480 H1540 V350 H1495" class="control" marker-end="url(#control-arrow)"/>
+  <circle cx="1240" cy="480" r="4.5" fill="#64727f"/>
+  <path d="M1240 701 V715" class="wire"/>
+  <use href="#ground" x="1240" y="717"/>
+  <text x="1300" y="659" class="label">c(t) = sen(2π·1000t)</text>
+  <text x="1300" y="695" class="small">mesma referência · A = 1 normalizado · fase 0°</text>
+
+  <text x="70" y="794" class="section">2. Nó d: filtro passa-baixas e amplificador não inversor</text>
+
+  <use href="#net-d" x="70" y="890"/>
+  <path d="M150 890 H260 M400 890 H1050" class="wire"/>
+  <rect x="260" y="872" width="140" height="36" class="device"/>
+  <text x="330" y="847" class="label" text-anchor="middle">Rb = 10 kΩ</text>
+  <circle cx="590" cy="890" r="5.5" class="node"/>
+  <path d="M590 890 V1000 M560 1000 H620 M560 1017 H620 M590 1017 V1088" class="wire"/>
+  <use href="#ground" x="590" y="1090"/>
+  <text x="640" y="1012" class="label">Cb = 795,8 nF</text>
+  <text x="785" y="847" class="label" text-anchor="middle">VBB ≈ 0–1 V</text>
+  <text x="405" y="1175" class="label" text-anchor="middle">fc = 1/(2π·Rb·Cb) ≈ 20 Hz</text>
+  <text x="405" y="1212" class="small" text-anchor="middle">τf ≈ 7,958 ms</text>
+
+  <path d="M1050 825 L1050 1075 L1320 950 Z" class="device"/>
+  <text x="1069" y="902" font-size="35">+</text>
+  <text x="1069" y="1023" font-size="35">−</text>
+  <text x="1158" y="946" class="label" text-anchor="middle">AOP</text>
+  <text x="1158" y="982" class="small" text-anchor="middle">ideal</text>
+  <path d="M1165 878.24 V826 M1165 1021.76 V1078" class="wire"/>
+  <text x="1187" y="837" class="label">V+</text>
+  <text x="1187" y="1085" class="label">V−</text>
+
+  <path d="M1320 950 H2020" class="wire" marker-end="url(#arrow)"/>
+  <circle cx="1440" cy="950" r="5.5" class="node"/>
+  <text x="1780" y="905" class="label" text-anchor="middle">Vout ≈ 5 V em fundo de escala</text>
+  <text x="1780" y="994" class="small" text-anchor="middle">com ondulação residual de 2 kHz</text>
+
+  <path d="M1050 1010 H975 V1135 H1210 M1350 1135 H1440 V950" class="wire"/>
+  <rect x="1210" y="1117" width="140" height="36" class="device"/>
+  <text x="1305" y="1101" class="label" text-anchor="middle">Rf = 40 kΩ</text>
+  <circle cx="975" cy="1135" r="5.5" class="node"/>
+  <path d="M975 1135 V1185 M975 1265 V1295" class="wire"/>
+  <rect x="958" y="1185" width="34" height="80" class="device"/>
+  <text x="1030" y="1234" class="label">Rin = 10 kΩ</text>
+  <use href="#ground" x="975" y="1297"/>
+
+  <text x="1540" y="1137" class="label">Av = 1 + Rf/Rin = 5</text>
+  <text x="1540" y="1180" class="label">Vout = 5·VBB</text>
+  <text x="1540" y="1223" class="small">Referência ideal: 0,50·Vp</text>
+  <text x="1540" y="1262" class="small">Erro = Vout − 0,50·Vp</text>
+
+  <path d="M70 1358 H2130" stroke="#c5ccd2" stroke-width="1.5"/>
+  <text x="70" y="1400" class="small">Rp/Cp e Rb/Cb: valores escolhidos para realizar as constantes de tempo. Escala mecânica equivalente: 1 V por mm.</text>
+  <text x="70" y="1441" class="small">BAM e BDET: fontes de tensão comportamentais; traços pontilhados indicam controles ideais. Todos os terras são comuns.</text>
+  <text x="70" y="1481" class="small">Equivalente contínuo: o modelo TyphoonSim usa funções discretizadas com Ts = 10 µs e um atraso de amostra em cada dinâmica.</text>
+</svg>

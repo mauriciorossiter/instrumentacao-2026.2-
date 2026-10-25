@@ -1,0 +1,7 @@
+# Preservar os bytes dos artefatos; nao converter suas quebras de linha.
+*.pdf binary
+*.tse binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.mp4 binary
