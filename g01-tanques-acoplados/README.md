@@ -41,6 +41,33 @@ Os modelos de caracterização e sensibilidade precisam ser adicionados como
 `typhoonsim/modelo.tse` nas respectivas entregas. As instruções dessas duas etapas
 registram os parâmetros dos relatórios e a ausência do arquivo de modelo.
 
+## Fase 2
+
+| Entrega | Relatório | Simulação | Apresentação | Estado |
+|---|---|---|---|---|
+| e1-caracterizacao | [relatorio.pdf](entregas/fase-2/e1-caracterizacao/relatorio/relatorio.pdf) e [figuras](entregas/fase-2/e1-caracterizacao/relatorio/figuras/) | [instrucoes.md](entregas/fase-2/e1-caracterizacao/simulacao/instrucoes.md), scripts, [resultados](entregas/fase-2/e1-caracterizacao/simulacao/resultados.md) e [CSVs](entregas/fase-2/e1-caracterizacao/simulacao/dados/) | [apresentacao.pdf](entregas/fase-2/e1-caracterizacao/apresentacao/apresentacao.pdf) e [gravação](entregas/fase-2/e1-caracterizacao/apresentacao/gravacao.mp4) | Organizada para submissão |
+
+A Fase 2 usa a estrutura específica solicitada em `e1-caracterizacao-git.pdf`:
+
+```text
+entregas/fase-2/e1-caracterizacao/
+  relatorio/relatorio.pdf
+  relatorio/figuras/fig-01-diagrama-blocos.png
+  simulacao/instrucoes.md
+  simulacao/tanques.py
+  simulacao/complementos.py
+  simulacao/requirements.txt
+  simulacao/resultados.md
+  simulacao/dados/
+  apresentacao/apresentacao.pdf
+  apresentacao/gravacao.mp4
+```
+
+O relatório fornecido foi preservado. As instruções permitem reproduzir os
+ensaios em Python, as figuras e os CSVs. A gravação é material complementar.
+O título do PR desta etapa é
+`g01 — Fase 2, Entrega 1: Caracterização da Planta`.
+
 ## Organização e próximos PRs
 
 Cada entrega usa esta estrutura, com nomes em minúsculas, sem acentos ou espaços:
