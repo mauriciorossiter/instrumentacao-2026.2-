@@ -1,0 +1,265 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.3
+//
+
+model "G04_Fase2_R4_x1" {
+    configuration {
+        hil_device = "HIL404"
+        hil_configuration_id = 6
+        simulation_method = exact
+        simulation_time_step = auto
+        fine_auto_sim_step = False
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 5e-07
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 5e-07
+        simulation_time = 0.255264
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 1e-05
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Step" Potencia_W {
+            execution_rate = "5e-07"
+            final_value = "10.0"
+            initial_value = "0.0"
+            step_time = "0.002"
+        }
+        [
+            position = 600, 448
+        ]
+
+        component "core/Step" Retorno_W {
+            execution_rate = "5e-07"
+            final_value = "0.0"
+            initial_value = "0.0"
+            step_time = "0.012"
+        }
+        [
+            position = 600, 600
+        ]
+
+        component "core/Sum" Entrada_P_W {
+            execution_rate = "5e-07"
+            signs = "+-"
+        }
+        [
+            position = 848, 448
+        ]
+
+        component "core/Thermal network" Planta_Termica_SI {
+            Rth = "[0.492466, 0.884411, 0.589157, 0.073673]"
+            Tth = "[0.0002, 0.00054, 0.0021, 0.031658]"
+            exec_rate = "5e-07"
+            execution_rate = "5e-07"
+            init_temps = "0.0"
+        }
+        [
+            position = 1152, 448
+        ]
+
+        component "core/Constant" Capsula_K {
+            execution_rate = "5e-07"
+            value = "298.15"
+        }
+        [
+            position = 1152, 648
+        ]
+
+        component "core/Probe" P_W {
+            execution_rate = "5e-07"
+        }
+        [
+            position = 848, 300
+        ]
+
+        component "core/Probe" Tj_termico_K {
+            execution_rate = "5e-07"
+        }
+        [
+            position = 1152, 300
+        ]
+
+        component "core/Signal Controlled Voltage Source" Adaptador_observacao_1V_por_K {
+            execution_rate = "5e-07"
+        }
+        [
+            position = 1700, 448
+        ]
+
+        component "core/Voltage Measurement" T_j_K {
+        }
+        [
+            position = 1952, 448
+        ]
+
+        component "core/Ground" GND_observacao {
+        }
+        [
+            position = 1700, 648
+        ]
+
+        component "core/Scope" Resultados {
+            selected_signals = "[\"T_j_K\"]"
+            signals_data = "{\"signals\": {\"T_j_K\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#163e69\"}, \"display\": {\"1\": \"solid\"}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"4\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}, \"plot_settings\": {\"legend_visible\": true, \"background_color\": \"white\", \"layout\": \"Vertical\"}}"
+        }
+        [
+            position = 1448, 700
+        ]
+
+        comment Comment1 START G04 / Fase2 Entrega01. Dominio TERMICO: P em W; theta e T em K.Planta Foster em bloco termico nativo, zero C functions; Ts=0.5 us.Parametros e condicoes iniciais: arquivo JSON homonimo ao modelo. ENDCOMMENT 
+        [
+            position = 600, 152
+        ]
+
+        connect Potencia_W.out Entrada_P_W.in as Connection1
+        connect Retorno_W.out Entrada_P_W.in1 as Connection2
+        connect Entrada_P_W.out Planta_Termica_SI.Pin as Connection3
+        connect Capsula_K.out Planta_Termica_SI.Tref as Connection4
+        connect Entrada_P_W.out P_W.in as Connection5
+        connect Planta_Termica_SI.Tout Tj_termico_K.in as Connection6
+        connect Planta_Termica_SI.Tout Adaptador_observacao_1V_por_K.in as Connection7
+        connect Adaptador_observacao_1V_por_K.p_node T_j_K.p_node as Connection8
+        connect Adaptador_observacao_1V_por_K.n_node T_j_K.n_node as Connection9
+        connect Adaptador_observacao_1V_por_K.n_node GND_observacao.node as Connection10
+    }
+
+    default {
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Step" {
+            step_time = "1"
+            initial_value = "0"
+            final_value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Signal Controlled Voltage Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Thermal network" {
+            N = "1"
+            network_type = "Foster"
+            Rth = "[0.159, 0.133, 0.120, 0.038]"
+            Tth = "[1.1e-1, 1.56e-2, 1.35e-3, 1.51e-4]"
+            Cth = "[0.0029, 0.0097, 0.1068, 0.8500]"
+            T_ambient_flag = "False"
+            init_temps = "0"
+            execution_rate = "inherit"
+            exec_rate = "100e-6"
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+}

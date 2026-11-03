@@ -1,0 +1,33 @@
+{
+  "caso": "C1_x5",
+  "parametros": {
+    "r": [
+      0.492466,
+      0.884411,
+      0.589157,
+      0.073673
+    ],
+    "c": [
+      0.002030597036140566,
+      0.0006105758521773248,
+      0.003564414918264571,
+      0.42970966297015184
+    ],
+    "trial": "degrau",
+    "duration": 0.255264,
+    "tc": 298.15,
+    "power": 10.0,
+    "step": 0.002,
+    "off": 0.012,
+    "group": "sensibilidade",
+    "parameter": "C1",
+    "scale": 5.0
+  },
+  "passo_nativo_s": 5e-07,
+  "pre_aquecimento_s": 0.0,
+  "sha256": "f9d574b333e0279e8b1f55415c9c8028c3f73f2b253d63c94c216d9725473e87",
+  "componentes": 11,
+  "c_functions": 0,
+  "reabertura_nativa": true,
+  "observacao": "adaptador isolado 1 V/K, sem efeito na planta"
+}

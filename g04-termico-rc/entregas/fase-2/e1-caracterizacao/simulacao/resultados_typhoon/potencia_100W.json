@@ -1,0 +1,36 @@
+{
+  "caso": "potencia_100W",
+  "backend": "TyphoonSim offline nativo",
+  "versao": "THCC 2026.3",
+  "parametros": {
+    "r": [
+      0.492466,
+      0.884411,
+      0.589157,
+      0.073673
+    ],
+    "c": [
+      0.00040611940722811324,
+      0.0006105758521773248,
+      0.003564414918264571,
+      0.42970966297015184
+    ],
+    "trial": "degrau",
+    "duration": 0.25,
+    "tc": 298.15,
+    "power": 100.0,
+    "step": 0.002,
+    "off": 0.012,
+    "group": "fora_validade"
+  },
+  "passo_nativo_s": 5e-07,
+  "pre_aquecimento_s": 0.0,
+  "erro_max_vs_solucao_fechada_K": 0.10592280953216004,
+  "colunas": [
+    "Time",
+    "T_j_K"
+  ],
+  "amostras": 25001,
+  "sha256_tse": "8d9acfb6238b10a1f6352ef98c65044bbd1030876806df0259c24287f92bf724",
+  "tempo_real_s": 5.9529999999999745
+}

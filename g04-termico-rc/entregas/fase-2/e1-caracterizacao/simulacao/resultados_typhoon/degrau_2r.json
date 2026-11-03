@@ -1,0 +1,32 @@
+{
+  "caso": "degrau_2r",
+  "backend": "TyphoonSim offline nativo",
+  "versao": "THCC 2026.3",
+  "parametros": {
+    "r": [
+      1.116866866999197,
+      0.922840133000803
+    ],
+    "c": [
+      0.0002577499517529622,
+      0.002190148320043851
+    ],
+    "trial": "degrau",
+    "duration": 0.25,
+    "tc": 298.15,
+    "power": 10.0,
+    "step": 0.002,
+    "off": 0.012,
+    "group": "nominal"
+  },
+  "passo_nativo_s": 5e-07,
+  "pre_aquecimento_s": 0.0,
+  "erro_max_vs_solucao_fechada_K": 0.010512669313982315,
+  "colunas": [
+    "Time",
+    "T_j_K"
+  ],
+  "amostras": 25001,
+  "sha256_tse": "19933a58b398ee70fe3679a31b4d664295f2ddc733d7757b5cad972cc06613bc",
+  "tempo_real_s": 6.030999999999949
+}

@@ -1,0 +1,38 @@
+{
+  "caso": "R4_x5",
+  "backend": "TyphoonSim offline nativo",
+  "versao": "THCC 2026.3",
+  "parametros": {
+    "r": [
+      0.492466,
+      0.884411,
+      0.589157,
+      0.368365
+    ],
+    "c": [
+      0.00040611940722811324,
+      0.0006105758521773248,
+      0.003564414918264571,
+      0.42970966297015184
+    ],
+    "trial": "degrau",
+    "duration": 1.26832,
+    "tc": 298.15,
+    "power": 10.0,
+    "step": 0.002,
+    "off": 0.012,
+    "group": "sensibilidade",
+    "parameter": "R4",
+    "scale": 5.0
+  },
+  "passo_nativo_s": 5e-07,
+  "pre_aquecimento_s": 0.0,
+  "erro_max_vs_solucao_fechada_K": 0.01060390703281655,
+  "colunas": [
+    "Time",
+    "T_j_K"
+  ],
+  "amostras": 126833,
+  "sha256_tse": "7418f20ac06cdb86e6e2b6d440485b32bf2ff050632a9a1269b233d78b177798",
+  "tempo_real_s": 10.75
+}
