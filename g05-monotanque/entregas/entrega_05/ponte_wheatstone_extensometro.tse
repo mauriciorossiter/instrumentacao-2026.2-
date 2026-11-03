@@ -1,0 +1,1132 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "ponte_wheatstone_extensometro" {
+    configuration {
+        hil_device = "HIL402"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = 1e-6
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-05
+        simulation_time = 2.0
+        abs_tol = 1e-6
+        rel_tol = 1e-6
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.2
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Triangular Wave Source" eps_varredura {
+            execution_rate = "Ts"
+            frequency = "f_sweep"
+            max_val = "eps_max"
+            min_val = "0"
+        }
+        [
+            position = 7600, 7900
+        ]
+
+        component "core/Probe" p1_deformacao {
+        }
+        [
+            position = 7900, 7700
+        ]
+
+        component "core/Gain" ref_linear_GF_4 {
+            gain = "1000*GF/4"
+        }
+        [
+            position = 7800, 7800
+        ]
+
+        component "core/Probe" p5_ref_linear_mV_por_V {
+        }
+        [
+            position = 7968, 7800
+        ]
+
+        component "core/Gain" dR_R0_GF {
+            gain = "R0*GF"
+        }
+        [
+            position = 7800, 7900
+        ]
+
+        component "core/Constant" R0_nominal {
+            execution_rate = "Ts"
+            value = "R0"
+        }
+        [
+            position = 7904, 8000
+        ]
+
+        component "core/Sum" R_extensometro {
+        }
+        [
+            position = 8008, 7968
+        ]
+
+        component "core/Probe" p4_R_extensometro_ohm {
+        }
+        [
+            position = 8120, 7968
+        ]
+
+        component "core/Voltage Source" Vex {
+            execution_rate = "Ts"
+            init_const_value = "Vex"
+        }
+        [
+            position = 8200, 8048
+            rotation = right
+        ]
+
+        component "core/Resistor" R1 {
+            resistance = "R0"
+        }
+        [
+            position = 8400, 7880
+            rotation = right
+        ]
+
+        component "core/Current Measurement" i_g {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 8400, 8024
+            rotation = right
+        ]
+
+        component "core/Resistor" Rg_R0 {
+            resistance = "R0"
+        }
+        [
+            position = 8400, 8120
+            rotation = right
+        ]
+
+        component "core/Voltage Source" Rg_dR {
+            execution_rate = "Ts"
+            sig_input = "True"
+            type = "signal controlled"
+        }
+        [
+            position = 8400, 8224
+            rotation = left
+        ]
+
+        component "core/Resistor" R3 {
+            resistance = "R0"
+        }
+        [
+            position = 8704, 7880
+            rotation = right
+        ]
+
+        component "core/Resistor" R4 {
+            resistance = "R0"
+        }
+        [
+            position = 8704, 8120
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" e0 {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 8552, 7960
+        ]
+
+        component "core/Ground" GND {
+        }
+        [
+            position = 8552, 8376
+        ]
+
+        component "core/Product" dR_vezes_i {
+        }
+        [
+            position = 8264, 8224
+        ]
+
+        component "core/Probe" p2_e0_V {
+        }
+        [
+            position = 9000, 7880
+        ]
+
+        component "core/Gain" para_mV_por_V {
+            gain = "1000/Vex"
+        }
+        [
+            position = 8952, 7960
+        ]
+
+        component "core/Probe" p3_e0_mV_por_V {
+        }
+        [
+            position = 9104, 7960
+        ]
+
+        component "core/Scope" Scope1 {
+            selected_signals = "[\'p1_deformacao\', \'p4_R_extensometro_ohm\', \'p3_e0_mV_por_V\', \'p5_ref_linear_mV_por_V\', \'p2_e0_V\']"
+            signals_data = "{\"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true, \"signals_tooltips_enabled\": true}, \"signals\": {\"p1_deformacao\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#C00000\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"p4_R_extensometro_ohm\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#7030A0\"}, \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"p3_e0_mV_por_V\": {\"viewports\": [3], \"type\": \"analog\", \"color\": {\"3\": \"#1F4E79\"}, \"display\": {\"3\": \"solid\"}, \"is_manual\": {\"3\": false}}, \"p5_ref_linear_mV_por_V\": {\"viewports\": [3], \"type\": \"analog\", \"color\": {\"3\": \"#C00000\"}, \"display\": {\"3\": \"dash\"}, \"is_manual\": {\"3\": false}}, \"p2_e0_V\": {\"viewports\": [4], \"type\": \"analog\", \"color\": {\"4\": \"#2E7D32\"}, \"display\": {\"4\": \"solid\"}, \"is_manual\": {\"4\": false}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"4\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"5\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"6\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}}"
+        }
+        [
+            position = 9104, 8120
+        ]
+
+        component "core/Voltage Source" Vex_0000ue {
+            execution_rate = "Ts"
+            init_const_value = "Vex"
+        }
+        [
+            position = 7648, 8704
+            rotation = right
+        ]
+
+        component "core/Resistor" R1_0000ue {
+            resistance = "R0"
+        }
+        [
+            position = 7744, 8632
+            rotation = right
+        ]
+
+        component "core/Resistor" Rg_0000ue {
+            resistance = "R0*(1+GF*0e-6)"
+        }
+        [
+            position = 7744, 8776
+            rotation = right
+        ]
+
+        component "core/Resistor" R3_0000ue {
+            resistance = "R0"
+        }
+        [
+            position = 7904, 8632
+            rotation = right
+        ]
+
+        component "core/Resistor" R4_0000ue {
+            resistance = "R0"
+        }
+        [
+            position = 7904, 8776
+            rotation = right
+        ]
+
+        component "core/Ground" GND_0000ue {
+        }
+        [
+            position = 7824, 8896
+        ]
+
+        component "core/Voltage Measurement" e0_0000ue {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 7824, 8704
+        ]
+
+        component "core/Probe" pe0_0000ue {
+        }
+        [
+            position = 7824, 8504
+        ]
+
+        component "core/Voltage Source" Vex_0500ue {
+            execution_rate = "Ts"
+            init_const_value = "Vex"
+        }
+        [
+            position = 8008, 8704
+            rotation = right
+        ]
+
+        component "core/Resistor" R1_0500ue {
+            resistance = "R0"
+        }
+        [
+            position = 8104, 8632
+            rotation = right
+        ]
+
+        component "core/Resistor" Rg_0500ue {
+            resistance = "R0*(1+GF*500e-6)"
+        }
+        [
+            position = 8104, 8776
+            rotation = right
+        ]
+
+        component "core/Resistor" R3_0500ue {
+            resistance = "R0"
+        }
+        [
+            position = 8264, 8632
+            rotation = right
+        ]
+
+        component "core/Resistor" R4_0500ue {
+            resistance = "R0"
+        }
+        [
+            position = 8264, 8776
+            rotation = right
+        ]
+
+        component "core/Ground" GND_0500ue {
+        }
+        [
+            position = 8184, 8896
+        ]
+
+        component "core/Voltage Measurement" e0_0500ue {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 8184, 8704
+        ]
+
+        component "core/Probe" pe0_0500ue {
+        }
+        [
+            position = 8184, 8504
+        ]
+
+        component "core/Voltage Source" Vex_1000ue {
+            execution_rate = "Ts"
+            init_const_value = "Vex"
+        }
+        [
+            position = 8368, 8704
+            rotation = right
+        ]
+
+        component "core/Resistor" R1_1000ue {
+            resistance = "R0"
+        }
+        [
+            position = 8464, 8632
+            rotation = right
+        ]
+
+        component "core/Resistor" Rg_1000ue {
+            resistance = "R0*(1+GF*1000e-6)"
+        }
+        [
+            position = 8464, 8776
+            rotation = right
+        ]
+
+        component "core/Resistor" R3_1000ue {
+            resistance = "R0"
+        }
+        [
+            position = 8624, 8632
+            rotation = right
+        ]
+
+        component "core/Resistor" R4_1000ue {
+            resistance = "R0"
+        }
+        [
+            position = 8624, 8776
+            rotation = right
+        ]
+
+        component "core/Ground" GND_1000ue {
+        }
+        [
+            position = 8544, 8896
+        ]
+
+        component "core/Voltage Measurement" e0_1000ue {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 8544, 8704
+        ]
+
+        component "core/Probe" pe0_1000ue {
+        }
+        [
+            position = 8544, 8504
+        ]
+
+        component "core/Voltage Source" Vex_1500ue {
+            execution_rate = "Ts"
+            init_const_value = "Vex"
+        }
+        [
+            position = 8728, 8704
+            rotation = right
+        ]
+
+        component "core/Resistor" R1_1500ue {
+            resistance = "R0"
+        }
+        [
+            position = 8824, 8632
+            rotation = right
+        ]
+
+        component "core/Resistor" Rg_1500ue {
+            resistance = "R0*(1+GF*1500e-6)"
+        }
+        [
+            position = 8824, 8776
+            rotation = right
+        ]
+
+        component "core/Resistor" R3_1500ue {
+            resistance = "R0"
+        }
+        [
+            position = 8984, 8632
+            rotation = right
+        ]
+
+        component "core/Resistor" R4_1500ue {
+            resistance = "R0"
+        }
+        [
+            position = 8984, 8776
+            rotation = right
+        ]
+
+        component "core/Ground" GND_1500ue {
+        }
+        [
+            position = 8904, 8896
+        ]
+
+        component "core/Voltage Measurement" e0_1500ue {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 8904, 8704
+        ]
+
+        component "core/Probe" pe0_1500ue {
+        }
+        [
+            position = 8904, 8504
+        ]
+
+        component "core/Voltage Source" Vex_2000ue {
+            execution_rate = "Ts"
+            init_const_value = "Vex"
+        }
+        [
+            position = 9088, 8704
+            rotation = right
+        ]
+
+        component "core/Resistor" R1_2000ue {
+            resistance = "R0"
+        }
+        [
+            position = 9184, 8632
+            rotation = right
+        ]
+
+        component "core/Resistor" Rg_2000ue {
+            resistance = "R0*(1+GF*2000e-6)"
+        }
+        [
+            position = 9184, 8776
+            rotation = right
+        ]
+
+        component "core/Resistor" R3_2000ue {
+            resistance = "R0"
+        }
+        [
+            position = 9344, 8632
+            rotation = right
+        ]
+
+        component "core/Resistor" R4_2000ue {
+            resistance = "R0"
+        }
+        [
+            position = 9344, 8776
+            rotation = right
+        ]
+
+        component "core/Ground" GND_2000ue {
+        }
+        [
+            position = 9264, 8896
+        ]
+
+        component "core/Voltage Measurement" e0_2000ue {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 9264, 8704
+        ]
+
+        component "core/Probe" pe0_2000ue {
+        }
+        [
+            position = 9264, 8504
+        ]
+
+        component "core/Scope" Scope_pontos {
+            selected_signals = "[\'pe0_0000ue\', \'pe0_0500ue\', \'pe0_1000ue\', \'pe0_1500ue\', \'pe0_2000ue\']"
+            signals_data = "{\"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true, \"signals_tooltips_enabled\": true}, \"signals\": {\"pe0_0000ue\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#000000\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"pe0_0500ue\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#1F4E79\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"pe0_1000ue\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#2E7D32\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"pe0_1500ue\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#C55A11\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"pe0_2000ue\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#C00000\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"4\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"5\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"6\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}}"
+        }
+        [
+            position = 9560, 8704
+        ]
+
+        junction j_eps sp
+        [
+            position = 7704, 7900
+        ]
+
+        junction j_dR sp
+        [
+            position = 7904, 7900
+        ]
+
+        junction no_A pe
+        [
+            position = 8400, 7800
+        ]
+
+        junction no_A0 pe
+        [
+            position = 8200, 7800
+        ]
+
+        junction no_A2 pe
+        [
+            position = 8704, 7800
+        ]
+
+        junction no_B pe
+        [
+            position = 8400, 7960
+        ]
+
+        junction no_C pe
+        [
+            position = 8704, 7960
+        ]
+
+        junction no_D pe
+        [
+            position = 8400, 8304
+        ]
+
+        junction no_D0 pe
+        [
+            position = 8200, 8304
+        ]
+
+        junction no_D2 pe
+        [
+            position = 8704, 8304
+        ]
+
+        junction no_D3 pe
+        [
+            position = 8552, 8304
+        ]
+
+        junction j_e0 sp
+        [
+            position = 8848, 7960
+        ]
+
+        junction a1_0000ue pe
+        [
+            position = 7744, 8560
+        ]
+
+        junction a0_0000ue pe
+        [
+            position = 7648, 8560
+        ]
+
+        junction a2_0000ue pe
+        [
+            position = 7904, 8560
+        ]
+
+        junction b_0000ue pe
+        [
+            position = 7744, 8704
+        ]
+
+        junction c_0000ue pe
+        [
+            position = 7904, 8704
+        ]
+
+        junction d1_0000ue pe
+        [
+            position = 7744, 8848
+        ]
+
+        junction d0_0000ue pe
+        [
+            position = 7648, 8848
+        ]
+
+        junction d2_0000ue pe
+        [
+            position = 7904, 8848
+        ]
+
+        junction d3_0000ue pe
+        [
+            position = 7824, 8848
+        ]
+
+        junction a1_0500ue pe
+        [
+            position = 8104, 8560
+        ]
+
+        junction a0_0500ue pe
+        [
+            position = 8008, 8560
+        ]
+
+        junction a2_0500ue pe
+        [
+            position = 8264, 8560
+        ]
+
+        junction b_0500ue pe
+        [
+            position = 8104, 8704
+        ]
+
+        junction c_0500ue pe
+        [
+            position = 8264, 8704
+        ]
+
+        junction d1_0500ue pe
+        [
+            position = 8104, 8848
+        ]
+
+        junction d0_0500ue pe
+        [
+            position = 8008, 8848
+        ]
+
+        junction d2_0500ue pe
+        [
+            position = 8264, 8848
+        ]
+
+        junction d3_0500ue pe
+        [
+            position = 8184, 8848
+        ]
+
+        junction a1_1000ue pe
+        [
+            position = 8464, 8560
+        ]
+
+        junction a0_1000ue pe
+        [
+            position = 8368, 8560
+        ]
+
+        junction a2_1000ue pe
+        [
+            position = 8624, 8560
+        ]
+
+        junction b_1000ue pe
+        [
+            position = 8464, 8704
+        ]
+
+        junction c_1000ue pe
+        [
+            position = 8624, 8704
+        ]
+
+        junction d1_1000ue pe
+        [
+            position = 8464, 8848
+        ]
+
+        junction d0_1000ue pe
+        [
+            position = 8368, 8848
+        ]
+
+        junction d2_1000ue pe
+        [
+            position = 8624, 8848
+        ]
+
+        junction d3_1000ue pe
+        [
+            position = 8544, 8848
+        ]
+
+        junction a1_1500ue pe
+        [
+            position = 8824, 8560
+        ]
+
+        junction a0_1500ue pe
+        [
+            position = 8728, 8560
+        ]
+
+        junction a2_1500ue pe
+        [
+            position = 8984, 8560
+        ]
+
+        junction b_1500ue pe
+        [
+            position = 8824, 8704
+        ]
+
+        junction c_1500ue pe
+        [
+            position = 8984, 8704
+        ]
+
+        junction d1_1500ue pe
+        [
+            position = 8824, 8848
+        ]
+
+        junction d0_1500ue pe
+        [
+            position = 8728, 8848
+        ]
+
+        junction d2_1500ue pe
+        [
+            position = 8984, 8848
+        ]
+
+        junction d3_1500ue pe
+        [
+            position = 8904, 8848
+        ]
+
+        junction a1_2000ue pe
+        [
+            position = 9184, 8560
+        ]
+
+        junction a0_2000ue pe
+        [
+            position = 9088, 8560
+        ]
+
+        junction a2_2000ue pe
+        [
+            position = 9344, 8560
+        ]
+
+        junction b_2000ue pe
+        [
+            position = 9184, 8704
+        ]
+
+        junction c_2000ue pe
+        [
+            position = 9344, 8704
+        ]
+
+        junction d1_2000ue pe
+        [
+            position = 9184, 8848
+        ]
+
+        junction d0_2000ue pe
+        [
+            position = 9088, 8848
+        ]
+
+        junction d2_2000ue pe
+        [
+            position = 9344, 8848
+        ]
+
+        junction d3_2000ue pe
+        [
+            position = 9264, 8848
+        ]
+
+        comment Comment1 START Verificacao por pontos: 5 pontes de 1/4 com o extensometro substituido por um resistor fixo R0*(1+GF*eps_k) ENDCOMMENT 
+        [
+            position = 8352, 8420
+        ]
+
+        connect eps_varredura.out j_eps as Connection1
+        connect j_eps p1_deformacao.in as Connection2
+        connect j_eps ref_linear_GF_4.in as Connection3
+        connect ref_linear_GF_4.out p5_ref_linear_mV_por_V.in as Connection4
+        connect j_eps dR_R0_GF.in as Connection5
+        connect dR_R0_GF.out j_dR as Connection6
+        connect j_dR R_extensometro.in as Connection7
+        connect R0_nominal.out R_extensometro.in1 as Connection8
+        connect R_extensometro.out p4_R_extensometro_ohm.in as Connection9
+        connect Vex.p_node no_A0 as Connection10
+        connect no_A0 no_A as Connection11
+        connect Vex.n_node no_D0 as Connection12
+        connect no_D0 no_D as Connection13
+        connect no_A R1.p_node as Connection14
+        connect R1.n_node no_B as Connection15
+        connect no_B i_g.p_node as Connection16
+        connect i_g.n_node Rg_R0.p_node as Connection17
+        connect Rg_R0.n_node Rg_dR.p_node as Connection18
+        connect Rg_dR.n_node no_D as Connection19
+        connect no_A no_A2 as Connection20
+        connect no_A2 R3.p_node as Connection21
+        connect R3.n_node no_C as Connection22
+        connect no_C R4.p_node as Connection23
+        connect R4.n_node no_D2 as Connection24
+        connect no_D no_D3 as Connection25
+        connect no_D3 no_D2 as Connection26
+        connect no_D3 GND.node as Connection27
+        connect no_B e0.p_node as Connection28
+        connect no_C e0.n_node as Connection29
+        connect j_dR dR_vezes_i.in as Connection30
+        connect i_g.out dR_vezes_i.in1 as Connection31
+        connect dR_vezes_i.out Rg_dR.in as Connection32
+        connect e0.out j_e0 as Connection33
+        connect j_e0 p2_e0_V.in as Connection34
+        connect j_e0 para_mV_por_V.in as Connection35
+        connect para_mV_por_V.out p3_e0_mV_por_V.in as Connection36
+        connect e0_0000ue.out pe0_0000ue.in as Connection37
+        connect Vex_0000ue.p_node a0_0000ue as Connection38
+        connect a0_0000ue a1_0000ue as Connection39
+        connect Vex_0000ue.n_node d0_0000ue as Connection40
+        connect d0_0000ue d1_0000ue as Connection41
+        connect a1_0000ue R1_0000ue.p_node as Connection42
+        connect R1_0000ue.n_node b_0000ue as Connection43
+        connect b_0000ue Rg_0000ue.p_node as Connection44
+        connect Rg_0000ue.n_node d1_0000ue as Connection45
+        connect a1_0000ue a2_0000ue as Connection46
+        connect a2_0000ue R3_0000ue.p_node as Connection47
+        connect R3_0000ue.n_node c_0000ue as Connection48
+        connect c_0000ue R4_0000ue.p_node as Connection49
+        connect R4_0000ue.n_node d2_0000ue as Connection50
+        connect d1_0000ue d3_0000ue as Connection51
+        connect d3_0000ue d2_0000ue as Connection52
+        connect d3_0000ue GND_0000ue.node as Connection53
+        connect b_0000ue e0_0000ue.p_node as Connection54
+        connect c_0000ue e0_0000ue.n_node as Connection55
+        connect e0_0500ue.out pe0_0500ue.in as Connection56
+        connect Vex_0500ue.p_node a0_0500ue as Connection57
+        connect a0_0500ue a1_0500ue as Connection58
+        connect Vex_0500ue.n_node d0_0500ue as Connection59
+        connect d0_0500ue d1_0500ue as Connection60
+        connect a1_0500ue R1_0500ue.p_node as Connection61
+        connect R1_0500ue.n_node b_0500ue as Connection62
+        connect b_0500ue Rg_0500ue.p_node as Connection63
+        connect Rg_0500ue.n_node d1_0500ue as Connection64
+        connect a1_0500ue a2_0500ue as Connection65
+        connect a2_0500ue R3_0500ue.p_node as Connection66
+        connect R3_0500ue.n_node c_0500ue as Connection67
+        connect c_0500ue R4_0500ue.p_node as Connection68
+        connect R4_0500ue.n_node d2_0500ue as Connection69
+        connect d1_0500ue d3_0500ue as Connection70
+        connect d3_0500ue d2_0500ue as Connection71
+        connect d3_0500ue GND_0500ue.node as Connection72
+        connect b_0500ue e0_0500ue.p_node as Connection73
+        connect c_0500ue e0_0500ue.n_node as Connection74
+        connect e0_1000ue.out pe0_1000ue.in as Connection75
+        connect Vex_1000ue.p_node a0_1000ue as Connection76
+        connect a0_1000ue a1_1000ue as Connection77
+        connect Vex_1000ue.n_node d0_1000ue as Connection78
+        connect d0_1000ue d1_1000ue as Connection79
+        connect a1_1000ue R1_1000ue.p_node as Connection80
+        connect R1_1000ue.n_node b_1000ue as Connection81
+        connect b_1000ue Rg_1000ue.p_node as Connection82
+        connect Rg_1000ue.n_node d1_1000ue as Connection83
+        connect a1_1000ue a2_1000ue as Connection84
+        connect a2_1000ue R3_1000ue.p_node as Connection85
+        connect R3_1000ue.n_node c_1000ue as Connection86
+        connect c_1000ue R4_1000ue.p_node as Connection87
+        connect R4_1000ue.n_node d2_1000ue as Connection88
+        connect d1_1000ue d3_1000ue as Connection89
+        connect d3_1000ue d2_1000ue as Connection90
+        connect d3_1000ue GND_1000ue.node as Connection91
+        connect b_1000ue e0_1000ue.p_node as Connection92
+        connect c_1000ue e0_1000ue.n_node as Connection93
+        connect e0_1500ue.out pe0_1500ue.in as Connection94
+        connect Vex_1500ue.p_node a0_1500ue as Connection95
+        connect a0_1500ue a1_1500ue as Connection96
+        connect Vex_1500ue.n_node d0_1500ue as Connection97
+        connect d0_1500ue d1_1500ue as Connection98
+        connect a1_1500ue R1_1500ue.p_node as Connection99
+        connect R1_1500ue.n_node b_1500ue as Connection100
+        connect b_1500ue Rg_1500ue.p_node as Connection101
+        connect Rg_1500ue.n_node d1_1500ue as Connection102
+        connect a1_1500ue a2_1500ue as Connection103
+        connect a2_1500ue R3_1500ue.p_node as Connection104
+        connect R3_1500ue.n_node c_1500ue as Connection105
+        connect c_1500ue R4_1500ue.p_node as Connection106
+        connect R4_1500ue.n_node d2_1500ue as Connection107
+        connect d1_1500ue d3_1500ue as Connection108
+        connect d3_1500ue d2_1500ue as Connection109
+        connect d3_1500ue GND_1500ue.node as Connection110
+        connect b_1500ue e0_1500ue.p_node as Connection111
+        connect c_1500ue e0_1500ue.n_node as Connection112
+        connect e0_2000ue.out pe0_2000ue.in as Connection113
+        connect Vex_2000ue.p_node a0_2000ue as Connection114
+        connect a0_2000ue a1_2000ue as Connection115
+        connect Vex_2000ue.n_node d0_2000ue as Connection116
+        connect d0_2000ue d1_2000ue as Connection117
+        connect a1_2000ue R1_2000ue.p_node as Connection118
+        connect R1_2000ue.n_node b_2000ue as Connection119
+        connect b_2000ue Rg_2000ue.p_node as Connection120
+        connect Rg_2000ue.n_node d1_2000ue as Connection121
+        connect a1_2000ue a2_2000ue as Connection122
+        connect a2_2000ue R3_2000ue.p_node as Connection123
+        connect R3_2000ue.n_node c_2000ue as Connection124
+        connect c_2000ue R4_2000ue.p_node as Connection125
+        connect R4_2000ue.n_node d2_2000ue as Connection126
+        connect d1_2000ue d3_2000ue as Connection127
+        connect d3_2000ue d2_2000ue as Connection128
+        connect d3_2000ue GND_2000ue.node as Connection129
+        connect b_2000ue e0_2000ue.p_node as Connection130
+        connect c_2000ue e0_2000ue.n_node as Connection131
+    }
+
+    default {
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Product" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Triangular Wave Source" {
+            min_val = "-0.5"
+            max_val = "0.5"
+            frequency = "50"
+            duty_cycle = "0.5"
+            phase = "0"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Voltage Source" {
+            sig_input = "False"
+            type = "signal generator"
+            param_set = "1phase"
+            parent_label = ""
+            dtsm_switch_name = ""
+            addr = "0"
+            spc_nb = "0"
+            execution_rate = "100e-6"
+            cpd_visible = "True"
+            enable_snb = "False"
+            snb_type = "R2"
+            R2 = "0.0"
+            L1 = "0.1"
+            override_signal_name = "False"
+            signal_name = ""
+            init_source_nature = "Constant"
+            init_const_value = "0.0"
+            init_rms_value = "0.0"
+            init_frequency = "50.0"
+            init_phase = "0.0"
+        }
+
+        "core/Current Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+
+    CODE model_init
+        # =====================================================================
+        #  ECOM060 - Instrumentacao Eletronica - UFAL - 2026.2
+        #  Fase 1 / Entrega 01 - Equipe G05
+        #  Extensometro (7.1.3) em ponte de Wheatstone de 1/4 (6.1)
+        #
+        #  Extensometro: OMEGA SGD-3/350-LY11 (folha de constantan)
+        #     R0 = 350 ohm, GF = 2,0
+        #  Excitacao: 5 V CC (limite do datasheet: 9,5 Vrms)
+        #  Especificacao (R2): S >= 0,5 (mV/V)/mstrain
+        #
+        #  O extensometro e modelado como R0 em serie com uma fonte de tensao
+        #  controlada v = dR*i, com dR = R0*GF*eps. Eletricamente equivale a uma
+        #  resistencia R0 + dR; a ponte (R1, R3, R4, Vex) e resolvida pelo solver.
+        # =====================================================================
+        Ts      = 1e-4        # s   - passo dos blocos de sinal
+        R0      = 350.0       # ohm - resistencia nominal do extensometro
+        GF      = 2.0         # gauge factor
+        Vex     = 5.0         # V   - excitacao da ponte
+        eps_max = 2000e-6     # 2000 microstrain (faixa nominal)
+        f_sweep = 0.5         # Hz  - varredura triangular 0 -> eps_max -> 0 em 2 s
+    ENDCODE
+}
