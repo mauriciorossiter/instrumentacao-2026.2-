@@ -1,0 +1,527 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.3
+//
+
+model "motor_cc_equivalente_eletrico_C" {
+    configuration {
+        hil_device = "HIL404"
+        hil_configuration_id = 6
+        simulation_method = exact
+        simulation_time_step = auto
+        fine_auto_sim_step = False
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 1e-05
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 1.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/SCADA Input" TL_ref {
+            execution_rate = "1e-5"
+            unit = "N.m"
+        }
+        [
+            position = 8068, 7756
+        ]
+
+        component "core/Resistor" Ra {
+            resistance = "3"
+        }
+        [
+            position = 7592, 7848
+        ]
+
+        component "core/Inductor" La {
+            inductance = "6e-3"
+        }
+        [
+            position = 7684, 7848
+        ]
+
+        component "core/Current Measurement" Ia {
+            execution_rate = "1e-5"
+            sig_output = "True"
+        }
+        [
+            position = 7752, 7848
+        ]
+
+        component "core/Gain" Gain_Ke {
+            execution_rate = "1e-5"
+            gain = "50e-3"
+        }
+        [
+            position = 7872, 8036
+            rotation = left
+        ]
+
+        component "core/Ground" gnd_el {
+        }
+        [
+            position = 7676, 8028
+        ]
+
+        component "core/Gain" Gain_Kt {
+            execution_rate = "1e-5"
+            gain = "50e-3"
+        }
+        [
+            position = 7936, 7756
+        ]
+
+        component "core/Capacitor" C_J {
+            capacitance = "100e-6"
+        }
+        [
+            position = 8084, 7948
+            rotation = right
+        ]
+
+        component "core/Resistor" R_B {
+            resistance = "9523.80952"
+        }
+        [
+            position = 8252, 7964
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" omega_equivalent {
+            execution_rate = "1e-5"
+            sig_output = "True"
+        }
+        [
+            position = 8392, 7920
+            rotation = right
+        ]
+
+        component "core/Ground" gnd_mec {
+        }
+        [
+            position = 8252, 8092
+        ]
+
+        component "core/Permanent Magnet DC Machine" "E-576 Servo Motor" {
+            Jm = "100e-6"
+            La = "6e-3"
+            Ra = "3"
+            execution_rate = "0.0001"
+            friction_coeff = "105e-6"
+            ke = "50e-3"
+            kt = "50e-3"
+            load_src = "Model"
+        }
+        [
+            position = 7036, 7924
+        ]
+
+        component "core/Current Measurement" "Amperímetro ideal" {
+            execution_rate = "0.0001"
+        }
+        [
+            position = 7220, 7828
+            rotation = down
+        ]
+
+        component "core/Constant" Constant2 {
+            value = "0"
+        }
+        [
+            position = 7016, 7776
+        ]
+
+        component "core/Signal Controlled Voltage Source" Vsp2 {
+        }
+        [
+            position = 7264, 7908
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Voltage Source" Va {
+        }
+        [
+            position = 7464, 7908
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Voltage Source" E_bemf {
+        }
+        [
+            position = 7808, 7920
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Current Source" I_TL {
+        }
+        [
+            position = 8164, 7896
+            rotation = left
+        ]
+
+        component "core/Signal Controlled Current Source" I_Tm {
+        }
+        [
+            position = 7980, 7936
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" Va_measurement {
+        }
+        [
+            position = 7404, 7944
+            rotation = right
+        ]
+
+        component "core/SCADA Input" Va_ref {
+            unit = ""
+        }
+        [
+            position = 7228, 8044
+        ]
+
+        junction Junction3 pe
+        [
+            position = 8252, 7848
+        ]
+
+        junction Junction7 pe
+        [
+            position = 8252, 8024
+        ]
+
+        junction Junction14 pe
+        [
+            position = 7676, 7984
+        ]
+
+        junction Junction16 pe
+        [
+            position = 8160, 7848
+        ]
+
+        junction Junction17 pe
+        [
+            position = 8160, 8024
+        ]
+
+        junction Junction18 pe
+        [
+            position = 8084, 7848
+        ]
+
+        junction Junction19 pe
+        [
+            position = 8084, 8024
+        ]
+
+        junction Junction21 pe
+        [
+            position = 7464, 7848
+        ]
+
+        junction Junction22 pe
+        [
+            position = 7464, 7984
+        ]
+
+        junction Junction23 sp
+        [
+            position = 7332, 7908
+        ]
+
+        connect Ra.n_node La.p_node as Con2
+        connect La.n_node Ia.p_node as Con3
+        connect Ia.out Gain_Kt.in as Con_kt_in
+        connect omega_equivalent.p_node Junction3 as Connection8
+        [
+            breakpoints = 8324, 7848; 8252, 7848
+        ]
+        connect R_B.p_node Junction3 as Connection10
+        connect omega_equivalent.out Gain_Ke.in as Connection15
+        [
+            breakpoints = 8428, 7976; 8428, 8148; 8360, 8148; 7872, 8148; 7872, 8148; 7872, 8148; 7872, 8064
+        ]
+        connect R_B.n_node Junction7 as Connection33
+        connect omega_equivalent.n_node Junction7 as Connection35
+        [
+            breakpoints = 8324, 8024; 8252, 8024
+        ]
+        connect gnd_mec.node Junction7 as Connection36
+        [
+            breakpoints = 8252, 8068; 8252, 8020
+        ]
+        connect Constant2.out "E-576 Servo Motor.load_in" as Connection48
+        connect "E-576 Servo Motor.a1_in" "Amperímetro ideal.n_node" as Connection63
+        connect E_bemf.p_node Ia.n_node as Connection103
+        connect gnd_el.node Junction14 as Connection104
+        connect E_bemf.n_node Junction14 as Connection106
+        connect Gain_Ke.out E_bemf.in as Connection107
+        connect Junction16 Junction3 as Connection119
+        [
+            breakpoints = 8252, 7848
+        ]
+        connect I_TL.n_node Junction16 as Connection120
+        connect Junction17 Junction7 as Connection122
+        [
+            breakpoints = 8252, 8024
+        ]
+        connect I_TL.p_node Junction17 as Connection123
+        connect Junction16 Junction18 as Connection127
+        connect Junction18 C_J.p_node as Connection128
+        [
+            breakpoints = 8072, 7848
+        ]
+        connect I_Tm.p_node Junction18 as Connection129
+        connect Junction17 Junction19 as Connection130
+        connect Junction19 C_J.n_node as Connection131
+        [
+            breakpoints = 8072, 8024
+        ]
+        connect I_Tm.n_node Junction19 as Connection132
+        connect Vsp2.p_node "Amperímetro ideal.p_node" as Connection135
+        connect "E-576 Servo Motor.a2_in" Vsp2.n_node as Connection136
+        connect Ra.p_node Junction21 as Connection143
+        [
+            breakpoints = 7496, 7848
+        ]
+        connect Junction21 Va.p_node as Connection144
+        connect Va_measurement.p_node Junction21 as Connection145
+        connect Junction14 Junction22 as Connection146
+        [
+            breakpoints = 7496, 7984
+        ]
+        connect Junction22 Va.n_node as Connection147
+        connect Va_measurement.n_node Junction22 as Connection148
+        connect Gain_Kt.out I_Tm.in as Connection169
+        [
+            breakpoints = 8024, 7756
+        ]
+        connect I_TL.in TL_ref.out as Connection259
+        [
+            breakpoints = 8100, 7812; 8100, 7776
+        ]
+        connect Vsp2.in Junction23 as Connection261
+        connect Junction23 Va.in as Connection262
+        [
+            breakpoints = 7496, 7908
+        ]
+        connect Va_ref.out Junction23 as Connection263
+    }
+
+    default {
+        "core/Capacitor" {
+            signal_access = "inherit"
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Inductor" {
+            signal_access = "inherit"
+            inductance = "1e-3"
+            initial_current = "0.0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/SCADA Input" {
+            signal_access = "inherit"
+            addr = "0"
+            format = "real"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "real"
+            min = "-1e6"
+            max = "1e6"
+            def_value = "0"
+            unit = " "
+            execution_rate = "100e-6"
+        }
+
+        "core/Current Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Permanent Magnet DC Machine" {
+            signal_access = "inherit"
+            Ra = "7"
+            La = "120e-3"
+            kt = "14.1e-3"
+            ke = "14.1e-3"
+            Jm = "10e-6"
+            friction_coeff = "0"
+            unconstrained_angle = "disabled"
+            load_src = "SCADA / external"
+            ext_mdl_load_type = "torque"
+            load_ai_pin_addr = "1"
+            load_ai_offset = "0"
+            load_ai_gain = "1"
+            enc_ppr = "1024"
+            encoder_Z_pulse_length = "Full period"
+            res_pole_pairs = "1"
+            res_carr_source = "internal"
+            res_carr_source_external = "single ended"
+            res_int_carr_f = "5e+3"
+            res_ai_pin_addr = "1"
+            res_ai_pin2_addr = "2"
+            res_ai_offset = "0"
+            res_ai_gain = "1"
+            absenc_type = "None"
+            singleturn_abs_enc = "0"
+            multiturn_enable = "False"
+            multiturn_abs_enc = "0"
+            endat_clock_di_addr = "1"
+            endat_clock_di_logic = "active high"
+            endat_data_di_addr = "2"
+            endat_data_di_logic = "active high"
+            biss_clock_di_addr = "1"
+            biss_clock_di_logic = "active high"
+            biss_data_di_addr = "2"
+            ssi_clock_di_addr = "1"
+            ssi_clock_di_logic = "active high"
+            ssi_data_di_addr = "2"
+            Rsnb_rotor = "inf"
+            execution_rate = "100e-6"
+            el_trq_out = "False"
+            mech_speed_out = "False"
+            mech_angle_out = "False"
+            psi_a = "False"
+            e_a = "False"
+        }
+
+        "core/Signal Controlled Current Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Signal Controlled Voltage Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+}
