@@ -1,0 +1,2 @@
+-r ../simulacao/requirements.txt
+typhoon-hil-api==1.32.1

@@ -1,0 +1,17 @@
+{
+  "data_local": "2026-11-10",
+  "aplicativo": "TyphoonSim 2026.3 independente",
+  "api": "typhoon-hil-api 1.32.1",
+  "modo_solver": "offline DAE/BDF",
+  "interface_testada": "SCADA Standalone",
+  "ensaios_offline_executados": 9,
+  "ensaios_offline_aprovados": 9,
+  "ensaios_confirmados_pela_interface": ["r3a", "r4-k2-2", "r4-q-0p5"],
+  "amostras_por_ensaio": 20251,
+  "intervalo_aquisicao_eletrico_s": 0.001,
+  "duracao_eletrica_s": 20.25,
+  "erro_maximo_nivel_mm": 0.6843090057373222,
+  "maior_diferenca_absoluta_metrica_pct": 0.3333333333333262,
+  "ensaios_virtual_hil": 0,
+  "control_center_usado": false
+}

@@ -1,0 +1,16 @@
+{
+  "interface": "SCADA Standalone",
+  "solver": "TyphoonSim offline",
+  "ensaio": "r4-k2-2",
+  "parametros": {
+    "Q_rel": 1.0,
+    "G1_rel": 1.0,
+    "G2_rel": 2.0,
+    "D_deg": 5.0,
+    "D_pul": 0.0,
+    "Vref1": 10.0,
+    "Vref2": 2.5
+  },
+  "concorda": true,
+  "instante_utc": "2026-11-11T01:36:33.699251+00:00"
+}

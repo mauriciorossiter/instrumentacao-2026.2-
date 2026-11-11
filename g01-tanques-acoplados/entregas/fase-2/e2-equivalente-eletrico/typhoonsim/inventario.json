@@ -1,0 +1,487 @@
+[
+  {
+    "nome": "I_in",
+    "biblioteca": "core/Signal Controlled Current Source",
+    "propriedades": {
+      "execution_rate": 0.0001
+    }
+  },
+  {
+    "nome": "Orificio_12",
+    "biblioteca": "core/Signal Controlled Current Source",
+    "propriedades": {
+      "execution_rate": 0.0001
+    }
+  },
+  {
+    "nome": "Orificio_2",
+    "biblioteca": "core/Signal Controlled Current Source",
+    "propriedades": {
+      "execution_rate": 0.0001
+    }
+  },
+  {
+    "nome": "I_pre1",
+    "biblioteca": "core/Signal Controlled Current Source",
+    "propriedades": {
+      "execution_rate": 0.0001
+    }
+  },
+  {
+    "nome": "I_pre2",
+    "biblioteca": "core/Signal Controlled Current Source",
+    "propriedades": {
+      "execution_rate": 0.0001
+    }
+  },
+  {
+    "nome": "C1",
+    "biblioteca": "core/Capacitor",
+    "propriedades": {
+      "capacitance": 0.0005,
+      "initial_voltage": 0.0,
+      "pole_shift_ignore": true
+    }
+  },
+  {
+    "nome": "C2",
+    "biblioteca": "core/Capacitor",
+    "propriedades": {
+      "capacitance": 0.0005,
+      "initial_voltage": 0.0,
+      "pole_shift_ignore": true
+    }
+  },
+  {
+    "nome": "V1",
+    "biblioteca": "core/Voltage Measurement",
+    "propriedades": {
+      "sig_output": true,
+      "execution_rate": 0.0001,
+      "override_signal_name": true,
+      "signal_name": "V1"
+    }
+  },
+  {
+    "nome": "V2",
+    "biblioteca": "core/Voltage Measurement",
+    "propriedades": {
+      "sig_output": true,
+      "execution_rate": 0.0001,
+      "override_signal_name": true,
+      "signal_name": "V2"
+    }
+  },
+  {
+    "nome": "Q_in",
+    "biblioteca": "core/Current Measurement",
+    "propriedades": {
+      "sig_output": true,
+      "execution_rate": 0.0001,
+      "override_signal_name": true,
+      "signal_name": "Q_in"
+    }
+  },
+  {
+    "nome": "Q_12",
+    "biblioteca": "core/Current Measurement",
+    "propriedades": {
+      "sig_output": true,
+      "execution_rate": 0.0001,
+      "override_signal_name": true,
+      "signal_name": "Q_12"
+    }
+  },
+  {
+    "nome": "Q_out",
+    "biblioteca": "core/Current Measurement",
+    "propriedades": {
+      "sig_output": true,
+      "execution_rate": 0.0001,
+      "override_signal_name": true,
+      "signal_name": "Q_out"
+    }
+  },
+  {
+    "nome": "Terra",
+    "biblioteca": "core/Ground",
+    "propriedades": {}
+  },
+  {
+    "nome": "precarga",
+    "biblioteca": "core/SCADA Input",
+    "propriedades": {
+      "def_value": 1.0,
+      "min": 0.0,
+      "max": 1.0,
+      "unit": "0/1",
+      "signal_type": "real",
+      "execution_rate": 0.0001
+    }
+  },
+  {
+    "nome": "Vref1",
+    "biblioteca": "core/SCADA Input",
+    "propriedades": {
+      "def_value": 10.0,
+      "min": 0.0,
+      "max": 12.0,
+      "unit": "V",
+      "signal_type": "real",
+      "execution_rate": 0.0001
+    }
+  },
+  {
+    "nome": "Vref2",
+    "biblioteca": "core/SCADA Input",
+    "propriedades": {
+      "def_value": 10.0,
+      "min": 0.0,
+      "max": 12.0,
+      "unit": "V",
+      "signal_type": "real",
+      "execution_rate": 0.0001
+    }
+  },
+  {
+    "nome": "Q_rel",
+    "biblioteca": "core/SCADA Input",
+    "propriedades": {
+      "def_value": 1.0,
+      "min": 0.1,
+      "max": 2.0,
+      "unit": "pu",
+      "signal_type": "real",
+      "execution_rate": 0.0001
+    }
+  },
+  {
+    "nome": "D_deg",
+    "biblioteca": "core/SCADA Input",
+    "propriedades": {
+      "def_value": 5.0,
+      "min": -30.0,
+      "max": 9.0,
+      "unit": "%",
+      "signal_type": "real",
+      "execution_rate": 0.0001
+    }
+  },
+  {
+    "nome": "D_pul",
+    "biblioteca": "core/SCADA Input",
+    "propriedades": {
+      "def_value": 0.0,
+      "min": 0.0,
+      "max": 20.0,
+      "unit": "%",
+      "signal_type": "real",
+      "execution_rate": 0.0001
+    }
+  },
+  {
+    "nome": "G1_rel",
+    "biblioteca": "core/SCADA Input",
+    "propriedades": {
+      "def_value": 1.0,
+      "min": 0.25,
+      "max": 4.0,
+      "unit": "pu",
+      "signal_type": "real",
+      "execution_rate": 0.0001
+    }
+  },
+  {
+    "nome": "G2_rel",
+    "biblioteca": "core/SCADA Input",
+    "propriedades": {
+      "def_value": 1.0,
+      "min": 0.25,
+      "max": 4.0,
+      "unit": "pu",
+      "signal_type": "real",
+      "execution_rate": 0.0001
+    }
+  },
+  {
+    "nome": "Um",
+    "biblioteca": "core/Constant",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "value": 1.0
+    }
+  },
+  {
+    "nome": "u_ensaio_calc",
+    "biblioteca": "core/Sum",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "signs": "+-"
+    }
+  },
+  {
+    "nome": "Tempo_ensaio",
+    "biblioteca": "core/Integrator",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "show_reset": "level",
+      "reset_type": "synchronous",
+      "init_value": "0"
+    }
+  },
+  {
+    "nome": "Duracao_pulso",
+    "biblioteca": "core/Constant",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "value": 0.3
+    }
+  },
+  {
+    "nome": "Janela_pulso",
+    "biblioteca": "core/Relational operator",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "relational_op": "<"
+    }
+  },
+  {
+    "nome": "Pulso_ativo",
+    "biblioteca": "core/Product",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "signs": "**"
+    }
+  },
+  {
+    "nome": "Degrau_fracao",
+    "biblioteca": "core/Gain",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "gain": 0.01
+    }
+  },
+  {
+    "nome": "Degrau_aplicado",
+    "biblioteca": "core/Product",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "signs": "**"
+    }
+  },
+  {
+    "nome": "Pulso_fracao",
+    "biblioteca": "core/Gain",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "gain": 0.01
+    }
+  },
+  {
+    "nome": "Pulso_aplicado",
+    "biblioteca": "core/Product",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "signs": "**"
+    }
+  },
+  {
+    "nome": "Soma_comando",
+    "biblioteca": "core/Sum",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "signs": "+++"
+    }
+  },
+  {
+    "nome": "Vazao_operacao",
+    "biblioteca": "core/Product",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "signs": "**"
+    }
+  },
+  {
+    "nome": "Escala_corrente",
+    "biblioteca": "core/Gain",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "gain": 0.01
+    }
+  },
+  {
+    "nome": "Vpositivo1",
+    "biblioteca": "core/Limit",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "lower_limit": 0.0,
+      "upper_limit": 1000000.0
+    }
+  },
+  {
+    "nome": "Raiz1",
+    "biblioteca": "core/Mathematical function",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "mathematical_fn": "sqrt"
+    }
+  },
+  {
+    "nome": "Gnom1",
+    "biblioteca": "core/Gain",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "gain": 0.0031622776601683794
+    }
+  },
+  {
+    "nome": "Coef_orificio1",
+    "biblioteca": "core/Product",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "signs": "**"
+    }
+  },
+  {
+    "nome": "Erro_pre1",
+    "biblioteca": "core/Sum",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "signs": "+-"
+    }
+  },
+  {
+    "nome": "Ganho_pre1",
+    "biblioteca": "core/Gain",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "gain": 2.0
+    }
+  },
+  {
+    "nome": "Limite_pre1",
+    "biblioteca": "core/Limit",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "lower_limit": -0.1,
+      "upper_limit": 0.1
+    }
+  },
+  {
+    "nome": "Ativa_pre1",
+    "biblioteca": "core/Product",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "signs": "**"
+    }
+  },
+  {
+    "nome": "Escala_h1",
+    "biblioteca": "core/Gain",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "gain": 0.1
+    }
+  },
+  {
+    "nome": "h1_m",
+    "biblioteca": "core/Probe",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "override_signal_name": true,
+      "signal_name": "h1_m"
+    }
+  },
+  {
+    "nome": "Vpositivo2",
+    "biblioteca": "core/Limit",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "lower_limit": 0.0,
+      "upper_limit": 1000000.0
+    }
+  },
+  {
+    "nome": "Raiz2",
+    "biblioteca": "core/Mathematical function",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "mathematical_fn": "sqrt"
+    }
+  },
+  {
+    "nome": "Gnom2",
+    "biblioteca": "core/Gain",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "gain": 0.0031622776601683794
+    }
+  },
+  {
+    "nome": "Coef_orificio2",
+    "biblioteca": "core/Product",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "signs": "**"
+    }
+  },
+  {
+    "nome": "Erro_pre2",
+    "biblioteca": "core/Sum",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "signs": "+-"
+    }
+  },
+  {
+    "nome": "Ganho_pre2",
+    "biblioteca": "core/Gain",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "gain": 2.0
+    }
+  },
+  {
+    "nome": "Limite_pre2",
+    "biblioteca": "core/Limit",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "lower_limit": -0.1,
+      "upper_limit": 0.1
+    }
+  },
+  {
+    "nome": "Ativa_pre2",
+    "biblioteca": "core/Product",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "signs": "**"
+    }
+  },
+  {
+    "nome": "Escala_h2",
+    "biblioteca": "core/Gain",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "gain": 0.1
+    }
+  },
+  {
+    "nome": "h2_m",
+    "biblioteca": "core/Probe",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "override_signal_name": true,
+      "signal_name": "h2_m"
+    }
+  },
+  {
+    "nome": "u_ensaio",
+    "biblioteca": "core/Probe",
+    "propriedades": {
+      "execution_rate": 0.0001,
+      "override_signal_name": true,
+      "signal_name": "u_ensaio"
+    }
+  }
+]

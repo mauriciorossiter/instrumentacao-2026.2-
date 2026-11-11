@@ -1,0 +1,71 @@
+{
+  "ensaio": "r4-q-1",
+  "origem": "typhoonsim-offline",
+  "entradas": {
+    "precarga": 1.0,
+    "Vref1": 10.0,
+    "Vref2": 10.0,
+    "Q_rel": 1.0,
+    "D_deg": 5.0,
+    "D_pul": 0.0,
+    "G1_rel": 1.0,
+    "G2_rel": 1.0
+  },
+  "erro_maximo_mm": 0.08993148803715378,
+  "concorda": true,
+  "metricas": [
+    {
+      "grandeza": "h2_final_m",
+      "original": 1.1024999826034527,
+      "equivalente": 1.1024999618530273,
+      "diferenca_pct": -1.882124780534569e-06,
+      "concorda": true
+    },
+    {
+      "grandeza": "Kef_s_m2",
+      "original": 204.99996520690544,
+      "equivalente": 204.9999237060547,
+      "diferenca_pct": -2.0244320877835853e-05,
+      "concorda": true
+    },
+    {
+      "grandeza": "t63_s",
+      "original": 221.5412090616339,
+      "equivalente": 221.44439255813953,
+      "diferenca_pct": -0.04370135195364309,
+      "concorda": true
+    },
+    {
+      "grandeza": "tr_s",
+      "original": 350.3023608459797,
+      "equivalente": 350.2796937365487,
+      "diferenca_pct": -0.006470726996027821,
+      "concorda": true
+    },
+    {
+      "grandeza": "ts_s",
+      "original": 608.9023229904109,
+      "equivalente": 608.7740705882421,
+      "diferenca_pct": -0.021062886004258968,
+      "concorda": true
+    },
+    {
+      "grandeza": "sobressinal_pct",
+      "original": 0.0,
+      "equivalente": 0.0,
+      "diferenca_pct": null,
+      "concorda": true
+    }
+  ],
+  "execucao": {
+    "aplicativo": "TyphoonSim 2026.3",
+    "api": "typhoon-hil-api 1.32.1",
+    "modo": "offline",
+    "amostras": 20251,
+    "intervalo_aquisicao_s": 0.0009999999999998899,
+    "duracao_eletrica_s": 20.25,
+    "max_sim_step_s": 0.0001,
+    "sp_execution_rate_s": 0.0001,
+    "segundos_processamento": 12.594
+  }
+}

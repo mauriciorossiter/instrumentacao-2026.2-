@@ -43,6 +43,11 @@ registram os parâmetros dos relatórios e a ausência do arquivo de modelo.
 
 ## Fase 2
 
+A [Entrega 02 - equivalente elétrico](entregas/fase-2/e2-equivalente-eletrico/readme.md)
+inclui modelo nativo, circuito, relatório e apresentação. Os nove ensaios
+foram executados no TyphoonSim offline, e os controles de k2 e vazão foram
+testados no SCADA Standalone. A entrega identifica o modo usado, sem VHIL.
+
 | Entrega | Relatório | Simulação | Apresentação | Estado |
 |---|---|---|---|---|
 | e1-caracterizacao | [relatorio.pdf](entregas/fase-2/e1-caracterizacao/relatorio/relatorio.pdf) e [figuras](entregas/fase-2/e1-caracterizacao/relatorio/figuras/) | [instrucoes.md](entregas/fase-2/e1-caracterizacao/simulacao/instrucoes.md), scripts, [resultados](entregas/fase-2/e1-caracterizacao/simulacao/resultados.md) e [CSVs](entregas/fase-2/e1-caracterizacao/simulacao/dados/) | [apresentacao.pdf](entregas/fase-2/e1-caracterizacao/apresentacao/apresentacao.pdf) e [gravação](entregas/fase-2/e1-caracterizacao/apresentacao/gravacao.mp4) | Organizada para submissão |
