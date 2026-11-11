@@ -25,6 +25,7 @@
 | [entrega_06](entregas/entrega_06/) | Fase 1, Entrega 02: não idealidades do extensômetro | entregue | — |
 | [entrega_07](entregas/entrega_07/) | Fase 1, Entrega 03: validação funcional (vídeo) | entregue | — |
 | [e1-caracterizacao](entregas/fase-2/e1-caracterizacao/) | Fase 2, Entrega 01: caracterização da planta | entregue | — |
+| [e2-equivalente-eletrico](entregas/fase-2/e2-equivalente-eletrico/) | Fase 2, Entrega 02: equivalente elétrico no TyphoonSim | entregue | — |
 
 ## Observações
 
