@@ -1,0 +1,1434 @@
+<?xml version="1.0" encoding="utf-8"?><ui_settings>
+    <version>2.9</version>
+    <model_locked>False</model_locked>
+    <canvas_bg_color>#ffffff</canvas_bg_color>
+    <initialization_code><![CDATA[# NOTE: Variables and functions defined here will be
+# available for use in all Macro and Expression scripts.
+# NOTE: This code is always executed prior to simulation start.
+
+# The variable 'SETTINGS_DIR' holds the directory where the loaded Panel .cus file is located.
+# Also you can call the 'get_settings_dir_path()' function in any
+# Macro and Expression script to get the same directory.
+SETTINGS_DIR = get_settings_dir_path()
+
+# The 'add_to_python_path(folder)' function can be used to add a custom folder
+# with Python files and packages to the PYTHONPATH. After a folder is added, all Python
+# files and Python packages from it can be imported into the SCADA Namespace.
+
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# Numpy module is imported as 'np'
+# Scipy module is imported as 'sp'
+# Schematic Editor model namespace is imported as 'scm'
+# Function for printing to the HIL SCADA Message log is imported as 'printf'.
+
+]]></initialization_code>
+    <components>
+        <component_data>
+                <id>6cfab779ed3c4277ac40e16c5f593695</id>
+                <name><![CDATA[Titulo]]></name>
+                <type>TextNote</type>
+                <description/>
+                <text><![CDATA[G04 / Fase 2 / Entrega 03 - Termopar T: medicao ideal e real]]></text>
+                <widget_settings>
+                    <x>10</x>
+                    <y>5</y>
+                    <width>1390</width>
+                    <height>34</height>
+                    <background_color><![CDATA[None]]></background_color>
+                    <background_type><![CDATA[Transparent]]></background_type>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label/>
+                    <use_label>False</use_label>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>ace5929f09e2459081d175b5e21af70f</id>
+                <name><![CDATA[Caso_degrau]]></name>
+                <type>MacroButton</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.refresh(panel,'03','degrau'))]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>10</x>
+                    <y>43</y>
+                    <width>165</width>
+                    <height>33</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[DEGRAU]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>4c9f0edafa0f411e946d36f8ca710533</id>
+                <name><![CDATA[Caso_livre]]></name>
+                <type>MacroButton</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.refresh(panel,'03','livre'))]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>185</x>
+                    <y>43</y>
+                    <width>165</width>
+                    <height>33</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[RESPOSTA LIVRE]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>41722f09e12b4931916260f780ab0140</id>
+                <name><![CDATA[Caso_pulso]]></name>
+                <type>MacroButton</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.refresh(panel,'03','pulso'))]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>360</x>
+                    <y>43</y>
+                    <width>165</width>
+                    <height>33</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[PULSO]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>4eca26d6b08d4ecca137299bd1568f92</id>
+                <name><![CDATA[Capturar]]></name>
+                <type>MacroButton</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.launch(panel,'03'))]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>550</x>
+                    <y>43</y>
+                    <width>230</width>
+                    <height>33</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[NOVO CAPTURE VHIL]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>c9db3fd7ea9d4c65901fa9dc4527c8b0</id>
+                <name><![CDATA[Atualizar]]></name>
+                <type>MacroButton</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.refresh(panel,'03'))]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>800</x>
+                    <y>43</y>
+                    <width>250</width>
+                    <height>33</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[ATUALIZAR / RESULTADO]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>f064b42de41c4a78b3ef0651db453ce0</id>
+                <name><![CDATA[Comparacao]]></name>
+                <type>XYGraphDisplay</type>
+                <description/>
+                <data_type>Expression</data_type>
+                <code><![CDATA[displayValue=[[0,298.15],['Tempo (ms)','Temperatura (K)']]]]></code>
+                <signals><![CDATA[[]]]></signals>
+                <updateRate>1000</updateRate>
+                <background_color>#ffffff</background_color>
+                <signals_scaling_factors>[1.0, 1.0]</signals_scaling_factors>
+                <widget_settings>
+                    <x>10</x>
+                    <y>88</y>
+                    <width>920</width>
+                    <height>420</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label/>
+                    <use_label>False</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+                <advance_widget_settings>
+                    <x_title><![CDATA[x axes]]></x_title>
+                    <y_title><![CDATA[y axes]]></y_title>
+                    <x_axis_custom_text><![CDATA[Tempo do ensaio (ms)]]></x_axis_custom_text>
+                    <y_axis_custom_text><![CDATA[Temperatura (K)]]></y_axis_custom_text>
+                    <enable_x_axis_custom_text>True</enable_x_axis_custom_text>
+                    <enable_y_axis_custom_text>True</enable_y_axis_custom_text>
+                    <y_range_min>297</y_range_min>
+                    <y_range_max>321</y_range_max>
+                    <x_range_min>0</x_range_min>
+                    <x_range_max>50</x_range_max>
+                    <time_window>10</time_window>
+                    <x_auto_scale_enabled>False</x_auto_scale_enabled>
+                    <y_auto_scale_enabled>False</y_auto_scale_enabled>
+                    <line_style>Circle (o)</line_style>
+                    <use_reference_curve>True</use_reference_curve>
+                    <reference_curve_code><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+referenceCurves=g04.curves('03',g04.state('03')['rotulo'])
+]]></reference_curve_code>
+                </advance_widget_settings>
+            </component_data>
+        <component_data>
+                <id>c375de60e7b54255bf21ed1b158b7a6d</id>
+                <name><![CDATA[Estado]]></name>
+                <type>TextNote</type>
+                <description/>
+                <text><![CDATA[Curvas salvas de Capture VHIL. Selecione o caso. NOVO CAPTURE refaz o ensaio com os ajustes abaixo.
+ATUALIZAR carrega o novo resultado. Dados brutos e metadados permanecem em capturas/.]]></text>
+                <widget_settings>
+                    <x>10</x>
+                    <y>515</y>
+                    <width>920</width>
+                    <height>85</height>
+                    <background_color><![CDATA[None]]></background_color>
+                    <background_type><![CDATA[Transparent]]></background_type>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label/>
+                    <use_label>False</use_label>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>064af9a42e844b7183adcfd2e1552cfa</id>
+                <name><![CDATA[Unidades]]></name>
+                <type>TextNote</type>
+                <description/>
+                <text><![CDATA[Temperaturas absolutas em K. Eletricos: V, A, ohm, F. Livre: potencia removida apos 2 ms de preparacao.
+Capture: 10 us. Solver: 0,2 us. Grafico reduz pontos somente para desenho.
+Parametros on: 0 desliga, 1 liga. Um nivel do banco por vez, selecionado pelos botoes.]]></text>
+                <widget_settings>
+                    <x>10</x>
+                    <y>605</y>
+                    <width>1350</width>
+                    <height>75</height>
+                    <background_color><![CDATA[None]]></background_color>
+                    <background_type><![CDATA[Transparent]]></background_type>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label/>
+                    <use_label>False</use_label>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>885856cd7e464201835582e8af6d4a87</id>
+                <name><![CDATA[Editar_Tau_sensor_s]]></name>
+                <type>TextBoxMacro</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.adjust(panel,'03','Tau_sensor_s',inputValue))]]></on_use_code>
+                <on_start_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+widgetValue=g04.state('03')['ajustes']['Tau_sensor_s']
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.003]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit/>
+                <widget_settings>
+                    <x>950</x>
+                    <y>87</y>
+                    <width>205</width>
+                    <height>38</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Tau termopar (s)]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>8973a0544ca84246882c41abc7a68551</id>
+                <name><![CDATA[Editar_Dinamica_on]]></name>
+                <type>TextBoxMacro</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.adjust(panel,'03','Dinamica_on',inputValue))]]></on_use_code>
+                <on_start_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+widgetValue=g04.state('03')['ajustes']['Dinamica_on']
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[1.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit/>
+                <widget_settings>
+                    <x>1170</x>
+                    <y>87</y>
+                    <width>205</width>
+                    <height>38</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Dinamica 0/1]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>6c56ecc8c4eb4711b0c292e4c871a817</id>
+                <name><![CDATA[Editar_Desvio_sensor_C]]></name>
+                <type>TextBoxMacro</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.adjust(panel,'03','Desvio_sensor_C',inputValue))]]></on_use_code>
+                <on_start_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+widgetValue=g04.state('03')['ajustes']['Desvio_sensor_C']
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.3]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit/>
+                <widget_settings>
+                    <x>950</x>
+                    <y>136</y>
+                    <width>205</width>
+                    <height>38</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Desvio TC (K)]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>46e97b8848774a4180efecef3dccd9fe</id>
+                <name><![CDATA[Editar_Desvio_sensor_on]]></name>
+                <type>TextBoxMacro</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.adjust(panel,'03','Desvio_sensor_on',inputValue))]]></on_use_code>
+                <on_start_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+widgetValue=g04.state('03')['ajustes']['Desvio_sensor_on']
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[1.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit/>
+                <widget_settings>
+                    <x>1170</x>
+                    <y>136</y>
+                    <width>205</width>
+                    <height>38</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Desvio TC 0/1]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>cde563d6c01c44e0b16f80fd93f4282e</id>
+                <name><![CDATA[Editar_Vos_uV]]></name>
+                <type>TextBoxMacro</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.adjust(panel,'03','Vos_uV',inputValue))]]></on_use_code>
+                <on_start_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+widgetValue=g04.state('03')['ajustes']['Vos_uV']
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[10.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit/>
+                <widget_settings>
+                    <x>950</x>
+                    <y>185</y>
+                    <width>205</width>
+                    <height>38</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Offset AOP (uV)]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>72f14c02d81344c4b5183406f80c56b5</id>
+                <name><![CDATA[Editar_Vos_on]]></name>
+                <type>TextBoxMacro</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.adjust(panel,'03','Vos_on',inputValue))]]></on_use_code>
+                <on_start_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+widgetValue=g04.state('03')['ajustes']['Vos_on']
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[1.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit/>
+                <widget_settings>
+                    <x>1170</x>
+                    <y>185</y>
+                    <width>205</width>
+                    <height>38</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Offset AOP 0/1]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>c21d876f7e834f3fb59628b4eb064f57</id>
+                <name><![CDATA[Editar_CJC_erro_C]]></name>
+                <type>TextBoxMacro</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.adjust(panel,'03','CJC_erro_C',inputValue))]]></on_use_code>
+                <on_start_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+widgetValue=g04.state('03')['ajustes']['CJC_erro_C']
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.1]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit/>
+                <widget_settings>
+                    <x>950</x>
+                    <y>234</y>
+                    <width>205</width>
+                    <height>38</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Erro CJC (K)]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>a0886d72255648f0a25afa24402a995f</id>
+                <name><![CDATA[Editar_CJC_erro_on]]></name>
+                <type>TextBoxMacro</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.adjust(panel,'03','CJC_erro_on',inputValue))]]></on_use_code>
+                <on_start_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+widgetValue=g04.state('03')['ajustes']['CJC_erro_on']
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[1.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit/>
+                <widget_settings>
+                    <x>1170</x>
+                    <y>234</y>
+                    <width>205</width>
+                    <height>38</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Erro CJC 0/1]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>a9d1400287b446119121d32506826961</id>
+                <name><![CDATA[Editar_Interferencia_uV]]></name>
+                <type>TextBoxMacro</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.adjust(panel,'03','Interferencia_uV',inputValue))]]></on_use_code>
+                <on_start_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+widgetValue=g04.state('03')['ajustes']['Interferencia_uV']
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[2.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit/>
+                <widget_settings>
+                    <x>950</x>
+                    <y>283</y>
+                    <width>205</width>
+                    <height>38</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Interferencia (uV pico)]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>f95ffde93fbf414faa99808844262f75</id>
+                <name><![CDATA[Editar_Interferencia_on]]></name>
+                <type>TextBoxMacro</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.adjust(panel,'03','Interferencia_on',inputValue))]]></on_use_code>
+                <on_start_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+widgetValue=g04.state('03')['ajustes']['Interferencia_on']
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[1.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit/>
+                <widget_settings>
+                    <x>1170</x>
+                    <y>283</y>
+                    <width>205</width>
+                    <height>38</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Interferencia 0/1]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>12a1d0e913a84be3b723539a2224d0c2</id>
+                <name><![CDATA[Editar_Filtro_on]]></name>
+                <type>TextBoxMacro</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.adjust(panel,'03','Filtro_on',inputValue))]]></on_use_code>
+                <on_start_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+widgetValue=g04.state('03')['ajustes']['Filtro_on']
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[1.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit/>
+                <widget_settings>
+                    <x>950</x>
+                    <y>332</y>
+                    <width>205</width>
+                    <height>38</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[RC antialias 0/1]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>f3aea5e97ee84b78b7ea5dbfc1ea2391</id>
+                <name><![CDATA[Editar_ADC_on]]></name>
+                <type>TextBoxMacro</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.adjust(panel,'03','ADC_on',inputValue))]]></on_use_code>
+                <on_start_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+widgetValue=g04.state('03')['ajustes']['ADC_on']
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[1.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit/>
+                <widget_settings>
+                    <x>1170</x>
+                    <y>332</y>
+                    <width>205</width>
+                    <height>38</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[ADC 0/1]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>eb8bda15010343fd8904fa8d2072d528</id>
+                <name><![CDATA[Editar_Nao_linearidade_on]]></name>
+                <type>TextBoxMacro</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.adjust(panel,'03','Nao_linearidade_on',inputValue))]]></on_use_code>
+                <on_start_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+widgetValue=g04.state('03')['ajustes']['Nao_linearidade_on']
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[1.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit/>
+                <widget_settings>
+                    <x>950</x>
+                    <y>381</y>
+                    <width>205</width>
+                    <height>38</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[NIST sensor 0/1]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>b1a1cc1d8d16401dbfd67be5ba1129f1</id>
+                <name><![CDATA[Editar_Correcao_NIST]]></name>
+                <type>TextBoxMacro</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.adjust(panel,'03','Correcao_NIST',inputValue))]]></on_use_code>
+                <on_start_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+widgetValue=g04.state('03')['ajustes']['Correcao_NIST']
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[1.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit/>
+                <widget_settings>
+                    <x>1170</x>
+                    <y>381</y>
+                    <width>205</width>
+                    <height>38</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[NIST inversa 0/1]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>feda03157d1a4e398e15099e950ea96b</id>
+                <name><![CDATA[Editar_Junta_fria_C]]></name>
+                <type>TextBoxMacro</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.adjust(panel,'03','Junta_fria_C',inputValue))]]></on_use_code>
+                <on_start_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+widgetValue=g04.state('03')['ajustes']['Junta_fria_C']
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[25.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit/>
+                <widget_settings>
+                    <x>950</x>
+                    <y>430</y>
+                    <width>205</width>
+                    <height>38</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Junta fria (C)]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>6ef9ed6a9709479cace4eda7b2484c75</id>
+                <name><![CDATA[Ganho]]></name>
+                <type>TextNote</type>
+                <description/>
+                <text><![CDATA[Ganho do AOP (decodificacao nominal: 1000)]]></text>
+                <widget_settings>
+                    <x>950</x>
+                    <y>485</y>
+                    <width>440</width>
+                    <height>32</height>
+                    <background_color><![CDATA[None]]></background_color>
+                    <background_type><![CDATA[Transparent]]></background_type>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label/>
+                    <use_label>False</use_label>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>98d9be7b0aa64d23af57bc7cccfbddf2</id>
+                <name><![CDATA[Ganho_0]]></name>
+                <type>MacroButton</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.bank(panel,'03','Ganho',0))]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>950</x>
+                    <y>520</y>
+                    <width>205</width>
+                    <height>33</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[1000]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>152334eddca14243b4b4d1ca2ca4964e</id>
+                <name><![CDATA[Ganho_1]]></name>
+                <type>MacroButton</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.bank(panel,'03','Ganho',1))]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>1170</x>
+                    <y>520</y>
+                    <width>205</width>
+                    <height>33</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[1002.5]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>585fbb544fd34730b842433fb8d212a3</id>
+                <name><![CDATA[Ganho_2]]></name>
+                <type>MacroButton</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.bank(panel,'03','Ganho',2))]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>950</x>
+                    <y>560</y>
+                    <width>205</width>
+                    <height>33</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[1025]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>19838b5d26f34db2a854a46ee9a18257</id>
+                <name><![CDATA[Ganho_3]]></name>
+                <type>MacroButton</type>
+                <description/>
+                <on_use_code active="True"><![CDATA[add_to_python_path(get_settings_dir_path())
+import ponte_painel as g04
+if g04.VERSAO != 'F2-02-03-2':
+ import importlib
+ g04=importlib.reload(g04)
+printf(g04.bank(panel,'03','Ganho',3))]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>1170</x>
+                    <y>560</y>
+                    <width>205</width>
+                    <height>33</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[1100]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        </components>
+</ui_settings>
