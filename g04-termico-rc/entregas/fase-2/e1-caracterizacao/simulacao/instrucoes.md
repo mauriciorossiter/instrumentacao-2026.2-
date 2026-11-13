@@ -1,9 +1,6 @@
 # Instruções de reprodução — Simulação térmica RC (G04)
 
-Ferramentas e versões usadas na geração dos resultados:
-
-- Python 3.12 (biblioteca padrão para integração; NumPy/Matplotlib para pós-processamento)
-- Typhoon HIL Control Center 2026.3 (simulação nativa da rede térmica Foster)
+Ferramenta: Typhoon HIL Control Center 2026.3.
 
 ## Parâmetros da planta
 
@@ -20,55 +17,32 @@ Cápsula fixa: Tc = 298,15 K. Potência nominal: 10 W (exceto extrapolação de 
 
 ## Arquivos incluídos
 
-- `modelo.py`: definição dos parâmetros, cenários e solução fechada de referência.
-- `simular_rk4.py`: integração RK4 explícito com passo h = 2 µs e registro a 10 µs.
-- `gerar_figuras_tabelas.py`: pós-processamento dos CSVs para reproduzir as figuras.
-- `parametros.json`: configuração de todos os cenários.
-- `modelos/`: arquivos `.tse` e `.json` dos 16 casos para o Typhoon HIL.
-- `resultados_rk4/`: CSVs e `resumo.json` já gerados.
-- `resultados_typhoon/`: resultados da execução nativa, quando aplicável.
+- `G04_<caso>.tse`: modelo para o Typhoon HIL Schematic Editor (16 casos).
 
-## Passos para reproduzir as figuras do relatório
+Casos disponíveis:
 
-### 1. Figuras 1 a 6 via Python
+| Arquivo | Descrição |
+|---|---|
+| `G04_degrau_4r.tse` | Resposta ao degrau de 10 W — 4 ramos |
+| `G04_degrau_2r.tse` | Resposta ao degrau de 10 W — 2 ramos |
+| `G04_livre_4r.tse` | Resposta livre — 4 ramos |
+| `G04_livre_2r.tse` | Resposta livre — 2 ramos |
+| `G04_pulso_4r.tse` | Resposta ao pulso de 10 W — 4 ramos |
+| `G04_pulso_2r.tse` | Resposta ao pulso de 10 W — 2 ramos |
+| `G04_potencia_100W.tse` | Degrau de 100 W (extrapolação numérica) |
+| `G04_R1_x0.2.tse`, `G04_R1_x1.tse`, `G04_R1_x5.tse` | Sensibilidade em R₁ |
+| `G04_C1_x0.2.tse`, `G04_C1_x1.tse`, `G04_C1_x5.tse` | Sensibilidade em C₁ |
+| `G04_R4_x0.2.tse`, `G04_R4_x1.tse`, `G04_R4_x5.tse` | Sensibilidade em R₄ |
 
-Requer Python 3.12 com NumPy e Matplotlib instalados:
+## Como rodar no Typhoon HIL
 
-```bash
-cd g04-termico-rc/entregas/fase-2/e1-caracterizacao/simulacao
-python simular_rk4.py          # gera resultados_rk4/*.csv e resumo.json
-python gerar_figuras_tabelas.py # gera as figuras em PNG
-```
+1. Abra o **Typhoon HIL Control Center**.
+2. No menu, selecione **File → Open** e carregue o arquivo `.tse` desejado.
+3. Clique em **Run TyphoonSim** (botão verde na barra superior).
+4. Após a simulação, abra o **Scope** chamado `Resultados`.
+5. O sinal `T_j_K` mostra a temperatura da junção em kelvin; o eixo horizontal está em segundos.
 
-As figuras são escritas no caminho padrão do script (`../../Overleaf/figuras/` a partir de `simulacao/`). Para gerar diretamente no relatório, ajuste a variável `FIG` no início de `gerar_figuras_tabelas.py` para apontar para `../relatorio/figuras/`.
-
-Mapeamento das figuras do relatório:
-
-| Figura | Arquivo gerado | Descrição |
-|---|---|---|
-| Figura 1 | `reducao.png` | Impedância térmica e erro da redução de 2 estados |
-| Figura 2 | `degrau.png` | Resposta ao degrau de 10 W |
-| Figura 3 | `livre.png` | Resposta livre a partir de IC não nula |
-| Figura 4 | `pulso.png` | Resposta ao pulso de 10 W |
-| Figura 5 | `validacao_typhoon.png` | Desvios TyphoonSim contra solução fechada |
-| Figura 6 | `sensibilidade.png` | Variação de R₁, C₁ e R₄ |
-
-### 2. Execução nativa no Typhoon HIL 2026.3
-
-Abra o Control Center, certifique-se de que não há outra sessão de API em execução, e rode:
-
-```bash
-typhoon-python typhoon_modelo.py --caso degrau_4r
-typhoon-python executar_typhoon.py --caso degrau_4r
-```
-
-Casos disponíveis: `degrau_4r`, `livre_4r`, `pulso_4r`, `degrau_2r`, `livre_2r`, `pulso_2r`, e todos os casos de sensibilidade (`R1_x0.2`, `R1_x5`, `C1_x0.2`, etc.). Use `--caso todos` para executar em sequência.
-
-Para visualização direta no Schematic Editor, abra `modelos/G04_degrau_4r.tse` e pressione **Run TyphoonSim**. Após a simulação, abra o Scope `Resultados`. O eixo horizontal está em segundos; `T_j_K` é a temperatura da junção em kelvin.
-
-### 3. Reprodutibilidade independente do Typhoon
-
-A integração RK4 em `simular_rk4.py` usa apenas a biblioteca padrão do Python e reproduz todos os gráficos principais sem depender do Typhoon HIL. Os valores característicos (ganho, tempos de subida e acomodação, polos) estão documentados em `resultados_rk4/resumo.json`.
+Repita o processo para cada caso que deseja observar.
 
 ## Observações
 
