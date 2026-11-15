@@ -1,0 +1,1690 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.3
+//
+
+model "base-e3" {
+    configuration {
+        hil_device = "HIL404"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = 1e-06
+        fine_auto_sim_step = False
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = False
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 0.0001
+        simulation_time = 25.25
+        abs_tol = 1e-09
+        rel_tol = 1e-07
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0.001
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Signal Controlled Current Source" I_in {
+            execution_rate = "0.0001"
+        }
+        [
+            position = 7540, 8120
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Current Source" Orificio_12 {
+            execution_rate = "0.0001"
+        }
+        [
+            position = 8460, 7920
+            rotation = down
+        ]
+
+        component "core/Signal Controlled Current Source" Orificio_2 {
+            execution_rate = "0.0001"
+        }
+        [
+            position = 9300, 8120
+            rotation = left
+        ]
+
+        component "core/Signal Controlled Current Source" I_pre1 {
+            execution_rate = "0.0001"
+        }
+        [
+            position = 8200, 8120
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Current Source" I_pre2 {
+            execution_rate = "0.0001"
+        }
+        [
+            position = 9040, 8120
+            rotation = right
+        ]
+
+        component "core/Capacitor" C1 {
+            capacitance = "0.0005"
+            initial_voltage = "0.0"
+            pole_shift_ignore = "True"
+        }
+        [
+            position = 7920, 8120
+            rotation = right
+        ]
+
+        component "core/Capacitor" C2 {
+            capacitance = "0.0005"
+            initial_voltage = "0.0"
+            pole_shift_ignore = "True"
+        }
+        [
+            position = 8740, 8120
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V1 {
+            execution_rate = "0.0001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "V1"
+        }
+        [
+            position = 8060, 8120
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V2 {
+            execution_rate = "0.0001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "V2"
+        }
+        [
+            position = 8888, 8120
+            rotation = right
+        ]
+
+        component "core/Current Measurement" Q_in {
+            execution_rate = "0.0001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "Q_in"
+        }
+        [
+            position = 7720, 7920
+        ]
+
+        component "core/Current Measurement" Q_12 {
+            execution_rate = "0.0001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "Q_12"
+        }
+        [
+            position = 8580, 7920
+        ]
+
+        component "core/Current Measurement" Q_out {
+            execution_rate = "0.0001"
+            override_signal_name = "True"
+            sig_output = "True"
+            signal_name = "Q_out"
+        }
+        [
+            position = 9300, 8288
+            rotation = right
+        ]
+
+        component "core/Ground" Terra {
+        }
+        [
+            position = 8400, 8408
+        ]
+
+        component "core/SCADA Input" Vref1 {
+            def_value = "10.0"
+            execution_rate = "0.0001"
+            max = "12.0"
+            min = "0.0"
+            unit = "V"
+        }
+        [
+            position = 7040, 8740
+        ]
+
+        component "core/SCADA Input" Vref2 {
+            def_value = "10.0"
+            execution_rate = "0.0001"
+            max = "12.0"
+            min = "0.0"
+            unit = "V"
+        }
+        [
+            position = 7040, 8880
+        ]
+
+        component "core/SCADA Input" Q_rel {
+            def_value = "1.0"
+            execution_rate = "0.0001"
+            max = "2.0"
+            min = "0.1"
+            unit = "pu"
+        }
+        [
+            position = 7040, 9020
+        ]
+
+        component "core/SCADA Input" D_deg {
+            def_value = "0.0"
+            execution_rate = "0.0001"
+            max = "9.0"
+            min = "-30.0"
+            unit = "%"
+        }
+        [
+            position = 7040, 9160
+        ]
+
+        component "core/SCADA Input" D_pul {
+            def_value = "0.0"
+            execution_rate = "0.0001"
+            max = "20.0"
+            min = "0.0"
+            unit = "%"
+        }
+        [
+            position = 7040, 9300
+        ]
+
+        component "core/SCADA Input" G1_rel {
+            def_value = "1.0"
+            execution_rate = "0.0001"
+            max = "4.0"
+            min = "0.25"
+            unit = "pu"
+        }
+        [
+            position = 7040, 9440
+        ]
+
+        component "core/SCADA Input" G2_rel {
+            def_value = "1.0"
+            execution_rate = "0.0001"
+            max = "4.0"
+            min = "0.25"
+            unit = "pu"
+        }
+        [
+            position = 7040, 9580
+        ]
+
+        component "core/Constant" Um {
+            execution_rate = "0.0001"
+            value = "1.0"
+        }
+        [
+            position = 7260, 8520
+        ]
+
+        component "core/Sum" u_ensaio_calc {
+            execution_rate = "0.0001"
+            signs = "+-"
+        }
+        [
+            position = 7480, 8600
+        ]
+
+        component "core/Integrator" Tempo_ensaio {
+            execution_rate = "0.0001"
+            reset_type = "synchronous"
+            show_reset = "level"
+        }
+        [
+            position = 7700, 8600
+        ]
+
+        component "core/Constant" Duracao_pulso {
+            execution_rate = "0.0001"
+            value = "0.3"
+        }
+        [
+            position = 7700, 8760
+        ]
+
+        component "core/Relational operator" Janela_pulso {
+            execution_rate = "0.0001"
+            relational_op = "<"
+        }
+        [
+            position = 7940, 8660
+        ]
+
+        component "core/Product" Pulso_ativo {
+            execution_rate = "0.0001"
+            signs = "**"
+        }
+        [
+            position = 8160, 8660
+        ]
+
+        component "core/Gain" Degrau_fracao {
+            execution_rate = "0.0001"
+            gain = "0.01"
+        }
+        [
+            position = 7460, 8920
+        ]
+
+        component "core/Product" Degrau_aplicado {
+            execution_rate = "0.0001"
+            signs = "**"
+        }
+        [
+            position = 7920, 8920
+        ]
+
+        component "core/Gain" Pulso_fracao {
+            execution_rate = "0.0001"
+            gain = "0.01"
+        }
+        [
+            position = 7460, 9080
+        ]
+
+        component "core/Product" Pulso_aplicado {
+            execution_rate = "0.0001"
+            signs = "**"
+        }
+        [
+            position = 7920, 9080
+        ]
+
+        component "core/Sum" Soma_comando {
+            execution_rate = "0.0001"
+            signs = "+++"
+        }
+        [
+            position = 8240, 8960
+        ]
+
+        component "core/Product" Vazao_operacao {
+            execution_rate = "0.0001"
+            signs = "**"
+        }
+        [
+            position = 8460, 8960
+        ]
+
+        component "core/Limit" Vpositivo1 {
+            execution_rate = "0.0001"
+            lower_limit = "0.0"
+            upper_limit = "1000000.0"
+        }
+        [
+            position = 7540, 9400
+        ]
+
+        component "core/Mathematical function" Raiz1 {
+            execution_rate = "0.0001"
+            mathematical_fn = "sqrt"
+        }
+        [
+            position = 7720, 9400
+        ]
+
+        component "core/Gain" Gnom1 {
+            execution_rate = "0.0001"
+            gain = "0.0031622776601683794"
+        }
+        [
+            position = 7900, 9400
+        ]
+
+        component "core/Product" Coef_orificio1 {
+            execution_rate = "0.0001"
+            signs = "**"
+        }
+        [
+            position = 8080, 9400
+        ]
+
+        component "core/Sum" Erro_pre1 {
+            execution_rate = "0.0001"
+            signs = "+-"
+        }
+        [
+            position = 7540, 9700
+        ]
+
+        component "core/Gain" Ganho_pre1 {
+            execution_rate = "0.0001"
+            gain = "2.0"
+        }
+        [
+            position = 7720, 9700
+        ]
+
+        component "core/Limit" Limite_pre1 {
+            execution_rate = "0.0001"
+            lower_limit = "-0.1"
+            upper_limit = "0.1"
+        }
+        [
+            position = 7900, 9700
+        ]
+
+        component "core/Product" Ativa_pre1 {
+            execution_rate = "0.0001"
+            signs = "**"
+        }
+        [
+            position = 8080, 9700
+        ]
+
+        component "core/Gain" Escala_h1 {
+            execution_rate = "0.0001"
+            gain = "0.1"
+        }
+        [
+            position = 7540, 9960
+        ]
+
+        component "core/Probe" h1_m {
+            execution_rate = "0.0001"
+            override_signal_name = "True"
+            signal_name = "h1_m"
+        }
+        [
+            position = 7720, 9960
+        ]
+
+        component "core/Limit" Vpositivo2 {
+            execution_rate = "0.0001"
+            lower_limit = "0.0"
+            upper_limit = "1000000.0"
+        }
+        [
+            position = 8540, 9400
+        ]
+
+        component "core/Mathematical function" Raiz2 {
+            execution_rate = "0.0001"
+            mathematical_fn = "sqrt"
+        }
+        [
+            position = 8720, 9400
+        ]
+
+        component "core/Gain" Gnom2 {
+            execution_rate = "0.0001"
+            gain = "0.0031622776601683794"
+        }
+        [
+            position = 8900, 9400
+        ]
+
+        component "core/Product" Coef_orificio2 {
+            execution_rate = "0.0001"
+            signs = "**"
+        }
+        [
+            position = 9080, 9400
+        ]
+
+        component "core/Sum" Erro_pre2 {
+            execution_rate = "0.0001"
+            signs = "+-"
+        }
+        [
+            position = 8540, 9700
+        ]
+
+        component "core/Gain" Ganho_pre2 {
+            execution_rate = "0.0001"
+            gain = "2.0"
+        }
+        [
+            position = 8720, 9700
+        ]
+
+        component "core/Limit" Limite_pre2 {
+            execution_rate = "0.0001"
+            lower_limit = "-0.1"
+            upper_limit = "0.1"
+        }
+        [
+            position = 8900, 9700
+        ]
+
+        component "core/Product" Ativa_pre2 {
+            execution_rate = "0.0001"
+            signs = "**"
+        }
+        [
+            position = 9080, 9700
+        ]
+
+        component "core/Gain" Escala_h2 {
+            execution_rate = "0.0001"
+            gain = "0.1"
+        }
+        [
+            position = 8540, 9960
+        ]
+
+        component "core/Probe" h2_m {
+            execution_rate = "0.0001"
+            override_signal_name = "True"
+            signal_name = "h2_m"
+        }
+        [
+            position = 8720, 9960
+        ]
+
+        component "core/Probe" u_ensaio {
+            execution_rate = "0.0001"
+            override_signal_name = "True"
+            signal_name = "u_ensaio"
+        }
+        [
+            position = 8160, 8520
+        ]
+
+        component "core/Step" precarga {
+            execution_rate = "0.0001"
+            final_value = "0"
+            initial_value = "[1.0]"
+            step_time = "[0.25]"
+        }
+        [
+            position = 7040, 8600
+        ]
+
+        component "core/Scope" Captura {
+            selected_signals = "[\'ref_m\', \'med_m\', \'h2_m\', \'h1_m\', \'bomba_ls\', \'entrada_ls\', \'u_ensaio\']"
+            signals_data = "{\"signals\": {\"ref_m\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#59616b\"}, \"display\": {\"1\": \"solid\"}}, \"med_m\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#bf581b\"}, \"display\": {\"1\": \"solid\"}}, \"h2_m\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#123c53\"}, \"display\": {\"1\": \"solid\"}}, \"h1_m\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#067686\"}, \"display\": {\"2\": \"solid\"}}, \"bomba_ls\": {\"viewports\": [3], \"type\": \"analog\", \"color\": {\"3\": \"#3d729a\"}, \"display\": {\"3\": \"solid\"}}, \"entrada_ls\": {\"viewports\": [3], \"type\": \"analog\", \"color\": {\"3\": \"#8a7532\"}, \"display\": {\"3\": \"solid\"}}, \"u_ensaio\": {\"viewports\": [4], \"type\": \"analog\", \"color\": {\"4\": \"#555555\"}, \"display\": {\"4\": \"solid\"}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"4\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}, \"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true}}"
+            user_range_data = "{\"1\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"2\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"3\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"4\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"5\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}, \"6\": {\"user_x_range_mode\": \"Zoom to fit\", \"user_y_range_mode\": \"Zoom to fit\", \"user_x_range\": [0, 1], \"user_y_range\": [0, 1]}}"
+        }
+        [
+            position = 9500, 10000
+        ]
+
+        component "core/Gain" Fase_interferente {
+            execution_rate = "0.0001"
+            gain = "502.6548245743669"
+        }
+        [
+            position = 10400, 8600
+        ]
+
+        component "core/Trigonometric function" Interferente_0p8Hz {
+            execution_rate = "0.0001"
+        }
+        [
+            position = 10600, 8600
+        ]
+
+        component "core/Gain" Ideal_unitario_T1 {
+            execution_rate = "0.0001"
+        }
+        [
+            position = 10580, 8832
+        ]
+
+        component "core/Probe" ideal_h1 {
+            execution_rate = "0.0001"
+            override_signal_name = "True"
+            signal_name = "ideal_h1"
+        }
+        [
+            position = 10760, 8832
+        ]
+
+        component "core/Gain" Pressao_Pa_T1 {
+            execution_rate = "0.0001"
+            gain = "9810.0"
+        }
+        [
+            position = 10940, 9000
+        ]
+
+        component "core/Gain" Pressao_na_precarga_T1 {
+            execution_rate = "0.0001"
+            gain = "9810.0"
+        }
+        [
+            position = 11120, 9196
+        ]
+
+        component "core/Product" Pressao_durante_ensaio_T1 {
+            execution_rate = "0.0001"
+            signs = "**"
+        }
+        [
+            position = 11300, 9000
+        ]
+
+        component "core/Sum" Pressao_com_inicio_estavel_T1 {
+            execution_rate = "0.0001"
+            signs = "++"
+        }
+        [
+            position = 11480, 9000
+        ]
+
+        component "core/Low-Pass Filter" Dinamica_tomada_T1 {
+            execution_rate = "0.0001"
+            frequency = "79.57747154594767"
+            init_out = "9810.0"
+        }
+        [
+            position = 11660, 9000
+        ]
+
+        component "core/Gain" Sensibilidade_HSC_T1 {
+            execution_rate = "0.0001"
+            gain = "0.00025"
+        }
+        [
+            position = 11840, 9000
+        ]
+
+        component "core/Gain" Erro_de_ganho_T1 {
+            execution_rate = "0.0001"
+            gain = "1.003"
+        }
+        [
+            position = 12020, 9000
+        ]
+
+        component "core/Gain" Fracao_de_escala_T1 {
+            execution_rate = "0.0001"
+            gain = "6.25e-05"
+        }
+        [
+            position = 12200, 9236
+        ]
+
+        component "core/Constant" Um_T1 {
+            execution_rate = "0.0001"
+        }
+        [
+            position = 12380, 9324
+        ]
+
+        component "core/Sum" Complemento_T1 {
+            execution_rate = "0.0001"
+            signs = "+-"
+        }
+        [
+            position = 12560, 9000
+        ]
+
+        component "core/Product" Curvatura_normalizada_T1 {
+            execution_rate = "0.0001"
+            signs = "**"
+        }
+        [
+            position = 12740, 9236
+        ]
+
+        component "core/Gain" Amplitude_curvatura_T1 {
+            execution_rate = "0.0001"
+            gain = "0.02943"
+        }
+        [
+            position = 12920, 9236
+        ]
+
+        component "core/Sum" Adiciona_curvatura_T1 {
+            execution_rate = "0.0001"
+            signs = "++"
+        }
+        [
+            position = 13100, 9000
+        ]
+
+        component "core/Constant" Zero_ratiometrico_T1 {
+            execution_rate = "0.0001"
+            value = "0.5"
+        }
+        [
+            position = 13280, 9156
+        ]
+
+        component "core/Sum" Saida_nominal_T1 {
+            execution_rate = "0.0001"
+            signs = "++"
+        }
+        [
+            position = 13460, 9000
+        ]
+
+        component "core/Constant" Deslocamento_zero_T1 {
+            execution_rate = "0.0001"
+            value = "0.014715"
+        }
+        [
+            position = 13640, 9156
+        ]
+
+        component "core/Sum" Erro_de_zero_T1 {
+            execution_rate = "0.0001"
+            signs = "++"
+        }
+        [
+            position = 13820, 9000
+        ]
+
+        component "core/Gain" Amplitude_interferente_T1 {
+            execution_rate = "0.0001"
+            gain = "0.0049050000000000005"
+        }
+        [
+            position = 14000, 8780
+        ]
+
+        component "core/Sum" Captacao_na_interface_T1 {
+            execution_rate = "0.0001"
+            signs = "++"
+        }
+        [
+            position = 14180, 9000
+        ]
+
+        component "core/Low-Pass Filter" Condicionamento_RC_T1 {
+            execution_rate = "0.0001"
+            frequency = "20.0"
+            init_out = "2.981553376472656"
+        }
+        [
+            position = 14360, 9000
+        ]
+
+        component "core/Limit" Faixa_ADC_T1 {
+            execution_rate = "0.0001"
+            lower_limit = "0"
+            upper_limit = "4.998779296875"
+        }
+        [
+            position = 14540, 9000
+        ]
+
+        component "core/Gain" Escala_ADC_T1 {
+            execution_rate = "0.0001"
+            gain = "819.2"
+        }
+        [
+            position = 14720, 9000
+        ]
+
+        component "core/Round" Quantizacao_ADC_T1 {
+            execution_rate = "0.0001"
+            round_fn = "round"
+        }
+        [
+            position = 14900, 9000
+        ]
+
+        component "core/Gain" Reconstrucao_ADC_T1 {
+            execution_rate = "0.0001"
+            gain = "0.001220703125"
+        }
+        [
+            position = 15080, 9000
+        ]
+
+        component "core/Constant" Zero_e_correcao_T1 {
+            execution_rate = "0.0001"
+            value = "0.5"
+        }
+        [
+            position = 15260, 9156
+        ]
+
+        component "core/Sum" Retira_zero_e_corrige_T1 {
+            execution_rate = "0.0001"
+            signs = "+-"
+        }
+        [
+            position = 15440, 9000
+        ]
+
+        component "core/Gain" Converte_volts_para_m_T1 {
+            execution_rate = "0.0001"
+            gain = "0.4077471967380224"
+        }
+        [
+            position = 15620, 9000
+        ]
+
+        component "core/Probe" real_h1 {
+            execution_rate = "0.0001"
+            override_signal_name = "True"
+            signal_name = "real_h1"
+        }
+        [
+            position = 15800, 9000
+        ]
+
+        component "core/Gain" Ideal_unitario_T2 {
+            execution_rate = "0.0001"
+        }
+        [
+            position = 10580, 9480
+        ]
+
+        component "core/Probe" ideal_h2 {
+            execution_rate = "0.0001"
+            override_signal_name = "True"
+            signal_name = "ideal_h2"
+        }
+        [
+            position = 10760, 9480
+        ]
+
+        component "core/Gain" Pressao_Pa_T2 {
+            execution_rate = "0.0001"
+            gain = "9810.0"
+        }
+        [
+            position = 10940, 9648
+        ]
+
+        component "core/Gain" Pressao_na_precarga_T2 {
+            execution_rate = "0.0001"
+            gain = "9810.0"
+        }
+        [
+            position = 11120, 9844
+        ]
+
+        component "core/Product" Pressao_durante_ensaio_T2 {
+            execution_rate = "0.0001"
+            signs = "**"
+        }
+        [
+            position = 11300, 9648
+        ]
+
+        component "core/Sum" Pressao_com_inicio_estavel_T2 {
+            execution_rate = "0.0001"
+            signs = "++"
+        }
+        [
+            position = 11480, 9648
+        ]
+
+        component "core/Low-Pass Filter" Dinamica_tomada_T2 {
+            execution_rate = "0.0001"
+            frequency = "79.57747154594767"
+            init_out = "9810.0"
+        }
+        [
+            position = 11660, 9648
+        ]
+
+        component "core/Gain" Sensibilidade_HSC_T2 {
+            execution_rate = "0.0001"
+            gain = "0.00025"
+        }
+        [
+            position = 11840, 9648
+        ]
+
+        component "core/Gain" Erro_de_ganho_T2 {
+            execution_rate = "0.0001"
+            gain = "1.003"
+        }
+        [
+            position = 12020, 9648
+        ]
+
+        component "core/Gain" Fracao_de_escala_T2 {
+            execution_rate = "0.0001"
+            gain = "6.25e-05"
+        }
+        [
+            position = 12200, 9884
+        ]
+
+        component "core/Constant" Um_T2 {
+            execution_rate = "0.0001"
+        }
+        [
+            position = 12380, 9976
+        ]
+
+        component "core/Sum" Complemento_T2 {
+            execution_rate = "0.0001"
+            signs = "+-"
+        }
+        [
+            position = 12560, 9648
+        ]
+
+        component "core/Product" Curvatura_normalizada_T2 {
+            execution_rate = "0.0001"
+            signs = "**"
+        }
+        [
+            position = 12740, 9884
+        ]
+
+        component "core/Gain" Amplitude_curvatura_T2 {
+            execution_rate = "0.0001"
+            gain = "0.02943"
+        }
+        [
+            position = 12920, 9884
+        ]
+
+        component "core/Sum" Adiciona_curvatura_T2 {
+            execution_rate = "0.0001"
+            signs = "++"
+        }
+        [
+            position = 13100, 9648
+        ]
+
+        component "core/Constant" Zero_ratiometrico_T2 {
+            execution_rate = "0.0001"
+            value = "0.5"
+        }
+        [
+            position = 13280, 9804
+        ]
+
+        component "core/Sum" Saida_nominal_T2 {
+            execution_rate = "0.0001"
+            signs = "++"
+        }
+        [
+            position = 13460, 9648
+        ]
+
+        component "core/Constant" Deslocamento_zero_T2 {
+            execution_rate = "0.0001"
+            value = "0.014715"
+        }
+        [
+            position = 13640, 9804
+        ]
+
+        component "core/Sum" Erro_de_zero_T2 {
+            execution_rate = "0.0001"
+            signs = "++"
+        }
+        [
+            position = 13820, 9648
+        ]
+
+        component "core/Gain" Amplitude_interferente_T2 {
+            execution_rate = "0.0001"
+            gain = "0.0049050000000000005"
+        }
+        [
+            position = 14000, 9432
+        ]
+
+        component "core/Sum" Captacao_na_interface_T2 {
+            execution_rate = "0.0001"
+            signs = "++"
+        }
+        [
+            position = 14180, 9648
+        ]
+
+        component "core/Low-Pass Filter" Condicionamento_RC_T2 {
+            execution_rate = "0.0001"
+            frequency = "20.0"
+            init_out = "2.981553376472656"
+        }
+        [
+            position = 14360, 9648
+        ]
+
+        component "core/Limit" Faixa_ADC_T2 {
+            execution_rate = "0.0001"
+            lower_limit = "0"
+            upper_limit = "4.998779296875"
+        }
+        [
+            position = 14540, 9648
+        ]
+
+        component "core/Gain" Escala_ADC_T2 {
+            execution_rate = "0.0001"
+            gain = "819.2"
+        }
+        [
+            position = 14720, 9648
+        ]
+
+        component "core/Round" Quantizacao_ADC_T2 {
+            execution_rate = "0.0001"
+            round_fn = "round"
+        }
+        [
+            position = 14900, 9648
+        ]
+
+        component "core/Gain" Reconstrucao_ADC_T2 {
+            execution_rate = "0.0001"
+            gain = "0.001220703125"
+        }
+        [
+            position = 15080, 9648
+        ]
+
+        component "core/Constant" Zero_e_correcao_T2 {
+            execution_rate = "0.0001"
+            value = "0.5"
+        }
+        [
+            position = 15260, 9804
+        ]
+
+        component "core/Sum" Retira_zero_e_corrige_T2 {
+            execution_rate = "0.0001"
+            signs = "+-"
+        }
+        [
+            position = 15440, 9648
+        ]
+
+        component "core/Gain" Converte_volts_para_m_T2 {
+            execution_rate = "0.0001"
+            gain = "0.4077471967380224"
+        }
+        [
+            position = 15620, 9648
+        ]
+
+        component "core/Probe" real_h2 {
+            execution_rate = "0.0001"
+            override_signal_name = "True"
+            signal_name = "real_h2"
+        }
+        [
+            position = 15800, 9648
+        ]
+
+        component "core/Constant" Ponto_nominal {
+            execution_rate = "0.0001"
+        }
+        [
+            position = 7248, 10460
+        ]
+
+        component "core/Gain" Amplitude_referencia {
+            execution_rate = "0.0001"
+            gain = "0.08000000000000007"
+        }
+        [
+            position = 7248, 10620
+        ]
+
+        component "core/Sum" Referencia_m {
+            execution_rate = "0.0001"
+            signs = "++"
+        }
+        [
+            position = 7488, 10620
+        ]
+
+        component "core/Sum" Erro_PI {
+            execution_rate = "0.0001"
+            signs = "+-"
+        }
+        [
+            position = 7740, 10620
+        ]
+
+        component "core/Product" Erro_com_disparo {
+            execution_rate = "0.0001"
+            signs = "**"
+        }
+        [
+            position = 7968, 10620
+        ]
+
+        component "core/Gain" Kp_025 {
+            execution_rate = "0.0001"
+            gain = "0.25"
+        }
+        [
+            position = 8200, 10620
+        ]
+
+        component "core/Integrator" Estado_integral {
+            execution_rate = "0.0001"
+            reset_type = "synchronous"
+            show_reset = "level"
+        }
+        [
+            position = 8720, 10768
+        ]
+
+        component "core/Sum" PI_mais_vazao_nominal {
+            execution_rate = "0.0001"
+            signs = "+++"
+        }
+        [
+            position = 9020, 10620
+        ]
+
+        component "core/Limit" Limites_bomba {
+            execution_rate = "0.0001"
+            lower_limit = "0.7"
+            upper_limit = "1.3"
+        }
+        [
+            position = 9248, 10620
+        ]
+
+        component "core/Sum" Retorno_antiwindup {
+            execution_rate = "0.0001"
+            signs = "+-"
+        }
+        [
+            position = 9440, 10880
+        ]
+
+        component "core/Gain" Rastreio_saturacao {
+            execution_rate = "0.0001"
+            gain = "4.0"
+        }
+        [
+            position = 9240, 10920
+        ]
+
+        component "core/Gain" Ki_00025 {
+            execution_rate = "0.0001"
+            gain = "0.25"
+        }
+        [
+            position = 8168, 10768
+        ]
+
+        component "core/Sum" Derivada_estado_integral {
+            execution_rate = "0.0001"
+            signs = "++"
+        }
+        [
+            position = 8460, 10768
+        ]
+
+        component "core/Gain" Disturbio_entrada {
+            execution_rate = "0.0001"
+            gain = "0.0"
+        }
+        [
+            position = 9472, 10752
+        ]
+
+        component "core/Sum" Vazao_inclui_disturbio {
+            execution_rate = "0.0001"
+            signs = "++"
+        }
+        [
+            position = 9632, 10620
+        ]
+
+        component "core/Gain" Corrente_de_comando_A {
+            execution_rate = "0.0001"
+            gain = "0.01"
+        }
+        [
+            position = 9888, 10620
+        ]
+
+        component "core/Probe" ref_m {
+            execution_rate = "0.0001"
+            override_signal_name = "True"
+            signal_name = "ref_m"
+        }
+        [
+            position = 7500, 10316
+        ]
+
+        component "core/Probe" med_m {
+            execution_rate = "0.0001"
+            override_signal_name = "True"
+            signal_name = "med_m"
+        }
+        [
+            position = 9620, 11060
+        ]
+
+        component "core/Gain" Bomba_em_L_s {
+            execution_rate = "0.0001"
+            gain = "10"
+        }
+        [
+            position = 9520, 10420
+        ]
+
+        component "core/Probe" bomba_ls {
+            execution_rate = "0.0001"
+            override_signal_name = "True"
+            signal_name = "bomba_ls"
+        }
+        [
+            position = 9700, 10420
+        ]
+
+        component "core/Gain" Entrada_em_L_s {
+            execution_rate = "0.0001"
+            gain = "10"
+        }
+        [
+            position = 9832, 10808
+        ]
+
+        component "core/Probe" entrada_ls {
+            execution_rate = "0.0001"
+            override_signal_name = "True"
+            signal_name = "entrada_ls"
+        }
+        [
+            position = 10008, 10808
+        ]
+
+        junction N1 pe
+        [
+            position = 7920, 7920
+        ]
+
+        junction N1_V pe
+        [
+            position = 8060, 7920
+        ]
+
+        junction N1_pre pe
+        [
+            position = 8200, 7920
+        ]
+
+        junction N2 pe
+        [
+            position = 8740, 7920
+        ]
+
+        junction N2_V pe
+        [
+            position = 8888, 7920
+        ]
+
+        junction N2_pre pe
+        [
+            position = 9040, 7920
+        ]
+
+        junction G0 pe
+        [
+            position = 7540, 8368
+        ]
+
+        junction G1 pe
+        [
+            position = 7920, 8368
+        ]
+
+        junction G1_V pe
+        [
+            position = 8060, 8368
+        ]
+
+        junction G1_pre pe
+        [
+            position = 8200, 8368
+        ]
+
+        junction G_mid pe
+        [
+            position = 8400, 8368
+        ]
+
+        junction G2 pe
+        [
+            position = 8740, 8368
+        ]
+
+        junction G2_V pe
+        [
+            position = 8888, 8368
+        ]
+
+        junction G2_pre pe
+        [
+            position = 9040, 8368
+        ]
+
+        junction Gout pe
+        [
+            position = 9300, 8368
+        ]
+
+        connect I_in.p_node Q_in.p_node as Connection1
+        connect Q_in.n_node N1 as Connection2
+        connect N1 N1_V as Connection3
+        connect N1_V N1_pre as Connection4
+        connect N1_pre Orificio_12.n_node as Connection5
+        connect Orificio_12.p_node Q_12.p_node as Connection6
+        connect Q_12.n_node N2 as Connection7
+        connect N2 N2_V as Connection8
+        connect N2_V N2_pre as Connection9
+        connect N2_pre Orificio_2.n_node as Connection10
+        connect Orificio_2.p_node Q_out.p_node as Connection11
+        connect Q_out.n_node Gout as Connection12
+        connect I_in.n_node G0 as Connection13
+        connect N1 C1.p_node as Connection14
+        connect C1.n_node G1 as Connection15
+        connect N1_V V1.p_node as Connection16
+        connect V1.n_node G1_V as Connection17
+        connect N1_pre I_pre1.p_node as Connection18
+        connect I_pre1.n_node G1_pre as Connection19
+        connect N2 C2.p_node as Connection20
+        connect C2.n_node G2 as Connection21
+        connect N2_V V2.p_node as Connection22
+        connect V2.n_node G2_V as Connection23
+        connect N2_pre I_pre2.p_node as Connection24
+        connect I_pre2.n_node G2_pre as Connection25
+        connect G_mid Terra.node as Connection26
+        connect G0 G1 as Connection27
+        connect G1 G1_V as Connection28
+        connect G1_V G1_pre as Connection29
+        connect G1_pre G_mid as Connection30
+        connect G_mid G2 as Connection31
+        connect G2 G2_V as Connection32
+        connect G2_V G2_pre as Connection33
+        connect G2_pre Gout as Connection34
+        connect Um.out u_ensaio_calc.in as Connection35
+        connect u_ensaio_calc.out Tempo_ensaio.in as Connection37
+        connect Tempo_ensaio.out Janela_pulso.in as Connection39
+        connect Duracao_pulso.out Janela_pulso.in1 as Connection40
+        connect u_ensaio_calc.out Pulso_ativo.in as Connection41
+        connect Janela_pulso.out Pulso_ativo.in1 as Connection42
+        connect D_deg.out Degrau_fracao.in as Connection43
+        connect Degrau_fracao.out Degrau_aplicado.in as Connection44
+        connect u_ensaio_calc.out Degrau_aplicado.in1 as Connection45
+        connect D_pul.out Pulso_fracao.in as Connection46
+        connect Pulso_fracao.out Pulso_aplicado.in as Connection47
+        connect Pulso_ativo.out Pulso_aplicado.in1 as Connection48
+        connect Um.out Soma_comando.in as Connection49
+        connect Degrau_aplicado.out Soma_comando.in1 as Connection50
+        connect Pulso_aplicado.out Soma_comando.in2 as Connection51
+        connect Soma_comando.out Vazao_operacao.in as Connection52
+        connect Q_rel.out Vazao_operacao.in1 as Connection53
+        connect V1.out Vpositivo1.in as Connection56
+        connect Vpositivo1.out Raiz1.in as Connection57
+        connect Raiz1.out Gnom1.in as Connection58
+        connect Gnom1.out Coef_orificio1.in as Connection59
+        connect G1_rel.out Coef_orificio1.in1 as Connection60
+        connect Coef_orificio1.out Orificio_12.in as Connection61
+        connect Vref1.out Erro_pre1.in as Connection62
+        connect V1.out Erro_pre1.in1 as Connection63
+        connect Erro_pre1.out Ganho_pre1.in as Connection64
+        connect Ganho_pre1.out Limite_pre1.in as Connection65
+        connect Limite_pre1.out Ativa_pre1.in as Connection66
+        connect Ativa_pre1.out I_pre1.in as Connection68
+        connect V1.out Escala_h1.in as Connection69
+        connect Escala_h1.out h1_m.in as Connection70
+        connect V2.out Vpositivo2.in as Connection71
+        connect Vpositivo2.out Raiz2.in as Connection72
+        connect Raiz2.out Gnom2.in as Connection73
+        connect Gnom2.out Coef_orificio2.in as Connection74
+        connect G2_rel.out Coef_orificio2.in1 as Connection75
+        connect Coef_orificio2.out Orificio_2.in as Connection76
+        connect Vref2.out Erro_pre2.in as Connection77
+        connect V2.out Erro_pre2.in1 as Connection78
+        connect Erro_pre2.out Ganho_pre2.in as Connection79
+        connect Ganho_pre2.out Limite_pre2.in as Connection80
+        connect Limite_pre2.out Ativa_pre2.in as Connection81
+        connect Ativa_pre2.out I_pre2.in as Connection83
+        connect V2.out Escala_h2.in as Connection84
+        connect Escala_h2.out h2_m.in as Connection85
+        connect u_ensaio_calc.out u_ensaio.in as Connection86
+        connect precarga.out u_ensaio_calc.in1 as Connection87
+        connect precarga.out Tempo_ensaio.reset as Connection88
+        connect precarga.out Ativa_pre1.in1 as Connection89
+        connect precarga.out Ativa_pre2.in1 as Connection90
+        connect Tempo_ensaio.out Fase_interferente.in as Connection91
+        connect Fase_interferente.out Interferente_0p8Hz.in as Connection92
+        connect Escala_h1.out Ideal_unitario_T1.in as Connection93
+        connect Ideal_unitario_T1.out ideal_h1.in as Connection94
+        connect Escala_h1.out Pressao_Pa_T1.in as Connection95
+        connect precarga.out Pressao_na_precarga_T1.in as Connection96
+        connect Pressao_Pa_T1.out Pressao_durante_ensaio_T1.in as Connection97
+        connect u_ensaio_calc.out Pressao_durante_ensaio_T1.in1 as Connection98
+        connect Pressao_durante_ensaio_T1.out Pressao_com_inicio_estavel_T1.in as Connection99
+        connect Pressao_na_precarga_T1.out Pressao_com_inicio_estavel_T1.in1 as Connection100
+        connect Pressao_com_inicio_estavel_T1.out Dinamica_tomada_T1.in as Connection101
+        connect Dinamica_tomada_T1.out Sensibilidade_HSC_T1.in as Connection102
+        connect Sensibilidade_HSC_T1.out Erro_de_ganho_T1.in as Connection103
+        connect Dinamica_tomada_T1.out Fracao_de_escala_T1.in as Connection104
+        connect Um_T1.out Complemento_T1.in as Connection105
+        connect Fracao_de_escala_T1.out Complemento_T1.in1 as Connection106
+        connect Fracao_de_escala_T1.out Curvatura_normalizada_T1.in as Connection107
+        connect Complemento_T1.out Curvatura_normalizada_T1.in1 as Connection108
+        connect Curvatura_normalizada_T1.out Amplitude_curvatura_T1.in as Connection109
+        connect Erro_de_ganho_T1.out Adiciona_curvatura_T1.in as Connection110
+        connect Amplitude_curvatura_T1.out Adiciona_curvatura_T1.in1 as Connection111
+        connect Adiciona_curvatura_T1.out Saida_nominal_T1.in as Connection112
+        connect Zero_ratiometrico_T1.out Saida_nominal_T1.in1 as Connection113
+        connect Saida_nominal_T1.out Erro_de_zero_T1.in as Connection114
+        connect Deslocamento_zero_T1.out Erro_de_zero_T1.in1 as Connection115
+        connect Interferente_0p8Hz.out Amplitude_interferente_T1.in as Connection116
+        connect Erro_de_zero_T1.out Captacao_na_interface_T1.in as Connection117
+        connect Amplitude_interferente_T1.out Captacao_na_interface_T1.in1 as Connection118
+        connect Captacao_na_interface_T1.out Condicionamento_RC_T1.in as Connection119
+        connect Condicionamento_RC_T1.out Faixa_ADC_T1.in as Connection120
+        connect Faixa_ADC_T1.out Escala_ADC_T1.in as Connection121
+        connect Escala_ADC_T1.out Quantizacao_ADC_T1.in as Connection122
+        connect Quantizacao_ADC_T1.out Reconstrucao_ADC_T1.in as Connection123
+        connect Reconstrucao_ADC_T1.out Retira_zero_e_corrige_T1.in as Connection124
+        connect Zero_e_correcao_T1.out Retira_zero_e_corrige_T1.in1 as Connection125
+        connect Retira_zero_e_corrige_T1.out Converte_volts_para_m_T1.in as Connection126
+        connect Converte_volts_para_m_T1.out real_h1.in as Connection127
+        connect Escala_h2.out Ideal_unitario_T2.in as Connection128
+        connect Ideal_unitario_T2.out ideal_h2.in as Connection129
+        connect Escala_h2.out Pressao_Pa_T2.in as Connection130
+        connect precarga.out Pressao_na_precarga_T2.in as Connection131
+        connect Pressao_Pa_T2.out Pressao_durante_ensaio_T2.in as Connection132
+        connect u_ensaio_calc.out Pressao_durante_ensaio_T2.in1 as Connection133
+        connect Pressao_durante_ensaio_T2.out Pressao_com_inicio_estavel_T2.in as Connection134
+        connect Pressao_na_precarga_T2.out Pressao_com_inicio_estavel_T2.in1 as Connection135
+        connect Pressao_com_inicio_estavel_T2.out Dinamica_tomada_T2.in as Connection136
+        connect Dinamica_tomada_T2.out Sensibilidade_HSC_T2.in as Connection137
+        connect Sensibilidade_HSC_T2.out Erro_de_ganho_T2.in as Connection138
+        connect Dinamica_tomada_T2.out Fracao_de_escala_T2.in as Connection139
+        connect Um_T2.out Complemento_T2.in as Connection140
+        connect Fracao_de_escala_T2.out Complemento_T2.in1 as Connection141
+        connect Fracao_de_escala_T2.out Curvatura_normalizada_T2.in as Connection142
+        connect Complemento_T2.out Curvatura_normalizada_T2.in1 as Connection143
+        connect Curvatura_normalizada_T2.out Amplitude_curvatura_T2.in as Connection144
+        connect Erro_de_ganho_T2.out Adiciona_curvatura_T2.in as Connection145
+        connect Amplitude_curvatura_T2.out Adiciona_curvatura_T2.in1 as Connection146
+        connect Adiciona_curvatura_T2.out Saida_nominal_T2.in as Connection147
+        connect Zero_ratiometrico_T2.out Saida_nominal_T2.in1 as Connection148
+        connect Saida_nominal_T2.out Erro_de_zero_T2.in as Connection149
+        connect Deslocamento_zero_T2.out Erro_de_zero_T2.in1 as Connection150
+        connect Interferente_0p8Hz.out Amplitude_interferente_T2.in as Connection151
+        connect Erro_de_zero_T2.out Captacao_na_interface_T2.in as Connection152
+        connect Amplitude_interferente_T2.out Captacao_na_interface_T2.in1 as Connection153
+        connect Captacao_na_interface_T2.out Condicionamento_RC_T2.in as Connection154
+        connect Condicionamento_RC_T2.out Faixa_ADC_T2.in as Connection155
+        connect Faixa_ADC_T2.out Escala_ADC_T2.in as Connection156
+        connect Escala_ADC_T2.out Quantizacao_ADC_T2.in as Connection157
+        connect Quantizacao_ADC_T2.out Reconstrucao_ADC_T2.in as Connection158
+        connect Reconstrucao_ADC_T2.out Retira_zero_e_corrige_T2.in as Connection159
+        connect Zero_e_correcao_T2.out Retira_zero_e_corrige_T2.in1 as Connection160
+        connect Retira_zero_e_corrige_T2.out Converte_volts_para_m_T2.in as Connection161
+        connect Converte_volts_para_m_T2.out real_h2.in as Connection162
+        connect u_ensaio_calc.out Amplitude_referencia.in as Connection163
+        connect Ponto_nominal.out Referencia_m.in as Connection164
+        connect Amplitude_referencia.out Referencia_m.in1 as Connection165
+        connect Referencia_m.out Erro_PI.in as Connection166
+        connect Converte_volts_para_m_T2.out Erro_PI.in1 as Connection167
+        connect Erro_PI.out Erro_com_disparo.in as Connection168
+        connect u_ensaio_calc.out Erro_com_disparo.in1 as Connection169
+        connect Erro_com_disparo.out Kp_025.in as Connection170
+        connect precarga.out Estado_integral.reset as Connection171
+        connect Ponto_nominal.out PI_mais_vazao_nominal.in as Connection172
+        connect Kp_025.out PI_mais_vazao_nominal.in1 as Connection173
+        connect Estado_integral.out PI_mais_vazao_nominal.in2 as Connection174
+        connect PI_mais_vazao_nominal.out Limites_bomba.in as Connection175
+        connect Limites_bomba.out Retorno_antiwindup.in as Connection176
+        connect PI_mais_vazao_nominal.out Retorno_antiwindup.in1 as Connection177
+        connect Retorno_antiwindup.out Rastreio_saturacao.in as Connection178
+        connect Erro_com_disparo.out Ki_00025.in as Connection179
+        connect Ki_00025.out Derivada_estado_integral.in as Connection180
+        connect Rastreio_saturacao.out Derivada_estado_integral.in1 as Connection181
+        connect Derivada_estado_integral.out Estado_integral.in as Connection182
+        connect u_ensaio_calc.out Disturbio_entrada.in as Connection183
+        connect Limites_bomba.out Vazao_inclui_disturbio.in as Connection184
+        connect Disturbio_entrada.out Vazao_inclui_disturbio.in1 as Connection185
+        connect Vazao_inclui_disturbio.out Corrente_de_comando_A.in as Connection186
+        connect Corrente_de_comando_A.out I_in.in as Connection187
+        connect Referencia_m.out ref_m.in as Connection188
+        connect Converte_volts_para_m_T2.out med_m.in as Connection189
+        connect Limites_bomba.out Bomba_em_L_s.in as Connection190
+        connect Bomba_em_L_s.out bomba_ls.in as Connection191
+        connect Vazao_inclui_disturbio.out Entrada_em_L_s.in as Connection192
+        connect Entrada_em_L_s.out entrada_ls.in as Connection193
+    }
+
+    default {
+        "core/Capacitor" {
+            signal_access = "inherit"
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Integrator" {
+            show_reset = "none"
+            reset_type = "asynchronous"
+            show_init_condition = "internal"
+            init_value = "0"
+            limit_output = "False"
+            limit_upper = "inf"
+            limit_lower = "-inf"
+            show_state = "False"
+            state_port_type = "inherit"
+            tml_file = "gen_accumulator_integrator"
+            mode = "integrator"
+            execution_rate = "inherit"
+        }
+
+        "core/Limit" {
+            upper_limit = "[\'inf\']"
+            lower_limit = "[\'-inf\']"
+            execution_rate = "inherit"
+        }
+
+        "core/Low-Pass Filter" {
+            frequency = "500"
+            init_out = "0"
+            unit = "Hz"
+            execution_rate = "inherit"
+            _tunable = "False"
+        }
+
+        "core/Mathematical function" {
+            mathematical_fn = "exponential"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Product" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Relational operator" {
+            relational_op = "=="
+            execution_rate = "inherit"
+        }
+
+        "core/Round" {
+            round_fn = "floor"
+            execution_rate = "inherit"
+        }
+
+        "core/SCADA Input" {
+            signal_access = "inherit"
+            addr = "0"
+            format = "real"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "real"
+            min = "-1e6"
+            max = "1e6"
+            def_value = "0"
+            unit = " "
+            execution_rate = "100e-6"
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Step" {
+            step_time = "1"
+            initial_value = "0"
+            final_value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Trigonometric function" {
+            trigonometric_fn = "sin"
+            angle = "Radians"
+            execution_rate = "inherit"
+        }
+
+        "core/Current Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Signal Controlled Current Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+}

@@ -1,0 +1,214 @@
+{
+  "limiares_na_grade": {
+    "subida": {
+      "zero_mm": {
+        "planta": {
+          "erro": {
+            "primeira_falha": 6,
+            "anterior": 4
+          },
+          "acomodacao": {
+            "primeira_falha": 4,
+            "anterior": 2
+          },
+          "pico": null,
+          "esforco": null,
+          "faixa": null
+        },
+        "medida": {
+          "erro": null,
+          "acomodacao": null,
+          "pico": null,
+          "esforco": null,
+          "faixa": null
+        }
+      },
+      "tau_s": {
+        "planta": {
+          "erro": {
+            "primeira_falha": 220,
+            "anterior": 140
+          },
+          "acomodacao": {
+            "primeira_falha": 90,
+            "anterior": 60
+          },
+          "pico": {
+            "primeira_falha": 30,
+            "anterior": 10
+          },
+          "esforco": null,
+          "faixa": null
+        },
+        "medida": {
+          "erro": {
+            "primeira_falha": 220,
+            "anterior": 140
+          },
+          "acomodacao": {
+            "primeira_falha": 90,
+            "anterior": 60
+          },
+          "pico": {
+            "primeira_falha": 30,
+            "anterior": 10
+          },
+          "esforco": null,
+          "faixa": null
+        }
+      },
+      "ruido_mm": {
+        "planta": {
+          "erro": null,
+          "acomodacao": null,
+          "pico": null,
+          "esforco": null,
+          "faixa": null
+        },
+        "medida": {
+          "erro": null,
+          "acomodacao": {
+            "primeira_falha": 15,
+            "anterior": 10
+          },
+          "pico": {
+            "primeira_falha": 15,
+            "anterior": 10
+          },
+          "esforco": null,
+          "faixa": null
+        }
+      }
+    },
+    "disturbio": {
+      "zero_mm": {
+        "planta": {
+          "erro": {
+            "primeira_falha": 4,
+            "anterior": 2
+          },
+          "acomodacao": {
+            "primeira_falha": 4,
+            "anterior": 2
+          },
+          "pico": {
+            "primeira_falha": 60,
+            "anterior": 30
+          },
+          "esforco": null,
+          "faixa": null
+        },
+        "medida": {
+          "erro": null,
+          "acomodacao": null,
+          "pico": {
+            "primeira_falha": 30,
+            "anterior": 15
+          },
+          "esforco": null,
+          "faixa": null
+        }
+      },
+      "tau_s": {
+        "planta": {
+          "erro": {
+            "primeira_falha": 220,
+            "anterior": 140
+          },
+          "acomodacao": {
+            "primeira_falha": 60,
+            "anterior": 30
+          },
+          "pico": {
+            "primeira_falha": 60,
+            "anterior": 30
+          },
+          "esforco": null,
+          "faixa": null
+        },
+        "medida": {
+          "erro": {
+            "primeira_falha": 400,
+            "anterior": 220
+          },
+          "acomodacao": {
+            "primeira_falha": 30,
+            "anterior": 10
+          },
+          "pico": null,
+          "esforco": null,
+          "faixa": null
+        }
+      },
+      "ruido_mm": {
+        "planta": {
+          "erro": null,
+          "acomodacao": null,
+          "pico": null,
+          "esforco": null,
+          "faixa": null
+        },
+        "medida": {
+          "erro": null,
+          "acomodacao": {
+            "primeira_falha": 10,
+            "anterior": 2
+          },
+          "pico": {
+            "primeira_falha": 40,
+            "anterior": 20
+          },
+          "esforco": null,
+          "faixa": null
+        }
+      }
+    }
+  },
+  "margens": [
+    {
+      "tau_s": 0,
+      "cruzamento_rad_s": 0.004550898605622272,
+      "fase_graus": 65.5301994792978
+    },
+    {
+      "tau_s": 0.2,
+      "cruzamento_rad_s": 0.004550896996638661,
+      "fase_graus": 65.47805769261922
+    },
+    {
+      "tau_s": 10,
+      "cruzamento_rad_s": 0.004546888710781459,
+      "fase_graus": 62.94585324987266
+    },
+    {
+      "tau_s": 30,
+      "cruzamento_rad_s": 0.004515681452565007,
+      "fase_graus": 57.98266269004346
+    },
+    {
+      "tau_s": 60,
+      "cruzamento_rad_s": 0.0044203195254625596,
+      "fase_graus": 51.29907978114082
+    },
+    {
+      "tau_s": 90,
+      "cruzamento_rad_s": 0.004287352540329635,
+      "fase_graus": 45.693787041971476
+    },
+    {
+      "tau_s": 140,
+      "cruzamento_rad_s": 0.00403655206562146,
+      "fase_graus": 38.546735026524225
+    },
+    {
+      "tau_s": 220,
+      "cruzamento_rad_s": 0.003658140712931038,
+      "fase_graus": 31.079972712163638
+    },
+    {
+      "tau_s": 400,
+      "cruzamento_rad_s": 0.0030391434546511043,
+      "fase_graus": 22.535941588566857
+    }
+  ]
+}

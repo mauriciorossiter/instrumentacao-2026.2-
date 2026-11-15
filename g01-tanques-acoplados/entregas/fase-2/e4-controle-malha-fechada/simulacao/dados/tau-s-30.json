@@ -1,0 +1,56 @@
+{
+  "preset": "tau-s-30",
+  "origem": "TyphoonSim 2026.3 offline",
+  "amostras": 25000,
+  "ensaio": "subida",
+  "perfil": "real",
+  "instrumento": {
+    "zero_mm": 0,
+    "ganho_pct": 0,
+    "tau_s": 30,
+    "ruido_mm": 0,
+    "fc_hz": 0,
+    "adc_bits": 0,
+    "correcao_mm": 0,
+    "curvatura_mm": 0
+  },
+  "medida": {
+    "erro_mm": -0.009616673326709188,
+    "erro_abs_max_fim_mm": 0.012630000000068975,
+    "acomodacao_s": 810.2,
+    "pico_mm": 80.00004000000006,
+    "sobressinal_pct": 11.320562499999854,
+    "atende": {
+      "erro": true,
+      "acomodacao": true,
+      "pico": false
+    }
+  },
+  "planta": {
+    "erro_mm": -0.00783064935068926,
+    "erro_abs_max_fim_mm": 0.010850000000006688,
+    "acomodacao_s": 779.9,
+    "pico_mm": 80.00004000000006,
+    "sobressinal_pct": 11.592062499999889,
+    "atende": {
+      "erro": true,
+      "acomodacao": true,
+      "pico": false
+    }
+  },
+  "esforco_ls": 0.48070530000000034,
+  "vazao_comando_ls": [
+    10.2001801,
+    10.4807053
+  ],
+  "vazao_entrada_ls": [
+    10.2001801,
+    10.4807053
+  ],
+  "faixa_planta_m": [
+    1.0,
+    1.09307623
+  ],
+  "atende_esforco": true,
+  "atende_faixa": true
+}
