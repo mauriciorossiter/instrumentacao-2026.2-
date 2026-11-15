@@ -1,0 +1,688 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "equivalente_eletrico" {
+    configuration {
+        hil_device = "HIL101"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 2e-05
+        simulation_time = 121.0
+        abs_tol = 1e-9
+        rel_tol = 1e-9
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Signal Controlled Voltage Source" V_m {
+        }
+        [
+            position = 7600, 8300
+            rotation = right
+        ]
+
+        component "core/Current Measurement" I_dw {
+            execution_rate = "2e-05"
+            sig_output = "True"
+        }
+        [
+            position = 7720, 8160
+        ]
+
+        component "core/Inductor" L_inercia {
+            inductance = "0.6621455962162305"
+        }
+        [
+            position = 7860, 8160
+        ]
+
+        component "core/Variable Resistor" R_amortec {
+            inductance = "0.001"
+        }
+        [
+            position = 8000, 8160
+        ]
+
+        component "core/Capacitor" C_sincron {
+            capacitance = "0.021821789023599242"
+            initial_voltage = "0.0"
+        }
+        [
+            position = 8140, 8260
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Voltage Source" v_nl {
+        }
+        [
+            position = 8140, 8420
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_vC {
+            execution_rate = "2e-05"
+            sig_output = "True"
+        }
+        [
+            position = 8260, 8260
+            rotation = right
+        ]
+
+        component "core/Ground" terra {
+        }
+        [
+            position = 7600, 8540
+        ]
+
+        component "core/SCADA Input" Pm0 {
+            def_value = "0.8"
+            execution_rate = "2e-05"
+            max = "1.5"
+            min = "0.0"
+            unit = "pu"
+        }
+        [
+            position = 7300, 7600
+        ]
+
+        component "core/SCADA Input" dPm {
+            def_value = "0.1"
+            execution_rate = "2e-05"
+            max = "0.9"
+            min = "-0.5"
+            unit = "pu"
+        }
+        [
+            position = 7300, 7672
+        ]
+
+        component "core/SCADA Input" degrau {
+            def_value = "0.0"
+            execution_rate = "2e-05"
+            max = "1.0"
+            min = "0.0"
+            unit = "0/1"
+        }
+        [
+            position = 7300, 7740
+        ]
+
+        component "core/SCADA Input" D {
+            def_value = "0.01"
+            execution_rate = "2e-05"
+            max = "2.0"
+            min = "0.0"
+            unit = "pu/(rad/s)"
+        }
+        [
+            position = 7300, 7808
+        ]
+
+        component "core/SCADA Input" X {
+            def_value = "0.6"
+            execution_rate = "2e-05"
+            max = "2.0"
+            min = "0.25"
+            unit = "pu"
+        }
+        [
+            position = 7300, 7880
+        ]
+
+        component "core/SCADA Input" falta {
+            def_value = "0.0"
+            execution_rate = "2e-05"
+            max = "1.0"
+            min = "0.0"
+            unit = "0/1"
+        }
+        [
+            position = 7300, 7952
+        ]
+
+        component "core/Step" degrau_temporizado {
+            execution_rate = "2e-05"
+            final_value = "1.0"
+            initial_value = "0.0"
+            step_time = "1e6"
+        }
+        [
+            position = 7300, 8100
+        ]
+
+        component "core/Sum" degrau_total {
+            execution_rate = "2e-05"
+            signs = "++"
+        }
+        [
+            position = 7420, 7700
+        ]
+
+        component "core/Product" dPm_x_degrau {
+            execution_rate = "2e-05"
+        }
+        [
+            position = 7520, 7680
+        ]
+
+        component "core/Sum" Pm {
+            execution_rate = "2e-05"
+            signs = "++"
+        }
+        [
+            position = 7620, 7620
+        ]
+
+        component "core/Gain" KV_x_Pm {
+            execution_rate = "2e-05"
+            gain = "2.5"
+        }
+        [
+            position = 7720, 7620
+        ]
+
+        component "core/Gain" KV_sobre_KI_x_D {
+            execution_rate = "2e-05"
+            gain = "25.0"
+        }
+        [
+            position = 7520, 7900
+        ]
+
+        component "core/Constant" R_minimo {
+            execution_rate = "2e-05"
+            value = "1e-6"
+        }
+        [
+            position = 7520, 7980
+        ]
+
+        component "core/Min Max" R_nao_nulo {
+            execution_rate = "2e-05"
+            operation = "max"
+        }
+        [
+            position = 7640, 7920
+        ]
+
+        component "core/Constant" EV {
+            execution_rate = "2e-05"
+            value = "1.2"
+        }
+        [
+            position = 8400, 7600
+        ]
+
+        component "core/Product" Pmax_EV_sobre_X {
+            execution_rate = "2e-05"
+            signs = "*/"
+        }
+        [
+            position = 8520, 7620
+        ]
+
+        component "core/Constant" um {
+            execution_rate = "2e-05"
+            value = "1.0"
+        }
+        [
+            position = 8400, 7700
+        ]
+
+        component "core/Step" falta_inicio {
+            execution_rate = "2e-05"
+            final_value = "1.0"
+            initial_value = "0.0"
+            step_time = "1e6"
+        }
+        [
+            position = 8400, 7760
+        ]
+
+        component "core/Step" falta_fim {
+            execution_rate = "2e-05"
+            final_value = "1.0"
+            initial_value = "0.0"
+            step_time = "1e6"
+        }
+        [
+            position = 8400, 7820
+        ]
+
+        component "core/Sum" rede_1_menos_falta {
+            execution_rate = "2e-05"
+            signs = "+--+"
+        }
+        [
+            position = 8520, 7760
+        ]
+
+        component "core/Product" Pmax_t {
+            execution_rate = "2e-05"
+        }
+        [
+            position = 8640, 7700
+        ]
+
+        component "core/Gain" vC_para_rad {
+            execution_rate = "2e-05"
+            gain = "0.2182178902359924"
+        }
+        [
+            position = 8400, 7960
+        ]
+
+        component "core/Constant" delta0 {
+            execution_rate = "2e-05"
+            value = "0.41151684606748806"
+        }
+        [
+            position = 8400, 8040
+        ]
+
+        component "core/Sum" delta {
+            execution_rate = "2e-05"
+            signs = "++"
+        }
+        [
+            position = 8520, 7980
+        ]
+
+        component "core/Trigonometric function" sen_delta {
+            execution_rate = "2e-05"
+        }
+        [
+            position = 8640, 7980
+        ]
+
+        component "core/Product" Pe {
+            execution_rate = "2e-05"
+        }
+        [
+            position = 8760, 7900
+        ]
+
+        component "core/Gain" KV_x_Pe {
+            execution_rate = "2e-05"
+            gain = "2.5"
+        }
+        [
+            position = 8880, 7900
+        ]
+
+        component "core/Sum" menos_vC {
+            execution_rate = "2e-05"
+            signs = "+-"
+        }
+        [
+            position = 9000, 7920
+        ]
+
+        component "core/Gain" i_para_dw {
+            execution_rate = "2e-05"
+            gain = "10.0"
+        }
+        [
+            position = 7720, 8040
+        ]
+
+        component "core/Gain" rad_para_graus {
+            execution_rate = "2e-05"
+            gain = "57.29577951308232"
+        }
+        [
+            position = 8640, 8060
+        ]
+
+        component "core/Probe" delta_graus {
+        }
+        [
+            position = 8760, 8060
+        ]
+
+        component "core/Probe" delta_omega {
+        }
+        [
+            position = 7840, 8040
+        ]
+
+        component "core/Probe" Pe_pu {
+        }
+        [
+            position = 8760, 7820
+        ]
+
+        component "core/Probe" Pm_pu {
+        }
+        [
+            position = 7620, 7540
+        ]
+
+        component "core/Probe" i_A {
+        }
+        [
+            position = 7840, 7980
+        ]
+
+        component "core/Probe" vC_V {
+        }
+        [
+            position = 8400, 8120
+        ]
+
+        component "core/Probe" vnl_V {
+        }
+        [
+            position = 9120, 7920
+        ]
+
+        component "core/Probe" Vm_V {
+        }
+        [
+            position = 7840, 7620
+        ]
+
+        component "core/Scope" Scope_equivalente {
+            selected_signals = "[\'delta_graus\', \'delta_omega\', \'Pe_pu\', \'Pm_pu\', \'i_A\', \'vC_V\', \'vnl_V\', \'Vm_V\']"
+        }
+        [
+            position = 9120, 8100
+        ]
+
+        junction no_topo pe
+        [
+            position = 8140, 8160
+        ]
+
+        junction no_meio pe
+        [
+            position = 8140, 8340
+        ]
+
+        junction no_vC_topo pe
+        [
+            position = 8260, 8160
+        ]
+
+        junction no_vC_baixo pe
+        [
+            position = 8260, 8340
+        ]
+
+        junction no_terra pe
+        [
+            position = 7600, 8500
+        ]
+
+        connect V_m.p_node I_dw.p_node as Connection1
+        connect I_dw.n_node L_inercia.p_node as Connection2
+        connect L_inercia.n_node R_amortec.p_node as Connection3
+        connect R_amortec.n_node no_topo as Connection4
+        connect no_topo C_sincron.p_node as Connection5
+        connect no_topo no_vC_topo as Connection6
+        connect no_vC_topo V_vC.p_node as Connection7
+        connect C_sincron.n_node no_meio as Connection8
+        connect no_meio no_vC_baixo as Connection9
+        connect no_vC_baixo V_vC.n_node as Connection10
+        connect no_meio v_nl.p_node as Connection11
+        connect v_nl.n_node no_terra as Connection12
+        connect V_m.n_node no_terra as Connection13
+        connect terra.node no_terra as Connection14
+        connect degrau.out degrau_total.in as Connection15
+        connect degrau_temporizado.out degrau_total.in1 as Connection16
+        connect dPm.out dPm_x_degrau.in as Connection17
+        connect degrau_total.out dPm_x_degrau.in1 as Connection18
+        connect Pm0.out Pm.in as Connection19
+        connect dPm_x_degrau.out Pm.in1 as Connection20
+        connect Pm.out KV_x_Pm.in as Connection21
+        connect KV_x_Pm.out V_m.in as Connection22
+        connect D.out KV_sobre_KI_x_D.in as Connection23
+        connect KV_sobre_KI_x_D.out R_nao_nulo.in as Connection24
+        connect R_minimo.out R_nao_nulo.in1 as Connection25
+        connect R_nao_nulo.out R_amortec.In as Connection26
+        connect EV.out Pmax_EV_sobre_X.in as Connection27
+        connect X.out Pmax_EV_sobre_X.in1 as Connection28
+        connect um.out rede_1_menos_falta.in as Connection29
+        connect falta.out rede_1_menos_falta.in1 as Connection30
+        connect falta_inicio.out rede_1_menos_falta.in2 as Connection31
+        connect falta_fim.out rede_1_menos_falta.in3 as Connection32
+        connect Pmax_EV_sobre_X.out Pmax_t.in as Connection33
+        connect rede_1_menos_falta.out Pmax_t.in1 as Connection34
+        connect V_vC.out vC_para_rad.in as Connection35
+        connect vC_para_rad.out delta.in as Connection36
+        connect delta0.out delta.in1 as Connection37
+        connect delta.out sen_delta.in as Connection38
+        connect Pmax_t.out Pe.in as Connection39
+        connect sen_delta.out Pe.in1 as Connection40
+        connect Pe.out KV_x_Pe.in as Connection41
+        connect KV_x_Pe.out menos_vC.in as Connection42
+        connect V_vC.out menos_vC.in1 as Connection43
+        connect menos_vC.out v_nl.in as Connection44
+        connect I_dw.out i_para_dw.in as Connection45
+        connect delta.out rad_para_graus.in as Connection46
+        connect rad_para_graus.out delta_graus.in as Connection47
+        connect i_para_dw.out delta_omega.in as Connection48
+        connect Pe.out Pe_pu.in as Connection49
+        connect Pm.out Pm_pu.in as Connection50
+        connect I_dw.out i_A.in as Connection51
+        connect V_vC.out vC_V.in as Connection52
+        connect menos_vC.out vnl_V.in as Connection53
+        connect KV_x_Pm.out Vm_V.in as Connection54
+    }
+
+    default {
+        "core/Capacitor" {
+            signal_access = "inherit"
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Inductor" {
+            signal_access = "inherit"
+            inductance = "1e-3"
+            initial_current = "0.0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Min Max" {
+            operation = "min"
+            inputs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Product" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/SCADA Input" {
+            signal_access = "inherit"
+            addr = "0"
+            format = "real"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "real"
+            min = "-1e6"
+            max = "1e6"
+            def_value = "0"
+            unit = " "
+            execution_rate = "100e-6"
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Step" {
+            step_time = "1"
+            initial_value = "0"
+            final_value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Trigonometric function" {
+            trigonometric_fn = "sin"
+            angle = "Radians"
+            execution_rate = "inherit"
+        }
+
+        "core/Current Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Signal Controlled Voltage Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Variable Resistor" {
+            inductance = "1e-3"
+            initial_current = "0.0"
+            hide_int_meas = "False"
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+}

@@ -1,0 +1,5 @@
+# arquivos gerados localmente (nao versionar)
+*Target files/
+__pycache__/
+*.pyc
+*.bak
