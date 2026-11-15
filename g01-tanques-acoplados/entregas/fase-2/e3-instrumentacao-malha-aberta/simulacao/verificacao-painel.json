@@ -1,0 +1,69 @@
+{
+  "preset": "zero-6mm",
+  "ensaio": "degrau",
+  "origem": "typhoonsim-offline",
+  "versao": "2026.3",
+  "parametros": {
+    "zero_mm": 60.0,
+    "ganho_pct": 0.0,
+    "tau_s": 0.0,
+    "ruido_mm": 0.0,
+    "fc_hz": 0.0,
+    "adc_bits": 0.0,
+    "correcao_mm": 0.0,
+    "curvatura_mm": 0.0
+  },
+  "amostras": 20051,
+  "passo_captura_s": 0.1,
+  "tempo_execucao_s": 5.27,
+  "diferenca_max_amostragem_no_mm": 0.0030040740965908697,
+  "metricas": {
+    "h1": {
+      "ideal": {
+        "h_inicial_m": 1.0,
+        "h_final_m": 1.1024999618530273,
+        "h_caracteristico_m": 1.1024999618530273,
+        "t_caracteristico_s": null,
+        "t50_s": 71.54457831325301,
+        "tempo_10_90_s": 228.7295922003055
+      },
+      "real": {
+        "h_inicial_m": 1.059999942779541,
+        "h_final_m": 1.162500023841858,
+        "h_caracteristico_m": 1.162500023841858,
+        "t_caracteristico_s": null,
+        "t50_s": 71.5445652173913,
+        "tempo_10_90_s": 228.7294569688715
+      },
+      "erro_max_mm": 60.000061988830566,
+      "erro_rel_max_pct": 5.999994277954102,
+      "rmse_mm": 60.00001166717395,
+      "erro_final_mm": 60.000061988830566,
+      "atraso_50_s": -1.3095861717715707e-05
+    },
+    "h2": {
+      "ideal": {
+        "h_inicial_m": 1.0,
+        "h_final_m": 1.1024999618530273,
+        "h_caracteristico_m": 1.1024999618530273,
+        "t_caracteristico_s": null,
+        "t50_s": 172.7701550387597,
+        "tempo_10_90_s": 350.2891814445111
+      },
+      "real": {
+        "h_inicial_m": 1.059999942779541,
+        "h_final_m": 1.162500023841858,
+        "h_caracteristico_m": 1.162500023841858,
+        "t_caracteristico_s": null,
+        "t50_s": 172.7700772200772,
+        "tempo_10_90_s": 350.2896345130682
+      },
+      "erro_max_mm": 60.000061988830566,
+      "erro_rel_max_pct": 6.000006198883057,
+      "rmse_mm": 60.0000017434975,
+      "erro_final_mm": 60.000061988830566,
+      "atraso_50_s": -7.781868248457613e-05
+    }
+  },
+  "interface": "Callbacks do painel verificados via API do SCADA Standalone"
+}

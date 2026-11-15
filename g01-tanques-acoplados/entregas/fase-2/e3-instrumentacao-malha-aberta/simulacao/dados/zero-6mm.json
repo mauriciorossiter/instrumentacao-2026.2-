@@ -1,0 +1,68 @@
+{
+  "preset": "zero-6mm",
+  "ensaio": "degrau",
+  "origem": "typhoonsim-offline",
+  "versao": "2026.3",
+  "parametros": {
+    "zero_mm": 6,
+    "ganho_pct": 0,
+    "tau_s": 0,
+    "ruido_mm": 0,
+    "fc_hz": 0,
+    "adc_bits": 0,
+    "correcao_mm": 0,
+    "curvatura_mm": 0
+  },
+  "amostras": 20051,
+  "passo_captura_s": 0.1,
+  "tempo_execucao_s": 4.77,
+  "diferenca_max_amostragem_no_mm": 0.0030040740965908697,
+  "metricas": {
+    "h1": {
+      "ideal": {
+        "h_inicial_m": 1.0,
+        "h_final_m": 1.1024999618530273,
+        "h_caracteristico_m": 1.1024999618530273,
+        "t_caracteristico_s": null,
+        "t50_s": 71.54457831325301,
+        "tempo_10_90_s": 228.7295922003055
+      },
+      "real": {
+        "h_inicial_m": 1.00600004196167,
+        "h_final_m": 1.1085000038146973,
+        "h_caracteristico_m": 1.1085000038146973,
+        "t_caracteristico_s": null,
+        "t50_s": 71.54468599033817,
+        "tempo_10_90_s": 228.72945939818067
+      },
+      "erro_max_mm": 6.000041961669922,
+      "erro_rel_max_pct": 0.6000041961669922,
+      "rmse_mm": 6.000009043907223,
+      "erro_final_mm": 6.000041961669922,
+      "atraso_50_s": 0.00010767708515402319
+    },
+    "h2": {
+      "ideal": {
+        "h_inicial_m": 1.0,
+        "h_final_m": 1.1024999618530273,
+        "h_caracteristico_m": 1.1024999618530273,
+        "t_caracteristico_s": null,
+        "t50_s": 172.7701550387597,
+        "tempo_10_90_s": 350.2891814445111
+      },
+      "real": {
+        "h_inicial_m": 1.00600004196167,
+        "h_final_m": 1.1085000038146973,
+        "h_caracteristico_m": 1.1085000038146973,
+        "t_caracteristico_s": null,
+        "t50_s": 172.7702702702703,
+        "tempo_10_90_s": 350.2891814445111
+      },
+      "erro_max_mm": 6.000041961669922,
+      "erro_rel_max_pct": 0.6000041961669922,
+      "rmse_mm": 6.000001790412509,
+      "erro_final_mm": 6.000041961669922,
+      "atraso_50_s": 0.00011523151059122938
+    }
+  }
+}

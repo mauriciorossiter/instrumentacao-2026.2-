@@ -1,0 +1,1620 @@
+<ui_settings>
+    <version>2.9</version>
+    <model_locked>False</model_locked>
+    <canvas_bg_color>#ffffff</canvas_bg_color>
+    <initialization_code><![CDATA[# NOTE: Variables and functions defined here will be
+# available for use in all Macro and Expression scripts.
+# NOTE: This code is always executed prior to simulation start.
+
+# The variable 'SETTINGS_DIR' holds the directory where the loaded Panel .cus file is located.
+# Also you can call the 'get_settings_dir_path()' function in any
+# Macro and Expression script to get the same directory.
+SETTINGS_DIR = get_settings_dir_path()
+
+# The 'add_to_python_path(folder)' function can be used to add a custom folder
+# with Python files and packages to the PYTHONPATH. After a folder is added, all Python
+# files and Python packages from it can be imported into the SCADA Namespace.
+
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# Numpy module is imported as 'np'
+# Scipy module is imported as 'sp'
+# Schematic Editor model namespace is imported as 'scm'
+# Function for printing to the HIL SCADA Message log is imported as 'printf'.
+
+]]></initialization_code>
+    <components>
+        <component_data>
+                <id>a7e0e10b8e024a70905027314c1b054d</id>
+                <name><![CDATA[Titulo]]></name>
+                <type>TextNote</type>
+                <description><![CDATA[]]></description>
+                <text><![CDATA[G01 | Instrumentação em malha aberta – TyphoonSim offline]]></text>
+                <widget_settings>
+                    <x>20</x>
+                    <y>10</y>
+                    <width>1110</width>
+                    <height>43</height>
+                    <background_color><![CDATA[None]]></background_color>
+                    <background_type><![CDATA[Transparent]]></background_type>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[]]></label>
+                    <use_label>False</use_label>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>ad4a07b6ec7e4b2ba0ce627d3cccdf93</id>
+                <name><![CDATA[Pasta]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[pass]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[]]></inputValue>
+                <inputValueType>string</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>20</x>
+                    <y>62</y>
+                    <width>700</width>
+                    <height>45</height>
+                    <inputWidgetWidth>480</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Pasta dos scripts]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>d6b1e17ad3b14530a99bb7cfaf47504d</id>
+                <name><![CDATA[zero_mm]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[pass]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[6.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>20</x>
+                    <y>119</y>
+                    <width>266</width>
+                    <height>47</height>
+                    <inputWidgetWidth>85</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Erro de zero (mm)]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>0cf69dfdd48b4da0a1c91cc3a1572361</id>
+                <name><![CDATA[ganho_pct]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[pass]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.3]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>306</x>
+                    <y>119</y>
+                    <width>266</width>
+                    <height>47</height>
+                    <inputWidgetWidth>85</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Erro de ganho (%)]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>0515d0022fe143aaa652be883805114c</id>
+                <name><![CDATA[tau_s]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[pass]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.2]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>592</x>
+                    <y>119</y>
+                    <width>266</width>
+                    <height>47</height>
+                    <inputWidgetWidth>85</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Constante da tomada (s)]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>a535ca00f9dd43e7a9379a4dfcedddc3</id>
+                <name><![CDATA[ruido_mm]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[pass]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[2.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>878</x>
+                    <y>119</y>
+                    <width>266</width>
+                    <height>47</height>
+                    <inputWidgetWidth>85</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Interferência de pico (mm)]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>3157369697974c4a8998af45771e1d62</id>
+                <name><![CDATA[fc_hz]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[pass]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.2]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>20</x>
+                    <y>173</y>
+                    <width>266</width>
+                    <height>47</height>
+                    <inputWidgetWidth>85</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Corte RC (Hz; 0 desliga)]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>bed7af6f67414cfb93287f41c260088e</id>
+                <name><![CDATA[adc_bits]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[pass]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[12.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>306</x>
+                    <y>173</y>
+                    <width>266</width>
+                    <height>47</height>
+                    <inputWidgetWidth>85</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[ADC (bits; 0 desliga)]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>41b50d89a72a44f696738c7f1dbb545b</id>
+                <name><![CDATA[correcao_mm]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[pass]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>592</x>
+                    <y>173</y>
+                    <width>266</width>
+                    <height>47</height>
+                    <inputWidgetWidth>85</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Correção de zero (mm)]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>5c73075acf614f22951581ce90158aa6</id>
+                <name><![CDATA[curvatura_mm]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[pass]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change widget value by setting this variable.
+# NOTE: If you not specify 'widgetValue' variable or assign 'None' to it,
+# widget value won't be changed.
+widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed periodically each 1000ms.
+# HIL API is imported as 'hil'
+# NOTE: Only read functions are available from the HIL API
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+# Change the widget value by setting this variable.
+# NOTE: If you do not specify a 'widgetValue' variable or assign 'None' to it,
+# the widget value will not be changed.
+widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[3.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>878</x>
+                    <y>173</y>
+                    <width>266</width>
+                    <height>47</height>
+                    <inputWidgetWidth>85</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Curvatura (mm)]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>c4062a0e73a444b7a71a15d67f5d1284</id>
+                <name><![CDATA[Preset_0]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'degrau')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",6.0)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0.3)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",0.2)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",2.0)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0.2)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",12)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",0.0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",3.0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>20</x>
+                    <y>235</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[degrau]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>2a72139bdc7e4716b27bdd0f00476471</id>
+                <name><![CDATA[Preset_1]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'inicial')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",6.0)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0.3)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",0.2)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",2.0)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0.2)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",12)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",0.0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",3.0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>210</x>
+                    <y>235</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[inicial]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>89d339382ab540b8b8629a5dc2b5879c</id>
+                <name><![CDATA[Preset_2]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'pulso')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",6.0)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0.3)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",0.2)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",2.0)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0.2)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",12)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",0.0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",3.0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>400</x>
+                    <y>235</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[pulso]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>57ce151f07424d4bae8abf319c89fdd6</id>
+                <name><![CDATA[Preset_3]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'referencia')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>590</x>
+                    <y>235</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[referencia]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>74ab293940f44608a9508da34e6ca178</id>
+                <name><![CDATA[Preset_4]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'so-ganho')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0.3)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>780</x>
+                    <y>235</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[so-ganho]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>49d3cb71262f489ea16953688c6f8058</id>
+                <name><![CDATA[Preset_5]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'so-adc')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",12)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>970</x>
+                    <y>235</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[so-adc]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>0ca17b753b5041e586cc34a76d931664</id>
+                <name><![CDATA[Preset_6]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'so-curvatura')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",3.0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>20</x>
+                    <y>275</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[so-curvatura]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>f061c7197c37439fa2d37d53dfa0a278</id>
+                <name><![CDATA[Preset_7]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'so-interferencia')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",2.0)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>210</x>
+                    <y>275</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[so-interferencia]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>257be48a5a0b4540b0076bafcada1cd9</id>
+                <name><![CDATA[Preset_8]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'so-filtro')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0.2)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>400</x>
+                    <y>275</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[so-filtro]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>d388f5bdc0404e0a968000ff8a2082f4</id>
+                <name><![CDATA[Preset_9]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'zero-corrigido')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",6.0)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0.3)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",0.2)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",2.0)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0.2)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",12)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",6.0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",3.0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>590</x>
+                    <y>275</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[zero-corrigido]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>4e038ba5fda04bb4ab4059e022918fee</id>
+                <name><![CDATA[Preset_10]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'zero-6mm')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",6)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>780</x>
+                    <y>275</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[zero-6mm]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>395330c5fd994b67b9e95c7cb8b72dc6</id>
+                <name><![CDATA[Preset_11]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'zero-20mm')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",20)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>970</x>
+                    <y>275</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[zero-20mm]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>3cabbe8627504ff480b86086be0fc632</id>
+                <name><![CDATA[Preset_12]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'zero-60mm')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",60)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>20</x>
+                    <y>315</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[zero-60mm]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>97752ae0803a4ee7b50775aa829b7464</id>
+                <name><![CDATA[Preset_13]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'tau-0p2s')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",0.2)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>210</x>
+                    <y>315</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[tau-0p2s]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>797c0d154c9144fb9d90f253c2083c4f</id>
+                <name><![CDATA[Preset_14]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'tau-10s')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",10)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>400</x>
+                    <y>315</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[tau-10s]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>20b456b4187d4a56944c86684c83063e</id>
+                <name><![CDATA[Preset_15]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'tau-60s')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",60)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>590</x>
+                    <y>315</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[tau-60s]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>89f433110f124b6185454e15477092b5</id>
+                <name><![CDATA[Preset_16]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'ruido-2mm')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",2)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0.2)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>780</x>
+                    <y>315</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[ruido-2mm]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>e13d90be90344e2cb7186e9d82f184a9</id>
+                <name><![CDATA[Preset_17]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'ruido-10mm')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",10)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0.2)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>970</x>
+                    <y>315</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[ruido-10mm]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>2ad7e585204b45bd842a9cded8de3b87</id>
+                <name><![CDATA[Preset_18]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[panel.set_property_value(panel.get_widget_by_fqn("Caso"),"text",'ruido-40mm')
+panel.set_property_value(panel.get_widget_by_fqn('zero_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ganho_pct'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('tau_s'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('ruido_mm'),"widget_value",40)
+panel.set_property_value(panel.get_widget_by_fqn('fc_hz'),"widget_value",0.2)
+panel.set_property_value(panel.get_widget_by_fqn('adc_bits'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('correcao_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn('curvatura_mm'),"widget_value",0)
+panel.set_property_value(panel.get_widget_by_fqn("Estado"),"text","Preset carregado. Clique Executar.")]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>20</x>
+                    <y>355</y>
+                    <width>174</width>
+                    <height>32</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[ruido-40mm]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>3bce2582c6a54bccab80b4c7ebfbf9ac</id>
+                <name><![CDATA[Caso]]></name>
+                <type>TextNote</type>
+                <description><![CDATA[]]></description>
+                <text><![CDATA[degrau]]></text>
+                <widget_settings>
+                    <x>23</x>
+                    <y>370</y>
+                    <width>225</width>
+                    <height>45</height>
+                    <background_color><![CDATA[None]]></background_color>
+                    <background_type><![CDATA[Transparent]]></background_type>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[]]></label>
+                    <use_label>False</use_label>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>99b44b5dc63a4a9cace527d595f4d3db</id>
+                <name><![CDATA[Executar]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[from pathlib import Path
+import sys, tempfile
+from dataclasses import replace
+_pasta=Path(panel.get_property_value(panel.get_widget_by_fqn("Pasta"),"widget_value"))
+try:
+    _origem=Path(get_settings_dir_path())
+    if (_origem/"executar.py").is_file():
+        _pasta=_origem
+except (NameError, TypeError):
+    pass
+if not (_pasta/"executar.py").is_file():
+    raise RuntimeError("Preencha Pasta dos scripts com o diretório typhoonsim da E03 e confirme com Enter.")
+sys.path.insert(0,str(_pasta.resolve()))
+from parametros import CASOS
+from executar import executar
+_st=panel.get_widget_by_fqn("Estado")
+_preset=panel.get_property_value(panel.get_widget_by_fqn("Caso"),"text")
+_caso,_base=CASOS[_preset]
+_ajustes={k: float(panel.get_property_value(panel.get_widget_by_fqn(k),"widget_value"))
+          for k in vars(_base)}
+try:
+    panel.set_property_value(_st,"text","Executando "+_preset+" no TyphoonSim...")
+    _dir=Path(tempfile.mkdtemp(prefix="g01-e3-scada-"))
+    _r=executar(_preset,inst=replace(_base,**_ajustes),saida=_dir)
+    sys.path.insert(0,str(_pasta.parent/"simulacao"))
+    from graficos import figura_ensaio
+    _png=_dir/"captura.png"
+    figura_ensaio(_dir/(_preset+".csv"),_png,_caso)
+    panel.set_property_value(panel.get_widget_by_fqn("Grafico"),"image",str(_png))
+    _m=_r["metricas"]
+    panel.set_property_value(_st,"text",f"Captura: {_preset} | {_r['amostras']} pontos\nErro máx. T1: {_m['h1']['erro_max_mm']:.2f} mm\nErro máx. T2: {_m['h2']['erro_max_mm']:.2f} mm\nArquivos temporários: {_dir}")
+except Exception as _erro:
+    panel.set_property_value(_st,"text","Falha: "+str(_erro))
+    raise
+]]></on_use_code>
+                <on_start_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed on simulation start.
+# NOTE: Variables specified here will be available in other handlers.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[# NOTE: The code specified in this handler will be executed after simulation is stopped.
+# HIL API is imported as 'hil'
+# SCADA API is imported as 'panel'
+# SCADA API constants are imported as 'api_const'
+# 'WIDGET_HANDLE' constant holds the WidgetHandle object of this widget.
+# This object can be used as an argument in SCADA API functions.
+
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>260</x>
+                    <y>364</y>
+                    <width>250</width>
+                    <height>44</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Executar no TyphoonSim]]></label>
+                    <use_label>True</use_label>
+                    <enabled>True</enabled>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>e3007b62bdfe48f19ac67466f3473089</id>
+                <name><![CDATA[Modo]]></name>
+                <type>TextNote</type>
+                <description><![CDATA[]]></description>
+                <text><![CDATA[Ajustes entre rodadas do solver. Zero em τ, fc e bits ativa bypass.]]></text>
+                <widget_settings>
+                    <x>565</x>
+                    <y>366</y>
+                    <width>555</width>
+                    <height>45</height>
+                    <background_color><![CDATA[None]]></background_color>
+                    <background_type><![CDATA[Transparent]]></background_type>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[]]></label>
+                    <use_label>False</use_label>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>f167befcc63d4906bbca637c8ed6051c</id>
+                <name><![CDATA[Grafico]]></name>
+                <type>Image</type>
+                <description><![CDATA[]]></description>
+                <image><![CDATA[:/ui/images/misc/no_image_holder.png]]></image>
+                <image_scaling><![CDATA[Keep aspect ratio]]></image_scaling>
+                <widget_settings>
+                    <x>20</x>
+                    <y>432</y>
+                    <width>815</width>
+                    <height>440</height>
+                    <background_color><![CDATA[None]]></background_color>
+                    <background_type><![CDATA[Transparent]]></background_type>
+                    <is_background>False</is_background>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[]]></label>
+                    <use_label>False</use_label>
+                </widget_settings>
+            </component_data>
+        <component_data>
+                <id>df6860771fc04897bc90f01aa8679e51</id>
+                <name><![CDATA[Estado]]></name>
+                <type>TextNote</type>
+                <description><![CDATA[]]></description>
+                <text><![CDATA[Escolha um preset, confirme ajustes com Enter e clique Executar.]]></text>
+                <widget_settings>
+                    <x>865</x>
+                    <y>432</y>
+                    <width>295</width>
+                    <height>255</height>
+                    <background_color><![CDATA[None]]></background_color>
+                    <background_type><![CDATA[Transparent]]></background_type>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[]]></label>
+                    <use_label>False</use_label>
+                </widget_settings>
+            </component_data>
+        </components>
+</ui_settings>

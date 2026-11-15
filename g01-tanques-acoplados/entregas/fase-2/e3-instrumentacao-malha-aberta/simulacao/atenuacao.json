@@ -1,0 +1,14 @@
+{
+  "2": {
+    "amplitude_prevista_mm": 0.48507125007266594,
+    "amplitude_observada_mm": 0.48800767409500784
+  },
+  "10": {
+    "amplitude_prevista_mm": 2.42535625036333,
+    "amplitude_observada_mm": 2.4400735055728013
+  },
+  "40": {
+    "amplitude_prevista_mm": 9.70142500145332,
+    "amplitude_observada_mm": 9.760278038090876
+  }
+}
