@@ -1,0 +1,22 @@
+(a) degrau 0$\to$0,7074 & $n_{ss}$ [rpm] & 3658,5 & 3651,7 & 3621,5 & +0,19 & $\le$0,5 & $d_{ef}$ do VHIL identificado por este valor \\
+ & ganho estático $n_{ss}$/$d_{ef}$ [rpm] & 4820,6 & 4811,6 & -- & +0,19 & $\le$0,5 & idem \\
+ & $t_{63}$ (cte. de tempo) [ms] & 3,539 & 3,836 & -- & -7,73 & $\le$5,0 & PWM em tempo real na partida; no TyphoonSim (mesmo \texttt{.tse}) a diferença é +0,07\,\% \\
+ & $t_s$ 2\,\% [ms] & 13,140 & 14,130 & -- & -7,01 & $\le$5,0 & idem (TyphoonSim: $-$1,0\,\%) \\
+ & pico de corrente de fase [A] & 6,408 & 6,306 & -- & +1,61 & $\le$2,0 & ondulação de comutação e amostragem \\
+(a$'$) degrau 0,85$\to$0,95 ($d_{ef}$) & $n$ antes [rpm] & 3918,7 & 3921,6 & -- & -0,07 & $\le$0,5 & $d_{ef}$ identificado \\
+ & ganho incremental $\Delta n/\Delta d$ [rpm] & 2994,3 & 2910,0 & -- & +2,90 & $\le$2,0 & incerteza do $\Delta d_{ef}$ identificado e FCEM retida por 50\,µs (TyphoonSim: +1,4\,\%) \\
+ & $t_{63}$ [ms] & 3,998 & 4,142 & -- & -3,47 & $\le$10,0 & ondulação de 6 rpm em $\Delta n$ = 350 rpm \\
+ & $t_{90}$ [ms] & 8,228 & 8,008 & -- & +2,75 & $\le$10,0 & cruzamento de 90\,\% sensível à ondulação ($\pm6$ rpm) \\
+(b) CI, $d=$0 (desaceleração livre) & $t_{1/2}$ [ms] & 17,224 & 17,222 & -- & +0,01 & $\le$1,0 & Riccati (E01): 17,142 ms \\
+ & $n$(0,16 s) [rpm] & 2535,2 & 2533,5 & 2533,1 & +0,07 & $\le$1,0 & ondulação de comutação e amostragem \\
+ & $n$(0,17 s) [rpm] & 1849,1 & 1849,4 & 1848,1 & -0,02 & $\le$1,0 & -- \\
+ & $n$(0,20 s) [rpm] & 1018,1 & 1019,8 & 1018,0 & -0,17 & $\le$1,0 & ondulação de comutação e amostragem \\
+(b$'$) CI, $d=$0,55 (fora do equilíbrio) & fim da condução descontínua [ms] & 0,520 & 0,510 & -- & +1,96 & $\le$5,0 & ondulação de comutação e amostragem \\
+ & $n_{ss}$ [rpm] & 2941,2 & 2941,0 & -- & +0,01 & $\le$0,5 & $d_{ef}$ do VHIL identificado por este valor \\
+(c) pulso 0,02 N·m, MA & $n$ antes [rpm] & 3660,8 & 3668,0 & 3620,8 & -0,20 & $\le$0,5 & $d_{ef}$ identificado \\
+ & $n$ durante [rpm] & 3431,3 & 3436,6 & 3388,8 & -0,15 & $\le$0,5 & ondulação de comutação e amostragem \\
+ & $n$ depois [rpm] & 3662,2 & 3668,0 & 3621,3 & -0,16 & $\le$0,5 & ondulação de comutação e amostragem \\
+ & $\Delta n$ [rpm] & -229,5 & -231,4 & -- & -0,83 & $\le$2,0 & ondulação de comutação e amostragem \\
+ & $t_{63}$ da queda [ms] & 3,587 & 3,588 & -- & -0,01 & $\le$10,0 & idem \\
+(c) pulso, MF & $n$ mínimo [rpm] & 3921,8 & 3919,1 & -- & +0,07 & $\le$0,5 & ondulação de comutação e amostragem \\
+malha fechada (modo 0) & $n_{ss}$ [rpm] & 3997,7 & 3997,8 & 4001,1 & -0,00 & $\le$0,5 & ondulação de comutação \\
