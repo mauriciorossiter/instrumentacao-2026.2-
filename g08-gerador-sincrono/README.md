@@ -35,7 +35,7 @@ modelo no Typhoon (Virtual HIL) é comparado com a integração numérica da E01
 | Entrega | Pasta | Estado |
 |---|---|---|
 | E01 — Caracterização do sistema | `entregas/fase-2/e1-caracterizacao/` | entregue |
-| E02 — Equivalente elétrico | `entregas/fase-2/e2-equivalente-eletrico/` | entregue (validado no VHIL, 14 ensaios) |
+| E02 — Equivalente elétrico | `entregas/fase-2/e2-equivalente-eletrico/` | entregue (validado no VHIL, 15 ensaios) |
 | E03 — Instrumentação (malha aberta) | `entregas/fase-2/e3-instrumentacao/` | entregue (validado no VHIL, 5 ensaios) |
 | E04 — Controle (malha fechada) | `entregas/fase-2/e4-controle/` | entregue (validado no VHIL, 11 ensaios) |
 
