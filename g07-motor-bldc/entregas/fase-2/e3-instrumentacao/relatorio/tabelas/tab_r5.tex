@@ -1,0 +1,11 @@
+banda 10 kHz & 62 & 60 & 10 µs & 10 kHz: o erro vem quase todo da ondulação de 10 kHz (ganho 0,71) \\
+banda 2 kHz & 204 & 200 & 70 µs & 2 kHz: já atenua a 5.ª e a 7.ª harmônicas; atraso $\approx 1/(2\pi f_c)$ = 80 µs \\
+banda 0,5 kHz & 491 & 490 & 230 µs & 0,5 kHz: atenua a própria comutação; atraso 230 µs ($1/(2\pi f_c)$ = 320 µs na fundamental, menos nas harmônicas) \\
+\midrule
+ruído 50 mV & 500 & 497 & -- & erro = $\sigma_v/S$: o ruído entra somado (interferente) e passa sem atenuação no sinal iso \\
+ruído 200 mV & 2000 & 1987 & -- & idem: escala linear com $\sigma_v$ \\
+ruído 1000 mV & 10000 & 9937 & -- & idem: 10 A rms, dez vezes a corrente \\
+\midrule
+ADC 8 bits & 56 & 49 & -- & $q$ = 195 mA; modelo uniforme $q/\sqrt{12}$ vale (erro $\ll$ sinal) \\
+ADC 6 bits & 226 & 210 & -- & $q$ = 781 mA; ainda vale, com pequeno desvio \\
+ADC 4 bits & 902 & 1028 & -- & $q$ = 3,1 A $>$ 2$\times$pico: a leitura fica em 0 e o erro vira o próprio sinal (1,03 A); o modelo uniforme deixa de valer \\
