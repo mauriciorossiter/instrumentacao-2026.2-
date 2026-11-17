@@ -1,0 +1,1457 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "monotanque_equivalente_v2" {
+    configuration {
+        hil_device = "HIL402"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = 2e-5
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 8.0
+        abs_tol = 1e-7
+        rel_tol = 1e-7
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/SCADA Input" ensaio {
+            def_value = "1.0"
+            execution_rate = "Ts"
+            max = "4"
+            min = "1"
+            unit = ""
+        }
+        [
+            position = 6900, 7100
+        ]
+
+        component "core/SCADA Input" disparo {
+            def_value = "0.0"
+            execution_rate = "Ts"
+            max = "1"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 6900, 7168
+        ]
+
+        component "core/SCADA Input" degrau_pct {
+            def_value = "20.0"
+            execution_rate = "Ts"
+            max = "150"
+            min = "-90"
+            unit = "%"
+        }
+        [
+            position = 6900, 7240
+        ]
+
+        component "core/SCADA Input" h_op_m {
+            def_value = "0.5"
+            execution_rate = "Ts"
+            max = "2"
+            min = "0.05"
+            unit = "m"
+        }
+        [
+            position = 6900, 7312
+        ]
+
+        component "core/SCADA Input" h_ini_m {
+            def_value = "1.0"
+            execution_rate = "Ts"
+            max = "2"
+            min = "0.0"
+            unit = "m"
+        }
+        [
+            position = 6900, 7380
+        ]
+
+        component "core/SCADA Input" amp_pct {
+            def_value = "10.0"
+            execution_rate = "Ts"
+            max = "50"
+            min = "0"
+            unit = "%"
+        }
+        [
+            position = 6900, 7448
+        ]
+
+        component "core/SCADA Input" w_rel {
+            def_value = "1.0"
+            execution_rate = "Ts"
+            max = "3000"
+            min = "0.01"
+            unit = ""
+        }
+        [
+            position = 6900, 7520
+        ]
+
+        component "core/SCADA Input" k_valvula {
+            def_value = "0.01"
+            execution_rate = "Ts"
+            max = "0.05"
+            min = "0.001"
+            unit = "m2.5/s"
+        }
+        [
+            position = 6900, 7648
+        ]
+
+        component "core/SCADA Input" modelo_orif {
+            def_value = "0.0"
+            execution_rate = "Ts"
+            max = "1"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 6900, 7720
+        ]
+
+        component "core/SCADA Input" qd_Ls {
+            def_value = "0.0"
+            execution_rate = "Ts"
+            max = "20"
+            min = "-5"
+            unit = "L/s"
+        }
+        [
+            position = 8780, 7880
+        ]
+
+        component Subsystem Gerador_de_ensaios {
+            layout = dynamic
+            component "core/Integrator" relogio_ensaio {
+                execution_rate = "Ts"
+                show_reset = "rising"
+            }
+            [
+                position = 7048, 6900
+            ]
+
+            component "core/Constant" um {
+                execution_rate = "Ts"
+            }
+            [
+                position = 6928, 6880
+            ]
+
+            component "core/Constant" um_ {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7180, 6820
+            ]
+
+            component "core/Constant" zero_ {
+                execution_rate = "Ts"
+                value = "0"
+            }
+            [
+                position = 7180, 6960
+            ]
+
+            component "core/Signal switch" depois_de_t_ev {
+                execution_rate = "Ts"
+                threshold = "t_ev"
+            }
+            [
+                position = 7300, 6880
+            ]
+
+            component "core/Gain" kv_hop {
+                execution_rate = "Ts"
+                gain = "kv"
+            }
+            [
+                position = 6952, 7328
+            ]
+
+            component "core/Gain" kv_hini {
+                execution_rate = "Ts"
+                gain = "kv"
+            }
+            [
+                position = 6952, 7440
+            ]
+
+            component "core/Multiport signal switch" nivel_inicial {
+                execution_rate = "Ts"
+                number_of_input_terminals = "4"
+            }
+            [
+                position = 7200, 7400
+            ]
+
+            component "core/Gain" Ke_de_k {
+                execution_rate = "Ts"
+                gain = "ki/kv**0.5"
+            }
+            [
+                position = 6952, 7768
+            ]
+
+            component "core/Limit" alvo_pos {
+                execution_rate = "Ts"
+                lower_limit = "0"
+                upper_limit = "1000000.0"
+            }
+            [
+                position = 7380, 7500
+            ]
+
+            component "core/Mathematical function" raiz_alvo {
+                execution_rate = "Ts"
+                mathematical_fn = "sqrt"
+            }
+            [
+                position = 7440, 7460
+            ]
+
+            component "core/Product" q_equilibrio {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7560, 7480
+            ]
+
+            component "core/Sum" erro {
+                execution_rate = "Ts"
+                signs = "+-"
+            }
+            [
+                position = 7440, 7560
+            ]
+
+            component "core/Gain" Kp_ {
+                execution_rate = "Ts"
+                gain = "Kp"
+            }
+            [
+                position = 7560, 7560
+            ]
+
+            component "core/Sum" ff_mais_p {
+                execution_rate = "Ts"
+                signs = "++"
+            }
+            [
+                position = 7680, 7520
+            ]
+
+            component "core/Limit" bomba_0_a_Qmax {
+                execution_rate = "Ts"
+                lower_limit = "0"
+                upper_limit = "Q_MAX"
+            }
+            [
+                position = 7800, 7520
+            ]
+
+            component "core/Mathematical function" raiz_vop {
+                execution_rate = "Ts"
+                mathematical_fn = "sqrt"
+            }
+            [
+                position = 7320, 7328
+            ]
+
+            component "core/Gain" Ke_nom {
+                execution_rate = "Ts"
+                gain = "K_e"
+            }
+            [
+                position = 7440, 7328
+            ]
+
+            component "core/Constant" um_a {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7300, 7640
+            ]
+
+            component "core/Gain" pct_degrau {
+                execution_rate = "Ts"
+                gain = "0.01"
+            }
+            [
+                position = 7300, 7700
+            ]
+
+            component "core/Sum" fator_a {
+                execution_rate = "Ts"
+                signs = "++"
+            }
+            [
+                position = 7440, 7660
+            ]
+
+            component "core/Constant" fator_b {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7440, 7740
+            ]
+
+            component "core/Constant" fator_b_drenagem {
+                execution_rate = "Ts"
+                value = "0"
+            }
+            [
+                position = 7440, 7800
+            ]
+
+            component "core/Constant" t_ev_ {
+                execution_rate = "Ts"
+                value = "t_ev"
+            }
+            [
+                position = 7180, 7900
+            ]
+
+            component "core/Sum" t_menos_t_ev {
+                execution_rate = "Ts"
+                signs = "+-"
+            }
+            [
+                position = 7300, 7880
+            ]
+
+            component "core/Gain" w_c_ {
+                execution_rate = "Ts"
+                gain = "w_c"
+            }
+            [
+                position = 7300, 7960
+            ]
+
+            component "core/Product" w_vezes_t {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7440, 7900
+            ]
+
+            component "core/Trigonometric function" seno {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7560, 7900
+            ]
+
+            component "core/Constant" um_c {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7680, 7860
+            ]
+
+            component "core/Gain" pct_amp {
+                execution_rate = "Ts"
+                gain = "0.01"
+            }
+            [
+                position = 7560, 7980
+            ]
+
+            component "core/Product" amp_x_seno {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7680, 7940
+            ]
+
+            component "core/Sum" fator_c {
+                execution_rate = "Ts"
+                signs = "++"
+            }
+            [
+                position = 7800, 7900
+            ]
+
+            component "core/Multiport signal switch" fator_do_ensaio {
+                execution_rate = "Ts"
+                number_of_input_terminals = "4"
+            }
+            [
+                position = 7952, 7752
+            ]
+
+            component "core/Product" q_ensaio {
+                execution_rate = "Ts"
+            }
+            [
+                position = 8100, 7600
+            ]
+
+            component "core/Signal switch" preparo_ou_ensaio {
+                execution_rate = "Ts"
+            }
+            [
+                position = 8300, 7552
+            ]
+
+            port ensaio {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6800, 7000
+            ]
+
+            port disparo {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6800, 7112
+            ]
+
+            port degrau_pct {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6800, 7220
+            ]
+
+            port h_op_m {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6800, 7328
+            ]
+
+            port h_ini_m {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6800, 7440
+            ]
+
+            port amp_pct {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6800, 7552
+            ]
+
+            port w_rel {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6800, 7660
+            ]
+
+            port k_valvula {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6800, 7768
+            ]
+
+            port v_medido {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6800, 7880
+            ]
+
+            port qi_ref_A {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 9000, 7300
+            ]
+
+            port t_ensaio {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 9000, 7600
+            ]
+
+            junction j_t sp
+            [
+                position = 7180, 6900
+            ]
+
+            junction j_depois sp
+            [
+                position = 7420, 6880
+            ]
+
+            junction j_ensaio sp
+            [
+                position = 6952, 7000
+            ]
+
+            junction j_vop sp
+            [
+                position = 7060, 7328
+            ]
+
+            junction j_vini sp
+            [
+                position = 7060, 7440
+            ]
+
+            junction j_valvo sp
+            [
+                position = 7320, 7400
+            ]
+
+            connect um.out relogio_ensaio.in as Connection1
+            connect disparo relogio_ensaio.reset as Connection2
+            connect relogio_ensaio.out j_t as Connection3
+            connect j_t t_ensaio as Connection4
+            connect um_.out depois_de_t_ev.in as Connection5
+            connect zero_.out depois_de_t_ev.in1 as Connection6
+            connect j_t depois_de_t_ev.in2 as Connection7
+            connect depois_de_t_ev.out j_depois as Connection8
+            connect ensaio j_ensaio as Connection9
+            connect h_op_m kv_hop.in as Connection10
+            connect kv_hop.out j_vop as Connection11
+            connect h_ini_m kv_hini.in as Connection12
+            connect kv_hini.out j_vini as Connection13
+            connect j_ensaio nivel_inicial.ctrl as Connection14
+            connect j_vop nivel_inicial.in as Connection15
+            connect j_vini nivel_inicial.in1 as Connection16
+            connect j_vini nivel_inicial.in2 as Connection17
+            connect j_vop nivel_inicial.in3 as Connection18
+            connect nivel_inicial.out j_valvo as Connection19
+            connect k_valvula Ke_de_k.in as Connection20
+            connect j_valvo alvo_pos.in as Connection21
+            connect alvo_pos.out raiz_alvo.in as Connection22
+            connect raiz_alvo.out q_equilibrio.in as Connection23
+            connect Ke_de_k.out q_equilibrio.in1 as Connection24
+            connect j_valvo erro.in as Connection25
+            connect v_medido erro.in1 as Connection26
+            connect erro.out Kp_.in as Connection27
+            connect q_equilibrio.out ff_mais_p.in as Connection28
+            connect Kp_.out ff_mais_p.in1 as Connection29
+            connect ff_mais_p.out bomba_0_a_Qmax.in as Connection30
+            connect j_vop raiz_vop.in as Connection31
+            connect raiz_vop.out Ke_nom.in as Connection32
+            connect degrau_pct pct_degrau.in as Connection33
+            connect um_a.out fator_a.in as Connection34
+            connect pct_degrau.out fator_a.in1 as Connection35
+            connect j_t t_menos_t_ev.in as Connection36
+            connect t_ev_.out t_menos_t_ev.in1 as Connection37
+            connect w_rel w_c_.in as Connection38
+            connect w_c_.out w_vezes_t.in as Connection39
+            connect t_menos_t_ev.out w_vezes_t.in1 as Connection40
+            connect w_vezes_t.out seno.in as Connection41
+            connect amp_pct pct_amp.in as Connection42
+            connect pct_amp.out amp_x_seno.in as Connection43
+            connect seno.out amp_x_seno.in1 as Connection44
+            connect um_c.out fator_c.in as Connection45
+            connect amp_x_seno.out fator_c.in1 as Connection46
+            connect j_ensaio fator_do_ensaio.ctrl as Connection47
+            connect fator_a.out fator_do_ensaio.in as Connection48
+            connect fator_b.out fator_do_ensaio.in1 as Connection49
+            connect fator_b_drenagem.out fator_do_ensaio.in2 as Connection50
+            connect fator_c.out fator_do_ensaio.in3 as Connection51
+            connect Ke_nom.out q_ensaio.in as Connection52
+            connect fator_do_ensaio.out q_ensaio.in1 as Connection53
+            connect q_ensaio.out preparo_ou_ensaio.in as Connection54
+            connect bomba_0_a_Qmax.out preparo_ou_ensaio.in1 as Connection55
+            connect j_depois preparo_ou_ensaio.in2 as Connection56
+            connect preparo_ou_ensaio.out qi_ref_A as Connection57
+        }
+        [
+            position = 7232, 7328
+            size = 140, 420
+        ]
+
+        component "core/Ground" GND {
+        }
+        [
+            position = 7832, 7808
+        ]
+
+        component "core/Signal Controlled Current Source" q_i_bomba {
+            execution_rate = "Ts"
+        }
+        [
+            position = 7648, 7600
+            rotation = right
+        ]
+
+        component "core/Current Measurement" A_qi {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 7680, 7420
+        ]
+
+        component "core/Capacitor" C_tanque {
+            capacitance = "C"
+            initial_voltage = "V0"
+            pole_shift_ignore = "True"
+        }
+        [
+            position = 7832, 7528
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_nivel {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 7960, 7528
+        ]
+
+        component "core/Current Measurement" A_qo {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 8152, 7420
+        ]
+
+        component "core/Inductor" L_tubo {
+            inductance = "L"
+            initial_current = "I0"
+            pole_shift_ignore = "True"
+        }
+        [
+            position = 8184, 7500
+            rotation = right
+        ]
+
+        component "core/Resistor" R_escoamento {
+            resistance = "R_or"
+        }
+        [
+            position = 8184, 7592
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Voltage Source" e_nao_linear {
+            execution_rate = "Ts"
+        }
+        [
+            position = 8184, 7680
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Current Source" q_d_consumo {
+            execution_rate = "Ts"
+        }
+        [
+            position = 8412, 7600
+            rotation = left
+        ]
+
+        component "core/Current Measurement" A_qd {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 8380, 7420
+        ]
+
+        component Subsystem Parte_nao_linear {
+            layout = dynamic
+            component "core/Gain" K_de_k {
+                execution_rate = "Ts"
+                gain = "ki/kv**0.5"
+            }
+            [
+                position = 6952, 7128
+            ]
+
+            component "core/Mathematical function" K2 {
+                execution_rate = "Ts"
+                mathematical_fn = "square"
+            }
+            [
+                position = 7180, 7180
+            ]
+
+            component "core/Mathematical function" um_sobre_K2 {
+                execution_rate = "Ts"
+                mathematical_fn = "reciprocal"
+            }
+            [
+                position = 7300, 7180
+            ]
+
+            component "core/Abs" abs_i {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7060, 7060
+            ]
+
+            component "core/Product" i_vezes_abs_i {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7180, 7020
+            ]
+
+            component "core/Product" v_or_nao_linear {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7440, 7040
+            ]
+
+            component "core/Gain" kv_ {
+                execution_rate = "Ts"
+                gain = "kv"
+            }
+            [
+                position = 6952, 7392
+            ]
+
+            component "core/Mathematical function" raiz_vop {
+                execution_rate = "Ts"
+                mathematical_fn = "sqrt"
+            }
+            [
+                position = 7180, 7328
+            ]
+
+            component "core/Gain" dois_raiz {
+                execution_rate = "Ts"
+                gain = "2"
+            }
+            [
+                position = 7300, 7328
+            ]
+
+            component "core/Mathematical function" um_sobre_K {
+                execution_rate = "Ts"
+                mathematical_fn = "reciprocal"
+            }
+            [
+                position = 7300, 7248
+            ]
+
+            component "core/Product" R_op {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7440, 7328
+            ]
+
+            component "core/Product" R_op_vezes_i {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7560, 7328
+            ]
+
+            component "core/Sum" v_or_tangente {
+                execution_rate = "Ts"
+                signs = "+-"
+            }
+            [
+                position = 7680, 7360
+            ]
+
+            component "core/Signal switch" modelo_do_orificio {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7820, 7200
+            ]
+
+            component "core/Gain" R_or_i {
+                execution_rate = "Ts"
+                gain = "R_or"
+            }
+            [
+                position = 7820, 7420
+            ]
+
+            component "core/Sum" e_menos_R_i {
+                execution_rate = "Ts"
+                signs = "+-"
+            }
+            [
+                position = 8000, 7300
+            ]
+
+            port i_o {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6800, 7000
+            ]
+
+            port k {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6800, 7128
+            ]
+
+            port modelo {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6800, 7260
+            ]
+
+            port h_op {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6800, 7392
+            ]
+
+            port e {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8200, 7300
+            ]
+
+            junction j_i sp
+            [
+                position = 6952, 7000
+            ]
+
+            junction j_K sp
+            [
+                position = 7060, 7128
+            ]
+
+            junction j_vop_nl sp
+            [
+                position = 7060, 7392
+            ]
+
+            connect i_o j_i as Connection1
+            connect k K_de_k.in as Connection2
+            connect K_de_k.out j_K as Connection3
+            connect j_K K2.in as Connection4
+            connect K2.out um_sobre_K2.in as Connection5
+            connect j_i abs_i.in as Connection6
+            connect j_i i_vezes_abs_i.in as Connection7
+            connect abs_i.out i_vezes_abs_i.in1 as Connection8
+            connect i_vezes_abs_i.out v_or_nao_linear.in as Connection9
+            connect um_sobre_K2.out v_or_nao_linear.in1 as Connection10
+            connect h_op kv_.in as Connection11
+            connect kv_.out j_vop_nl as Connection12
+            connect j_vop_nl raiz_vop.in as Connection13
+            connect raiz_vop.out dois_raiz.in as Connection14
+            connect j_K um_sobre_K.in as Connection15
+            connect dois_raiz.out R_op.in as Connection16
+            connect um_sobre_K.out R_op.in1 as Connection17
+            connect R_op.out R_op_vezes_i.in as Connection18
+            connect j_i R_op_vezes_i.in1 as Connection19
+            connect R_op_vezes_i.out v_or_tangente.in as Connection20
+            connect j_vop_nl v_or_tangente.in1 as Connection21
+            connect v_or_tangente.out modelo_do_orificio.in as Connection22
+            connect v_or_nao_linear.out modelo_do_orificio.in1 as Connection23
+            connect modelo modelo_do_orificio.in2 as Connection24
+            connect j_i R_or_i.in as Connection25
+            connect modelo_do_orificio.out e_menos_R_i.in as Connection26
+            connect R_or_i.out e_menos_R_i.in1 as Connection27
+            connect e_menos_R_i.out e as Connection28
+        }
+        [
+            position = 8000, 7900
+            size = 150, 110
+        ]
+
+        component "core/Probe" qi_Ls {
+        }
+        [
+            position = 8952, 7300
+        ]
+
+        component "core/Probe" qo_Ls {
+        }
+        [
+            position = 8952, 7368
+        ]
+
+        component "core/Probe" qd_Ls_med {
+        }
+        [
+            position = 8952, 7440
+        ]
+
+        component "core/Gain" v_para_h {
+            execution_rate = "Ts"
+            gain = "1/kv"
+        }
+        [
+            position = 8840, 7560
+        ]
+
+        component "core/Probe" h_m {
+        }
+        [
+            position = 8952, 7560
+        ]
+
+        component "core/Probe" v_C_V {
+        }
+        [
+            position = 8952, 7632
+        ]
+
+        component "core/Probe" e_nl_V {
+        }
+        [
+            position = 8952, 7700
+        ]
+
+        component "core/Gain" t_para_tanque {
+            execution_rate = "Ts"
+            gain = "kt"
+        }
+        [
+            position = 7352, 7900
+        ]
+
+        component "core/Probe" t_fisico_s {
+        }
+        [
+            position = 7448, 7900
+        ]
+
+        component "core/Scope" Scope_nivel {
+            selected_signals = "[\'h_m\', \'qi_Ls\', \'qo_Ls\', \'qd_Ls_med\', \'t_fisico_s\']"
+            signals_data = "{\"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true, \"signals_tooltips_enabled\": true}, \"signals\": {\"h_m\": {\"viewports\": [1], \"type\": \"analog\", \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"qi_Ls\": {\"viewports\": [2], \"type\": \"analog\", \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"qo_Ls\": {\"viewports\": [2], \"type\": \"analog\", \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"qd_Ls_med\": {\"viewports\": [2], \"type\": \"analog\", \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"t_fisico_s\": {\"viewports\": [3], \"type\": \"analog\", \"display\": {\"3\": \"solid\"}, \"is_manual\": {\"3\": false}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}}"
+        }
+        [
+            position = 9100, 7500
+        ]
+
+        junction j_k sp
+        [
+            position = 7020, 7648
+        ]
+
+        junction j_hop sp
+        [
+            position = 7020, 7312
+        ]
+
+        junction n_nivel_bomba pe
+        [
+            position = 7712, 7300
+        ]
+
+        junction n_nivel_C pe
+        [
+            position = 7832, 7300
+        ]
+
+        junction n_nivel_vm pe
+        [
+            position = 7960, 7300
+        ]
+
+        junction n_nivel_saida pe
+        [
+            position = 8120, 7300
+        ]
+
+        junction n_nivel_qd pe
+        [
+            position = 8348, 7300
+        ]
+
+        junction n_terra_bomba pe
+        [
+            position = 7648, 7760
+        ]
+
+        junction n_terra_C pe
+        [
+            position = 7832, 7760
+        ]
+
+        junction n_terra_vm pe
+        [
+            position = 7960, 7760
+        ]
+
+        junction n_terra_saida pe
+        [
+            position = 8184, 7760
+        ]
+
+        junction n_terra_qd pe
+        [
+            position = 8412, 7760
+        ]
+
+        junction j_io sp
+        [
+            position = 8152, 7860
+        ]
+
+        junction j_e sp
+        [
+            position = 8260, 7900
+        ]
+
+        junction j_v sp
+        [
+            position = 7960, 7860
+        ]
+
+        comment Comment1 START ENSAIO: 1 = (a) degrau a partir de h_op | 2 = (b) de h_ini volta a h_op | 3 = (b) drenagem livre a partir de h_ini | 4 = (c) senoide em h_op com w = w_rel * w_cmodelo_orif: 0 = nao linear (q = k*sqrt(h)) | 1 = linearizado em h_op (so o resistor) ENDCOMMENT 
+        [
+            position = 7000, 6952
+        ]
+
+        comment Comment2 START CIRCUITO: bomba (fonte de vazao) | C = tanque | voltimetro = nivel | saida: L = inercia da agua no tubo, R = resistencia de escoamento, e = parte nao linear de k*sqrt(h) | consumo qd ENDCOMMENT 
+        [
+            position = 7700, 7180
+        ]
+
+        connect k_valvula.out j_k as Connection1
+        connect h_op_m.out j_hop as Connection2
+        connect ensaio.out Gerador_de_ensaios.ensaio as Connection3
+        connect disparo.out Gerador_de_ensaios.disparo as Connection4
+        connect degrau_pct.out Gerador_de_ensaios.degrau_pct as Connection5
+        connect j_hop Gerador_de_ensaios.h_op_m as Connection6
+        connect h_ini_m.out Gerador_de_ensaios.h_ini_m as Connection7
+        connect amp_pct.out Gerador_de_ensaios.amp_pct as Connection8
+        connect w_rel.out Gerador_de_ensaios.w_rel as Connection9
+        connect j_k Gerador_de_ensaios.k_valvula as Connection10
+        connect n_nivel_bomba n_nivel_C as Connection11
+        connect n_terra_bomba n_terra_C as Connection12
+        connect n_nivel_C n_nivel_vm as Connection13
+        connect n_terra_C n_terra_vm as Connection14
+        connect n_nivel_vm n_nivel_saida as Connection15
+        connect n_terra_vm n_terra_saida as Connection16
+        connect n_nivel_saida n_nivel_qd as Connection17
+        connect n_terra_saida n_terra_qd as Connection18
+        connect n_terra_C GND.node as Connection19
+        connect q_i_bomba.n_node n_terra_bomba as Connection20
+        connect q_i_bomba.p_node A_qi.p_node as Connection21
+        connect A_qi.n_node n_nivel_bomba as Connection22
+        connect Gerador_de_ensaios.qi_ref_A q_i_bomba.in as Connection23
+        connect C_tanque.p_node n_nivel_C as Connection24
+        connect C_tanque.n_node n_terra_C as Connection25
+        connect V_nivel.p_node n_nivel_vm as Connection26
+        connect V_nivel.n_node n_terra_vm as Connection27
+        connect n_nivel_saida A_qo.p_node as Connection28
+        connect A_qo.n_node L_tubo.p_node as Connection29
+        connect L_tubo.n_node R_escoamento.p_node as Connection30
+        connect R_escoamento.n_node e_nao_linear.p_node as Connection31
+        connect e_nao_linear.n_node n_terra_saida as Connection32
+        connect n_nivel_qd A_qd.p_node as Connection33
+        connect A_qd.n_node q_d_consumo.n_node as Connection34
+        connect q_d_consumo.p_node n_terra_qd as Connection35
+        connect qd_Ls.out q_d_consumo.in as Connection36
+        connect A_qo.out j_io as Connection37
+        connect j_io Parte_nao_linear.i_o as Connection38
+        connect j_k Parte_nao_linear.k as Connection39
+        connect modelo_orif.out Parte_nao_linear.modelo as Connection40
+        connect j_hop Parte_nao_linear.h_op as Connection41
+        connect Parte_nao_linear.e j_e as Connection42
+        connect j_e e_nao_linear.in as Connection43
+        connect V_nivel.out j_v as Connection44
+        connect j_v Gerador_de_ensaios.v_medido as Connection45
+        connect A_qi.out qi_Ls.in as Connection46
+        connect j_io qo_Ls.in as Connection47
+        connect A_qd.out qd_Ls_med.in as Connection48
+        connect j_v v_para_h.in as Connection49
+        connect v_para_h.out h_m.in as Connection50
+        connect j_v v_C_V.in as Connection51
+        connect j_e e_nl_V.in as Connection52
+        connect Gerador_de_ensaios.t_ensaio t_para_tanque.in as Connection53
+        connect t_para_tanque.out t_fisico_s.in as Connection54
+    }
+
+    default {
+        "core/Abs" {
+            execution_rate = "inherit"
+        }
+
+        "core/Capacitor" {
+            signal_access = "inherit"
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Inductor" {
+            signal_access = "inherit"
+            inductance = "1e-3"
+            initial_current = "0.0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Integrator" {
+            show_reset = "none"
+            reset_type = "asynchronous"
+            show_init_condition = "internal"
+            init_value = "0"
+            limit_output = "False"
+            limit_upper = "inf"
+            limit_lower = "-inf"
+            show_state = "False"
+            state_port_type = "inherit"
+            tml_file = "gen_accumulator_integrator"
+            mode = "integrator"
+            execution_rate = "inherit"
+        }
+
+        "core/Limit" {
+            upper_limit = "[\'inf\']"
+            lower_limit = "[\'-inf\']"
+            execution_rate = "inherit"
+        }
+
+        "core/Mathematical function" {
+            mathematical_fn = "exponential"
+            execution_rate = "inherit"
+        }
+
+        "core/Multiport signal switch" {
+            number_of_input_terminals = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Product" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/SCADA Input" {
+            signal_access = "inherit"
+            addr = "0"
+            format = "real"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "real"
+            min = "-1e6"
+            max = "1e6"
+            def_value = "0"
+            unit = " "
+            execution_rate = "100e-6"
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Signal switch" {
+            criterion = "ctrl > threshold"
+            threshold = "0.5"
+            execution_rate = "inherit"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Trigonometric function" {
+            trigonometric_fn = "sin"
+            angle = "Radians"
+            execution_rate = "inherit"
+        }
+
+        "core/Current Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Signal Controlled Current Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Signal Controlled Voltage Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+
+    CODE model_init
+        # =====================================================================
+        #  ECOM060 - Instrumentacao Eletronica - UFAL - 2026.2
+        #  Devolutiva da Fase 2 / Entrega 02 - Equipe G05 - Equivalente eletrico v2
+        #  Tanque:          A dh/dt   = qi - q - qd
+        #  Tubo de saida:   I_h dq/dt = h - q|q|/k^2     (inercia + resistencia turbulenta)
+        # =====================================================================
+        # ---- construcao (para outra area ou outro tubo: mudar aqui e recompilar)
+        A      = 0.5            # m2       area da base (Entrega 01: 0,5)
+        l_tubo = 1.0            # m        comprimento do tubo de saida (estimativa: 1 m)
+        
+        # ---- parametros fisicos (Entrega 01)
+        k_nom = 0.01            # m^2.5/s  coeficiente agregado do orificio
+        h0    = 0.5             # m        nivel de operacao
+        qi0   = k_nom*h0**0.5   # m3/s     vazao de equilibrio (7,071 L/s)
+        g     = 9.81            # m/s2
+        Cd    = 0.60            # -        coeficiente de descarga (borda viva)
+        a_or  = k_nom/(Cd*(2*g)**0.5)    # m2   area do orificio/tubo (3,76e-3 m2, d = 6,9 cm)
+        I_h   = l_tubo/(g*a_or)          # s2/m2 inertancia da coluna de liquido (27,1 s2/m2 por metro)
+        
+        # ---- fatores de escala
+        kv = 10.0               # V por m        : 1 V = 10 cm de agua
+        ki = 1000.0             # A por m3/s     : 1 A = 1 L/s
+        kt = 100.0              # 1 s no circuito = 100 s no tanque
+        
+        # ---- parametros do circuito
+        C     = A*ki/(kv*kt)             # F   tanque           (0,5 F)
+        L     = kv*I_h/(ki*kt)           # H   inercia no tubo  (2,71 mH por metro de tubo)
+        K_e   = k_nom*ki/kv**0.5         # A/V^0.5  orificio    (3,162)
+        V0    = kv*h0                    # V   (5 V)
+        I0    = ki*qi0                   # A   (7,071 A)
+        R_or  = 2*V0**0.5/K_e            # ohm resistencia de escoamento linearizada em h0 (1,414 ohm)
+        w_c   = 1/(R_or*C)               # rad/s frequencia de canto nominal no circuito
+        
+        # ---- ensaios
+        t_ev  = 1.0                      # s   fim da preparacao (= 100 s no tanque): a bomba leva o nivel ao valor inicial
+        Kp    = 50.0                     # A/V ganho da bomba na preparacao
+        Q_MAX = 40.0                     # A   vazao maxima da bomba na preparacao (40 L/s)
+        Ts    = 2e-5                     # s   passo dos blocos de sinal (= passo do circuito)
+    ENDCODE
+}
