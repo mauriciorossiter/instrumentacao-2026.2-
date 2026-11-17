@@ -1,0 +1,101 @@
+% G07 - Fase 2, Entrega 03 - slides de apoio (10 min: 7 de exposicao + 3 de perguntas)
+\documentclass[aspectratio=169,10pt]{beamer}
+\usetheme{default}
+\usepackage{fontspec}
+\setsansfont{TeX Gyre Heros}
+\usepackage{booktabs,amsmath}
+\usepackage{newunicodechar}
+\newunicodechar{Ω}{\ensuremath{\Omega}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{≈}{\ensuremath{\approx}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{°}{\ensuremath{^\circ}}
+\newunicodechar{µ}{\ensuremath{\mu}}
+\newunicodechar{Δ}{\ensuremath{\Delta}}
+\definecolor{az}{HTML}{1F5FA8}\definecolor{vm}{HTML}{C0392B}
+\setbeamercolor{frametitle}{fg=az}\setbeamercolor{structure}{fg=az}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{\hfill\scriptsize\color{gray}G07 · ECOM060 · E04 \quad\insertframenumber\hspace{1em}\vspace{4pt}}
+\newcommand{\fig}[2][\textwidth]{\includegraphics[width=#1]{../relatorio/figuras/#2}}
+\begin{document}
+
+\begin{frame}
+\vspace{1.2cm}
+{\small\color{vm} Grupo G07 · ECOM060 Instrumentação Eletrônica · UFAL 2026.2 · Fase 2, Entrega 04}\\[6pt]
+{\LARGE\bfseries\color{az} Malha fechada com instrumentação real:\\ controle de corrente do motor BLDC}\\[10pt]
+Nícolas De Almeida Souza · Lucas Momesso Alves · Cláudio Henrique da Costa Santos\\[14pt]
+\small Planta da E02 no Virtual HIL · sensor Hall ACS712 da E03 nas fases a e b · PI nativo do Typhoon.
+\end{frame}
+
+\begin{frame}{Especificação e controlador ideal (2 min)}
+\begin{columns}[T]\column{.5\textwidth}\scriptsize
+\textbf{Malha de corrente} = malha de torque ($T_e = k\,i$), interna à de velocidade do ventilador.\\[3pt]
+\begin{tabular}{@{}ll@{}}\toprule
+Erro estacionário & $\le$ 30 mA (2 \%)\\
+Acomodação ($\pm$5 \%) & $\le$ 3 ms\\
+Sobressinal & $\le$ 10 \%\\
+Esforço & desvio de $d \le$ 0,08; sat. $\le$ 1 \%\\
+Rejeição (−10 \% em $d$) & $|\Delta i| \le$ 0,3 A, $\le$ 5 ms\\\bottomrule
+\end{tabular}\\[5pt]
+PI por cancelamento do polo $R_{LL}/L_{LL}$: $L(s) = \frac{\omega_c}{s}e^{-s\tau}$, $\omega_c$ = 2500 rad/s ⇒ $K_p$ = 0,264, $K_i$ = 222.\\
+Previsto: $t_s$ = 1,2 ms, MF 83° (ideal) / 74° (real), MG 22 / 15 dB, $e_{ss}$ = 0.
+\column{.48\textwidth}\fig{fig_bode.pdf}\\[4pt]\scriptsize
+Ideal no VHIL: $t_s$ = 1,4 ms, $M_p$ = 5 \%, $e_{ss}$ = 9 mA, afundamento $-$0,17 A (previsto $-$0,22 A).
+\end{columns}
+\end{frame}
+
+\begin{frame}{Referência × medido × real (2 min)}
+\begin{columns}[T]\column{.62\textwidth}\fig{fig_r3.pdf}
+\column{.36\textwidth}\scriptsize
+\begin{itemize}
+\item O PI zera o erro \textbf{da medida} (5 mA); a \textbf{planta} fica 23 mA abaixo.
+\item Causa: \textbf{ruído retificado} na fase que não conduz: $|n|$ tem média $\sigma\sqrt{2/\pi}$ ⇒ viés de ≈16 mA.
+\item Atraso de 60 µs: MF 83° → 74°, sobressinal 5 → 7 \%.
+\item Esforço igual: a média por período tira a ondulação de 10 kHz.
+\item Todos os critérios atendidos, com pouca folga no erro.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Intensidade das características}
+\fig{fig_mapa.pdf}\\[3pt]
+\scriptsize
+\begin{columns}[T]\column{.5\textwidth}
+\textbf{Zero não compensado}: a planta vai a $i^* - \frac23\delta$; o erro falha com \textbf{1,4 mV} (previsto 1,2 mV). Com 150 mV a medida marca 3 A com $i$ = 0: colapso.
+\column{.48\textwidth}
+\textbf{Ruído}: o viés retificado falha o erro com \textbf{15 mV} (previsto 19). \textbf{RC}: abaixo de ≈1 kHz atenua as correntes de 247 Hz e a planta passa da referência (1,91 A com 0,3 kHz).
+\end{columns}
+\end{frame}
+
+\begin{frame}{Ação de projeto: autocalibração do zero (SCADA ao vivo)}
+\begin{columns}[T]\column{.55\textwidth}\fig{fig_varreduras.pdf}
+\column{.43\textwidth}\scriptsize
+5 ms com $d$ = 0 na partida ⇒ $i$ = 0 ⇒ o processamento mede o zero e passa a usá-lo (correção calculada, 2.5.3).\\[3pt]
+Erro com zero de 0 a 50 mV: \textbf{26–29 mA} (sem a ação: 22, 132, 282 mA). Limite do erro: 1,4 → \textbf{97 mV}.\\[3pt]
+Custo: ~15 linhas de C, 5 ms sem torque por calibração, mesmo esforço, nenhum atraso na malha.\\[3pt]
+Ao vivo: \texttt{G07\_fb\_real}, \texttt{G07\_corr} = 0, \texttt{G07\_ruido} = 100, \texttt{G07\_fc\_rc} = 0.3.
+\end{columns}
+\end{frame}
+
+\begin{frame}{Síntese (1 min)}
+\small
+\begin{itemize}
+\item Em malha fechada o controle zera o erro \textbf{da medida}: todo viés do instrumento passa inteiro para a planta.
+\item Decisivo no nosso sistema: \textbf{desvio de zero} (falha com 1,4 mV, menos que a deriva térmica) e \textbf{ruído}, que $|\cdot|$ transforma em viés (falha com 15 mV).
+\item Banda só pesa perto da frequência elétrica; atraso e esforço estão folgados.
+\item Projeto: calibrar o zero com o inversor parado, ruído baixo antes de retificar (ou usar a posição para escolher a fase), filtro anti-aliasing $>$ 4 $f_{e,max}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Repetibilidade}
+\small
+\begin{enumerate}
+\item Typhoon HIL 2026.3: \texttt{modelo\_malha\_fechada.tse} (tempo real) e \texttt{painel\_malha\_fechada.cus}.
+\item Bloco do \emph{Model initialization} com \texttt{g07\_modo = 5} e \texttt{g07\_cl\_ens} (1 = R3; 2, 3, 4 = varredura); compilar; \emph{Reload Model} em Virtual HIL.
+\item Painel: \texttt{G07\_fb\_real} (0 ideal / 1 real), \texttt{G07\_autocal}. Capture: preset Default (R3) ou R4\_varredura; T↑ e ▶.
+\item Esperado: real ⇒ medida 1,500 A, planta ≈ 1,478 A; tabelas 2 e 3 do relatório.
+\end{enumerate}
+\end{frame}
+\end{document}
