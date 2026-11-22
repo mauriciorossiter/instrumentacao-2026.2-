@@ -1,0 +1,2192 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "ponte_wheatstone_extensometro" {
+    configuration {
+        hil_device = "HIL402"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = 1e-6
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-05
+        simulation_time = 2.0
+        abs_tol = 1e-6
+        rel_tol = 1e-6
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.2
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Triangular Wave Source" eps_varredura {
+            execution_rate = "Ts"
+            frequency = "f_sweep"
+            max_val = "eps_max"
+            min_val = "0"
+        }
+        [
+            position = 7360, 7800
+        ]
+
+        component "core/Probe" p_eps {
+        }
+        [
+            position = 7472, 7720
+        ]
+
+        component "core/Step" eps_degrau {
+            execution_rate = "Ts"
+            final_value = "eps_step"
+            step_time = "t_step"
+        }
+        [
+            position = 7360, 8800
+        ]
+
+        component "core/Probe" p_eps_degrau {
+        }
+        [
+            position = 7472, 8720
+        ]
+
+        component "core/Constant" zero_cf {
+            execution_rate = "Ts"
+            value = "0"
+        }
+        [
+            position = 7152, 8660
+        ]
+
+        component "core/C function" ruido_gaussiano {
+            execution_rate = "Ts"
+            global_variables = "real s;
+real u1;
+real u2;"
+            init_fnc = "s = 20261005.0;"
+            input_terminals_dimensions = "inherit"
+            output_fnc = "s = fmod(16807.0 * s, 2147483647.0);
+u1 = s / 2147483647.0;
+s = fmod(16807.0 * s, 2147483647.0);
+u2 = s / 2147483647.0;
+out = sqrt(-2.0 * log(u1)) * cos(6.283185307179586 * u2);"
+            output_terminals_dimensions = "inherit"
+        }
+        [
+            position = 7260, 8660
+        ]
+
+        component "core/Gain" ruido_termico_sigma_n {
+            gain = "sigma_n"
+        }
+        [
+            position = 7400, 8660
+        ]
+
+        component "core/Probe" p_vn {
+        }
+        [
+            position = 7500, 8592
+        ]
+
+        component "core/Gain" dR_ideal {
+            gain = "R0*GF"
+        }
+        [
+            position = 7700, 7800
+        ]
+
+        component Subsystem Ponte_ideal {
+            layout = dynamic
+            component "core/Voltage Source" Vex {
+                execution_rate = "Ts"
+                init_const_value = "Vex"
+            }
+            [
+                position = 8200, 8048
+                rotation = right
+            ]
+
+            component "core/Resistor" R1 {
+                resistance = "R0"
+            }
+            [
+                position = 8400, 7880
+                rotation = right
+            ]
+
+            component "core/Current Measurement" i_g {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8400, 8024
+                rotation = right
+            ]
+
+            component "core/Resistor" Rg_R0 {
+                resistance = "R0"
+            }
+            [
+                position = 8400, 8120
+                rotation = right
+            ]
+
+            component "core/Voltage Source" Rg_dR {
+                execution_rate = "Ts"
+                sig_input = "True"
+                type = "signal controlled"
+            }
+            [
+                position = 8400, 8224
+                rotation = left
+            ]
+
+            component "core/Resistor" R3 {
+                resistance = "R0"
+            }
+            [
+                position = 8704, 7880
+                rotation = right
+            ]
+
+            component "core/Resistor" R4 {
+                resistance = "R0"
+            }
+            [
+                position = 8704, 8120
+                rotation = right
+            ]
+
+            component "core/Voltage Measurement" e0 {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8552, 7960
+            ]
+
+            component "core/Ground" GND {
+            }
+            [
+                position = 8552, 8376
+            ]
+
+            component "core/Product" dR_vezes_i {
+            }
+            [
+                position = 8264, 8224
+            ]
+
+            port dR {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7800, 8224
+            ]
+
+            port saida_e0 {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 9000, 7960
+            ]
+
+            junction no_A pe
+            [
+                position = 8400, 7800
+            ]
+
+            junction no_A0 pe
+            [
+                position = 8200, 7800
+            ]
+
+            junction no_A2 pe
+            [
+                position = 8704, 7800
+            ]
+
+            junction no_B pe
+            [
+                position = 8400, 7960
+            ]
+
+            junction no_C pe
+            [
+                position = 8704, 7960
+            ]
+
+            junction no_D pe
+            [
+                position = 8400, 8304
+            ]
+
+            junction no_D0 pe
+            [
+                position = 8200, 8304
+            ]
+
+            junction no_D2 pe
+            [
+                position = 8704, 8304
+            ]
+
+            junction no_D3 pe
+            [
+                position = 8552, 8304
+            ]
+
+            connect Vex.p_node no_A0 as Connection1
+            connect no_A0 no_A as Connection2
+            connect Vex.n_node no_D0 as Connection3
+            connect no_D0 no_D as Connection4
+            connect no_A R1.p_node as Connection5
+            connect R1.n_node no_B as Connection6
+            connect no_B i_g.p_node as Connection7
+            connect i_g.n_node Rg_R0.p_node as Connection8
+            connect Rg_R0.n_node Rg_dR.p_node as Connection9
+            connect Rg_dR.n_node no_D as Connection10
+            connect no_A no_A2 as Connection11
+            connect no_A2 R3.p_node as Connection12
+            connect R3.n_node no_C as Connection13
+            connect no_C R4.p_node as Connection14
+            connect R4.n_node no_D2 as Connection15
+            connect no_D no_D3 as Connection16
+            connect no_D3 no_D2 as Connection17
+            connect no_D3 GND.node as Connection18
+            connect no_B e0.p_node as Connection19
+            connect no_C e0.n_node as Connection20
+            connect dR dR_vezes_i.in as Connection21
+            connect i_g.out dR_vezes_i.in1 as Connection22
+            connect dR_vezes_i.out Rg_dR.in as Connection23
+            connect e0.out saida_e0 as Connection24
+        }
+        [
+            position = 8180, 7800
+        ]
+
+        component "core/Probe" e0_ideal {
+        }
+        [
+            position = 8360, 7744
+        ]
+
+        component "core/Gain" dR_GF_real {
+            gain = "R0*GF_real"
+        }
+        [
+            position = 7700, 7952
+        ]
+
+        component "core/Sum" mais_zero_T {
+        }
+        [
+            position = 7840, 7952
+        ]
+
+        component "core/Constant" mais_zero_T_zero {
+            execution_rate = "Ts"
+            value = "R0*GF*eps_app"
+        }
+        [
+            position = 7768, 8008
+        ]
+
+        component Subsystem Ponte_estatica {
+            layout = dynamic
+            component "core/Voltage Source" Vex {
+                execution_rate = "Ts"
+                init_const_value = "Vex"
+            }
+            [
+                position = 8200, 8048
+                rotation = right
+            ]
+
+            component "core/Resistor" R1 {
+                resistance = "R0"
+            }
+            [
+                position = 8400, 7880
+                rotation = right
+            ]
+
+            component "core/Current Measurement" i_g {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8400, 8024
+                rotation = right
+            ]
+
+            component "core/Resistor" Rg_R0 {
+                resistance = "R0"
+            }
+            [
+                position = 8400, 8120
+                rotation = right
+            ]
+
+            component "core/Voltage Source" Rg_dR {
+                execution_rate = "Ts"
+                sig_input = "True"
+                type = "signal controlled"
+            }
+            [
+                position = 8400, 8224
+                rotation = left
+            ]
+
+            component "core/Resistor" R3 {
+                resistance = "R0"
+            }
+            [
+                position = 8704, 7880
+                rotation = right
+            ]
+
+            component "core/Resistor" R4 {
+                resistance = "R0"
+            }
+            [
+                position = 8704, 8120
+                rotation = right
+            ]
+
+            component "core/Voltage Measurement" e0 {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8552, 7960
+            ]
+
+            component "core/Ground" GND {
+            }
+            [
+                position = 8552, 8376
+            ]
+
+            component "core/Product" dR_vezes_i {
+            }
+            [
+                position = 8264, 8224
+            ]
+
+            port dR {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7800, 8224
+            ]
+
+            port saida_e0 {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 9000, 7960
+            ]
+
+            junction no_A pe
+            [
+                position = 8400, 7800
+            ]
+
+            junction no_A0 pe
+            [
+                position = 8200, 7800
+            ]
+
+            junction no_A2 pe
+            [
+                position = 8704, 7800
+            ]
+
+            junction no_B pe
+            [
+                position = 8400, 7960
+            ]
+
+            junction no_C pe
+            [
+                position = 8704, 7960
+            ]
+
+            junction no_D pe
+            [
+                position = 8400, 8304
+            ]
+
+            junction no_D0 pe
+            [
+                position = 8200, 8304
+            ]
+
+            junction no_D2 pe
+            [
+                position = 8704, 8304
+            ]
+
+            junction no_D3 pe
+            [
+                position = 8552, 8304
+            ]
+
+            connect Vex.p_node no_A0 as Connection1
+            connect no_A0 no_A as Connection2
+            connect Vex.n_node no_D0 as Connection3
+            connect no_D0 no_D as Connection4
+            connect no_A R1.p_node as Connection5
+            connect R1.n_node no_B as Connection6
+            connect no_B i_g.p_node as Connection7
+            connect i_g.n_node Rg_R0.p_node as Connection8
+            connect Rg_R0.n_node Rg_dR.p_node as Connection9
+            connect Rg_dR.n_node no_D as Connection10
+            connect no_A no_A2 as Connection11
+            connect no_A2 R3.p_node as Connection12
+            connect R3.n_node no_C as Connection13
+            connect no_C R4.p_node as Connection14
+            connect R4.n_node no_D2 as Connection15
+            connect no_D no_D3 as Connection16
+            connect no_D3 no_D2 as Connection17
+            connect no_D3 GND.node as Connection18
+            connect no_B e0.p_node as Connection19
+            connect no_C e0.n_node as Connection20
+            connect dR dR_vezes_i.in as Connection21
+            connect i_g.out dR_vezes_i.in1 as Connection22
+            connect dR_vezes_i.out Rg_dR.in as Connection23
+            connect e0.out saida_e0 as Connection24
+        }
+        [
+            position = 8180, 7952
+        ]
+
+        component "core/Probe" e0_estatica {
+        }
+        [
+            position = 8360, 7896
+        ]
+
+        component "core/Gain" ordem_zero {
+            gain = "K_din"
+        }
+        [
+            position = 7700, 8100
+        ]
+
+        component "core/Gain" dR_din {
+            gain = "R0*GF"
+        }
+        [
+            position = 7840, 8100
+        ]
+
+        component Subsystem Ponte_dinamica {
+            layout = dynamic
+            component "core/Voltage Source" Vex {
+                execution_rate = "Ts"
+                init_const_value = "Vex"
+            }
+            [
+                position = 8200, 8048
+                rotation = right
+            ]
+
+            component "core/Resistor" R1 {
+                resistance = "R0"
+            }
+            [
+                position = 8400, 7880
+                rotation = right
+            ]
+
+            component "core/Current Measurement" i_g {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8400, 8024
+                rotation = right
+            ]
+
+            component "core/Resistor" Rg_R0 {
+                resistance = "R0"
+            }
+            [
+                position = 8400, 8120
+                rotation = right
+            ]
+
+            component "core/Voltage Source" Rg_dR {
+                execution_rate = "Ts"
+                sig_input = "True"
+                type = "signal controlled"
+            }
+            [
+                position = 8400, 8224
+                rotation = left
+            ]
+
+            component "core/Resistor" R3 {
+                resistance = "R0"
+            }
+            [
+                position = 8704, 7880
+                rotation = right
+            ]
+
+            component "core/Resistor" R4 {
+                resistance = "R0"
+            }
+            [
+                position = 8704, 8120
+                rotation = right
+            ]
+
+            component "core/Voltage Measurement" e0 {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8552, 7960
+            ]
+
+            component "core/Ground" GND {
+            }
+            [
+                position = 8552, 8376
+            ]
+
+            component "core/Product" dR_vezes_i {
+            }
+            [
+                position = 8264, 8224
+            ]
+
+            port dR {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7800, 8224
+            ]
+
+            port saida_e0 {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 9000, 7960
+            ]
+
+            junction no_A pe
+            [
+                position = 8400, 7800
+            ]
+
+            junction no_A0 pe
+            [
+                position = 8200, 7800
+            ]
+
+            junction no_A2 pe
+            [
+                position = 8704, 7800
+            ]
+
+            junction no_B pe
+            [
+                position = 8400, 7960
+            ]
+
+            junction no_C pe
+            [
+                position = 8704, 7960
+            ]
+
+            junction no_D pe
+            [
+                position = 8400, 8304
+            ]
+
+            junction no_D0 pe
+            [
+                position = 8200, 8304
+            ]
+
+            junction no_D2 pe
+            [
+                position = 8704, 8304
+            ]
+
+            junction no_D3 pe
+            [
+                position = 8552, 8304
+            ]
+
+            connect Vex.p_node no_A0 as Connection1
+            connect no_A0 no_A as Connection2
+            connect Vex.n_node no_D0 as Connection3
+            connect no_D0 no_D as Connection4
+            connect no_A R1.p_node as Connection5
+            connect R1.n_node no_B as Connection6
+            connect no_B i_g.p_node as Connection7
+            connect i_g.n_node Rg_R0.p_node as Connection8
+            connect Rg_R0.n_node Rg_dR.p_node as Connection9
+            connect Rg_dR.n_node no_D as Connection10
+            connect no_A no_A2 as Connection11
+            connect no_A2 R3.p_node as Connection12
+            connect R3.n_node no_C as Connection13
+            connect no_C R4.p_node as Connection14
+            connect R4.n_node no_D2 as Connection15
+            connect no_D no_D3 as Connection16
+            connect no_D3 no_D2 as Connection17
+            connect no_D3 GND.node as Connection18
+            connect no_B e0.p_node as Connection19
+            connect no_C e0.n_node as Connection20
+            connect dR dR_vezes_i.in as Connection21
+            connect i_g.out dR_vezes_i.in1 as Connection22
+            connect dR_vezes_i.out Rg_dR.in as Connection23
+            connect e0.out saida_e0 as Connection24
+        }
+        [
+            position = 8180, 8100
+        ]
+
+        component "core/Probe" e0_dinamica {
+        }
+        [
+            position = 8360, 8044
+        ]
+
+        component "core/Gain" dR_esp {
+            gain = "R0*GF"
+        }
+        [
+            position = 7700, 8248
+        ]
+
+        component Subsystem Ponte_espectral {
+            layout = dynamic
+            component "core/Voltage Source" Vex {
+                execution_rate = "Ts"
+                init_const_value = "Vex"
+            }
+            [
+                position = 8200, 8048
+                rotation = right
+            ]
+
+            component "core/Resistor" R1 {
+                resistance = "R0"
+            }
+            [
+                position = 8400, 7880
+                rotation = right
+            ]
+
+            component "core/Current Measurement" i_g {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8400, 8024
+                rotation = right
+            ]
+
+            component "core/Resistor" Rg_R0 {
+                resistance = "R0"
+            }
+            [
+                position = 8400, 8120
+                rotation = right
+            ]
+
+            component "core/Voltage Source" Rg_dR {
+                execution_rate = "Ts"
+                sig_input = "True"
+                type = "signal controlled"
+            }
+            [
+                position = 8400, 8224
+                rotation = left
+            ]
+
+            component "core/Resistor" R3 {
+                resistance = "R0"
+            }
+            [
+                position = 8704, 7880
+                rotation = right
+            ]
+
+            component "core/Resistor" R4 {
+                resistance = "R0"
+            }
+            [
+                position = 8704, 8120
+                rotation = right
+            ]
+
+            component "core/Voltage Measurement" e0 {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8552, 7960
+            ]
+
+            component "core/Ground" GND {
+            }
+            [
+                position = 8552, 8376
+            ]
+
+            component "core/Voltage Source" v_ruido_termico {
+                execution_rate = "Ts"
+                sig_input = "True"
+                type = "signal controlled"
+            }
+            [
+                position = 8476, 7960
+                rotation = down
+            ]
+
+            component "core/Product" dR_vezes_i {
+            }
+            [
+                position = 8264, 8224
+            ]
+
+            port dR {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7800, 8224
+            ]
+
+            port saida_e0 {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 9000, 7960
+            ]
+
+            port vn {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8476, 8056
+            ]
+
+            junction no_A pe
+            [
+                position = 8400, 7800
+            ]
+
+            junction no_A0 pe
+            [
+                position = 8200, 7800
+            ]
+
+            junction no_A2 pe
+            [
+                position = 8704, 7800
+            ]
+
+            junction no_B pe
+            [
+                position = 8400, 7960
+            ]
+
+            junction no_C pe
+            [
+                position = 8704, 7960
+            ]
+
+            junction no_D pe
+            [
+                position = 8400, 8304
+            ]
+
+            junction no_D0 pe
+            [
+                position = 8200, 8304
+            ]
+
+            junction no_D2 pe
+            [
+                position = 8704, 8304
+            ]
+
+            junction no_D3 pe
+            [
+                position = 8552, 8304
+            ]
+
+            connect Vex.p_node no_A0 as Connection1
+            connect no_A0 no_A as Connection2
+            connect Vex.n_node no_D0 as Connection3
+            connect no_D0 no_D as Connection4
+            connect no_A R1.p_node as Connection5
+            connect R1.n_node no_B as Connection6
+            connect no_B i_g.p_node as Connection7
+            connect i_g.n_node Rg_R0.p_node as Connection8
+            connect Rg_R0.n_node Rg_dR.p_node as Connection9
+            connect Rg_dR.n_node no_D as Connection10
+            connect no_A no_A2 as Connection11
+            connect no_A2 R3.p_node as Connection12
+            connect R3.n_node no_C as Connection13
+            connect no_C R4.p_node as Connection14
+            connect R4.n_node no_D2 as Connection15
+            connect no_D no_D3 as Connection16
+            connect no_D3 no_D2 as Connection17
+            connect no_D3 GND.node as Connection18
+            connect no_B v_ruido_termico.n_node as Connection19
+            connect v_ruido_termico.p_node e0.p_node as Connection20
+            connect vn v_ruido_termico.in as Connection21
+            connect no_C e0.n_node as Connection22
+            connect dR dR_vezes_i.in as Connection23
+            connect i_g.out dR_vezes_i.in1 as Connection24
+            connect dR_vezes_i.out Rg_dR.in as Connection25
+            connect e0.out saida_e0 as Connection26
+        }
+        [
+            position = 8180, 8248
+        ]
+
+        component "core/Probe" e0_espectral {
+        }
+        [
+            position = 8360, 8192
+        ]
+
+        component "core/Gain" dR_GF_real_c {
+            gain = "R0*GF_real"
+        }
+        [
+            position = 7700, 8400
+        ]
+
+        component "core/Gain" ordem_zero_c {
+            gain = "K_din"
+        }
+        [
+            position = 7840, 8400
+        ]
+
+        component "core/Sum" mais_zero_T_c {
+        }
+        [
+            position = 7980, 8400
+        ]
+
+        component "core/Constant" mais_zero_T_c_zero {
+            execution_rate = "Ts"
+            value = "R0*GF*eps_app"
+        }
+        [
+            position = 7912, 8456
+        ]
+
+        component Subsystem Ponte_completa {
+            layout = dynamic
+            component "core/Voltage Source" Vex {
+                execution_rate = "Ts"
+                init_const_value = "Vex"
+            }
+            [
+                position = 8200, 8048
+                rotation = right
+            ]
+
+            component "core/Resistor" R1 {
+                resistance = "R0"
+            }
+            [
+                position = 8400, 7880
+                rotation = right
+            ]
+
+            component "core/Current Measurement" i_g {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8400, 8024
+                rotation = right
+            ]
+
+            component "core/Resistor" Rg_R0 {
+                resistance = "R0"
+            }
+            [
+                position = 8400, 8120
+                rotation = right
+            ]
+
+            component "core/Voltage Source" Rg_dR {
+                execution_rate = "Ts"
+                sig_input = "True"
+                type = "signal controlled"
+            }
+            [
+                position = 8400, 8224
+                rotation = left
+            ]
+
+            component "core/Resistor" R3 {
+                resistance = "R0"
+            }
+            [
+                position = 8704, 7880
+                rotation = right
+            ]
+
+            component "core/Resistor" R4 {
+                resistance = "R0"
+            }
+            [
+                position = 8704, 8120
+                rotation = right
+            ]
+
+            component "core/Voltage Measurement" e0 {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8552, 7960
+            ]
+
+            component "core/Ground" GND {
+            }
+            [
+                position = 8552, 8376
+            ]
+
+            component "core/Voltage Source" v_ruido_termico {
+                execution_rate = "Ts"
+                sig_input = "True"
+                type = "signal controlled"
+            }
+            [
+                position = 8476, 7960
+                rotation = down
+            ]
+
+            component "core/Product" dR_vezes_i {
+            }
+            [
+                position = 8264, 8224
+            ]
+
+            port dR {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7800, 8224
+            ]
+
+            port saida_e0 {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 9000, 7960
+            ]
+
+            port vn {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8476, 8056
+            ]
+
+            junction no_A pe
+            [
+                position = 8400, 7800
+            ]
+
+            junction no_A0 pe
+            [
+                position = 8200, 7800
+            ]
+
+            junction no_A2 pe
+            [
+                position = 8704, 7800
+            ]
+
+            junction no_B pe
+            [
+                position = 8400, 7960
+            ]
+
+            junction no_C pe
+            [
+                position = 8704, 7960
+            ]
+
+            junction no_D pe
+            [
+                position = 8400, 8304
+            ]
+
+            junction no_D0 pe
+            [
+                position = 8200, 8304
+            ]
+
+            junction no_D2 pe
+            [
+                position = 8704, 8304
+            ]
+
+            junction no_D3 pe
+            [
+                position = 8552, 8304
+            ]
+
+            connect Vex.p_node no_A0 as Connection1
+            connect no_A0 no_A as Connection2
+            connect Vex.n_node no_D0 as Connection3
+            connect no_D0 no_D as Connection4
+            connect no_A R1.p_node as Connection5
+            connect R1.n_node no_B as Connection6
+            connect no_B i_g.p_node as Connection7
+            connect i_g.n_node Rg_R0.p_node as Connection8
+            connect Rg_R0.n_node Rg_dR.p_node as Connection9
+            connect Rg_dR.n_node no_D as Connection10
+            connect no_A no_A2 as Connection11
+            connect no_A2 R3.p_node as Connection12
+            connect R3.n_node no_C as Connection13
+            connect no_C R4.p_node as Connection14
+            connect R4.n_node no_D2 as Connection15
+            connect no_D no_D3 as Connection16
+            connect no_D3 no_D2 as Connection17
+            connect no_D3 GND.node as Connection18
+            connect no_B v_ruido_termico.n_node as Connection19
+            connect v_ruido_termico.p_node e0.p_node as Connection20
+            connect vn v_ruido_termico.in as Connection21
+            connect no_C e0.n_node as Connection22
+            connect dR dR_vezes_i.in as Connection23
+            connect i_g.out dR_vezes_i.in1 as Connection24
+            connect dR_vezes_i.out Rg_dR.in as Connection25
+            connect e0.out saida_e0 as Connection26
+        }
+        [
+            position = 8180, 8400
+        ]
+
+        component "core/Probe" e0_completa {
+        }
+        [
+            position = 8360, 8344
+        ]
+
+        component "core/Gain" dR_GF_real_d {
+            gain = "R0*GF_real"
+        }
+        [
+            position = 7700, 8552
+        ]
+
+        component "core/Sum" mais_zero_T_d {
+        }
+        [
+            position = 7840, 8552
+        ]
+
+        component "core/Constant" mais_zero_T_d_zero {
+            execution_rate = "Ts"
+            value = "R0*GF*eps_app"
+        }
+        [
+            position = 7768, 8608
+        ]
+
+        component Subsystem Ponte_compensada {
+            layout = dynamic
+            component "core/Voltage Source" Vex {
+                execution_rate = "Ts"
+                init_const_value = "Vex"
+            }
+            [
+                position = 8200, 8048
+                rotation = right
+            ]
+
+            component "core/Resistor" R1_dummy {
+                resistance = "R0*(1+GF*eps_app)"
+            }
+            [
+                position = 8400, 7880
+                rotation = right
+            ]
+
+            component "core/Current Measurement" i_g {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8400, 8024
+                rotation = right
+            ]
+
+            component "core/Resistor" Rg_R0 {
+                resistance = "R0"
+            }
+            [
+                position = 8400, 8120
+                rotation = right
+            ]
+
+            component "core/Voltage Source" Rg_dR {
+                execution_rate = "Ts"
+                sig_input = "True"
+                type = "signal controlled"
+            }
+            [
+                position = 8400, 8224
+                rotation = left
+            ]
+
+            component "core/Resistor" R3 {
+                resistance = "R0"
+            }
+            [
+                position = 8704, 7880
+                rotation = right
+            ]
+
+            component "core/Resistor" R4 {
+                resistance = "R0"
+            }
+            [
+                position = 8704, 8120
+                rotation = right
+            ]
+
+            component "core/Voltage Measurement" e0 {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8552, 7960
+            ]
+
+            component "core/Ground" GND {
+            }
+            [
+                position = 8552, 8376
+            ]
+
+            component "core/Product" dR_vezes_i {
+            }
+            [
+                position = 8264, 8224
+            ]
+
+            port dR {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7800, 8224
+            ]
+
+            port saida_e0 {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 9000, 7960
+            ]
+
+            junction no_A pe
+            [
+                position = 8400, 7800
+            ]
+
+            junction no_A0 pe
+            [
+                position = 8200, 7800
+            ]
+
+            junction no_A2 pe
+            [
+                position = 8704, 7800
+            ]
+
+            junction no_B pe
+            [
+                position = 8400, 7960
+            ]
+
+            junction no_C pe
+            [
+                position = 8704, 7960
+            ]
+
+            junction no_D pe
+            [
+                position = 8400, 8304
+            ]
+
+            junction no_D0 pe
+            [
+                position = 8200, 8304
+            ]
+
+            junction no_D2 pe
+            [
+                position = 8704, 8304
+            ]
+
+            junction no_D3 pe
+            [
+                position = 8552, 8304
+            ]
+
+            connect Vex.p_node no_A0 as Connection1
+            connect no_A0 no_A as Connection2
+            connect Vex.n_node no_D0 as Connection3
+            connect no_D0 no_D as Connection4
+            connect no_A R1_dummy.p_node as Connection5
+            connect R1_dummy.n_node no_B as Connection6
+            connect no_B i_g.p_node as Connection7
+            connect i_g.n_node Rg_R0.p_node as Connection8
+            connect Rg_R0.n_node Rg_dR.p_node as Connection9
+            connect Rg_dR.n_node no_D as Connection10
+            connect no_A no_A2 as Connection11
+            connect no_A2 R3.p_node as Connection12
+            connect R3.n_node no_C as Connection13
+            connect no_C R4.p_node as Connection14
+            connect R4.n_node no_D2 as Connection15
+            connect no_D no_D3 as Connection16
+            connect no_D3 no_D2 as Connection17
+            connect no_D3 GND.node as Connection18
+            connect no_B e0.p_node as Connection19
+            connect no_C e0.n_node as Connection20
+            connect dR dR_vezes_i.in as Connection21
+            connect i_g.out dR_vezes_i.in1 as Connection22
+            connect dR_vezes_i.out Rg_dR.in as Connection23
+            connect e0.out saida_e0 as Connection24
+        }
+        [
+            position = 8180, 8552
+        ]
+
+        component "core/Probe" e0_compensada {
+        }
+        [
+            position = 8360, 8496
+        ]
+
+        component "core/Gain" ordem_zero_s {
+            gain = "K_din"
+        }
+        [
+            position = 7700, 8800
+        ]
+
+        component "core/Gain" dR_degrau {
+            gain = "R0*GF"
+        }
+        [
+            position = 7840, 8800
+        ]
+
+        component Subsystem Ponte_degrau {
+            layout = dynamic
+            component "core/Voltage Source" Vex {
+                execution_rate = "Ts"
+                init_const_value = "Vex"
+            }
+            [
+                position = 8200, 8048
+                rotation = right
+            ]
+
+            component "core/Resistor" R1 {
+                resistance = "R0"
+            }
+            [
+                position = 8400, 7880
+                rotation = right
+            ]
+
+            component "core/Current Measurement" i_g {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8400, 8024
+                rotation = right
+            ]
+
+            component "core/Resistor" Rg_R0 {
+                resistance = "R0"
+            }
+            [
+                position = 8400, 8120
+                rotation = right
+            ]
+
+            component "core/Voltage Source" Rg_dR {
+                execution_rate = "Ts"
+                sig_input = "True"
+                type = "signal controlled"
+            }
+            [
+                position = 8400, 8224
+                rotation = left
+            ]
+
+            component "core/Resistor" R3 {
+                resistance = "R0"
+            }
+            [
+                position = 8704, 7880
+                rotation = right
+            ]
+
+            component "core/Resistor" R4 {
+                resistance = "R0"
+            }
+            [
+                position = 8704, 8120
+                rotation = right
+            ]
+
+            component "core/Voltage Measurement" e0 {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8552, 7960
+            ]
+
+            component "core/Ground" GND {
+            }
+            [
+                position = 8552, 8376
+            ]
+
+            component "core/Product" dR_vezes_i {
+            }
+            [
+                position = 8264, 8224
+            ]
+
+            port dR {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7800, 8224
+            ]
+
+            port saida_e0 {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 9000, 7960
+            ]
+
+            junction no_A pe
+            [
+                position = 8400, 7800
+            ]
+
+            junction no_A0 pe
+            [
+                position = 8200, 7800
+            ]
+
+            junction no_A2 pe
+            [
+                position = 8704, 7800
+            ]
+
+            junction no_B pe
+            [
+                position = 8400, 7960
+            ]
+
+            junction no_C pe
+            [
+                position = 8704, 7960
+            ]
+
+            junction no_D pe
+            [
+                position = 8400, 8304
+            ]
+
+            junction no_D0 pe
+            [
+                position = 8200, 8304
+            ]
+
+            junction no_D2 pe
+            [
+                position = 8704, 8304
+            ]
+
+            junction no_D3 pe
+            [
+                position = 8552, 8304
+            ]
+
+            connect Vex.p_node no_A0 as Connection1
+            connect no_A0 no_A as Connection2
+            connect Vex.n_node no_D0 as Connection3
+            connect no_D0 no_D as Connection4
+            connect no_A R1.p_node as Connection5
+            connect R1.n_node no_B as Connection6
+            connect no_B i_g.p_node as Connection7
+            connect i_g.n_node Rg_R0.p_node as Connection8
+            connect Rg_R0.n_node Rg_dR.p_node as Connection9
+            connect Rg_dR.n_node no_D as Connection10
+            connect no_A no_A2 as Connection11
+            connect no_A2 R3.p_node as Connection12
+            connect R3.n_node no_C as Connection13
+            connect no_C R4.p_node as Connection14
+            connect R4.n_node no_D2 as Connection15
+            connect no_D no_D3 as Connection16
+            connect no_D3 no_D2 as Connection17
+            connect no_D3 GND.node as Connection18
+            connect no_B e0.p_node as Connection19
+            connect no_C e0.n_node as Connection20
+            connect dR dR_vezes_i.in as Connection21
+            connect i_g.out dR_vezes_i.in1 as Connection22
+            connect dR_vezes_i.out Rg_dR.in as Connection23
+            connect e0.out saida_e0 as Connection24
+        }
+        [
+            position = 8180, 8800
+        ]
+
+        component "core/Probe" e0_degrau {
+        }
+        [
+            position = 8360, 8744
+        ]
+
+        component "core/Sum" dif_estatica {
+            signs = "+-"
+        }
+        [
+            position = 8560, 7960
+        ]
+
+        component "core/Gain" uV_estatica {
+            gain = "1e6"
+        }
+        [
+            position = 8672, 7960
+        ]
+
+        component "core/Probe" erro_uV_estatica {
+        }
+        [
+            position = 8780, 7960
+        ]
+
+        component "core/Sum" dif_dinamica {
+            signs = "+-"
+        }
+        [
+            position = 8560, 8108
+        ]
+
+        component "core/Gain" uV_dinamica {
+            gain = "1e6"
+        }
+        [
+            position = 8672, 8108
+        ]
+
+        component "core/Probe" erro_uV_dinamica {
+        }
+        [
+            position = 8780, 8108
+        ]
+
+        component "core/Sum" dif_espectral {
+            signs = "+-"
+        }
+        [
+            position = 8560, 8256
+        ]
+
+        component "core/Gain" uV_espectral {
+            gain = "1e6"
+        }
+        [
+            position = 8672, 8256
+        ]
+
+        component "core/Probe" erro_uV_espectral {
+        }
+        [
+            position = 8780, 8256
+        ]
+
+        component "core/Sum" dif_completa {
+            signs = "+-"
+        }
+        [
+            position = 8560, 8408
+        ]
+
+        component "core/Gain" uV_completa {
+            gain = "1e6"
+        }
+        [
+            position = 8672, 8408
+        ]
+
+        component "core/Probe" erro_uV_completa {
+        }
+        [
+            position = 8780, 8408
+        ]
+
+        component "core/Sum" dif_compensada {
+            signs = "+-"
+        }
+        [
+            position = 8560, 8560
+        ]
+
+        component "core/Gain" uV_compensada {
+            gain = "1e6"
+        }
+        [
+            position = 8672, 8560
+        ]
+
+        component "core/Probe" erro_uV_compensada {
+        }
+        [
+            position = 8780, 8560
+        ]
+
+        component "core/Scope" Scope_E02 {
+            selected_signals = "[\'p_eps\', \'e0_ideal\', \'e0_estatica\', \'e0_completa\', \'erro_uV_estatica\', \'erro_uV_completa\', \'erro_uV_compensada\', \'erro_uV_dinamica\', \'erro_uV_espectral\', \'p_eps_degrau\', \'e0_degrau\']"
+            signals_data = "{\"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true, \"signals_tooltips_enabled\": true}, \"signals\": {\"p_eps\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#C00000\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"e0_ideal\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#000000\"}, \"display\": {\"2\": \"dash\"}, \"is_manual\": {\"2\": false}}, \"e0_estatica\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#C55A11\"}, \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"e0_completa\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#1F4E79\"}, \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"erro_uV_estatica\": {\"viewports\": [3], \"type\": \"analog\", \"color\": {\"3\": \"#C55A11\"}, \"display\": {\"3\": \"solid\"}, \"is_manual\": {\"3\": false}}, \"erro_uV_completa\": {\"viewports\": [3], \"type\": \"analog\", \"color\": {\"3\": \"#1F4E79\"}, \"display\": {\"3\": \"solid\"}, \"is_manual\": {\"3\": false}}, \"erro_uV_compensada\": {\"viewports\": [3], \"type\": \"analog\", \"color\": {\"3\": \"#2E7D32\"}, \"display\": {\"3\": \"solid\"}, \"is_manual\": {\"3\": false}}, \"erro_uV_dinamica\": {\"viewports\": [4], \"type\": \"analog\", \"color\": {\"4\": \"#7030A0\"}, \"display\": {\"4\": \"solid\"}, \"is_manual\": {\"4\": false}}, \"erro_uV_espectral\": {\"viewports\": [4], \"type\": \"analog\", \"color\": {\"4\": \"#1F4E79\"}, \"display\": {\"4\": \"solid\"}, \"is_manual\": {\"4\": false}}, \"p_eps_degrau\": {\"viewports\": [5], \"type\": \"analog\", \"color\": {\"5\": \"#C00000\"}, \"display\": {\"5\": \"solid\"}, \"is_manual\": {\"5\": false}}, \"e0_degrau\": {\"viewports\": [6], \"type\": \"analog\", \"color\": {\"6\": \"#1F4E79\"}, \"display\": {\"6\": \"solid\"}, \"is_manual\": {\"6\": false}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"4\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"5\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"6\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}}"
+        }
+        [
+            position = 8952, 8800
+        ]
+
+        junction j_eps0 sp
+        [
+            position = 7472, 7800
+        ]
+
+        junction j_eps_ideal sp
+        [
+            position = 7560, 7800
+        ]
+
+        junction j_eps_estatica sp
+        [
+            position = 7560, 7952
+        ]
+
+        junction j_eps_dinamica sp
+        [
+            position = 7560, 8100
+        ]
+
+        junction j_eps_espectral sp
+        [
+            position = 7560, 8248
+        ]
+
+        junction j_eps_completa sp
+        [
+            position = 7560, 8400
+        ]
+
+        junction j_eps_compensada sp
+        [
+            position = 7560, 8552
+        ]
+
+        junction j_vn0 sp
+        [
+            position = 7500, 8660
+        ]
+
+        junction j_vn_c sp
+        [
+            position = 7620, 8660
+        ]
+
+        junction j_degrau0 sp
+        [
+            position = 7472, 8800
+        ]
+
+        junction j_e0_ideal sp
+        [
+            position = 8288, 7800
+        ]
+
+        junction j_e0_estatica sp
+        [
+            position = 8288, 7952
+        ]
+
+        junction j_e0_dinamica sp
+        [
+            position = 8288, 8100
+        ]
+
+        junction j_vn_espectral sp
+        [
+            position = 7620, 8264
+        ]
+
+        junction j_e0_espectral sp
+        [
+            position = 8288, 8248
+        ]
+
+        junction j_vn_completa sp
+        [
+            position = 7620, 8416
+        ]
+
+        junction j_e0_completa sp
+        [
+            position = 8288, 8400
+        ]
+
+        junction j_e0_compensada sp
+        [
+            position = 8288, 8552
+        ]
+
+        junction j_e0_degrau sp
+        [
+            position = 8288, 8800
+        ]
+
+        junction j_ideal0 sp
+        [
+            position = 8440, 7800
+        ]
+
+        junction j_ideal_estatica sp
+        [
+            position = 8440, 7968
+        ]
+
+        junction j_ideal_dinamica sp
+        [
+            position = 8440, 8116
+        ]
+
+        junction j_ideal_espectral sp
+        [
+            position = 8440, 8264
+        ]
+
+        junction j_ideal_completa sp
+        [
+            position = 8440, 8416
+        ]
+
+        junction j_ideal_compensada sp
+        [
+            position = 8440, 8568
+        ]
+
+        comment Comment1 START Entrega 01: extensometro ideal ENDCOMMENT 
+        [
+            position = 7672, 7736
+        ]
+
+        comment Comment2 START R6 - camada estatica: GF real + desvio de zero por temperatura ENDCOMMENT 
+        [
+            position = 7672, 7888
+        ]
+
+        comment Comment3 START R7 - camada dinamica: ordem zero ENDCOMMENT 
+        [
+            position = 7672, 8036
+        ]
+
+        comment Comment4 START R8 - camada espectral: ruido termico da ponte ENDCOMMENT 
+        [
+            position = 7672, 8184
+        ]
+
+        comment Comment5 START R10 - tres camadas juntas na mesma ponte ENDCOMMENT 
+        [
+            position = 7672, 8336
+        ]
+
+        comment Comment6 START Extra - camada estatica com extensometro inativo (dummy) no braco R1 ENDCOMMENT 
+        [
+            position = 7672, 8488
+        ]
+
+        comment Comment7 START R7 - ensaio de degrau (1000 microstrain em t = 0,5 s) ENDCOMMENT 
+        [
+            position = 7672, 8736
+        ]
+
+        connect zero_cf.out ruido_gaussiano.in as Connection1
+        connect ruido_gaussiano.out ruido_termico_sigma_n.in as Connection2
+        connect eps_varredura.out j_eps0 as Connection3
+        connect j_eps0 p_eps.in as Connection4
+        connect j_eps0 j_eps_ideal as Connection5
+        connect j_eps_ideal j_eps_estatica as Connection6
+        connect j_eps_estatica j_eps_dinamica as Connection7
+        connect j_eps_dinamica j_eps_espectral as Connection8
+        connect j_eps_espectral j_eps_completa as Connection9
+        connect j_eps_completa j_eps_compensada as Connection10
+        connect ruido_termico_sigma_n.out j_vn0 as Connection11
+        connect j_vn0 p_vn.in as Connection12
+        connect j_vn0 j_vn_c as Connection13
+        connect eps_degrau.out j_degrau0 as Connection14
+        connect j_degrau0 p_eps_degrau.in as Connection15
+        connect j_eps_ideal dR_ideal.in as Connection16
+        connect dR_ideal.out Ponte_ideal.dR as Connection17
+        connect Ponte_ideal.saida_e0 j_e0_ideal as Connection18
+        connect j_e0_ideal e0_ideal.in as Connection19
+        connect j_eps_estatica dR_GF_real.in as Connection20
+        connect dR_GF_real.out mais_zero_T.in as Connection21
+        connect mais_zero_T_zero.out mais_zero_T.in1 as Connection22
+        connect mais_zero_T.out Ponte_estatica.dR as Connection23
+        connect Ponte_estatica.saida_e0 j_e0_estatica as Connection24
+        connect j_e0_estatica e0_estatica.in as Connection25
+        connect j_eps_dinamica ordem_zero.in as Connection26
+        connect ordem_zero.out dR_din.in as Connection27
+        connect dR_din.out Ponte_dinamica.dR as Connection28
+        connect Ponte_dinamica.saida_e0 j_e0_dinamica as Connection29
+        connect j_e0_dinamica e0_dinamica.in as Connection30
+        connect j_eps_espectral dR_esp.in as Connection31
+        connect dR_esp.out Ponte_espectral.dR as Connection32
+        connect j_vn_espectral Ponte_espectral.vn as Connection33
+        connect Ponte_espectral.saida_e0 j_e0_espectral as Connection34
+        connect j_e0_espectral e0_espectral.in as Connection35
+        connect j_eps_completa dR_GF_real_c.in as Connection36
+        connect dR_GF_real_c.out ordem_zero_c.in as Connection37
+        connect ordem_zero_c.out mais_zero_T_c.in as Connection38
+        connect mais_zero_T_c_zero.out mais_zero_T_c.in1 as Connection39
+        connect mais_zero_T_c.out Ponte_completa.dR as Connection40
+        connect j_vn_completa Ponte_completa.vn as Connection41
+        connect Ponte_completa.saida_e0 j_e0_completa as Connection42
+        connect j_e0_completa e0_completa.in as Connection43
+        connect j_eps_compensada dR_GF_real_d.in as Connection44
+        connect dR_GF_real_d.out mais_zero_T_d.in as Connection45
+        connect mais_zero_T_d_zero.out mais_zero_T_d.in1 as Connection46
+        connect mais_zero_T_d.out Ponte_compensada.dR as Connection47
+        connect Ponte_compensada.saida_e0 j_e0_compensada as Connection48
+        connect j_e0_compensada e0_compensada.in as Connection49
+        connect j_degrau0 ordem_zero_s.in as Connection50
+        connect ordem_zero_s.out dR_degrau.in as Connection51
+        connect dR_degrau.out Ponte_degrau.dR as Connection52
+        connect Ponte_degrau.saida_e0 j_e0_degrau as Connection53
+        connect j_e0_degrau e0_degrau.in as Connection54
+        connect j_vn_espectral j_vn_completa as Connection55
+        connect j_vn_completa j_vn_c as Connection56
+        connect j_e0_ideal j_ideal0 as Connection57
+        connect j_ideal0 j_ideal_estatica as Connection58
+        connect j_e0_estatica dif_estatica.in as Connection59
+        connect j_ideal_estatica dif_estatica.in1 as Connection60
+        connect dif_estatica.out uV_estatica.in as Connection61
+        connect uV_estatica.out erro_uV_estatica.in as Connection62
+        connect j_ideal_estatica j_ideal_dinamica as Connection63
+        connect j_e0_dinamica dif_dinamica.in as Connection64
+        connect j_ideal_dinamica dif_dinamica.in1 as Connection65
+        connect dif_dinamica.out uV_dinamica.in as Connection66
+        connect uV_dinamica.out erro_uV_dinamica.in as Connection67
+        connect j_ideal_dinamica j_ideal_espectral as Connection68
+        connect j_e0_espectral dif_espectral.in as Connection69
+        connect j_ideal_espectral dif_espectral.in1 as Connection70
+        connect dif_espectral.out uV_espectral.in as Connection71
+        connect uV_espectral.out erro_uV_espectral.in as Connection72
+        connect j_ideal_espectral j_ideal_completa as Connection73
+        connect j_e0_completa dif_completa.in as Connection74
+        connect j_ideal_completa dif_completa.in1 as Connection75
+        connect dif_completa.out uV_completa.in as Connection76
+        connect uV_completa.out erro_uV_completa.in as Connection77
+        connect j_ideal_completa j_ideal_compensada as Connection78
+        connect j_e0_compensada dif_compensada.in as Connection79
+        connect j_ideal_compensada dif_compensada.in1 as Connection80
+        connect dif_compensada.out uV_compensada.in as Connection81
+        connect uV_compensada.out erro_uV_compensada.in as Connection82
+    }
+
+    default {
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Product" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Step" {
+            step_time = "1"
+            initial_value = "0"
+            final_value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Triangular Wave Source" {
+            min_val = "-0.5"
+            max_val = "0.5"
+            frequency = "50"
+            duty_cycle = "0.5"
+            phase = "0"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Voltage Source" {
+            sig_input = "False"
+            type = "signal generator"
+            param_set = "1phase"
+            parent_label = ""
+            dtsm_switch_name = ""
+            addr = "0"
+            spc_nb = "0"
+            execution_rate = "100e-6"
+            cpd_visible = "True"
+            enable_snb = "False"
+            snb_type = "R2"
+            R2 = "0.0"
+            L1 = "0.1"
+            override_signal_name = "False"
+            signal_name = ""
+            init_source_nature = "Constant"
+            init_const_value = "0.0"
+            init_rms_value = "0.0"
+            init_frequency = "50.0"
+            init_phase = "0.0"
+        }
+
+        "core/Current Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+
+    CODE model_init
+        # =====================================================================
+        #  ECOM060 - Instrumentacao Eletronica - UFAL - 2026.2
+        #  Fase 1 / Entrega 02 - Equipe G05 - Nao idealidades
+        #  Extensometro OMEGA SGD-3/350-LY11 em ponte de Wheatstone de 1/4
+        #  (mesma ponte da Entrega 01: R1 = R3 = R4 = R0, Vex = 5 V)
+        # =====================================================================
+        Ts      = 1e-4        # s   - passo dos blocos de sinal
+        R0      = 350.0       # ohm - resistencia nominal
+        GF      = 2.0         # gauge factor nominal
+        Vex     = 5.0         # V   - excitacao da ponte
+        eps_max = 2000e-6     # fundo de escala (2000 microstrain)
+        f_sweep = 0.5         # Hz  - varredura triangular 0 -> eps_max -> 0 em 2 s
+        
+        # ---- camada estatica (Cap. 3) - OMEGA Strain Gage Technical Data
+        T_ref    = 23.0       # C   - temperatura de referencia do datasheet
+        T_op     = 53.0       # C   - temperatura do ensaio
+        dT       = T_op - T_ref
+        tol_GF   = -0.01      # tolerancia do GF por lote: +-1,00 % (pior caso, abaixo)
+        alpha_GF = 1.0e-4     # 1/K - variacao do GF com T: < 1 % em 100 C
+        beta_TO  = 2.0e-6     # 1/K - tolerancia da compensacao de temperatura: 2 ppm/C
+        GF_real  = GF*(1 + tol_GF)*(1 + alpha_GF*dT)   # sensibilidade real
+        eps_app  = beta_TO*dT                           # deformacao aparente (desvio de zero)
+        
+        # ---- camada dinamica (Cap. 4)
+        K_din    = 1.0        # ordem zero: e(t) = K*eps(t), sem atraso
+        eps_step = 1000e-6    # degrau de 1000 microstrain
+        t_step   = 0.5        # s
+        
+        # ---- camada espectral (Cap. 5) - ruido termico (Johnson) da ponte
+        kB      = 1.380649e-23
+        T_K     = T_op + 273.15
+        R_out   = R0          # resistencia de saida da ponte: R1//Rg + R3//R4 = R0
+        B_n     = 1/(2*Ts)    # banda do ruido amostrado a 1/Ts
+        sigma_n = (4*kB*T_K*R_out*B_n)**0.5   # V rms na saida
+    ENDCODE
+}

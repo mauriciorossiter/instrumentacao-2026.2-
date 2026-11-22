@@ -1,0 +1,292 @@
+version = 4.2
+
+//
+// Gerado por gerar_tse.py - Projeto Monotanque (ECOM060/UFAL)
+// Compativel com: sw version 2026.3
+//
+
+model "Monotanque_Cenario3" {
+    configuration {
+        hil_device = "HIL101"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = auto
+        fine_auto_sim_step = False
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 0.01
+        simulation_time = 600
+        abs_tol = 1e-6
+        rel_tol = 1e-6
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.2
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Signal Controlled Current Source" Iin_qi {
+            execution_rate = "Ts"
+        }
+        [
+            position = 8320, 8288
+            rotation = right
+        ]
+
+        component "core/Capacitor" C_tanque {
+            capacitance = "0.5"
+            initial_voltage = "0.5"
+        }
+        [
+            position = 8544, 8288
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Current Source" Iout_dreno {
+            execution_rate = "Ts"
+        }
+        [
+            position = 8768, 8288
+            rotation = left
+        ]
+
+        component "core/Voltage Measurement" VC {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 8992, 8288
+            rotation = right
+        ]
+
+        component "core/Ground" GND {
+        }
+        [
+            position = 8544, 8432
+        ]
+
+        junction Jt_in pe
+        [
+            position = 8320, 8192
+        ]
+
+        junction Jb_in pe
+        [
+            position = 8320, 8384
+        ]
+
+        junction Jt_c pe
+        [
+            position = 8544, 8192
+        ]
+
+        junction Jb_c pe
+        [
+            position = 8544, 8384
+        ]
+
+        junction Jt_out pe
+        [
+            position = 8768, 8192
+        ]
+
+        junction Jb_out pe
+        [
+            position = 8768, 8384
+        ]
+
+        junction Jt_vc pe
+        [
+            position = 8992, 8192
+        ]
+
+        junction Jb_vc pe
+        [
+            position = 8992, 8384
+        ]
+
+        component "core/Limit" clamp_pos {
+            lower_limit = "0"
+            execution_rate = "Ts"
+        }
+        [
+            position = 9184, 8032
+            scale = -1, 1
+        ]
+
+        component "core/Mathematical function" raiz_vC {
+            mathematical_fn = "sqrt"
+            execution_rate = "Ts"
+        }
+        [
+            position = 9008, 8032
+            scale = -1, 1
+        ]
+
+        component "core/Gain" ganho_k {
+            gain = "0.01"
+            execution_rate = "Ts"
+        }
+        [
+            position = 8832, 8032
+            scale = -1, 1
+        ]
+
+        junction Jq_o sp
+        [
+            position = 8688, 8032
+        ]
+
+        component "core/Probe" q_o {
+            execution_rate = "Ts"
+        }
+        [
+            position = 8688, 7936
+        ]
+
+        junction Jq_i sp
+        [
+            position = 8192, 8032
+        ]
+
+        component "core/Probe" q_i {
+            execution_rate = "Ts"
+        }
+        [
+            position = 8192, 7936
+        ]
+
+        component "core/Constant" qi_base {
+            value = "0.007071067811865476"
+            execution_rate = "Ts"
+        }
+        [
+            position = 7744, 7936
+        ]
+
+        component "core/Step" degrau_sobe {
+            step_time = "100"
+            initial_value = "0"
+            final_value = "0.003535533905932738"
+            execution_rate = "Ts"
+        }
+        [
+            position = 7744, 8032
+        ]
+
+        component "core/Step" degrau_desce {
+            step_time = "130"
+            initial_value = "0"
+            final_value = "-0.003535533905932738"
+            execution_rate = "Ts"
+        }
+        [
+            position = 7744, 8128
+        ]
+
+        component "core/Sum" soma_qi {
+            signs = "+++"
+            execution_rate = "Ts"
+        }
+        [
+            position = 7968, 8032
+        ]
+
+        component "core/Scope" Scope1 {
+            selected_signals = "[\"VC\", \"q_i\", \"q_o\"]"
+            signals_data = "{\"signals\": {\"VC\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#FF0000\"}, \"display\": {\"1\": \"solid\"}}, \"q_i\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#0000FF\"}, \"display\": {\"2\": \"solid\"}}, \"q_o\": {\"viewports\": [3], \"type\": \"analog\", \"color\": {\"3\": \"#008000\"}, \"display\": {\"3\": \"solid\"}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"4\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}, \"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true}}"
+        }
+        [
+            position = 7488, 8288
+        ]
+
+        comment Nota START <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><style type="text/css">p, li { white-space: pre-wrap; }</style></head><body style=" font-family:'Arial'; font-size:10pt; font-weight:400; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">MONOTANQUE - ECOM060 (UFAL 2026.2) - Cenario 3: Pulso temporario + recuperacao</p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">A*dh/dt = q_i(t) - k*sqrt(h)   &lt;-&gt;   C*dv_C/dt = i_in(t) - k*sqrt(v_C)</p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">C = A = 0.5 F   k = 0.01   q_i0 = k*sqrt(h0) = 0.0070711 A</p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">v_C(0) = 0.5 V   T_stop = 600 s   Ts = 0.01 s</p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">v_C [V] = nivel h [m] ; i_in [A] = q_i [m3/s] ; i_out [A] = q_o [m3/s]</p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Dreno nao linear (Torricelli): VC -&gt; Limit(&gt;=0) -&gt; sqrt -&gt; Gain(k) -&gt; Iout_dreno</p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Pulso: q_i = 1.5*q_i0 entre t = 100 s e t = 130 s (delta = 0.0035355 A)</p></body></html> ENDCOMMENT 
+        [
+            position = 8320, 8560
+        ]
+
+        connect Iin_qi.p_node Jt_in as w_iin_tanque
+        connect C_tanque.p_node Jt_c as w_cap_tanque
+        connect Iout_dreno.n_node Jt_out as w_iout_tanque
+        connect VC.p_node Jt_vc as w_vc_tanque
+        connect Jt_in Jt_c as w_trilho_sup_1
+        connect Jt_c Jt_out as w_trilho_sup_2
+        connect Jt_out Jt_vc as w_trilho_sup_3
+        connect Iin_qi.n_node Jb_in as w_iin_gnd
+        connect C_tanque.n_node Jb_c as w_cap_gnd
+        connect Iout_dreno.p_node Jb_out as w_iout_gnd
+        connect VC.n_node Jb_vc as w_vc_gnd
+        connect Jb_in Jb_c as w_trilho_inf_1
+        connect Jb_c Jb_out as w_trilho_inf_2
+        connect Jb_out Jb_vc as w_trilho_inf_3
+        connect GND.node Jb_c as w_terra
+        connect VC.out clamp_pos.in as w_vc_clamp
+        connect clamp_pos.out raiz_vC.in as w_clamp_raiz
+        connect raiz_vC.out ganho_k.in as w_raiz_ganho
+        connect ganho_k.out Jq_o as w_ganho_jqo
+        connect Jq_o Iout_dreno.in as w_jqo_iout
+        connect Jq_o q_o.in as w_jqo_probe
+        connect qi_base.out soma_qi.in as w_base_soma
+        connect degrau_sobe.out soma_qi.in1 as w_sobe_soma
+        connect degrau_desce.out soma_qi.in2 as w_desce_soma
+        connect soma_qi.out Jq_i as w_soma_jqi
+        connect Jq_i Iin_qi.in as w_jqi_iin
+        connect Jq_i q_i.in as w_jqi_probe
+    }
+
+    CODE model_init
+        # Taxa de execucao do processamento de sinais [s].
+        # Diminua para refinar o segurador de ordem zero do dreno.
+        Ts = 0.01
+    ENDCODE
+}
