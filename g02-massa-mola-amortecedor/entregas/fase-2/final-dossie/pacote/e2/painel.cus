@@ -1,0 +1,297 @@
+<ui_settings>
+    <version>2.9</version>
+    <model_locked>False</model_locked>
+    <canvas_bg_color>#ffffff</canvas_bg_color>
+    <initialization_code><![CDATA[# Painel G02 (ECOM060, UFAL 2026.2) - funcoes comuns as macros
+import time
+
+
+def disparar():
+    # borda de subida em 'disparo' zera o relogio do ensaio e os estados do PID
+    hil.set_scada_input_value('disparo', 0.0)
+    hil.set_scada_input_value('disparo', 1.0)
+    time.sleep(0.1)
+    hil.set_scada_input_value('disparo', 0.0)
+
+
+def aplicar(valores):
+    for nome, valor in valores.items():
+        hil.set_scada_input_value(nome, float(valor))
+    disparar()
+
+
+IDEAL_CADEIA = dict(en_sens=0, en_lim=0, en_res=0, en_ruido=0, en_interf=0, chop=1, comp_cal=0, comp_din=0)
+REAL_E02 = dict(en_sens=1, S_real_mVN=24.6, en_lim=1, en_res=1, en_ruido=1, sigma_mV=20, en_interf=1, chop=1,
+                fc_Hz=1.0, comp_cal=0, comp_din=0)
+]]></initialization_code>
+    <components>
+        <component_data>
+                <id>1108b534e6c411f1b085586d675f6404</id>
+                <name><![CDATA[Titulo]]></name>
+                <type>TextNote</type>
+                <description><![CDATA[]]></description>
+                <text><![CDATA[G02 - Fase 2, Entrega 02: equivalente eletrico do massa-mola-amortecedor (1 V = 1 N = 1 cm)]]></text>
+                <widget_settings>
+                    <x>16</x>
+                    <y>8</y>
+                    <width>1560</width>
+                    <height>30</height>
+                    <background_color><![CDATA[None]]></background_color>
+                    <background_type><![CDATA[Transparent]]></background_type>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[]]></label>
+                    <use_label>False</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>110967dae6c411f1a9c0586d675f6404</id>
+                <name><![CDATA[Ensaio]]></name>
+                <type>ComboBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[OPC = ['(a) Degrau a partir do repouso', '(b) Condicao inicial nao nula', '(c) Pulso de 1,5 A por 0,5 s']
+VAL = [1, 2, 3]
+hil.set_scada_input_value('ensaio', float(VAL[OPC.index(inputValue)]))
+disparar()
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = '(a) Degrau a partir do repouso'
+hil.set_scada_input_value('ensaio', 1.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.0]]></inputValue>
+                <availableValues><![CDATA[['(a) Degrau a partir do repouso', '(b) Condicao inicial nao nula', '(c) Pulso de 1,5 A por 0,5 s']]]></availableValues>
+                <unit><![CDATA[]]></unit>
+                <autocomplete_enabled>False</autocomplete_enabled>
+                <widget_settings>
+                    <x>16</x>
+                    <y>52</y>
+                    <width>300</width>
+                    <height>52</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Ensaio (evento em t = 2 s)]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>110967dbe6c411f1ad0f586d675f6404</id>
+                <name><![CDATA[Amplitude]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[hil.set_scada_input_value('amplitude', float(inputValue))
+disparar()
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 10.0
+hil.set_scada_input_value('amplitude', 10.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[10.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>16</x>
+                    <y>112</y>
+                    <width>300</width>
+                    <height>52</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Amplitude A [cm em malha fechada | N em aberta]]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>110967dce6c411f1b063586d675f6404</id>
+                <name><![CDATA[Disparar]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[disparar()
+]]></on_use_code>
+                <on_start_code active="False"><![CDATA[
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>16</x>
+                    <y>170</y>
+                    <width>300</width>
+                    <height>40</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[DISPARAR / REPETIR ENSAIO]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>110967dde6c411f1b167586d675f6404</id>
+                <name><![CDATA[G1]]></name>
+                <type>TraceDisplay</type>
+                <description><![CDATA[]]></description>
+                <data_type>Signals</data_type>
+                <code><![CDATA[data = {"analog_names": [], "analog_values": [], "digital_names": [], "digital_values": []}
+displayValue = data
+]]></code>
+                <analog_signals><![CDATA[['x_real', 'r']]]></analog_signals>
+                <digital_signals><![CDATA[[]]]></digital_signals>
+                <streaming_analog_signals><![CDATA[[]]]></streaming_analog_signals>
+                <streaming_digital_signals><![CDATA[[]]]></streaming_digital_signals>
+                <analog_signals_scaling_factors><![CDATA[{}]]></analog_signals_scaling_factors>
+                <streaming_analog_signals_scaling_factors><![CDATA[{}]]></streaming_analog_signals_scaling_factors>
+                <update_rate>250</update_rate>
+                <execution_rate>None</execution_rate>
+                <background_color>white</background_color>
+                <widget_settings>
+                    <x>332</x>
+                    <y>42</y>
+                    <width>1248</width>
+                    <height>470</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Deslocamento x [cm] = tensao no capacitor [V] = forca na mola [N]]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+                <advance_widget_settings>
+                    <x_title><![CDATA[t [s]]]></x_title>
+                    <y_title><![CDATA[x [cm]]]></y_title>
+                    <y_range_min>-5</y_range_min>
+                    <y_range_max>20</y_range_max>
+                    <time_window>8</time_window>
+                    <auto_scale_enabled>False</auto_scale_enabled>
+                    <legend_enabled>True</legend_enabled>
+                    <x_axis_title_enabled>False</x_axis_title_enabled>
+                    <y_axis_title_enabled>True</y_axis_title_enabled>
+                    <use_reference_curve>False</use_reference_curve>
+                    <reference_curve_code><![CDATA[referenceCurves = []
+]]></reference_curve_code>
+                </advance_widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>110967dee6c411f19bf6586d675f6404</id>
+                <name><![CDATA[G2]]></name>
+                <type>TraceDisplay</type>
+                <description><![CDATA[]]></description>
+                <data_type>Signals</data_type>
+                <code><![CDATA[data = {"analog_names": [], "analog_values": [], "digital_names": [], "digital_values": []}
+displayValue = data
+]]></code>
+                <analog_signals><![CDATA[['v_massa']]]></analog_signals>
+                <digital_signals><![CDATA[[]]]></digital_signals>
+                <streaming_analog_signals><![CDATA[[]]]></streaming_analog_signals>
+                <streaming_digital_signals><![CDATA[[]]]></streaming_digital_signals>
+                <analog_signals_scaling_factors><![CDATA[{}]]></analog_signals_scaling_factors>
+                <streaming_analog_signals_scaling_factors><![CDATA[{}]]></streaming_analog_signals_scaling_factors>
+                <update_rate>250</update_rate>
+                <execution_rate>None</execution_rate>
+                <background_color>white</background_color>
+                <widget_settings>
+                    <x>332</x>
+                    <y>522</y>
+                    <width>1248</width>
+                    <height>300</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Velocidade [m/s] = corrente da malha [A]]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+                <advance_widget_settings>
+                    <x_title><![CDATA[t [s]]]></x_title>
+                    <y_title><![CDATA[v [m/s]]]></y_title>
+                    <y_range_min>-1.5</y_range_min>
+                    <y_range_max>1.5</y_range_max>
+                    <time_window>8</time_window>
+                    <auto_scale_enabled>False</auto_scale_enabled>
+                    <legend_enabled>True</legend_enabled>
+                    <x_axis_title_enabled>False</x_axis_title_enabled>
+                    <y_axis_title_enabled>True</y_axis_title_enabled>
+                    <use_reference_curve>False</use_reference_curve>
+                    <reference_curve_code><![CDATA[referenceCurves = []
+]]></reference_curve_code>
+                </advance_widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>110967dfe6c411f1a200586d675f6404</id>
+                <name><![CDATA[D1]]></name>
+                <type>DigitalDisplay</type>
+                <description><![CDATA[]]></description>
+                <data_type>Analog signal</data_type>
+                <code><![CDATA[displayValue = 0.0
+]]></code>
+                <signal_name><![CDATA[x_real]]></signal_name>
+                <unit><![CDATA[cm]]></unit>
+                <automatic_unit>False</automatic_unit>
+                <decimals><![CDATA[3]]></decimals>
+                <updateRate>250</updateRate>
+                <scaling_factor>1.0</scaling_factor>
+                <widget_settings>
+                    <x>16</x>
+                    <y>230</y>
+                    <width>145</width>
+                    <height>60</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Deslocamento x]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+                <advance_widget_settings>
+                    <color_range>False</color_range>
+                    <green_range>(0, 0, 0, 0)</green_range>
+                    <orange_range>(0, 0, 0, 0)</orange_range>
+                    <red_range>(0, 0, 0, 0)</red_range>
+                </advance_widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>110967e0e6c411f19d53586d675f6404</id>
+                <name><![CDATA[D2]]></name>
+                <type>DigitalDisplay</type>
+                <description><![CDATA[]]></description>
+                <data_type>Analog signal</data_type>
+                <code><![CDATA[displayValue = 0.0
+]]></code>
+                <signal_name><![CDATA[v_massa]]></signal_name>
+                <unit><![CDATA[m/s]]></unit>
+                <automatic_unit>False</automatic_unit>
+                <decimals><![CDATA[3]]></decimals>
+                <updateRate>250</updateRate>
+                <scaling_factor>1.0</scaling_factor>
+                <widget_settings>
+                    <x>171</x>
+                    <y>230</y>
+                    <width>145</width>
+                    <height>60</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Velocidade]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+                <advance_widget_settings>
+                    <color_range>False</color_range>
+                    <green_range>(0, 0, 0, 0)</green_range>
+                    <orange_range>(0, 0, 0, 0)</orange_range>
+                    <red_range>(0, 0, 0, 0)</red_range>
+                </advance_widget_settings>
+            </component_data>
+
+        </components>
+</ui_settings>

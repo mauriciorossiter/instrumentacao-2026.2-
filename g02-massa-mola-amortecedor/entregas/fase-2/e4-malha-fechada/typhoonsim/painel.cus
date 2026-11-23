@@ -1,0 +1,1193 @@
+<ui_settings>
+    <version>2.9</version>
+    <model_locked>False</model_locked>
+    <canvas_bg_color>#ffffff</canvas_bg_color>
+    <initialization_code><![CDATA[# Painel G02 (ECOM060, UFAL 2026.2) - funcoes comuns as macros
+import time
+
+
+def disparar():
+    # borda de subida em 'disparo' zera o relogio do ensaio e os estados do PID
+    hil.set_scada_input_value('disparo', 0.0)
+    hil.set_scada_input_value('disparo', 1.0)
+    time.sleep(0.1)
+    hil.set_scada_input_value('disparo', 0.0)
+
+
+def aplicar(valores):
+    for nome, valor in valores.items():
+        hil.set_scada_input_value(nome, float(valor))
+    disparar()
+
+
+IDEAL_CADEIA = dict(en_sens=0, en_lim=0, en_res=0, en_ruido=0, en_interf=0, chop=1, comp_cal=0, comp_din=0)
+REAL_E02 = dict(en_sens=1, S_real_mVN=24.6, en_lim=1, en_res=1, en_ruido=1, sigma_mV=20, en_interf=1, chop=1,
+                fc_Hz=1.0, comp_cal=0, comp_din=0)
+]]></initialization_code>
+    <components>
+        <component_data>
+                <id>1218fc38e6c411f1bd75586d675f6404</id>
+                <name><![CDATA[Titulo]]></name>
+                <type>TextNote</type>
+                <description><![CDATA[]]></description>
+                <text><![CDATA[G02 - Entrega Final: instrumentacao nao ideal e seus efeitos no controle (1 V = 1 N = 1 cm)]]></text>
+                <widget_settings>
+                    <x>16</x>
+                    <y>8</y>
+                    <width>1560</width>
+                    <height>30</height>
+                    <background_color><![CDATA[None]]></background_color>
+                    <background_type><![CDATA[Transparent]]></background_type>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[]]></label>
+                    <use_label>False</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b34e6c411f1a870586d675f6404</id>
+                <name><![CDATA[Ensaio]]></name>
+                <type>ComboBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[OPC = ['(a) Degrau a partir do repouso', '(b) Condicao inicial nao nula', '(c) Pulso de 1,5 A por 0,5 s', '(d) Perturbacao de forca 0,5 A']
+VAL = [1, 2, 3, 4]
+hil.set_scada_input_value('ensaio', float(VAL[OPC.index(inputValue)]))
+disparar()
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = '(a) Degrau a partir do repouso'
+hil.set_scada_input_value('ensaio', 1.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.0]]></inputValue>
+                <availableValues><![CDATA[['(a) Degrau a partir do repouso', '(b) Condicao inicial nao nula', '(c) Pulso de 1,5 A por 0,5 s', '(d) Perturbacao de forca 0,5 A']]]></availableValues>
+                <unit><![CDATA[]]></unit>
+                <autocomplete_enabled>False</autocomplete_enabled>
+                <widget_settings>
+                    <x>16</x>
+                    <y>52</y>
+                    <width>300</width>
+                    <height>52</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Ensaio (evento em t = 2 s)]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b35e6c411f1becc586d675f6404</id>
+                <name><![CDATA[Amplitude]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[hil.set_scada_input_value('amplitude', float(inputValue))
+disparar()
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 10.0
+hil.set_scada_input_value('amplitude', 10.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[10.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>16</x>
+                    <y>112</y>
+                    <width>300</width>
+                    <height>52</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Amplitude A [cm em malha fechada | N em aberta]]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b36e6c411f1a627586d675f6404</id>
+                <name><![CDATA[Disparar]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[disparar()
+]]></on_use_code>
+                <on_start_code active="False"><![CDATA[
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>16</x>
+                    <y>170</y>
+                    <width>300</width>
+                    <height>40</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[DISPARAR / REPETIR ENSAIO]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b37e6c411f1b86e586d675f6404</id>
+                <name><![CDATA[Malha]]></name>
+                <type>ComboBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[OPC = ['aberta (forca = A)', 'fechada (PID)']
+VAL = [0, 1]
+hil.set_scada_input_value('malha', float(VAL[OPC.index(inputValue)]))
+disparar()
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 'fechada (PID)'
+hil.set_scada_input_value('malha', 1.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.0]]></inputValue>
+                <availableValues><![CDATA[['aberta (forca = A)', 'fechada (PID)']]]></availableValues>
+                <unit><![CDATA[]]></unit>
+                <autocomplete_enabled>False</autocomplete_enabled>
+                <widget_settings>
+                    <x>16</x>
+                    <y>220</y>
+                    <width>300</width>
+                    <height>52</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Malha]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b38e6c411f19116586d675f6404</id>
+                <name><![CDATA[Seletor]]></name>
+                <type>ComboBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[OPC = ['ideal (ponta de prova)', 'real (sensor + condicionamento)']
+VAL = [0, 1]
+hil.set_scada_input_value('seletor', float(VAL[OPC.index(inputValue)]))
+disparar()
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 'ideal (ponta de prova)'
+hil.set_scada_input_value('seletor', 0.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.0]]></inputValue>
+                <availableValues><![CDATA[['ideal (ponta de prova)', 'real (sensor + condicionamento)']]]></availableValues>
+                <unit><![CDATA[]]></unit>
+                <autocomplete_enabled>False</autocomplete_enabled>
+                <widget_settings>
+                    <x>16</x>
+                    <y>278</y>
+                    <width>300</width>
+                    <height>52</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Seletor: leitura que vai ao controlador]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b39e6c411f1814b586d675f6404</id>
+                <name><![CDATA[Sec_cen]]></name>
+                <type>TextNote</type>
+                <description><![CDATA[]]></description>
+                <text><![CDATA[CENARIOS PRONTOS (mesmo controlador, mesmo ensaio)]]></text>
+                <widget_settings>
+                    <x>16</x>
+                    <y>342</y>
+                    <width>300</width>
+                    <height>24</height>
+                    <background_color><![CDATA[None]]></background_color>
+                    <background_type><![CDATA[Transparent]]></background_type>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[]]></label>
+                    <use_label>False</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b3ae6c411f1a7f5586d675f6404</id>
+                <name><![CDATA[Cen1]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[hil.set_scada_input_value('seletor', 0.0)
+aplicar(dict(malha=1))
+]]></on_use_code>
+                <on_start_code active="False"><![CDATA[
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>16</x>
+                    <y>368</y>
+                    <width>300</width>
+                    <height>36</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[1) Instrumento IDEAL]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b3be6c411f1ae81586d675f6404</id>
+                <name><![CDATA[Cen2]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[hil.set_scada_input_value('seletor', 1.0)
+aplicar(dict(REAL_E02, malha=1))
+]]></on_use_code>
+                <on_start_code active="False"><![CDATA[
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>16</x>
+                    <y>408</y>
+                    <width>300</width>
+                    <height>36</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[2) Instrumento REAL (cadeia da E02)]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b3ce6c411f18d58586d675f6404</id>
+                <name><![CDATA[Cen3]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[hil.set_scada_input_value('seletor', 1.0)
+aplicar(dict(REAL_E02, malha=1, comp_cal=1, S_cal_mVN=24.6))
+]]></on_use_code>
+                <on_start_code active="False"><![CDATA[
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>16</x>
+                    <y>448</y>
+                    <width>300</width>
+                    <height>36</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[3) REAL + calibracao (x1,625)]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b3de6c411f1beb7586d675f6404</id>
+                <name><![CDATA[Cen4]]></name>
+                <type>MacroButton</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[hil.set_scada_input_value('seletor', 1.0)
+aplicar(dict(REAL_E02, malha=1, comp_cal=1, S_cal_mVN=24.6, comp_din=1, fc_corr_Hz=1.0))
+]]></on_use_code>
+                <on_start_code active="False"><![CDATA[
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[
+]]></on_stop_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <widget_settings>
+                    <x>16</x>
+                    <y>488</y>
+                    <width>300</width>
+                    <height>36</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[4) REAL + calibracao + correcao do filtro]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b3ee6c411f18bee586d675f6404</id>
+                <name><![CDATA[Sec_car]]></name>
+                <type>TextNote</type>
+                <description><![CDATA[]]></description>
+                <text><![CDATA[CARACTERISTICAS DO INSTRUMENTO REAL]]></text>
+                <widget_settings>
+                    <x>332</x>
+                    <y>42</y>
+                    <width>300</width>
+                    <height>24</height>
+                    <background_color><![CDATA[None]]></background_color>
+                    <background_type><![CDATA[Transparent]]></background_type>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[]]></label>
+                    <use_label>False</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b3fe6c411f1a0ea586d675f6404</id>
+                <name><![CDATA[w_chop]]></name>
+                <type>ComboBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[OPC = ['desligado', 'ligado']
+VAL = [0, 1]
+hil.set_scada_input_value('chop', float(VAL[OPC.index(inputValue)]))
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 'ligado'
+hil.set_scada_input_value('chop', 1.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.0]]></inputValue>
+                <availableValues><![CDATA[['desligado', 'ligado']]]></availableValues>
+                <unit><![CDATA[]]></unit>
+                <autocomplete_enabled>False</autocomplete_enabled>
+                <widget_settings>
+                    <x>332</x>
+                    <y>68</y>
+                    <width>300</width>
+                    <height>50</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Chopagem a 100 Hz]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b40e6c411f1af1e586d675f6404</id>
+                <name><![CDATA[w_en_sens]]></name>
+                <type>ComboBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[OPC = ['desligado', 'ligado']
+VAL = [0, 1]
+hil.set_scada_input_value('en_sens', float(VAL[OPC.index(inputValue)]))
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 'ligado'
+hil.set_scada_input_value('en_sens', 1.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.0]]></inputValue>
+                <availableValues><![CDATA[['desligado', 'ligado']]]></availableValues>
+                <unit><![CDATA[]]></unit>
+                <autocomplete_enabled>False</autocomplete_enabled>
+                <widget_settings>
+                    <x>332</x>
+                    <y>122</y>
+                    <width>300</width>
+                    <height>50</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Desvio de sensibilidade]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b41e6c411f18918586d675f6404</id>
+                <name><![CDATA[w_S_real_mVN]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[hil.set_scada_input_value('S_real_mVN', float(inputValue))
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 24.6
+hil.set_scada_input_value('S_real_mVN', 24.6)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[24.6]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>332</x>
+                    <y>176</y>
+                    <width>300</width>
+                    <height>50</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[S real [mV/N] (nominal 40)]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b42e6c411f19c40586d675f6404</id>
+                <name><![CDATA[w_en_lim]]></name>
+                <type>ComboBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[OPC = ['desligado', 'ligado']
+VAL = [0, 1]
+hil.set_scada_input_value('en_lim', float(VAL[OPC.index(inputValue)]))
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 'ligado'
+hil.set_scada_input_value('en_lim', 1.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.0]]></inputValue>
+                <availableValues><![CDATA[['desligado', 'ligado']]]></availableValues>
+                <unit><![CDATA[]]></unit>
+                <autocomplete_enabled>False</autocomplete_enabled>
+                <widget_settings>
+                    <x>332</x>
+                    <y>230</y>
+                    <width>300</width>
+                    <height>50</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Limiar (0,02 N)]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b43e6c411f1ada8586d675f6404</id>
+                <name><![CDATA[w_en_res]]></name>
+                <type>ComboBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[OPC = ['desligado', 'ligado']
+VAL = [0, 1]
+hil.set_scada_input_value('en_res', float(VAL[OPC.index(inputValue)]))
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 'ligado'
+hil.set_scada_input_value('en_res', 1.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.0]]></inputValue>
+                <availableValues><![CDATA[['desligado', 'ligado']]]></availableValues>
+                <unit><![CDATA[]]></unit>
+                <autocomplete_enabled>False</autocomplete_enabled>
+                <widget_settings>
+                    <x>332</x>
+                    <y>284</y>
+                    <width>300</width>
+                    <height>50</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Resolucao (0,01 N)]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b44e6c411f1848e586d675f6404</id>
+                <name><![CDATA[w_en_ruido]]></name>
+                <type>ComboBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[OPC = ['desligado', 'ligado']
+VAL = [0, 1]
+hil.set_scada_input_value('en_ruido', float(VAL[OPC.index(inputValue)]))
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 'ligado'
+hil.set_scada_input_value('en_ruido', 1.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.0]]></inputValue>
+                <availableValues><![CDATA[['desligado', 'ligado']]]></availableValues>
+                <unit><![CDATA[]]></unit>
+                <autocomplete_enabled>False</autocomplete_enabled>
+                <widget_settings>
+                    <x>332</x>
+                    <y>338</y>
+                    <width>300</width>
+                    <height>50</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Ruido branco]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b45e6c411f18d7a586d675f6404</id>
+                <name><![CDATA[w_sigma_mV]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[hil.set_scada_input_value('sigma_mV', float(inputValue))
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 20.0
+hil.set_scada_input_value('sigma_mV', 20.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[20.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>332</x>
+                    <y>392</y>
+                    <width>300</width>
+                    <height>50</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[sigma do ruido [mV]]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b46e6c411f19f52586d675f6404</id>
+                <name><![CDATA[w_en_interf]]></name>
+                <type>ComboBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[OPC = ['desligado', 'ligado']
+VAL = [0, 1]
+hil.set_scada_input_value('en_interf', float(VAL[OPC.index(inputValue)]))
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 'ligado'
+hil.set_scada_input_value('en_interf', 1.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.0]]></inputValue>
+                <availableValues><![CDATA[['desligado', 'ligado']]]></availableValues>
+                <unit><![CDATA[]]></unit>
+                <autocomplete_enabled>False</autocomplete_enabled>
+                <widget_settings>
+                    <x>332</x>
+                    <y>446</y>
+                    <width>300</width>
+                    <height>50</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Offset + deriva + 60 Hz]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b47e6c411f1aecb586d675f6404</id>
+                <name><![CDATA[w_fc_Hz]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[hil.set_scada_input_value('fc_Hz', float(inputValue))
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 1.0
+hil.set_scada_input_value('fc_Hz', 1.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[1.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>332</x>
+                    <y>500</y>
+                    <width>300</width>
+                    <height>50</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[fc do Butterworth do lock-in [Hz]]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b48e6c411f18c2f586d675f6404</id>
+                <name><![CDATA[w_comp_cal]]></name>
+                <type>ComboBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[OPC = ['desligado', 'ligado']
+VAL = [0, 1]
+hil.set_scada_input_value('comp_cal', float(VAL[OPC.index(inputValue)]))
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 'desligado'
+hil.set_scada_input_value('comp_cal', 0.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.0]]></inputValue>
+                <availableValues><![CDATA[['desligado', 'ligado']]]></availableValues>
+                <unit><![CDATA[]]></unit>
+                <autocomplete_enabled>False</autocomplete_enabled>
+                <widget_settings>
+                    <x>332</x>
+                    <y>554</y>
+                    <width>300</width>
+                    <height>50</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Calibracao de 1 ponto]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b49e6c411f1b558586d675f6404</id>
+                <name><![CDATA[w_S_cal_mVN]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[hil.set_scada_input_value('S_cal_mVN', float(inputValue))
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 24.6
+hil.set_scada_input_value('S_cal_mVN', 24.6)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[24.6]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>332</x>
+                    <y>608</y>
+                    <width>300</width>
+                    <height>50</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[S levantada na calibracao [mV/N]]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b4ae6c411f19065586d675f6404</id>
+                <name><![CDATA[w_comp_din]]></name>
+                <type>ComboBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[OPC = ['desligado', 'ligado']
+VAL = [0, 1]
+hil.set_scada_input_value('comp_din', float(VAL[OPC.index(inputValue)]))
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 'desligado'
+hil.set_scada_input_value('comp_din', 0.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.0]]></inputValue>
+                <availableValues><![CDATA[['desligado', 'ligado']]]></availableValues>
+                <unit><![CDATA[]]></unit>
+                <autocomplete_enabled>False</autocomplete_enabled>
+                <widget_settings>
+                    <x>332</x>
+                    <y>662</y>
+                    <width>300</width>
+                    <height>50</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Correcao calculada do filtro]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b4be6c411f18f85586d675f6404</id>
+                <name><![CDATA[w_fc_corr_Hz]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[hil.set_scada_input_value('fc_corr_Hz', float(inputValue))
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 1.0
+hil.set_scada_input_value('fc_corr_Hz', 1.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[1.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>332</x>
+                    <y>716</y>
+                    <width>300</width>
+                    <height>50</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[fc assumido pelo corretor [Hz]]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b4ce6c411f18fac586d675f6404</id>
+                <name><![CDATA[w_f_f_Hz]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[hil.set_scada_input_value('f_f_Hz', float(inputValue))
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 10.0
+hil.set_scada_input_value('f_f_Hz', 10.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[10.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>332</x>
+                    <y>770</y>
+                    <width>300</width>
+                    <height>50</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Polos rapidos do corretor [Hz]]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b4de6c411f1b10b586d675f6404</id>
+                <name><![CDATA[Sec_pid]]></name>
+                <type>TextNote</type>
+                <description><![CDATA[]]></description>
+                <text><![CDATA[CONTROLADOR PID]]></text>
+                <widget_settings>
+                    <x>16</x>
+                    <y>534</y>
+                    <width>300</width>
+                    <height>24</height>
+                    <background_color><![CDATA[None]]></background_color>
+                    <background_type><![CDATA[Transparent]]></background_type>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[]]></label>
+                    <use_label>False</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b4ee6c411f180c6586d675f6404</id>
+                <name><![CDATA[w_Kp]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[hil.set_scada_input_value('Kp', float(inputValue))
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 2.0
+hil.set_scada_input_value('Kp', 2.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[2.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>16</x>
+                    <y>560</y>
+                    <width>300</width>
+                    <height>46</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Kp [N/cm]]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b4fe6c411f1b42f586d675f6404</id>
+                <name><![CDATA[w_Ki]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[hil.set_scada_input_value('Ki', float(inputValue))
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 10.0
+hil.set_scada_input_value('Ki', 10.0)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[10.0]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>16</x>
+                    <y>610</y>
+                    <width>300</width>
+                    <height>46</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Ki [N/(cm s)]]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b50e6c411f18b1d586d675f6404</id>
+                <name><![CDATA[w_Kd]]></name>
+                <type>TextBoxMacro</type>
+                <description><![CDATA[]]></description>
+                <on_use_code active="True"><![CDATA[hil.set_scada_input_value('Kd', float(inputValue))
+]]></on_use_code>
+                <on_start_code active="True"><![CDATA[widgetValue = 0.2
+hil.set_scada_input_value('Kd', 0.2)
+]]></on_start_code>
+                <on_stop_code active="False"><![CDATA[widgetValue = None
+]]></on_stop_code>
+                <on_timer_code active="False"><![CDATA[widgetValue = None
+]]></on_timer_code>
+                <on_start_code_source><![CDATA[Custom code]]></on_start_code_source>
+                <inputValue><![CDATA[0.2]]></inputValue>
+                <inputValueType>float</inputValueType>
+                <unit><![CDATA[]]></unit>
+                <widget_settings>
+                    <x>16</x>
+                    <y>660</y>
+                    <width>300</width>
+                    <height>46</height>
+                    <inputWidgetWidth>80</inputWidgetWidth>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position>1</hierarchy_position>
+                    <label><![CDATA[Kd [N s/cm]]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b51e6c411f1bdd2586d675f6404</id>
+                <name><![CDATA[G1]]></name>
+                <type>TraceDisplay</type>
+                <description><![CDATA[]]></description>
+                <data_type>Signals</data_type>
+                <code><![CDATA[data = {"analog_names": [], "analog_values": [], "digital_names": [], "digital_values": []}
+displayValue = data
+]]></code>
+                <analog_signals><![CDATA[['r', 'x_real', 'y_med', 'y_ctrl']]]></analog_signals>
+                <digital_signals><![CDATA[[]]]></digital_signals>
+                <streaming_analog_signals><![CDATA[[]]]></streaming_analog_signals>
+                <streaming_digital_signals><![CDATA[[]]]></streaming_digital_signals>
+                <analog_signals_scaling_factors><![CDATA[{}]]></analog_signals_scaling_factors>
+                <streaming_analog_signals_scaling_factors><![CDATA[{}]]></streaming_analog_signals_scaling_factors>
+                <update_rate>250</update_rate>
+                <execution_rate>None</execution_rate>
+                <background_color>white</background_color>
+                <widget_settings>
+                    <x>648</x>
+                    <y>42</y>
+                    <width>932</width>
+                    <height>430</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Referencia, grandeza REAL da planta e grandeza MEDIDA [cm]]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+                <advance_widget_settings>
+                    <x_title><![CDATA[t [s]]]></x_title>
+                    <y_title><![CDATA[x [cm]]]></y_title>
+                    <y_range_min>-5</y_range_min>
+                    <y_range_max>25</y_range_max>
+                    <time_window>8</time_window>
+                    <auto_scale_enabled>False</auto_scale_enabled>
+                    <legend_enabled>True</legend_enabled>
+                    <x_axis_title_enabled>False</x_axis_title_enabled>
+                    <y_axis_title_enabled>True</y_axis_title_enabled>
+                    <use_reference_curve>False</use_reference_curve>
+                    <reference_curve_code><![CDATA[referenceCurves = []
+]]></reference_curve_code>
+                </advance_widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b52e6c411f19509586d675f6404</id>
+                <name><![CDATA[G2]]></name>
+                <type>TraceDisplay</type>
+                <description><![CDATA[]]></description>
+                <data_type>Signals</data_type>
+                <code><![CDATA[data = {"analog_names": [], "analog_values": [], "digital_names": [], "digital_values": []}
+displayValue = data
+]]></code>
+                <analog_signals><![CDATA[['u', 'F_atuador']]]></analog_signals>
+                <digital_signals><![CDATA[[]]]></digital_signals>
+                <streaming_analog_signals><![CDATA[[]]]></streaming_analog_signals>
+                <streaming_digital_signals><![CDATA[[]]]></streaming_digital_signals>
+                <analog_signals_scaling_factors><![CDATA[{}]]></analog_signals_scaling_factors>
+                <streaming_analog_signals_scaling_factors><![CDATA[{}]]></streaming_analog_signals_scaling_factors>
+                <update_rate>250</update_rate>
+                <execution_rate>None</execution_rate>
+                <background_color>white</background_color>
+                <widget_settings>
+                    <x>648</x>
+                    <y>482</y>
+                    <width>932</width>
+                    <height>230</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Esforco do controlador u e forca no atuador [N]]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+                <advance_widget_settings>
+                    <x_title><![CDATA[t [s]]]></x_title>
+                    <y_title><![CDATA[N]]></y_title>
+                    <y_range_min>-65</y_range_min>
+                    <y_range_max>65</y_range_max>
+                    <time_window>8</time_window>
+                    <auto_scale_enabled>False</auto_scale_enabled>
+                    <legend_enabled>True</legend_enabled>
+                    <x_axis_title_enabled>False</x_axis_title_enabled>
+                    <y_axis_title_enabled>True</y_axis_title_enabled>
+                    <use_reference_curve>False</use_reference_curve>
+                    <reference_curve_code><![CDATA[referenceCurves = []
+]]></reference_curve_code>
+                </advance_widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b53e6c411f19468586d675f6404</id>
+                <name><![CDATA[G3]]></name>
+                <type>TraceDisplay</type>
+                <description><![CDATA[]]></description>
+                <data_type>Signals</data_type>
+                <code><![CDATA[data = {"analog_names": [], "analog_values": [], "digital_names": [], "digital_values": []}
+displayValue = data
+]]></code>
+                <analog_signals><![CDATA[['pre_amp', 'demod', 'bw']]]></analog_signals>
+                <digital_signals><![CDATA[[]]]></digital_signals>
+                <streaming_analog_signals><![CDATA[[]]]></streaming_analog_signals>
+                <streaming_digital_signals><![CDATA[[]]]></streaming_digital_signals>
+                <analog_signals_scaling_factors><![CDATA[{}]]></analog_signals_scaling_factors>
+                <streaming_analog_signals_scaling_factors><![CDATA[{}]]></streaming_analog_signals_scaling_factors>
+                <update_rate>250</update_rate>
+                <execution_rate>None</execution_rate>
+                <background_color>white</background_color>
+                <widget_settings>
+                    <x>648</x>
+                    <y>722</y>
+                    <width>932</width>
+                    <height>230</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[Dentro da cadeia: pre-amp, demodulado, saida do Butterworth [V]]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+                <advance_widget_settings>
+                    <x_title><![CDATA[t [s]]]></x_title>
+                    <y_title><![CDATA[V]]></y_title>
+                    <y_range_min>-10</y_range_min>
+                    <y_range_max>10</y_range_max>
+                    <time_window>8</time_window>
+                    <auto_scale_enabled>True</auto_scale_enabled>
+                    <legend_enabled>True</legend_enabled>
+                    <x_axis_title_enabled>False</x_axis_title_enabled>
+                    <y_axis_title_enabled>True</y_axis_title_enabled>
+                    <use_reference_curve>False</use_reference_curve>
+                    <reference_curve_code><![CDATA[referenceCurves = []
+]]></reference_curve_code>
+                </advance_widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b54e6c411f1b5ec586d675f6404</id>
+                <name><![CDATA[D1]]></name>
+                <type>DigitalDisplay</type>
+                <description><![CDATA[]]></description>
+                <data_type>Analog signal</data_type>
+                <code><![CDATA[displayValue = 0.0
+]]></code>
+                <signal_name><![CDATA[x_real]]></signal_name>
+                <unit><![CDATA[cm]]></unit>
+                <automatic_unit>False</automatic_unit>
+                <decimals><![CDATA[3]]></decimals>
+                <updateRate>250</updateRate>
+                <scaling_factor>1.0</scaling_factor>
+                <widget_settings>
+                    <x>16</x>
+                    <y>720</y>
+                    <width>145</width>
+                    <height>60</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[x real]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+                <advance_widget_settings>
+                    <color_range>False</color_range>
+                    <green_range>(0, 0, 0, 0)</green_range>
+                    <orange_range>(0, 0, 0, 0)</orange_range>
+                    <red_range>(0, 0, 0, 0)</red_range>
+                </advance_widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b55e6c411f187a7586d675f6404</id>
+                <name><![CDATA[D2]]></name>
+                <type>DigitalDisplay</type>
+                <description><![CDATA[]]></description>
+                <data_type>Analog signal</data_type>
+                <code><![CDATA[displayValue = 0.0
+]]></code>
+                <signal_name><![CDATA[y_med]]></signal_name>
+                <unit><![CDATA[cm]]></unit>
+                <automatic_unit>False</automatic_unit>
+                <decimals><![CDATA[3]]></decimals>
+                <updateRate>250</updateRate>
+                <scaling_factor>1.0</scaling_factor>
+                <widget_settings>
+                    <x>171</x>
+                    <y>720</y>
+                    <width>145</width>
+                    <height>60</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[x medido]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+                <advance_widget_settings>
+                    <color_range>False</color_range>
+                    <green_range>(0, 0, 0, 0)</green_range>
+                    <orange_range>(0, 0, 0, 0)</orange_range>
+                    <red_range>(0, 0, 0, 0)</red_range>
+                </advance_widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b56e6c411f1ad7a586d675f6404</id>
+                <name><![CDATA[D3]]></name>
+                <type>DigitalDisplay</type>
+                <description><![CDATA[]]></description>
+                <data_type>Analog signal</data_type>
+                <code><![CDATA[displayValue = 0.0
+]]></code>
+                <signal_name><![CDATA[u]]></signal_name>
+                <unit><![CDATA[N]]></unit>
+                <automatic_unit>False</automatic_unit>
+                <decimals><![CDATA[3]]></decimals>
+                <updateRate>250</updateRate>
+                <scaling_factor>1.0</scaling_factor>
+                <widget_settings>
+                    <x>16</x>
+                    <y>786</y>
+                    <width>145</width>
+                    <height>60</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[esforco u]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+                <advance_widget_settings>
+                    <color_range>False</color_range>
+                    <green_range>(0, 0, 0, 0)</green_range>
+                    <orange_range>(0, 0, 0, 0)</orange_range>
+                    <red_range>(0, 0, 0, 0)</red_range>
+                </advance_widget_settings>
+            </component_data>
+
+        <component_data>
+                <id>12197b57e6c411f1b9cb586d675f6404</id>
+                <name><![CDATA[D4]]></name>
+                <type>DigitalDisplay</type>
+                <description><![CDATA[]]></description>
+                <data_type>Analog signal</data_type>
+                <code><![CDATA[displayValue = 0.0
+]]></code>
+                <signal_name><![CDATA[t_ensaio]]></signal_name>
+                <unit><![CDATA[s]]></unit>
+                <automatic_unit>False</automatic_unit>
+                <decimals><![CDATA[2]]></decimals>
+                <updateRate>250</updateRate>
+                <scaling_factor>1.0</scaling_factor>
+                <widget_settings>
+                    <x>171</x>
+                    <y>786</y>
+                    <width>145</width>
+                    <height>60</height>
+                    <appearance><![CDATA[Flat]]></appearance>
+                    <hierarchy_position><![CDATA[1]]></hierarchy_position>
+                    <is_background><![CDATA[False]]></is_background>
+                    <label><![CDATA[tempo do ensaio]]></label>
+                    <use_label>True</use_label>
+                </widget_settings>
+                <advance_widget_settings>
+                    <color_range>False</color_range>
+                    <green_range>(0, 0, 0, 0)</green_range>
+                    <orange_range>(0, 0, 0, 0)</orange_range>
+                    <red_range>(0, 0, 0, 0)</red_range>
+                </advance_widget_settings>
+            </component_data>
+
+        </components>
+</ui_settings>

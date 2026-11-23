@@ -104,7 +104,3 @@ não tem contrapartida na correção e constitui o piso de erro do método.
 
 Redução de mais de 99 % do erro sistemático de deriva térmica; o residual vem do modelo
 incompleto da célula (r(t)), não do TMP117.
-
-## Captura de tela (esquemático + painel SCADA)
-
-![Esquemático e painel de instrumentação](captura-scada.png)
