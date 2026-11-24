@@ -1,0 +1,12 @@
+\begin{tikzpicture}[font=\footnotesize, >=Stealth, bx/.style={draw, rounded corners=2pt, align=center, fill=white, inner sep=3pt}]
+\node[bx, text width=1.1cm] (vs) at (0,0) {Fonte\\36 V};
+\node[bx, text width=1.75cm] (inv) at (2.25,0) {Inversor\\seis-passos\\PWM 10 kHz};
+\node[draw, circle, minimum size=1.45cm, align=center, fill=gray!8, font=\scriptsize] (m) at (4.75,0) {\textbf{BLDC}\\R42BLD30L3};
+\node[bx, text width=1.75cm] (lg) at (2.25,-2.0) {Comutação e controle ($d$)};
+\node[bx, text width=1.45cm] (fan) at (4.75,-2.0) {Ventilador\\$T_L = b_2 n^2$};
+\draw[->] (vs) -- (inv);
+\draw[->] (inv) -- node[above, font=\scriptsize]{$i_{a,b,c}$} (m);
+\draw[line width=1.4pt] (m.south) -- node[right, font=\scriptsize]{eixo} (fan.north);
+\draw[->, dashed] (m.south west) -- node[above, sloped, font=\scriptsize]{Hall} (lg.north east);
+\draw[->, dashed] (lg) -- (inv);
+\end{tikzpicture}

@@ -1,0 +1,32 @@
+% Figura 1 da orientacao, preenchida com os blocos do modelo_final.tse (G07)
+\begin{tikzpicture}[font=\scriptsize, >=Stealth,
+  bx/.style={draw, rounded corners=2pt, align=center, fill=white, inner sep=3pt, text width=#1},
+  bx/.default=2.5cm,
+  ins/.style={bx=#1, fill=gray!10}, ins/.default=2.5cm]
+\node[bx=2.6cm] (pl) at (0,0) {\textbf{Planta}\\(equivalente elétrico)\\[1pt]{\tiny fases \texttt{G07\_Rs/Ls/e\_x};\\ mecânica \texttt{G07\_L\_J}, \texttt{G07\_R\_B}}};
+\node[bx=2.7cm] (pp) at (3.7,0) {\textbf{Ponta de prova ideal}\\[1pt]{\tiny \texttt{G07\_iS}, \texttt{G07\_iSb}: amperímetros em série com as fases a e b}};
+\node[bx=2.9cm] (id) at (7.6,1.75) {\textbf{Caminho ideal}: ganho 1\\[1pt]{\tiny \texttt{G07\_Med\_ideal}; $i_{pl}$ em \texttt{G07\_CL\_realimentacao}}};
+\node[bx=2.3cm] (sel) at (11.0,0) {\textbf{Seletor ideal/real}\\[1pt]{\tiny caixa \texttt{G07\_fb\_real}}};
+\node[bx=2.4cm] (rf) at (15.2,1.75) {\textbf{Referência} $r$\\[1pt]{\tiny \texttt{G07\_CL\_referencia}}};
+\node[bx=2.4cm] (ct) at (15.2,0) {\textbf{Controlador}\\[1pt]{\tiny \texttt{G07\_CL\_erro} (Sum) e \texttt{G07\_CL\_PI} (PI)}};
+\node[bx=2.4cm] (at) at (15.2,-2.45) {\textbf{Atuador}\\[1pt]{\tiny \texttt{G07\_Seletor\_duty} e inversor (PWM 10 kHz)}};
+\node[ins=2.45cm] (se) at (4.9,-2.45) {\textbf{Sensor} ACS712-20A\\[1pt]{\tiny \texttt{S1} sensibilidade · \texttt{S2} zero\\ \texttt{S3} banda · \texttt{S4} ruído}};
+\node[ins=2.45cm] (co) at (7.85,-2.45) {\textbf{Condicionamento}\\[1pt]{\tiny \texttt{C1} filtro RC 15 kHz\\ \texttt{C2} ADC 12 bits, 20 kS/s}};
+\node[ins=2.75cm] (pr) at (10.95,-2.45) {\textbf{Processamento e compensação}\\[1pt]{\tiny \texttt{P1}: correção calculada, média, autocalibração; \texttt{CL\_realimentacao}: módulo ou Hall, correção do RC}};
+\begin{scope}[on background layer]
+\node[draw=gray, dashed, rounded corners, fill=gray!4, fit=(se)(co)(pr), inner sep=5pt] (box) {};
+\end{scope}
+\node[font=\scriptsize\bfseries, above=0pt of box.north] {Aqui atua a instrumentação (cadeias das fases a e b)};
+\node[bx=3.6cm] (es) at (7.85,-4.55) {\textbf{Entradas espúrias}\\[1pt]{\tiny temperatura (\texttt{G07\_T} = 60 °C); ruído e interferência (\texttt{G07\_ruido})}};
+\draw[->] (pl) -- node[above]{$y_{real}$} (pp);
+\draw[->] (pp.east) -- ++(0.35,0) |- (id.west);
+\draw[->] (pp.south) |- (se.west);
+\draw[->] (se) -- (co); \draw[->] (co) -- (pr);
+\draw[->] (id.east) -| (sel.north);
+\draw[->] (pr.north) -- (pr.north |- sel.south);
+\draw[->] (sel) -- node[above, font=\tiny, align=center]{$y_{ideal}$\\ou $y_{med}$} (ct);
+\draw[->] (rf) -- (ct); \draw[->] (ct) -- (at);
+\draw[->] (es) -- (box.south -| es);
+\draw[->, dashed] ([xshift=-6mm]box.south) |- (0.4,-3.75) node[pos=0.75, below, font=\tiny, align=center]{carregamento: 1,2 m$\Omega$ ≪ 1,6 $\Omega$ (< 0,04 \%), desprezado} -- ([xshift=4mm]pl.south);
+\draw[->] (at.south) -- ++(0,-2.55) -| node[pos=0.25, below, font=\tiny]{ação de controle: razão cíclica $d$ (atuador → planta)} ([xshift=-4mm]pl.south);
+\end{tikzpicture}

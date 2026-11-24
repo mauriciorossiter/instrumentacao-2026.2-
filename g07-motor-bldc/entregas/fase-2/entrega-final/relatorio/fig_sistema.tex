@@ -1,0 +1,15 @@
+\begin{tikzpicture}[font=\scriptsize, >=Stealth, bx/.style={draw, rounded corners=2pt, align=center, fill=white, inner sep=3pt}]
+\node[bx, text width=1.3cm] (vs) at (0,0) {Fonte\\$V_s$ = 36 V};
+\node[bx, text width=2.0cm] (inv) at (2.6,0) {Inversor trifásico\\seis-passos, PWM 10 kHz};
+\node[draw, circle, minimum size=1.55cm, align=center, fill=gray!8] (m) at (5.6,0) {\textbf{BLDC}\\R42BLD30L3};
+\node[bx, text width=1.5cm] (fan) at (8.3,0) {Ventilador\\$T_L = b_2 n^2$};
+\node[bx, text width=2.2cm] (hl) at (5.6,-1.75) {Sensores Hall de posição (120°)};
+\node[bx, text width=2.0cm] (lg) at (2.6,-1.75) {Lógica de comutação e controle ($d$)};
+\draw[->] (vs) -- (inv);
+\foreach \y in {-0.18,0,0.18} \draw ([yshift=\y cm]inv.east) -- ([yshift=\y cm]m.west |- 0,\y);
+\node[above, font=\tiny] at (4.25,0.2) {$i_a, i_b, i_c$};
+\draw[line width=1.4pt] (m.east) -- node[above, font=\tiny]{eixo, $\omega$} (fan.west);
+\draw[->, dashed] (m.south) -- (hl.north);
+\draw[->, dashed] (hl) -- (lg);
+\draw[->, dashed] (lg) -- (inv);
+\end{tikzpicture}

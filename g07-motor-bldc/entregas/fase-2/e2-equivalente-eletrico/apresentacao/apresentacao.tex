@@ -1,112 +1,136 @@
-% G07 - Fase 2, Entrega 02 - slides de apoio (10 min: 7 de exposicao + 3 de perguntas)
-% xelatex apresentacao.tex
-\documentclass[aspectratio=169,10pt]{beamer}
+% G07 - Fase 2, Entrega 02 - apresentacao
+\documentclass[aspectratio=169,11pt]{beamer}
 \usetheme{default}
 \usepackage{fontspec}
 \setsansfont{TeX Gyre Heros}
-\usepackage{booktabs,amsmath}
+\usepackage{booktabs,amsmath,tikz,array}
 \usepackage{newunicodechar}
 \newunicodechar{Ω}{\ensuremath{\Omega}}
 \newunicodechar{→}{\ensuremath{\to}}
 \newunicodechar{×}{\ensuremath{\times}}
 \newunicodechar{·}{\ensuremath{\cdot}}
-\definecolor{az}{HTML}{1F5FA8}\definecolor{vm}{HTML}{C0392B}
-\setbeamercolor{frametitle}{fg=az}\setbeamercolor{structure}{fg=az}
+\newunicodechar{≈}{\ensuremath{\approx}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{°}{\ensuremath{^\circ}}
+\newunicodechar{µ}{\ensuremath{\mu}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{−}{\ensuremath{-}}
+\definecolor{az}{HTML}{1F4E8C}\definecolor{azc}{HTML}{E8F0FA}
+\definecolor{vm}{HTML}{C0392B}\definecolor{cz}{HTML}{5A6270}
+\setbeamercolor{normal text}{fg=black!85}
+\setbeamercolor{structure}{fg=az}
+\setbeamercolor{frametitle}{fg=az}
+\setbeamerfont{frametitle}{size=\Large,series=\bfseries}
 \setbeamertemplate{navigation symbols}{}
-\setbeamertemplate{footline}{\hfill\scriptsize\color{gray}G07 · ECOM060 · E02 \quad\insertframenumber\hspace{1em}\vspace{4pt}}
+\setbeamertemplate{itemize item}{\color{az}\rule[0.25ex]{0.6ex}{0.6ex}}
+\setbeamertemplate{frametitle}{\vspace{2pt}\insertframetitle\par\vspace{1pt}{\color{az}\rule{2.2cm}{2pt}}\vspace{-4pt}}
+\setbeamertemplate{footline}{\leavevmode\hbox to\paperwidth{\hspace{12pt}\scriptsize\color{cz}\rodape\hfill\insertframenumber\hspace{12pt}}\vspace{6pt}}
 \newcommand{\fig}[2][\textwidth]{\includegraphics[width=#1]{../relatorio/figuras/#2}}
+\newcommand{\kpi}[3][2.55cm]{\begin{tikzpicture}\node[fill=azc,rounded corners=3pt,inner sep=6pt,text width=#1,align=center]{{\Large\bfseries\color{az}#2}\\[1pt]{\scriptsize\color{cz}#3}};\end{tikzpicture}}
+\newcommand{\kpivm}[3][2.55cm]{\begin{tikzpicture}\node[fill=vm!10,rounded corners=3pt,inner sep=6pt,text width=#1,align=center]{{\Large\bfseries\color{vm}#2}\\[1pt]{\scriptsize\color{cz}#3}};\end{tikzpicture}}
+\newcommand{\capa}[3]{{\setbeamertemplate{footline}{}\setbeamercolor{background canvas}{bg=az}
+\begin{frame}\color{white}\vspace{1.4cm}
+{\small #1}\\[10pt]{\huge\bfseries #2}\\[6pt]{\Large #3}\\[24pt]
+{\color{white}\rule{3cm}{1.5pt}}\\[10pt]
+\small Nícolas De Almeida Souza · Lucas Momesso Alves · Cláudio Henrique da Costa Santos
+\end{frame}}}
+\newcommand{\destaque}[1]{\begin{center}\colorbox{azc}{\parbox{.9\textwidth}{\centering\vspace{5pt}#1\vspace{5pt}}}\end{center}}
+\newcommand{\pontos}[6]{\begin{tabular}{@{}>{\raggedright\arraybackslash}p{.3\textwidth}@{\hspace{.035\textwidth}}>{\raggedright\arraybackslash}p{.3\textwidth}@{\hspace{.035\textwidth}}>{\raggedright\arraybackslash}p{.3\textwidth}@{}}
+#1 & #3 & #5\\[4pt]\small #2 & \small #4 & \small #6\end{tabular}}
+\newcommand{\contexto}[1]{{\small\color{cz}#1}\par\vspace{4pt}}
+\newcommand{\rodape}{Equivalente elétrico do motor BLDC}
 \begin{document}
 
-\begin{frame}
-\vspace{1.2cm}
-{\small\color{vm} Grupo G07 · ECOM060 Instrumentação Eletrônica · UFAL 2026.2 · Fase 2, Entrega 02}\\[6pt]
-{\LARGE\bfseries\color{az} Equivalente elétrico no TyphoonSim:\\ motor BLDC MOONS' R42BLD30L3}\\[10pt]
-Nícolas De Almeida Souza · Lucas Momesso Alves · Cláudio Henrique da Costa Santos
-\begin{columns}\column{.55\textwidth}
-\vspace{6pt}\small
-\begin{itemize}
-\item Pendências da E01: imagem do sistema completo (não há motor físico) e método de simulação detalhado (Tab.~1 do relatório).
-\item O bloco \texttt{Brushless DC Machine} sai; no lugar entra um circuito de R, L e fontes controladas.
-\end{itemize}
-\column{.4\textwidth}\centering
-\includegraphics[height=3.2cm]{../relatorio/figuras/foto_motor.jpg}
+\capa{Fase 2 · Entrega 02}{Equivalente elétrico do motor BLDC}{MOONS' R42BLD30L3 representado só com circuitos no Typhoon HIL}
+
+\begin{frame}{Analogia força–tensão}
+\contexto{A parte mecânica do motor vira um circuito: o bloco \texttt{Brushless DC Machine} sai e entram R, L e fontes controladas.}
+\begin{columns}[c]
+\column{.5\textwidth}\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}ll@{}}\toprule
+\textbf{Motor} & \textbf{Circuito}\\\midrule
+torque & tensão\\
+velocidade & corrente\\
+inércia $J$ & indutor $L_J$\\
+atrito $B$ & resistor $R_B$\\
+torques $T_e$, $T_L$, $T_d$ & fontes controladas\\
+parte elétrica & mantida 1:1\\\bottomrule
+\end{tabular}
+\column{.44\textwidth}\centering
+\kpi[2.4cm]{100 V}{por N·m}\hspace{2pt}\kpi[2.4cm]{1 A}{= 1000 rpm}\\[6pt]
+\kpi[2.4cm]{34,56 mH}{$L_J$ (inércia)}\hspace{2pt}\kpi[2.4cm]{10,47 mΩ}{$R_B$ (atrito)}
 \end{columns}
 \end{frame}
 
-\begin{frame}{Analogia força–tensão (2 min)}
-\begin{columns}[T]\column{.5\textwidth}\small
-\begin{tabular}{ll}\toprule original & circuito\\\midrule
-torque (esforço) & tensão, $K_V$ = 100 V/(N·m)\\
-velocidade (fluxo) & corrente, 1 A = 1000 rpm\\
-inércia $J$ & indutor $L_J$ = 34,56 mH\\
-atrito $B$ & resistor $R_B$ = 10,47 mΩ\\
-$T_e$, carga, $T_d$ & fontes de tensão controladas\\
-FCEM $e_x$ & fonte controlada por $i_m$\\
-$R_s$, $L_s$, $V_s$, inversor & 1:1\\\bottomrule\end{tabular}
-\column{.48\textwidth}\small
-$L_J\dot i_m+R_Bi_m=v_{Te}-v_{carga}$\\
-$\Leftrightarrow\;J\dot\omega+B\omega=T_e-T_L-T_d$\\[4pt]
-\begin{itemize}
-\item Escala de tempo 1:1, em tempo real no HIL.
-\item $k/K_I$ = 5,027 V/A, o mesmo valor do \texttt{Emf} da E01.
-\item Polos, $\omega_n$, $\zeta$, $\tau_m$ e ganho estático idênticos à R2 da E01:\\ $-479{,}1\pm j227{,}9$ s$^{-1}$ em 4000 rpm.
-\end{itemize}
-\end{columns}
+\begin{frame}{O circuito tem a mesma dinâmica do motor}
+\contexto{As escalas foram escolhidas para que a equação do circuito seja a equação mecânica multiplicada por constantes.}
+\vspace{6pt}
+\begin{center}
+{\large $L_J\,\dfrac{di_m}{dt} + R_B\,i_m = v_{Te} - v_{carga}$ \quad$\Longleftrightarrow$\quad $J\,\dfrac{d\omega}{dt} + B\,\omega = T_e - T_L - T_d$}
+\end{center}
+\vspace{10pt}
+\kpi[3.05cm]{1:1}{escala de tempo}\hfill
+\kpi[3.05cm]{−479 ± j228}{polos (iguais à E01)}\hfill
+\kpi[3.05cm]{5,027 V/A}{$k/K_I$ (igual à E01)}\hfill
+\kpi[3.05cm]{iguais}{$\omega_n$, $\zeta$, $\tau_m$ e ganho}
 \end{frame}
 
-\begin{frame}{Circuito no TyphoonSim e inventário (2 min)}
-\centering\fig[.82\textwidth]{fig_circuito.pdf}\\[-2pt]
-\scriptsize Nativos: \texttt{Resistor}, \texttt{Inductor}, \texttt{Signal Controlled Voltage Source}, \texttt{Current/Voltage Measurement}, \texttt{Gain}, \texttt{SCADA Input}. \textbf{Uma} \texttt{C function} (25 linhas): trapézio $f(\theta_e)$, produtos $\omega f$ e $\sum f i$, $\theta_m$ envolto em $2\pi$. A biblioteca não tem FCEM trapezoidal nem girador fora do bloco BLDC.
+\begin{frame}{Implementação com a biblioteca nativa}
+\contexto{Só componentes nativos do Typhoon, mais uma C function para o que a biblioteca não tem: a FCEM trapezoidal.}
+\centering\fig[.64\textwidth]{fig_circuito.pdf}\\[2pt]
+\footnotesize\color{cz} R, L, fontes controladas, medições e SCADA Input · 1 C function de 25 linhas
 \end{frame}
 
 \begin{frame}{Modelo completo no Schematic Editor}
-\centering\includegraphics[height=.84\textheight]{../relatorio/figuras/foto_motor.jpg}
-\end{frame}
-
-\begin{frame}{Validação no VHIL/SCADA × E01 (2 min)}
-\centering\fig[.74\textwidth]{fig_validacao.pdf}\\
-\scriptsize 6 ensaios compilados para o Virtual HIL e gravados pelo \emph{Capture} do HIL SCADA (0,3 s, 50 kS/s). Critério: regime $\le$ 0,5 \%; tempos $\le$ 5 \% (grandes sinais), $\le$ 10 \% (degrau pequeno). \textbf{19 de 22 itens passam}.
-\end{frame}
-
-\begin{frame}{Fora do equilíbrio e diferenças}
-\begin{columns}\column{.55\textwidth}\fig{fig_correntes.pdf}
-\column{.43\textwidth}\scriptsize
-\begin{itemize}
-\item Desaceleração livre (Riccati): $\le$ 0,17 \%; $t_{1/2}$ +0,01 \%. Malha fechada e pulso MF: $\le$ 0,07 \%. Pulso MA: $\Delta n$ $-$0,8 \%.
-\item Condução descontínua ($d$ = 0,55): termina em 0,52 ms contra 0,51 ms.
-\item PWM em tempo real aplica $d_{ef}$ = 0,759 (TyphoonSim: 0,75): identificado pelo $n_{ss}$ e usado na E01.
-\item Fora: $t_{63}$/$t_s$ da partida ($-$7 a $-$8 \%) e ganho do degrau pequeno (+2,9 \%): vêm do modulador; o mesmo \texttt{.tse} no TyphoonSim dá +0,07 \% e +1,4 \%.
+\begin{columns}[c]
+\column{.4\textwidth}\centering
+\includegraphics[height=.82\textheight]{../relatorio/figuras/foto_motor.jpg}
+\column{.56\textwidth}
+\contexto{Não há motor físico: o sistema completo é este modelo, que serve de planta para as entregas 3 e 4.}
+\begin{itemize}\setlength{\itemsep}{8pt}\small
+\item Inversor trifásico e fonte de 36 V
+\item Fases com $R_s$, $L_s$ e FCEM
+\item Malha mecânica equivalente ($L_J$, $R_B$)
+\item Painel no HIL SCADA para mudar $k$ e $R$ com o modelo rodando
 \end{itemize}
 \end{columns}
 \end{frame}
 
-\begin{frame}{Sensibilidade no SCADA (1 min)}
-\begin{columns}[T]
-\column{.52\textwidth}\centering\fig{fig_sensibilidade.pdf}\\[-2pt]
-{\tiny TyphoonSim: $n_{ss}$ a $\le$ 0,4 \% do trifásico da E01; tendência a $\le$ 1,6 \% da Tab.~5.}
-\column{.46\textwidth}\scriptsize
-\textbf{Executado no VHIL/SCADA} (painel, modelo rodando):\\[3pt]
-\begin{tabular}{@{}lccc@{}}\toprule
-Ajuste & $n_{ss}$ & razão & E01\\\midrule
-nominal & 3458 & 1,000 & 1,000\\
-$k\times$0,896 & 3570 & 1,032 & 1,024\\
-$k\times$1,3375 & 3068 & 0,887 & 0,891\\
-$\Delta R=-1{,}1$ & 3700 & 1,070 & 1,077\\
-$\Delta R=+0{,}63$ & 3319 & 0,960 & 0,960\\\bottomrule
-\end{tabular}\\[4pt]
-Diferença $\le$ 0,8 \%. \textbf{O equivalente responde aos parâmetros como o original}; $J$ só muda recompilando ($L_J$).
+\begin{frame}{Validação no Virtual HIL contra a E01}
+\contexto{Os 6 ensaios da E01 foram repetidos no Virtual HIL e gravados pelo Capture do HIL SCADA.}
+\begin{columns}[c]
+\column{.64\textwidth}\fig{fig_validacao.pdf}
+\column{.32\textwidth}\centering
+\kpi{19 de 22}{itens dentro do critério}\\[8pt]
+{\footnotesize\raggedright Critério: regime ≤ 0,5 \%; tempos ≤ 5 \% (grandes sinais) e ≤ 10 \% (degrau pequeno).\par}
 \end{columns}
 \end{frame}
 
-\begin{frame}{Demonstração e repetibilidade}
-\small
-\begin{enumerate}
-\item Abrir \texttt{modelo\_equivalente.tse} (Typhoon 2026.3, perspectiva TyphoonSim para os ensaios, tempo real para o SCADA) e escolher \texttt{g07\_modo} em \emph{Model initialization}.
-\item Compilar para o Virtual HIL e carregar \texttt{painel\_equivalente.cus} no HIL SCADA.
-\item Ao vivo: $n\approx$ 3458 rpm; \texttt{G07\_k\_fator} = 1,3375 → $\approx$ 3068 rpm; \texttt{G07\_dR} = $-1{,}1$ Ω → $\approx$ 3700 rpm.
-\item Tudo está em um único arquivo: \texttt{modelo\_equivalente.tse}.
-\end{enumerate}
-\vspace{4pt}
-\textbf{Próxima entrega:} a instrumentação mede $i_m$ (velocidade), $v_{Te}$ (torque) e as correntes de fase nesta planta.
+\begin{frame}{Onde o equivalente difere, e por quê}
+\contexto{Fora do equilíbrio o equivalente segue a E01; as diferenças restantes vêm do PWM em tempo real, não do circuito.}
+\fig[.88\textwidth]{fig_correntes.pdf}\\[6pt]
+\kpi[3.05cm]{≤ 0,17 \%}{desaceleração livre}\hfill
+\kpi[3.05cm]{≤ 0,07 \%}{malha fechada}\hfill
+\kpivm[3.05cm]{0,759}{$d$ efetivo (0,75 no Sim)}\hfill
+\kpivm[3.05cm]{−7 \%}{tempos da partida}
 \end{frame}
+
+\begin{frame}{Sensibilidade aos parâmetros}
+\contexto{Com o modelo rodando, $k$ e $R$ foram alterados pelo painel do SCADA e comparados com a sensibilidade da E01.}
+\fig[.86\textwidth]{fig_sensibilidade.pdf}\\[6pt]
+\kpi[3.05cm]{0,887 · 0,891}{$k\times$1,34: HIL · E01}\hfill
+\kpi[3.05cm]{1,070 · 1,077}{$R - 1{,}1$ Ω: HIL · E01}\hfill
+\kpi[3.05cm]{0,960 · 0,960}{$R + 0{,}63$ Ω: HIL · E01}\hfill
+\kpi[3.05cm]{≤ 0,8 \%}{maior diferença}
+\end{frame}
+
+\begin{frame}{Conclusões}
+\contexto{O que o equivalente elétrico entrega para as próximas etapas.}
+\vspace{10pt}
+\pontos{{\color{az}\Large\bfseries Equivalência}}{Mesma equação, mesmos polos e escala de tempo 1:1.}{{\color{az}\Large\bfseries Validação}}{19 de 22 itens; os 3 restantes vêm do modulador PWM.}{{\color{az}\Large\bfseries Sensibilidade}}{$k$ e $R$ afetam a velocidade como na E01 (≤ 0,8 \%).}
+\vspace{22pt}
+\destaque{O circuito substitui o motor e é a planta das entregas 3 e 4.}
+\end{frame}
+
 \end{document}

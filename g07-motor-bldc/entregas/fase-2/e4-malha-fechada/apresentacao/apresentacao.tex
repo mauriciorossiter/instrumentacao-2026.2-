@@ -1,9 +1,9 @@
-% G07 - Fase 2, Entrega 03 - slides de apoio (10 min: 7 de exposicao + 3 de perguntas)
-\documentclass[aspectratio=169,10pt]{beamer}
+% G07 - Fase 2, Entrega 04 - apresentacao
+\documentclass[aspectratio=169,11pt]{beamer}
 \usetheme{default}
 \usepackage{fontspec}
 \setsansfont{TeX Gyre Heros}
-\usepackage{booktabs,amsmath}
+\usepackage{booktabs,amsmath,tikz,array}
 \usepackage{newunicodechar}
 \newunicodechar{Ω}{\ensuremath{\Omega}}
 \newunicodechar{→}{\ensuremath{\to}}
@@ -13,89 +13,138 @@
 \newunicodechar{≤}{\ensuremath{\le}}
 \newunicodechar{°}{\ensuremath{^\circ}}
 \newunicodechar{µ}{\ensuremath{\mu}}
-\newunicodechar{Δ}{\ensuremath{\Delta}}
-\definecolor{az}{HTML}{1F5FA8}\definecolor{vm}{HTML}{C0392B}
-\setbeamercolor{frametitle}{fg=az}\setbeamercolor{structure}{fg=az}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{−}{\ensuremath{-}}
+\definecolor{az}{HTML}{1F4E8C}\definecolor{azc}{HTML}{E8F0FA}
+\definecolor{vm}{HTML}{C0392B}\definecolor{cz}{HTML}{5A6270}
+\setbeamercolor{normal text}{fg=black!85}
+\setbeamercolor{structure}{fg=az}
+\setbeamercolor{frametitle}{fg=az}
+\setbeamerfont{frametitle}{size=\Large,series=\bfseries}
 \setbeamertemplate{navigation symbols}{}
-\setbeamertemplate{footline}{\hfill\scriptsize\color{gray}G07 · ECOM060 · E04 \quad\insertframenumber\hspace{1em}\vspace{4pt}}
+\setbeamertemplate{itemize item}{\color{az}\rule[0.25ex]{0.6ex}{0.6ex}}
+\setbeamertemplate{frametitle}{\vspace{2pt}\insertframetitle\par\vspace{1pt}{\color{az}\rule{2.2cm}{2pt}}\vspace{-4pt}}
+\setbeamertemplate{footline}{\leavevmode\hbox to\paperwidth{\hspace{12pt}\scriptsize\color{cz}\rodape\hfill\insertframenumber\hspace{12pt}}\vspace{6pt}}
 \newcommand{\fig}[2][\textwidth]{\includegraphics[width=#1]{../relatorio/figuras/#2}}
+\newcommand{\kpi}[3][2.55cm]{\begin{tikzpicture}\node[fill=azc,rounded corners=3pt,inner sep=6pt,text width=#1,align=center]{{\Large\bfseries\color{az}#2}\\[1pt]{\scriptsize\color{cz}#3}};\end{tikzpicture}}
+\newcommand{\kpivm}[3][2.55cm]{\begin{tikzpicture}\node[fill=vm!10,rounded corners=3pt,inner sep=6pt,text width=#1,align=center]{{\Large\bfseries\color{vm}#2}\\[1pt]{\scriptsize\color{cz}#3}};\end{tikzpicture}}
+\newcommand{\capa}[3]{{\setbeamertemplate{footline}{}\setbeamercolor{background canvas}{bg=az}
+\begin{frame}\color{white}\vspace{1.4cm}
+{\small #1}\\[10pt]{\huge\bfseries #2}\\[6pt]{\Large #3}\\[24pt]
+{\color{white}\rule{3cm}{1.5pt}}\\[10pt]
+\small Nícolas De Almeida Souza · Lucas Momesso Alves · Cláudio Henrique da Costa Santos
+\end{frame}}}
+\newcommand{\destaque}[1]{\begin{center}\colorbox{azc}{\parbox{.9\textwidth}{\centering\vspace{5pt}#1\vspace{5pt}}}\end{center}}
+\newcommand{\pontos}[6]{\begin{tabular}{@{}>{\raggedright\arraybackslash}p{.3\textwidth}@{\hspace{.035\textwidth}}>{\raggedright\arraybackslash}p{.3\textwidth}@{\hspace{.035\textwidth}}>{\raggedright\arraybackslash}p{.3\textwidth}@{}}
+#1 & #3 & #5\\[4pt]\small #2 & \small #4 & \small #6\end{tabular}}
+\newcommand{\contexto}[1]{{\small\color{cz}#1}\par\vspace{4pt}}
+\newcommand{\rodape}{Malha fechada com instrumentação real}
 \begin{document}
 
-\begin{frame}
-\vspace{1.2cm}
-{\small\color{vm} Grupo G07 · ECOM060 Instrumentação Eletrônica · UFAL 2026.2 · Fase 2, Entrega 04}\\[6pt]
-{\LARGE\bfseries\color{az} Malha fechada com instrumentação real:\\ controle de corrente do motor BLDC}\\[10pt]
-Nícolas De Almeida Souza · Lucas Momesso Alves · Cláudio Henrique da Costa Santos\\[14pt]
-\small Planta da E02 no Virtual HIL · sensor Hall ACS712 da E03 nas fases a e b · PI nativo do Typhoon.
-\end{frame}
+\capa{Fase 2 · Entrega 04}{Malha fechada com instrumentação real}{Controle de corrente do motor BLDC}
 
-\begin{frame}{Especificação e controlador ideal (2 min)}
-\begin{columns}[T]\column{.5\textwidth}\scriptsize
-\textbf{Malha de corrente} = malha de torque ($T_e = k\,i$), interna à de velocidade do ventilador.\\[3pt]
-\begin{tabular}{@{}ll@{}}\toprule
-Erro estacionário & $\le$ 30 mA (2 \%)\\
-Acomodação ($\pm$5 \%) & $\le$ 3 ms\\
-Sobressinal & $\le$ 10 \%\\
-Esforço & desvio de $d \le$ 0,08; sat. $\le$ 1 \%\\
-Rejeição (−10 \% em $d$) & $|\Delta i| \le$ 0,3 A, $\le$ 5 ms\\\bottomrule
-\end{tabular}\\[5pt]
-PI por cancelamento do polo $R_{LL}/L_{LL}$: $L(s) = \frac{\omega_c}{s}e^{-s\tau}$, $\omega_c$ = 2500 rad/s ⇒ $K_p$ = 0,264, $K_i$ = 222.\\
-Previsto: $t_s$ = 1,2 ms, MF 83° (ideal) / 74° (real), MG 22 / 15 dB, $e_{ss}$ = 0.
-\column{.48\textwidth}\fig{fig_bode.pdf}\\[4pt]\scriptsize
-Ideal no VHIL: $t_s$ = 1,4 ms, $M_p$ = 5 \%, $e_{ss}$ = 9 mA, afundamento $-$0,17 A (previsto $-$0,22 A).
-\end{columns}
-\end{frame}
-
-\begin{frame}{Referência × medido × real (2 min)}
-\begin{columns}[T]\column{.62\textwidth}\fig{fig_r3.pdf}
-\column{.36\textwidth}\scriptsize
-\begin{itemize}
-\item O PI zera o erro \textbf{da medida} (5 mA); a \textbf{planta} fica 23 mA abaixo.
-\item Causa: \textbf{ruído retificado} na fase que não conduz: $|n|$ tem média $\sigma\sqrt{2/\pi}$ ⇒ viés de ≈16 mA.
-\item Atraso de 60 µs: MF 83° → 74°, sobressinal 5 → 7 \%.
-\item Esforço igual: a média por período tira a ondulação de 10 kHz.
-\item Todos os critérios atendidos, com pouca folga no erro.
-\end{itemize}
-\end{columns}
-\end{frame}
-
-\begin{frame}{Intensidade das características}
-\fig{fig_mapa.pdf}\\[3pt]
-\scriptsize
-\begin{columns}[T]\column{.5\textwidth}
-\textbf{Zero não compensado}: a planta vai a $i^* - \frac23\delta$; o erro falha com \textbf{1,4 mV} (previsto 1,2 mV). Com 150 mV a medida marca 3 A com $i$ = 0: colapso.
+\begin{frame}{Por que controlar a corrente}
+\contexto{A E04 fecha a malha sobre a corrente medida pelo instrumento da E03 e compara com a medição ideal.}
+\begin{columns}[c]
 \column{.48\textwidth}
-\textbf{Ruído}: o viés retificado falha o erro com \textbf{15 mV} (previsto 19). \textbf{RC}: abaixo de ≈1 kHz atenua as correntes de 247 Hz e a planta passa da referência (1,91 A com 0,3 kHz).
-\end{columns}
-\end{frame}
-
-\begin{frame}{Ação de projeto: autocalibração do zero (SCADA ao vivo)}
-\begin{columns}[T]\column{.55\textwidth}\fig{fig_varreduras.pdf}
-\column{.43\textwidth}\scriptsize
-5 ms com $d$ = 0 na partida ⇒ $i$ = 0 ⇒ o processamento mede o zero e passa a usá-lo (correção calculada, 2.5.3).\\[3pt]
-Erro com zero de 0 a 50 mV: \textbf{26–29 mA} (sem a ação: 22, 132, 282 mA). Limite do erro: 1,4 → \textbf{97 mV}.\\[3pt]
-Custo: ~15 linhas de C, 5 ms sem torque por calibração, mesmo esforço, nenhum atraso na malha.\\[3pt]
-Ao vivo: \texttt{G07\_fb\_real}, \texttt{G07\_corr} = 0, \texttt{G07\_ruido} = 100, \texttt{G07\_fc\_rc} = 0.3.
-\end{columns}
-\end{frame}
-
-\begin{frame}{Síntese (1 min)}
-\small
-\begin{itemize}
-\item Em malha fechada o controle zera o erro \textbf{da medida}: todo viés do instrumento passa inteiro para a planta.
-\item Decisivo no nosso sistema: \textbf{desvio de zero} (falha com 1,4 mV, menos que a deriva térmica) e \textbf{ruído}, que $|\cdot|$ transforma em viés (falha com 15 mV).
-\item Banda só pesa perto da frequência elétrica; atraso e esforço estão folgados.
-\item Projeto: calibrar o zero com o inversor parado, ruído baixo antes de retificar (ou usar a posição para escolher a fase), filtro anti-aliasing $>$ 4 $f_{e,max}$.
+\begin{itemize}\setlength{\itemsep}{12pt}
+\item $T_e = k\,i$: controlar a corrente é \textbf{controlar o torque}
+\item Malha interna à de velocidade do ventilador
+\item Medição: sensor Hall da E03 nas fases \textbf{a} e \textbf{b}; $i_c = -(i_a + i_b)$
+\item Controlador: \textbf{PI nativo} do Typhoon
 \end{itemize}
+\column{.47\textwidth}\centering
+\renewcommand{\arraystretch}{1.4}\small
+\begin{tabular}{@{}lr@{}}\toprule
+\textbf{Critério} & \textbf{Limite}\\\midrule
+Erro estacionário & ≤ 30 mA\\
+Acomodação (±5 \%) & ≤ 3 ms\\
+Sobressinal & ≤ 10 \%\\
+Esforço (desvio de $d$) & ≤ 0,08\\
+Queda com −10 \% na tensão & ≤ 0,3 A\\\bottomrule
+\end{tabular}
+\end{columns}
 \end{frame}
 
-\begin{frame}{Repetibilidade}
-\small
-\begin{enumerate}
-\item Typhoon HIL 2026.3: \texttt{modelo\_malha\_fechada.tse} (tempo real) e \texttt{painel\_malha\_fechada.cus}.
-\item Bloco do \emph{Model initialization} com \texttt{g07\_modo = 5} e \texttt{g07\_cl\_ens} (1 = R3; 2, 3, 4 = varredura); compilar; \emph{Reload Model} em Virtual HIL.
-\item Painel: \texttt{G07\_fb\_real} (0 ideal / 1 real), \texttt{G07\_autocal}. Capture: preset Default (R3) ou R4\_varredura; T↑ e ▶.
-\item Esperado: real ⇒ medida 1,500 A, planta ≈ 1,478 A; tabelas 2 e 3 do relatório.
-\end{enumerate}
+\begin{frame}{Projeto do PI: cancelamento do polo elétrico}
+\contexto{Com o zero do PI sobre o polo R/L do motor, a malha aberta vira um integrador com atraso: basta escolher o corte.}
+\fig[.9\textwidth]{fig_bode.pdf}\\[4pt]
+\kpi[3.05cm]{2500 rad/s}{frequência de corte}\hfill
+\kpi[3.05cm]{0,264 · 222}{$K_p$ · $K_i$}\hfill
+\kpi[3.05cm]{83° / 74°}{MF ideal / real}\hfill
+\kpi[3.05cm]{1,2 ms}{acomodação prevista}
 \end{frame}
+
+\begin{frame}{Com medição ideal, o projeto se confirma}
+\contexto{Primeiro a malha roda com a medição ideal (ganho 1), para validar o projeto sem a influência do sensor.}
+\vspace{10pt}
+\centering
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{@{}lccc@{}}\toprule
+ & \textbf{Previsto} & \textbf{VHIL} & \textbf{Critério}\\\midrule
+Acomodação & 1,2 ms & \textbf{1,4 ms} & ≤ 3 ms\\
+Sobressinal & — & \textbf{5 \%} & ≤ 10 \%\\
+Erro estacionário & 0 & \textbf{9 mA} & ≤ 30 mA\\
+Queda com −10 \% na tensão & −0,22 A & \textbf{−0,17 A} & ≤ 0,3 A\\\bottomrule
+\end{tabular}
+\end{frame}
+
+\begin{frame}{Com o sensor real, a planta fica abaixo da referência}
+\contexto{Mesma malha, agora realimentada pela cadeia real. Referência de 1,5 A; a corrente real é lida direto na planta.}
+\begin{columns}[c]
+\column{.6\textwidth}\fig{fig_r3.pdf}
+\column{.32\textwidth}\centering
+\kpi{1,500 A}{medida (referência)}\\[6pt]
+\kpivm{1,478 A}{corrente real}\\[8pt]
+\footnotesize\raggedright O PI zera o erro \textbf{da medida}, não o da planta.
+\end{columns}
+\end{frame}
+
+\begin{frame}{A causa: ruído retificado}
+\contexto{Por que o controlador entrega 23 mA a menos, mesmo com o erro da medida quase nulo.}
+\begin{columns}[c]
+\column{.55\textwidth}
+\begin{itemize}\setlength{\itemsep}{8pt}
+\item A grandeza controlada usa $|i_a|$, $|i_b|$, $|i_c|$
+\item Na fase que não conduz, $i = 0$, mas a medida tem ruído
+\item $|\text{ruído}|$ tem média positiva: $\sigma\sqrt{2/\pi}$
+\item O PI “corrige” esse viés e reduz a corrente real
+\end{itemize}
+\column{.4\textwidth}\centering
+\kpivm[3.2cm]{−23 mA}{erro na planta}\\[6pt]
+\kpi[3.2cm]{74°}{margem de fase (era 83°)}\\[6pt]
+\kpi[3.2cm]{7 \%}{sobressinal (era 5 \%)}
+\end{columns}
+\vspace{4pt}\n\destaque{Todos os critérios atendidos, mas com pouca folga no erro estacionário.}
+\end{frame}
+
+\begin{frame}{Até onde cada característica pode piorar}
+\contexto{Zero, ruído e filtro RC foram varridos em 4 níveis cada, em uma única captura, para achar o limite de cada critério.}
+\fig[.84\textwidth]{fig_mapa.pdf}\\[2pt]
+\kpivm[2.9cm]{1,4 mV}{zero não compensado}\hfill
+\kpivm[2.9cm]{15 mV}{ruído}\hfill
+\kpivm[2.9cm]{≈ 1 kHz}{filtro RC}\hfill
+\begin{minipage}[c]{2.8cm}\raggedright\scriptsize\color{cz} Valores a partir dos quais o erro estacionário passa de 30 mA.\end{minipage}
+\end{frame}
+
+\begin{frame}{Ação de projeto: autocalibração do zero}
+\contexto{O zero é a característica mais crítica. A correção passa a usar o zero medido no próprio sistema, não o de catálogo.}
+\fig[.88\textwidth]{fig_varreduras.pdf}\\[2pt]
+\begin{columns}[c]
+\column{.44\textwidth}\footnotesize
+5 ms com o inversor parado na partida: $i = 0$, então o processamento mede o zero e passa a usá-lo.\\[4pt]
+{\footnotesize\color{cz} Custo: 5 ms sem torque, ~15 linhas de C.}
+\column{.52\textwidth}\centering
+\kpivm[2.4cm]{1,4 mV}{limite antes}\hspace{4pt}\raisebox{0.45cm}{\color{az}\Large$\rightarrow$}\hspace{4pt}\kpi[2.4cm]{97 mV}{limite depois}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Conclusões}
+\contexto{O que muda quando o instrumento passa a fazer parte da malha.}
+\vspace{14pt}
+\pontos{{\color{vm}\Large\bfseries Zero}}{Decisivo: falha com 1,4 mV, menos que a deriva térmica do sensor.}{{\color{vm}\Large\bfseries Ruído}}{O módulo transforma ruído em viés: falha com 15 mV.}{{\color{az}\Large\bfseries Banda e atraso}}{Folgados: só pesam perto da frequência elétrica.}
+\vspace{22pt}
+\destaque{Em malha fechada, todo viés do instrumento passa inteiro para a planta.}
+\end{frame}
+
 \end{document}

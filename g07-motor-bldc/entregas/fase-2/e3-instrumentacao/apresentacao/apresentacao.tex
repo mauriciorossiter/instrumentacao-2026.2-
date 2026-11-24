@@ -1,9 +1,9 @@
-% G07 - Fase 2, Entrega 03 - slides de apoio (10 min: 7 de exposicao + 3 de perguntas)
-\documentclass[aspectratio=169,10pt]{beamer}
+% G07 - Fase 2, Entrega 03 - apresentacao
+\documentclass[aspectratio=169,11pt]{beamer}
 \usetheme{default}
 \usepackage{fontspec}
 \setsansfont{TeX Gyre Heros}
-\usepackage{booktabs,amsmath}
+\usepackage{booktabs,amsmath,tikz,array}
 \usepackage{newunicodechar}
 \newunicodechar{Ω}{\ensuremath{\Omega}}
 \newunicodechar{→}{\ensuremath{\to}}
@@ -13,82 +13,125 @@
 \newunicodechar{≤}{\ensuremath{\le}}
 \newunicodechar{°}{\ensuremath{^\circ}}
 \newunicodechar{µ}{\ensuremath{\mu}}
-\definecolor{az}{HTML}{1F5FA8}\definecolor{vm}{HTML}{C0392B}
-\setbeamercolor{frametitle}{fg=az}\setbeamercolor{structure}{fg=az}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{−}{\ensuremath{-}}
+\definecolor{az}{HTML}{1F4E8C}\definecolor{azc}{HTML}{E8F0FA}
+\definecolor{vm}{HTML}{C0392B}\definecolor{cz}{HTML}{5A6270}
+\setbeamercolor{normal text}{fg=black!85}
+\setbeamercolor{structure}{fg=az}
+\setbeamercolor{frametitle}{fg=az}
+\setbeamerfont{frametitle}{size=\Large,series=\bfseries}
 \setbeamertemplate{navigation symbols}{}
-\setbeamertemplate{footline}{\hfill\scriptsize\color{gray}G07 · ECOM060 · E03 \quad\insertframenumber\hspace{1em}\vspace{4pt}}
+\setbeamertemplate{itemize item}{\color{az}\rule[0.25ex]{0.6ex}{0.6ex}}
+\setbeamertemplate{frametitle}{\vspace{2pt}\insertframetitle\par\vspace{1pt}{\color{az}\rule{2.2cm}{2pt}}\vspace{-4pt}}
+\setbeamertemplate{footline}{\leavevmode\hbox to\paperwidth{\hspace{12pt}\scriptsize\color{cz}\rodape\hfill\insertframenumber\hspace{12pt}}\vspace{6pt}}
 \newcommand{\fig}[2][\textwidth]{\includegraphics[width=#1]{../relatorio/figuras/#2}}
+\newcommand{\kpi}[3][2.55cm]{\begin{tikzpicture}\node[fill=azc,rounded corners=3pt,inner sep=6pt,text width=#1,align=center]{{\Large\bfseries\color{az}#2}\\[1pt]{\scriptsize\color{cz}#3}};\end{tikzpicture}}
+\newcommand{\kpivm}[3][2.55cm]{\begin{tikzpicture}\node[fill=vm!10,rounded corners=3pt,inner sep=6pt,text width=#1,align=center]{{\Large\bfseries\color{vm}#2}\\[1pt]{\scriptsize\color{cz}#3}};\end{tikzpicture}}
+\newcommand{\capa}[3]{{\setbeamertemplate{footline}{}\setbeamercolor{background canvas}{bg=az}
+\begin{frame}\color{white}\vspace{1.4cm}
+{\small #1}\\[10pt]{\huge\bfseries #2}\\[6pt]{\Large #3}\\[24pt]
+{\color{white}\rule{3cm}{1.5pt}}\\[10pt]
+\small Nícolas De Almeida Souza · Lucas Momesso Alves · Cláudio Henrique da Costa Santos
+\end{frame}}}
+\newcommand{\destaque}[1]{\begin{center}\colorbox{azc}{\parbox{.9\textwidth}{\centering\vspace{5pt}#1\vspace{5pt}}}\end{center}}
+\newcommand{\pontos}[6]{\begin{tabular}{@{}>{\raggedright\arraybackslash}p{.3\textwidth}@{\hspace{.035\textwidth}}>{\raggedright\arraybackslash}p{.3\textwidth}@{\hspace{.035\textwidth}}>{\raggedright\arraybackslash}p{.3\textwidth}@{}}
+#1 & #3 & #5\\[4pt]\small #2 & \small #4 & \small #6\end{tabular}}
+\newcommand{\contexto}[1]{{\small\color{cz}#1}\par\vspace{4pt}}
+\newcommand{\rodape}{Instrumentação em malha aberta}
 \begin{document}
 
-\begin{frame}
-\vspace{1.2cm}
-{\small\color{vm} Grupo G07 · ECOM060 Instrumentação Eletrônica · UFAL 2026.2 · Fase 2, Entrega 03}\\[6pt]
-{\LARGE\bfseries\color{az} Instrumentação em malha aberta:\\ corrente de fase do motor BLDC}\\[10pt]
-Nícolas De Almeida Souza · Lucas Momesso Alves · Cláudio Henrique da Costa Santos\\[14pt]
-\small Planta: equivalente elétrico da E02 no Virtual HIL. Sensor: efeito Hall (ACS712-20A), base: Aguirre, Caps. 2–7.
+\capa{Fase 2 · Entrega 03}{Instrumentação em malha aberta}{Medindo a corrente de fase do motor BLDC}
+
+\begin{frame}{O que o instrumento precisa medir}
+\contexto{A corrente de fase simulada no VHIL (forma de 120°, 244 Hz, ondulação de PWM de 10 kHz) define os requisitos do instrumento.}
+\fig[.9\textwidth]{fig_demanda.pdf}\\[4pt]
+\kpi[3.05cm]{±10 A}{faixa (partida 6,4 A)}\hfill
+\kpi[3.05cm]{3,5 kHz}{banda (13.ª harmônica)}\hfill
+\kpi[3.05cm]{≤ 25 mA}{viés (2 \% do nominal)}\hfill
+\kpi[3.05cm]{≤ 100 µs}{atraso (1 ciclo PWM)}
 \end{frame}
 
-\begin{frame}{Demanda e escolha do sensor (2 min)}
-\begin{columns}[T]\column{.56\textwidth}\fig{fig_demanda.pdf}\\[2pt]
-\scriptsize Ensaio (a) no VHIL: forma de 120°, $f_e$ = 244 Hz, ondulação de PWM de 0,68 A p-p a 10 kHz.
-\column{.42\textwidth}\scriptsize
-\begin{tabular}{@{}ll@{}}\toprule
-Faixa & $\pm$10 A (pico de 6,4 A na partida)\\
-Banda & 0–3,5 kHz (até a 13.ª harmônica)\\
-Resolução & $\le$ 40 mA ($\Delta i$ do pulso / 5)\\
-Viés & $\le$ 25 mA (2 \% de 1,14 A)\\
-Aleatório & $\le$ 70 mA rms\\
-Atraso & $\le$ 100 µs (1 período de PWM)\\\bottomrule
-\end{tabular}\\[6pt]
-\textbf{Hall} (livro, 7.6 e 8.2.1): isolado, saída em tensão, sem amplificador externo. ACS712-20A: 2,5 V + 100 mV/A, 80 kHz, $\pm$1,5 \%; a versão de 5 A saturaria.
+\begin{frame}{Sensor escolhido: efeito Hall ACS712-20A}
+\contexto{Entre o shunt e o Hall, o Hall é o mais simples de ligar ao inversor: isolado e já com saída em tensão.}
+\begin{columns}[c]
+\column{.52\textwidth}
+\begin{itemize}\setlength{\itemsep}{12pt}
+\item \textbf{Isolado} do circuito de potência
+\item \textbf{Saída em tensão}, sem amplificador externo
+\item Versão de \textbf{20 A}: a de 5 A saturaria na partida
+\item Base: Aguirre, seções 7.6 e 8.2.1
+\end{itemize}
+\column{.4\textwidth}\centering
+\kpi{100 mV/A}{sensibilidade}\\[6pt]
+\kpi{80 kHz}{banda}\\[6pt]
+\kpi{±1,5 \%}{erro total}
 \end{columns}
 \end{frame}
 
-\begin{frame}{Sensor real e circuitos auxiliares (2 min)}
-\fig{fig_cadeia.pdf}\\[2pt]
-\scriptsize
-\begin{columns}[T]\column{.5\textwidth}
-\textbf{Sensor (Cap. 2–5):} sensibilidade +1,5 \% e zero +10 mV (calibração); temperatura $T$ = 60 °C \emph{modificante} ($-$0,004 mV/A/°C) e \emph{interferente} ($-$0,07 mV/°C); 1.ª ordem de 80 kHz; ruído de 10 mV rms.
-\column{.48\textwidth}
-\textbf{Condicionamento (R3):} saída raciométrica = $V_{ref}$ do ADC (insensibilidade inerente); RC de 15 kHz (filtragem); ADC de 12 bits a 20 kS/s síncrono com a portadora; correção calculada de zero/ganho/T; média por período de PWM (filtragem discreta).
-\end{columns}\vspace{3pt}\par
-Cada característica: uma \texttt{C function} + um \texttt{SCADA Input}; caminho ideal: \texttt{Gain} = 1.
-\end{frame}
-
-\begin{frame}{Ensaio ideal × real (2 min)}
-\begin{columns}[T]\column{.6\textwidth}\fig{fig_ensaios.pdf}
-\column{.38\textwidth}\scriptsize
-\begin{itemize}
-\item Ideal = grandeza real em todas as amostras.
-\item Real: viés de 0,5 a 2 mA; erro rms de 58 mA (5 \%) depois de descontado o atraso de 60 µs.
-\item Corrente nula (b): 1,2 mA; sem correção, 75,5 mA.
-\item Pulso (c): $\Delta i_{rms}$ = 0,208 A, contra 0,209 A.
-\item Atende ao R1 em viés, resolução e atraso.
+\begin{frame}{A cadeia de medição no Typhoon HIL}
+\contexto{Cada bloco é uma C function com uma característica do sensor ou do condicionamento, ajustável pelo SCADA. O caminho ideal é um ganho 1.}
+\fig[.82\textwidth]{fig_cadeia.pdf}\\[0pt]
+\begin{columns}[T]
+\column{.46\textwidth}
+{\color{vm}\bfseries Imperfeições do sensor}
+\begin{itemize}\footnotesize
+\item Erros de ganho e de zero
+\item Temperatura de 60 °C
+\item Banda finita e ruído
+\end{itemize}
+\column{.46\textwidth}
+{\color{az}\bfseries Condicionamento}
+\begin{itemize}\footnotesize
+\item Filtro RC de 15 kHz
+\item ADC de 12 bits síncrono com o PWM
+\item Correção calculada + média por período
 \end{itemize}
 \end{columns}
 \end{frame}
 
-\begin{frame}{Contribuição de cada característica}
-\fig{fig_contribuicoes.pdf}\\[2pt]
-\scriptsize Uma captura só: cada bloco calcula também a medição com \emph{apenas} a sua característica. O zero domina o viés (75 mA, não sai com média); o ruído e o ADC dominam o erro instantâneo, que a média por período reduz.
-\end{frame}
-
-\begin{frame}{Exacerbação e síntese (1 min + SCADA ao vivo)}
-\begin{columns}[T]\column{.58\textwidth}\fig{fig_exacerbacao.pdf}
-\column{.4\textwidth}\scriptsize
-Previsão antes de simular: banda $\sum|1-H|^2|I|^2$; ruído $\sigma_v/S$; ADC $q/\sqrt{12}$. Concordam até 4 bits, quando $q$ = 3,1 A passa o sinal e a leitura vai a zero.\\[4pt]
-\textbf{Síntese:} o \textbf{desvio de zero} é o mais nocivo em uso real (viés sistemático para torque e potência; exige correção calculada). Exagerado, o \textbf{ruído} é o pior (10 A rms com 1 V): disparos falsos de proteção. A banda baixa atrasa e apaga a comutação (malha de corrente).\\[4pt]
-Ao vivo: \texttt{G07\_corr} = 0, \texttt{G07\_ruido} = 200, \texttt{G07\_fc\_sensor} = 0,5, \texttt{G07\_bits} = 4.
+\begin{frame}{A medição real atende à demanda}
+\contexto{Três ensaios no VHIL (partida, corrente nula e pulso de carga) comparam a medição ideal com a real.}
+\begin{columns}[c]
+\column{.66\textwidth}\fig{fig_ensaios.pdf}
+\column{.28\textwidth}\centering
+\kpi{≤ 2 mA}{viés}\\[6pt]
+\kpi{58 mA}{erro rms (5 \%)}\\[6pt]
+\kpi{60 µs}{atraso}
 \end{columns}
 \end{frame}
 
-\begin{frame}{Repetibilidade}
-\small
-\begin{enumerate}
-\item Typhoon HIL 2026.3; \texttt{modelo\_instrumentado.tse} (tempo real) e \texttt{painel\_instrumentado.cus}.
-\item Ensaio por \texttt{g07\_modo} (1, 2, 3) no \emph{Model initialization}; compilar; \emph{Reload Model} no SCADA (Virtual HIL).
-\item Capture: preset \textbf{Default} para o R4 (T↑ com a simulação parada, depois ▶); preset \textbf{R5} em regime.
-\item Esperado: viés ≈ 1 mA, erro ≈ 58 mA, atraso 60 µs; R5 da Tab. 6 do relatório.
-\end{enumerate}
+\begin{frame}{O desvio de zero domina o viés}
+\contexto{Para saber qual característica pesa mais, cada bloco também calcula a medição só com a sua imperfeição.}
+\fig[.8\textwidth]{fig_contribuicoes.pdf}\\[0pt]
+\begin{columns}[c]
+\column{.5\textwidth}\footnotesize
+O zero desloca o valor médio e não sai com média.\\[4pt]
+Ruído e ADC pesam no erro instantâneo, que a média por período reduz.
+\column{.46\textwidth}\centering
+\kpivm{75,5 mA}{sem correção, com $i = 0$}\hspace{4pt}\kpi{1,2 mA}{com correção}
+\end{columns}
 \end{frame}
+
+\begin{frame}{Exagerando as características}
+\contexto{Banda, ruído e bits do ADC foram levados a níveis extremos, com o erro previsto por fórmula antes de cada simulação.}
+\begin{columns}[c]
+\column{.64\textwidth}\fig{fig_exacerbacao.pdf}
+\column{.29\textwidth}
+\begin{itemize}\setlength{\itemsep}{10pt}\footnotesize
+\item Previsões feitas \textbf{antes} de simular batem com o resultado
+\item Exceção: ADC de 4 bits, em que o degrau (3,1 A) é maior que o sinal
+\item Ruído de 1 V gera \textbf{10 A rms} de erro
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Conclusões}
+\contexto{O que cada característica significa para o motor BLDC em operação.}
+\vspace{14pt}
+\pontos{{\color{vm}\Large\bfseries Zero}}{O mais nocivo em uso real: viés sistemático no torque e na potência.}{{\color{vm}\Large\bfseries Ruído}}{O pior quando exagerado: disparos falsos da proteção.}{{\color{az}\Large\bfseries Banda}}{Banda baixa atrasa a medida e apaga a comutação.}
+\vspace{22pt}
+\destaque{Com correção calculada e média por período, o ACS712 atende a toda a demanda.}
+\end{frame}
+
 \end{document}
