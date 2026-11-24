@@ -1,0 +1,48 @@
+{
+ "a": {
+  "final_ideal": 0.5999999999999999,
+  "final_med": 0.37343131273203517,
+  "final_cal": 0.6072053865561547
+ },
+ "b": {
+  "final_ideal": 0.0,
+  "final_med": 0.004353708063102263,
+  "final_cal": 0.007079200102605304
+ },
+ "c": {
+  "final_ideal": 0.5999999999999999,
+  "final_med": 0.3734366468913681,
+  "final_cal": 0.6072140599859643
+ },
+ "camadas": [
+  {
+   "camada": "cadeia ideal da E01",
+   "desvio_rms_N": 0.0015575538528697025,
+   "final_N": 0.6001573330834566
+  },
+  {
+   "camada": "estática (S, limiar, resolução)",
+   "desvio_rms_N": 0.23080415967292542,
+   "final_N": 0.369071862637908
+  },
+  {
+   "camada": "dinâmica sem chopagem (passa-alta)",
+   "desvio_rms_N": 0.6006947725119021,
+   "final_N": -3.950853096301894e-06
+  },
+  {
+   "camada": "espectral (ruído + 60 Hz + offset + deriva)",
+   "desvio_rms_N": 0.007164202795568354,
+   "final_N": 0.6045109687077121
+  },
+  {
+   "camada": "todas (com chopagem)",
+   "desvio_rms_N": 0.2258769800323654,
+   "final_N": 0.37342549821882204
+  }
+ ],
+ "previsao_teste_A1N": {
+  "previsto": 0.615,
+  "obtido": 0.6187493975117653
+ }
+}

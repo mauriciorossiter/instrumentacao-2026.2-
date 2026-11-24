@@ -1,0 +1,1334 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "g02_fase2_e03_malha_aberta" {
+    configuration {
+        hil_device = "VHIL+"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 10.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/C function" gerador_ensaios {
+            arb_defs = "/*Begin code section*/
+/* Gerador dos ensaios. Uma borda de subida em \'disparo\' zera o relogio do ensaio. */
+double t_G = 0.0;          /* relogio do ensaio [s]       */
+double disp_ant_G = 0.0;   /* disparo no passo anterior   */
+double TS_G = 1e-4;        /* passo [s]                   */
+double T_EV_G = 2.0;  /* instante do evento [s]      */
+int ens_G = 1;
+double A_G = 0.0;
+/*End code section*/"
+            execution_rate = "1e-4"
+            init_fnc = "/*Begin code section*/
+t_G = 0.0;
+disp_ant_G = 0.0;
+/*End code section*/"
+            input_terminals = "real ensaio;real amplitude;real disparo;"
+            input_terminals_dimensions = "inherit;inherit;inherit"
+            input_terminals_feedthrough = "True;True;True"
+            input_terminals_show_labels = "True;True;True"
+            output_fnc = "/*Begin code section*/
+ens_G = (int)(ensaio + 0.5);
+A_G = amplitude;
+d = 0.0;
+if (ens_G == 1) {                 /* (a) degrau a partir do repouso */
+    r = (t_G >= T_EV_G) ? A_G : 0.0;
+} else if (ens_G == 2) {          /* (b) condicao inicial nao nula: segura em A e solta */
+    r = (t_G < T_EV_G) ? A_G : 0.0;
+} else if (ens_G == 3) {          /* (c) transitorio temporario: pulso de 1,5 A por 0,5 s */
+    r = (t_G >= T_EV_G && t_G < T_EV_G + 0.5) ? 1.5 * A_G : A_G;
+} else {                          /* (d) perturbacao de forca de 0,5 A em t_ev */
+    r = (t_G >= 0.5) ? A_G : 0.0;
+    d = (t_G >= T_EV_G) ? 0.5 * A_G : 0.0;
+}
+t_ens = t_G;
+/*End code section*/"
+            output_terminals = "real r;real d;real t_ens;"
+            output_terminals_dimensions = "1;1;1"
+            output_terminals_feedthrough = "True;True;True"
+            output_terminals_show_labels = "True;True;True"
+            update_fnc = "/*Begin code section*/
+if (disparo > 0.5 && disp_ant_G <= 0.5) {
+    t_G = 0.0;
+} else {
+    t_G = t_G + TS_G;
+}
+disp_ant_G = disparo;
+/*End code section*/"
+        }
+        [
+            position = 6500, 7000
+            size = 112, 96
+        ]
+
+        component "core/SCADA Input" ensaio {
+            def_value = "1"
+            execution_rate = "1e-4"
+            max = "4"
+            min = "1"
+            unit = " "
+        }
+        [
+            position = 6300, 6940
+        ]
+
+        component "core/SCADA Input" amplitude {
+            def_value = "10"
+            execution_rate = "1e-4"
+            max = "20"
+            min = "-20"
+            unit = " "
+        }
+        [
+            position = 6300, 7000
+        ]
+
+        component "core/SCADA Input" disparo {
+            def_value = "0"
+            execution_rate = "1e-4"
+            max = "1"
+            min = "0"
+            unit = " "
+        }
+        [
+            position = 6300, 7060
+        ]
+
+        component "core/Probe" r {
+        }
+        [
+            position = 6640, 6900
+        ]
+
+        component "core/Probe" t_ensaio {
+        }
+        [
+            position = 6640, 7120
+        ]
+
+        component "core/C function" controlador_PID {
+            arb_defs = "/*Begin code section*/
+/* PID com derivada na medicao (filtro Tf), saturacao do atuador e anti-windup condicional. */
+double integ_C = 0.0;
+double dfilt_C = 0.0;
+double dnovo_C = 0.0;
+double yprev_C = 0.0;
+int primeiro_C = 1;
+double e_C = 0.0;
+double ulin_C = 0.0;
+double u_C = 0.0;
+double disp_ant_C = 0.0;
+double TS_C = 1e-4;     /* s */
+double TF_C = 0.01;     /* s, filtro da derivada */
+double UMAX_C = 60.0;   /* N, limite do atuador  */
+/*End code section*/"
+            execution_rate = "1e-4"
+            init_fnc = "/*Begin code section*/
+integ_C = 0.0;
+dfilt_C = 0.0;
+primeiro_C = 1;
+/*End code section*/"
+            input_terminals = "real r;real y;real d;real malha;real Kp;real Ki;real Kd;real disparo;"
+            input_terminals_dimensions = "inherit;inherit;inherit;inherit;inherit;inherit;inherit;inherit"
+            input_terminals_feedthrough = "True;True;True;True;True;True;True;True"
+            input_terminals_show_labels = "True;True;True;True;True;True;True;True"
+            output_fnc = "/*Begin code section*/
+if (malha > 0.5) {
+    e_C = r - y;
+    if (primeiro_C) { yprev_C = y; }
+    dnovo_C = dfilt_C + TS_C / TF_C * (-Kd * (y - yprev_C) / TS_C - dfilt_C);
+    ulin_C = Kp * e_C + Ki * integ_C + dnovo_C;
+    u_C = ulin_C;
+    if (u_C > UMAX_C) { u_C = UMAX_C; }
+    if (u_C < -UMAX_C) { u_C = -UMAX_C; }
+} else {
+    e_C = 0.0;
+    dnovo_C = 0.0;
+    ulin_C = r;
+    u_C = r;                   /* malha aberta: a referencia e a propria forca */
+}
+u = u_C;
+F = u_C + d;
+/*End code section*/"
+            output_terminals = "real u;real F;"
+            output_terminals_dimensions = "1;1"
+            output_terminals_feedthrough = "True;True"
+            output_terminals_show_labels = "True;True"
+            update_fnc = "/*Begin code section*/
+if (disparo > 0.5 && disp_ant_C <= 0.5) {      /* novo ensaio: zera os estados do PID */
+    integ_C = 0.0;
+    dfilt_C = 0.0;
+    primeiro_C = 1;
+} else if (malha > 0.5) {
+    dfilt_C = dnovo_C;
+    yprev_C = y;
+    primeiro_C = 0;
+    if (u_C == ulin_C || (ulin_C > UMAX_C && e_C < 0.0) || (ulin_C < -UMAX_C && e_C > 0.0)) {
+        integ_C = integ_C + e_C * TS_C;
+    }
+} else {
+    integ_C = 0.0;
+    dfilt_C = 0.0;
+    primeiro_C = 1;
+}
+disp_ant_C = disparo;
+/*End code section*/"
+        }
+        [
+            position = 6700, 7700
+            size = 112, 216
+        ]
+
+        component "core/SCADA Input" malha {
+            def_value = "0"
+            execution_rate = "1e-4"
+            max = "1"
+            min = "0"
+            unit = " "
+        }
+        [
+            position = 6450, 7620
+        ]
+
+        component "core/SCADA Input" Kp {
+            def_value = "2.0"
+            execution_rate = "1e-4"
+            max = "100"
+            min = "0"
+            unit = " "
+        }
+        [
+            position = 6450, 7680
+        ]
+
+        component "core/SCADA Input" Ki {
+            def_value = "10.0"
+            execution_rate = "1e-4"
+            max = "1000"
+            min = "0"
+            unit = " "
+        }
+        [
+            position = 6450, 7740
+        ]
+
+        component "core/SCADA Input" Kd {
+            def_value = "0.2"
+            execution_rate = "1e-4"
+            max = "10"
+            min = "0"
+            unit = " "
+        }
+        [
+            position = 6450, 7800
+        ]
+
+        component "core/Probe" u {
+        }
+        [
+            position = 6850, 7640
+        ]
+
+        component "core/Probe" F_atuador {
+        }
+        [
+            position = 6850, 7760
+        ]
+
+        component "core/Signal Controlled Voltage Source" Vf_atuador {
+        }
+        [
+            position = 6900, 7000
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Inductor" L_massa {
+            inductance = "1"
+        }
+        [
+            position = 7000, 6900
+        ]
+
+        component "core/Current Measurement" v_massa {
+            execution_rate = "1e-4"
+            sig_output = "True"
+        }
+        [
+            position = 7110, 6900
+            size = 64, 32
+        ]
+
+        component "core/Resistor" R_amortecedor {
+            resistance = "6"
+        }
+        [
+            position = 7220, 6900
+        ]
+
+        component "core/Capacitor" C_mola {
+            capacitance = "0.01"
+        }
+        [
+            position = 7320, 7000
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" y_real {
+            execution_rate = "1e-4"
+            sig_output = "True"
+        }
+        [
+            position = 7420, 7000
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Ground" gnd_planta {
+        }
+        [
+            position = 7160, 7130
+        ]
+
+        component "core/Probe" x_real {
+        }
+        [
+            position = 7560, 6860
+        ]
+
+        component "core/Gain" caminho_ideal {
+            gain = "1"
+        }
+        [
+            position = 7700, 7000
+        ]
+
+        component "core/Probe" y_ideal {
+        }
+        [
+            position = 7820, 6940
+        ]
+
+        component "core/C function" portadora_chopper {
+            arb_defs = "/*Begin code section*/
+/* Portadora da chopagem (modulacao) e da demodulacao sincrona. */
+double t_P = 0.0;
+double TS_P = 1e-4;
+double F_CH_P = 100.0;                    /* Hz */
+double PI_P = 3.14159265358979323846;
+/*End code section*/"
+            execution_rate = "1e-4"
+            init_fnc = "/*Begin code section*/
+t_P = 0.0;
+/*End code section*/"
+            input_terminals = "real chop;"
+            input_terminals_dimensions = "inherit"
+            input_terminals_feedthrough = "True"
+            input_terminals_show_labels = "True"
+            output_fnc = "/*Begin code section*/
+if (chop > 0.5) {
+    car = 1.41421356237 * sin(2.0 * PI_P * F_CH_P * t_P);
+} else {
+    car = 1.0;                            /* sem chopagem: forca aplicada direto (DC) */
+}
+/*End code section*/"
+            output_terminals = "real car;"
+            output_terminals_dimensions = "1"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            update_fnc = "/*Begin code section*/
+t_P = t_P + TS_P;
+if (t_P >= 1.0) { t_P = t_P - 1.0; }      /* 100 periodos inteiros por segundo */
+/*End code section*/"
+        }
+        [
+            position = 7400, 7720
+            size = 112, 48
+        ]
+
+        component "core/C function" sensor_piezo {
+            arb_defs = "/*Begin code section*/
+/* Camada estatica do disco piezoeletrico (Murata 7BB-20-6, ceramica APC 850).
+ * S nominal = d33/Ct = 400 pC/N / 10 nF = 40 mV/N.
+ * Pior caso inferior (padrao): 320 pC/N / 13 nF = 24,6 mV/N (-38 %).
+ * Limiar e resolucao: estimativas da equipe. */
+double S_NOM_S = 0.04;     /* V/N */
+double F_LIM_S = 0.02;     /* N   */
+double F_RES_S = 0.01;     /* N   */
+double S_use_S = 0.04;
+double Fa_S = 0.0;
+/*End code section*/"
+            execution_rate = "1e-4"
+            init_fnc = "/*Begin code section*/
+S_use_S = S_NOM_S;
+/*End code section*/"
+            input_terminals = "real Fk;real car;real en_sens;real S_real_mVN;real en_lim;real en_res;"
+            input_terminals_dimensions = "inherit;inherit;inherit;inherit;inherit;inherit"
+            input_terminals_feedthrough = "True;True;True;True;True;True"
+            input_terminals_show_labels = "True;True;True;True;True;True"
+            output_fnc = "/*Begin code section*/
+F_inst = Fk * car;                                  /* forca modulada pela portadora */
+S_use_S = (en_sens > 0.5) ? (S_real_mVN * 1e-3) : S_NOM_S;
+Fa_S = F_inst;
+if (en_lim > 0.5 && fabs(Fa_S) < F_LIM_S) { Fa_S = 0.0; }                 /* limiar    */
+if (en_res > 0.5) { Fa_S = F_RES_S * floor(Fa_S / F_RES_S + 0.5); }       /* resolucao */
+vctrl = S_use_S * Fa_S;                              /* fonte de Thevenin do piezo */
+/*End code section*/"
+            output_terminals = "real vctrl;real F_inst;"
+            output_terminals_dimensions = "1;1"
+            output_terminals_feedthrough = "True;True"
+            output_terminals_show_labels = "True;True"
+            update_fnc = "/*Begin code section*/
+/* sem estados */
+/*End code section*/"
+        }
+        [
+            position = 7400, 7900
+            size = 112, 168
+        ]
+
+        component "core/Probe" vctrl {
+        }
+        [
+            position = 7510, 7810
+        ]
+
+        component "core/Probe" F_inst {
+        }
+        [
+            position = 7510, 7990
+        ]
+
+        component "core/Signal Controlled Voltage Source" Vs_piezo {
+        }
+        [
+            position = 7600, 7980
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Capacitor" Ct_piezo {
+            capacitance = "10e-9"
+        }
+        [
+            position = 7690, 7900
+        ]
+
+        component "core/Resistor" Rin_preamp {
+            resistance = "10e6"
+        }
+        [
+            position = 7790, 7980
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" v_piezo {
+            execution_rate = "1e-4"
+            sig_output = "True"
+        }
+        [
+            position = 7880, 7980
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Ground" gnd_piezo {
+        }
+        [
+            position = 7730, 8100
+        ]
+
+        component "core/C function" ruido_branco {
+            arb_defs = "/*Begin code section*/
+/* Ruido branco gaussiano: xorshift32 (semente fixa) + Box-Muller, retido a cada 1e-4 s. */
+unsigned int x_N = 610839777u;
+double g_N = 0.0;
+double u1_N = 0.5;
+double u2_N = 0.5;
+double PI_N = 3.14159265358979323846;
+/*End code section*/"
+            execution_rate = "1e-4"
+            init_fnc = "/*Begin code section*/
+x_N = 610839777u;
+x_N ^= x_N << 13; x_N ^= x_N >> 17; x_N ^= x_N << 5;
+u1_N = ((x_N >> 8) + 0.5) / 16777216.0;
+x_N ^= x_N << 13; x_N ^= x_N >> 17; x_N ^= x_N << 5;
+u2_N = ((x_N >> 8) + 0.5) / 16777216.0;
+g_N = sqrt(-2.0 * log(u1_N)) * cos(2.0 * PI_N * u2_N);
+/*End code section*/"
+            input_terminals = "real en_ruido;real sigma_mV;"
+            input_terminals_dimensions = "inherit;inherit"
+            input_terminals_feedthrough = "True;True"
+            input_terminals_show_labels = "True;True"
+            output_fnc = "/*Begin code section*/
+n = (en_ruido > 0.5) ? (sigma_mV * 1e-3 * g_N) : 0.0;
+/*End code section*/"
+            output_terminals = "real n;"
+            output_terminals_dimensions = "1"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            update_fnc = "/*Begin code section*/
+x_N ^= x_N << 13; x_N ^= x_N >> 17; x_N ^= x_N << 5;
+u1_N = ((x_N >> 8) + 0.5) / 16777216.0;
+x_N ^= x_N << 13; x_N ^= x_N >> 17; x_N ^= x_N << 5;
+u2_N = ((x_N >> 8) + 0.5) / 16777216.0;
+g_N = sqrt(-2.0 * log(u1_N)) * cos(2.0 * PI_N * u2_N);
+/*End code section*/"
+        }
+        [
+            position = 8040, 7740
+            size = 112, 72
+        ]
+
+        component "core/C function" interferencia {
+            arb_defs = "/*Begin code section*/
+/* Entradas espurias na entrada do pre-amplificador (10 MOhm):
+ * offset 3 mV (VIO tipico do TL072), deriva 5 mV a 0,05 Hz (piroeletricidade do PZT, estimativa),
+ * zumbido de 60 Hz com 20 mV de pico (entrada sem blindagem, estimativa). */
+double A_OFF_I = 3e-3;
+double A_DRIFT_I = 5e-3;
+double F_DRIFT_I = 0.05;
+double A_HUM_I = 20e-3;
+double TS_I = 1e-4;
+double PI_I = 3.14159265358979323846;
+double t_I = 0.0;
+/*End code section*/"
+            execution_rate = "1e-4"
+            init_fnc = "/*Begin code section*/
+t_I = 0.0;
+/*End code section*/"
+            input_terminals = "real en_interf;"
+            input_terminals_dimensions = "inherit"
+            input_terminals_feedthrough = "True"
+            input_terminals_show_labels = "True"
+            output_fnc = "/*Begin code section*/
+if (en_interf > 0.5) {
+    interf = A_OFF_I + A_DRIFT_I * sin(2.0 * PI_I * F_DRIFT_I * t_I) + A_HUM_I * sin(2.0 * PI_I * 60.0 * t_I);
+} else {
+    interf = 0.0;
+}
+/*End code section*/"
+            output_terminals = "real interf;"
+            output_terminals_dimensions = "1"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            update_fnc = "/*Begin code section*/
+t_I = t_I + TS_I;
+if (t_I >= 20.0) { t_I = t_I - 20.0; }
+/*End code section*/"
+        }
+        [
+            position = 8040, 8100
+            size = 112, 48
+        ]
+
+        component "core/C function" condicionamento_lockin {
+            arb_defs = "/*Begin code section*/
+/* Condicionamento: pre-amplificador nao inversor (G = 5) + demodulacao sincrona (lock-in)
+ * + Butterworth de 2a ordem com fc ajustavel, discretizado por Tustin a 10 kHz. */
+double G_L = 5;
+double PI_L = 3.14159265358979323846;
+double TS_L = 1e-4;
+double fc_ant_L = -1.0;
+double B0_L = 0.0, B1_L = 0.0, B2_L = 0.0, A1_L = 0.0, A2_L = 0.0;
+double z0_L = 0.0, z1_L = 0.0;
+double dem_L = 0.0, y_L = 0.0;
+double wb_L = 0.0, K_L = 0.0, a2_L = 0.0, a1_L = 0.0, A0_L = 0.0, fcu_L = 1.0;
+/*End code section*/"
+            execution_rate = "1e-4"
+            init_fnc = "/*Begin code section*/
+fc_ant_L = -1.0;
+z0_L = 0.0;
+z1_L = 0.0;
+/*End code section*/"
+            input_terminals = "real v_piezo;real n;real interf;real car;real fc_Hz;"
+            input_terminals_dimensions = "inherit;inherit;inherit;inherit;inherit"
+            input_terminals_feedthrough = "True;True;True;True;True"
+            input_terminals_show_labels = "True;True;True;True;True"
+            output_fnc = "/*Begin code section*/
+fcu_L = (fc_Hz < 0.05) ? 0.05 : fc_Hz;
+if (fcu_L != fc_ant_L) {                   /* recalcula os coeficientes quando fc muda */
+    wb_L = 2.0 * PI_L * fcu_L;
+    K_L = 2.0 / TS_L;
+    a2_L = 1.0 / (wb_L * wb_L);
+    a1_L = 1.41421356237 / wb_L;
+    A0_L = a2_L * K_L * K_L + a1_L * K_L + 1.0;
+    B0_L = 1.0 / A0_L;
+    B1_L = 2.0 / A0_L;
+    B2_L = 1.0 / A0_L;
+    A1_L = (2.0 - 2.0 * a2_L * K_L * K_L) / A0_L;
+    A2_L = (a2_L * K_L * K_L - a1_L * K_L + 1.0) / A0_L;
+    fc_ant_L = fcu_L;
+}
+pre_amp = G_L * (v_piezo + n + interf);
+dem_L = pre_amp * car;
+y_L = B0_L * dem_L + z0_L;
+demod = dem_L;
+bw = y_L;
+/*End code section*/"
+            output_terminals = "real pre_amp;real demod;real bw;"
+            output_terminals_dimensions = "1;1;1"
+            output_terminals_feedthrough = "True;True;True"
+            output_terminals_show_labels = "True;True;True"
+            update_fnc = "/*Begin code section*/
+z0_L = B1_L * dem_L - A1_L * y_L + z1_L;
+z1_L = B2_L * dem_L - A2_L * y_L;
+/*End code section*/"
+        }
+        [
+            position = 8220, 7900
+            size = 112, 144
+        ]
+
+        component "core/Probe" pre_amp {
+        }
+        [
+            position = 8360, 7780
+        ]
+
+        component "core/Probe" demod {
+        }
+        [
+            position = 8360, 7840
+        ]
+
+        component "core/Probe" bw {
+        }
+        [
+            position = 8360, 8020
+        ]
+
+        component "core/C function" processamento_compensacao {
+            arb_defs = "/*Begin code section*/
+/* Processamento: escala K = 1/(S_nom*G) (1 V = 1 N = 1 cm), calibracao de 1 ponto e
+ * correcao calculada da dinamica do filtro: C(s) = (s^2/wb^2 + sqrt2 s/wb + 1)/(s/wf + 1)^2. */
+double S_NOM_P = 0.04;
+double G_P = 5;
+double PI_P2 = 3.14159265358979323846;
+double TS_P2 = 1e-4;
+double ym_P = 0.0, yc_P = 0.0;
+double fcc_ant_P = -1.0, ff_ant_P = -1.0;
+double C0_P = 1.0, C1_P = 0.0, C2_P = 0.0, D1_P = 0.0, D2_P = 0.0;
+double zc0_P = 0.0, zc1_P = 0.0;
+double wb_P = 0.0, wf_P = 0.0, K_P = 0.0, b2_P = 0.0, b1_P = 0.0, a2_P = 0.0, a1_P = 0.0, A0_P = 0.0;
+double fcu_P = 1.0, ffu_P = 10.0;
+/*End code section*/"
+            execution_rate = "1e-4"
+            init_fnc = "/*Begin code section*/
+fcc_ant_P = -1.0;
+zc0_P = 0.0;
+zc1_P = 0.0;
+/*End code section*/"
+            input_terminals = "real bw;real comp_cal;real S_cal_mVN;real comp_din;real fc_corr_Hz;real f_f_Hz;"
+            input_terminals_dimensions = "inherit;inherit;inherit;inherit;inherit;inherit"
+            input_terminals_feedthrough = "True;True;True;True;True;True"
+            input_terminals_show_labels = "True;True;True;True;True;True"
+            output_fnc = "/*Begin code section*/
+fcu_P = (fc_corr_Hz < 0.05) ? 0.05 : fc_corr_Hz;
+ffu_P = (f_f_Hz < fcu_P) ? fcu_P : f_f_Hz;
+if (fcu_P != fcc_ant_P || ffu_P != ff_ant_P) {
+    wb_P = 2.0 * PI_P2 * fcu_P;
+    wf_P = 2.0 * PI_P2 * ffu_P;
+    K_P = 2.0 / TS_P2;
+    b2_P = 1.0 / (wb_P * wb_P);  b1_P = 1.41421356237 / wb_P;
+    a2_P = 1.0 / (wf_P * wf_P);  a1_P = 2.0 / wf_P;
+    A0_P = a2_P * K_P * K_P + a1_P * K_P + 1.0;
+    C0_P = (b2_P * K_P * K_P + b1_P * K_P + 1.0) / A0_P;
+    C1_P = (2.0 - 2.0 * b2_P * K_P * K_P) / A0_P;
+    C2_P = (b2_P * K_P * K_P - b1_P * K_P + 1.0) / A0_P;
+    D1_P = (2.0 - 2.0 * a2_P * K_P * K_P) / A0_P;
+    D2_P = (a2_P * K_P * K_P - a1_P * K_P + 1.0) / A0_P;
+    fcc_ant_P = fcu_P;
+    ff_ant_P = ffu_P;
+}
+ym_P = bw / (S_NOM_P * G_P);
+if (comp_cal > 0.5 && S_cal_mVN > 0.1) { ym_P = ym_P * S_NOM_P / (S_cal_mVN * 1e-3); }
+yc_P = C0_P * ym_P + zc0_P;                /* o corretor roda sempre; a chave escolhe a saida */
+y_med = (comp_din > 0.5) ? yc_P : ym_P;
+/*End code section*/"
+            output_terminals = "real y_med;"
+            output_terminals_dimensions = "1"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            update_fnc = "/*Begin code section*/
+zc0_P = C1_P * ym_P - D1_P * yc_P + zc1_P;
+zc1_P = C2_P * ym_P - D2_P * yc_P;
+/*End code section*/"
+        }
+        [
+            position = 8480, 7900
+            size = 112, 168
+        ]
+
+        component "core/Probe" y_med {
+        }
+        [
+            position = 8620, 7820
+        ]
+
+        component "core/C function" seletor_ideal_real {
+            arb_defs = "/*Begin code section*/
+/* Seletor ideal/real: escolhe qual leitura chega ao controlador. */
+int dummy_SEL = 0;
+/*End code section*/"
+            execution_rate = "1e-4"
+            init_fnc = "/*Begin code section*/
+dummy_SEL = 0;
+/*End code section*/"
+            input_terminals = "real y_real_med;real y_ideal;real seletor;"
+            input_terminals_dimensions = "inherit;inherit;inherit"
+            input_terminals_feedthrough = "True;True;True"
+            input_terminals_show_labels = "True;True;True"
+            output_fnc = "/*Begin code section*/
+y_ctrl = (seletor > 0.5) ? y_real_med : y_ideal;
+/*End code section*/"
+            output_terminals = "real y_ctrl;"
+            output_terminals_dimensions = "1"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "True"
+            update_fnc = "/*Begin code section*/
+/* sem estados */
+/*End code section*/"
+        }
+        [
+            position = 8700, 7400
+            size = 112, 96
+        ]
+
+        component "core/SCADA Input" seletor {
+            def_value = "0"
+            execution_rate = "1e-4"
+            max = "1"
+            min = "0"
+            unit = " "
+        }
+        [
+            position = 8560, 7300
+        ]
+
+        component "core/Probe" y_ctrl {
+        }
+        [
+            position = 8840, 7340
+        ]
+
+        component "core/SCADA Input" chop {
+            def_value = "1"
+            execution_rate = "1e-4"
+            max = "1"
+            min = "0"
+            unit = " "
+        }
+        [
+            position = 6300, 8500
+        ]
+
+        component "core/SCADA Input" en_sens {
+            def_value = "1"
+            execution_rate = "1e-4"
+            max = "1"
+            min = "0"
+            unit = " "
+        }
+        [
+            position = 6300, 8560
+        ]
+
+        component "core/SCADA Input" S_real_mVN {
+            def_value = "24.6"
+            execution_rate = "1e-4"
+            max = "200"
+            min = "1"
+            unit = " "
+        }
+        [
+            position = 6300, 8620
+        ]
+
+        component "core/SCADA Input" en_lim {
+            def_value = "1"
+            execution_rate = "1e-4"
+            max = "1"
+            min = "0"
+            unit = " "
+        }
+        [
+            position = 6300, 8680
+        ]
+
+        component "core/SCADA Input" en_res {
+            def_value = "1"
+            execution_rate = "1e-4"
+            max = "1"
+            min = "0"
+            unit = " "
+        }
+        [
+            position = 6300, 8740
+        ]
+
+        component "core/SCADA Input" en_ruido {
+            def_value = "1"
+            execution_rate = "1e-4"
+            max = "1"
+            min = "0"
+            unit = " "
+        }
+        [
+            position = 6300, 8800
+        ]
+
+        component "core/SCADA Input" sigma_mV {
+            def_value = "20"
+            execution_rate = "1e-4"
+            max = "1000"
+            min = "0"
+            unit = " "
+        }
+        [
+            position = 6300, 8860
+        ]
+
+        component "core/SCADA Input" en_interf {
+            def_value = "1"
+            execution_rate = "1e-4"
+            max = "1"
+            min = "0"
+            unit = " "
+        }
+        [
+            position = 6460, 8500
+        ]
+
+        component "core/SCADA Input" fc_Hz {
+            def_value = "1.0"
+            execution_rate = "1e-4"
+            max = "1000"
+            min = "0.05"
+            unit = " "
+        }
+        [
+            position = 6460, 8560
+        ]
+
+        component "core/SCADA Input" comp_cal {
+            def_value = "0"
+            execution_rate = "1e-4"
+            max = "1"
+            min = "0"
+            unit = " "
+        }
+        [
+            position = 6460, 8620
+        ]
+
+        component "core/SCADA Input" S_cal_mVN {
+            def_value = "24.6"
+            execution_rate = "1e-4"
+            max = "200"
+            min = "1"
+            unit = " "
+        }
+        [
+            position = 6460, 8680
+        ]
+
+        component "core/SCADA Input" comp_din {
+            def_value = "0"
+            execution_rate = "1e-4"
+            max = "1"
+            min = "0"
+            unit = " "
+        }
+        [
+            position = 6460, 8740
+        ]
+
+        component "core/SCADA Input" fc_corr_Hz {
+            def_value = "1.0"
+            execution_rate = "1e-4"
+            max = "1000"
+            min = "0.05"
+            unit = " "
+        }
+        [
+            position = 6460, 8800
+        ]
+
+        component "core/SCADA Input" f_f_Hz {
+            def_value = "10.0"
+            execution_rate = "1e-4"
+            max = "1000"
+            min = "0.05"
+            unit = " "
+        }
+        [
+            position = 6460, 8860
+        ]
+
+        component "core/Scope" Scope1 {
+            selected_signals = "[\'r\', \'x_real\', \'y_med\', \'y_ctrl\', \'u\']"
+            signals_data = "{\"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true, \"signals_tooltips_enabled\": true}, \"signals\": {\"r\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#FF0000\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"x_real\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#FF0000\"}, \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"y_med\": {\"viewports\": [3], \"type\": \"analog\", \"color\": {\"3\": \"#FF0000\"}, \"display\": {\"3\": \"solid\"}, \"is_manual\": {\"3\": false}}, \"y_ctrl\": {\"viewports\": [4], \"type\": \"analog\", \"color\": {\"4\": \"#FF0000\"}, \"display\": {\"4\": \"solid\"}, \"is_manual\": {\"4\": false}}, \"u\": {\"viewports\": [5], \"type\": \"analog\", \"color\": {\"5\": \"#FF0000\"}, \"display\": {\"5\": \"solid\"}, \"is_manual\": {\"5\": false}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"4\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"5\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"6\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}}"
+        }
+        [
+            position = 8900, 7000
+        ]
+
+        junction J_disparo sp
+        [
+            position = 6340, 7060
+        ]
+
+        junction J_r sp
+        [
+            position = 6540, 7000
+        ]
+
+        junction J_yctrl sp
+        [
+            position = 6740, 7700
+        ]
+
+        junction J_F sp
+        [
+            position = 6740, 7700
+        ]
+
+        junction J_p4 pe
+        [
+            position = 7260, 6900
+        ]
+
+        junction J_p0 pe
+        [
+            position = 7360, 7000
+        ]
+
+        junction J_yreal sp
+        [
+            position = 7460, 7000
+        ]
+
+        junction J_yideal sp
+        [
+            position = 7740, 7000
+        ]
+
+        junction J_car sp
+        [
+            position = 7440, 7720
+        ]
+
+        junction J_vctrl sp
+        [
+            position = 7440, 7900
+        ]
+
+        junction J_q2 pe
+        [
+            position = 7730, 7900
+        ]
+
+        junction J_q0 pe
+        [
+            position = 7830, 7980
+        ]
+
+        junction J_bw sp
+        [
+            position = 8260, 7900
+        ]
+
+        junction J_ymed sp
+        [
+            position = 8520, 7900
+        ]
+
+        scheme_area Area1 {
+            title = <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Tahoma'; font-size:14pt; font-weight:100; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;text-indent:0px;">Gerador de ensaios e referencia r</p></body></html>
+        }
+        [
+            position = 6440, 7000
+            size = 420, 360
+            background_color = #0e52514e
+        ]
+
+        scheme_area Area2 {
+            title = <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Tahoma'; font-size:14pt; font-weight:100; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;text-indent:0px;">Controlador PID (derivada na medicao) e atuador (forca = tensao)</p></body></html>
+        }
+        [
+            position = 6620, 7700
+            size = 520, 380
+            background_color = #0e6250d6
+        ]
+
+        scheme_area Area3 {
+            title = <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Tahoma'; font-size:14pt; font-weight:100; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;text-indent:0px;">Planta: equivalente eletrico (L = m = 1 H, R = c = 6 ohm, C = 1/k = 10 mF; 1 V = 1 N = 1 cm)</p></body></html>
+        }
+        [
+            position = 7180, 6980
+            size = 720, 360
+            background_color = #0e2a78d6
+        ]
+
+        scheme_area Area4 {
+            title = <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Tahoma'; font-size:14pt; font-weight:100; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;text-indent:0px;">Ponta de prova ideal e caminho ideal (ganho 1, sem atraso)</p></body></html>
+        }
+        [
+            position = 7720, 6980
+            size = 300, 200
+            background_color = #0e1baf7a
+        ]
+
+        scheme_area Area5 {
+            title = <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Tahoma'; font-size:14pt; font-weight:100; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;text-indent:0px;">Sensor (elemento primario): disco piezoeletrico 7BB-20-6, Thevenin Ct-Rin</p></body></html>
+        }
+        [
+            position = 7630, 7920
+            size = 700, 420
+            background_color = #0eeb6834
+        ]
+
+        scheme_area Area6 {
+            title = <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Tahoma'; font-size:14pt; font-weight:100; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;text-indent:0px;">Entradas espurias (60 Hz, offset, deriva, ruido)</p></body></html>
+        }
+        [
+            position = 8040, 7920
+            size = 200, 520
+            background_color = #0e1baf7a
+        ]
+
+        scheme_area Area7 {
+            title = <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Tahoma'; font-size:14pt; font-weight:100; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;text-indent:0px;">Condicionamento: pre-amp G = 5 + lock-in (Butterworth fc)</p></body></html>
+        }
+        [
+            position = 8260, 7920
+            size = 300, 420
+            background_color = #0eeda100
+        ]
+
+        scheme_area Area8 {
+            title = <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Tahoma'; font-size:14pt; font-weight:100; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;text-indent:0px;">Processamento e compensacao (escala, calibracao, correcao do filtro)</p></body></html>
+        }
+        [
+            position = 8520, 7920
+            size = 260, 420
+            background_color = #0e6250d6
+        ]
+
+        scheme_area Area9 {
+            title = <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Tahoma'; font-size:14pt; font-weight:100; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;text-indent:0px;">Seletor ideal / real (o que chega ao controlador)</p></body></html>
+        }
+        [
+            position = 8720, 7400
+            size = 320, 220
+            background_color = #0e898781
+        ]
+
+        scheme_area Area10 {
+            title = <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Tahoma'; font-size:14pt; font-weight:100; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;text-indent:0px;">Painel: caracteristicas do instrumento real (SCADA Inputs)</p></body></html>
+        }
+        [
+            position = 6380, 8680
+            size = 400, 480
+            background_color = #0e898781
+        ]
+
+        connect ensaio.out gerador_ensaios.ensaio as Connection1
+        connect amplitude.out gerador_ensaios.amplitude as Connection2
+        connect J_disparo disparo.out as Connection3
+        connect J_disparo gerador_ensaios.disparo as Connection4
+        connect J_disparo controlador_PID.disparo as Connection5
+        connect J_r gerador_ensaios.r as Connection6
+        connect J_r r.in as Connection7
+        connect J_r controlador_PID.r as Connection8
+        connect gerador_ensaios.d controlador_PID.d as Connection9
+        connect gerador_ensaios.t_ens t_ensaio.in as Connection10
+        connect J_yctrl controlador_PID.y as Connection11
+        connect J_yctrl seletor_ideal_real.y_ctrl as Connection12
+        connect J_yctrl y_ctrl.in as Connection13
+        connect malha.out controlador_PID.malha as Connection14
+        connect Kp.out controlador_PID.Kp as Connection15
+        connect Ki.out controlador_PID.Ki as Connection16
+        connect Kd.out controlador_PID.Kd as Connection17
+        connect controlador_PID.u u.in as Connection18
+        connect J_F controlador_PID.F as Connection19
+        connect J_F F_atuador.in as Connection20
+        connect J_F Vf_atuador.in as Connection21
+        connect Vf_atuador.p_node L_massa.p_node as Connection22
+        connect L_massa.n_node v_massa.p_node as Connection23
+        connect v_massa.n_node R_amortecedor.p_node as Connection24
+        connect J_p4 R_amortecedor.n_node as Connection25
+        connect J_p4 C_mola.p_node as Connection26
+        connect J_p4 y_real.p_node as Connection27
+        connect J_p0 C_mola.n_node as Connection28
+        connect J_p0 y_real.n_node as Connection29
+        connect J_p0 Vf_atuador.n_node as Connection30
+        connect J_p0 gnd_planta.node as Connection31
+        connect J_yreal y_real.out as Connection32
+        connect J_yreal x_real.in as Connection33
+        connect J_yreal caminho_ideal.in as Connection34
+        connect J_yreal sensor_piezo.Fk as Connection35
+        connect J_yideal caminho_ideal.out as Connection36
+        connect J_yideal y_ideal.in as Connection37
+        connect J_yideal seletor_ideal_real.y_ideal as Connection38
+        connect portadora_chopper.chop chop.out as Connection39
+        connect J_car portadora_chopper.car as Connection40
+        connect J_car sensor_piezo.car as Connection41
+        connect J_car condicionamento_lockin.car as Connection42
+        connect sensor_piezo.en_sens en_sens.out as Connection43
+        connect sensor_piezo.S_real_mVN S_real_mVN.out as Connection44
+        connect sensor_piezo.en_lim en_lim.out as Connection45
+        connect sensor_piezo.en_res en_res.out as Connection46
+        connect J_vctrl sensor_piezo.vctrl as Connection47
+        connect J_vctrl vctrl.in as Connection48
+        connect J_vctrl Vs_piezo.in as Connection49
+        connect sensor_piezo.F_inst F_inst.in as Connection50
+        connect Vs_piezo.p_node Ct_piezo.p_node as Connection51
+        connect J_q2 Ct_piezo.n_node as Connection52
+        connect J_q2 Rin_preamp.p_node as Connection53
+        connect J_q2 v_piezo.p_node as Connection54
+        connect J_q0 Rin_preamp.n_node as Connection55
+        connect J_q0 v_piezo.n_node as Connection56
+        connect J_q0 Vs_piezo.n_node as Connection57
+        connect J_q0 gnd_piezo.node as Connection58
+        connect v_piezo.out condicionamento_lockin.v_piezo as Connection59
+        connect ruido_branco.en_ruido en_ruido.out as Connection60
+        connect ruido_branco.sigma_mV sigma_mV.out as Connection61
+        connect ruido_branco.n condicionamento_lockin.n as Connection62
+        connect interferencia.en_interf en_interf.out as Connection63
+        connect interferencia.interf condicionamento_lockin.interf as Connection64
+        connect condicionamento_lockin.fc_Hz fc_Hz.out as Connection65
+        connect condicionamento_lockin.pre_amp pre_amp.in as Connection66
+        connect condicionamento_lockin.demod demod.in as Connection67
+        connect J_bw condicionamento_lockin.bw as Connection68
+        connect J_bw bw.in as Connection69
+        connect J_bw processamento_compensacao.bw as Connection70
+        connect processamento_compensacao.comp_cal comp_cal.out as Connection71
+        connect processamento_compensacao.S_cal_mVN S_cal_mVN.out as Connection72
+        connect processamento_compensacao.comp_din comp_din.out as Connection73
+        connect processamento_compensacao.fc_corr_Hz fc_corr_Hz.out as Connection74
+        connect processamento_compensacao.f_f_Hz f_f_Hz.out as Connection75
+        connect J_ymed processamento_compensacao.y_med as Connection76
+        connect J_ymed y_med.in as Connection77
+        connect J_ymed seletor_ideal_real.y_real_med as Connection78
+        connect seletor.out seletor_ideal_real.seletor as Connection79
+    }
+
+    default {
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/Capacitor" {
+            signal_access = "inherit"
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Current Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Inductor" {
+            signal_access = "inherit"
+            inductance = "1e-3"
+            initial_current = "0.0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/SCADA Input" {
+            signal_access = "inherit"
+            addr = "0"
+            format = "real"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "real"
+            min = "-1e6"
+            max = "1e6"
+            def_value = "0"
+            unit = " "
+            execution_rate = "100e-6"
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Signal Controlled Voltage Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+    }
+}

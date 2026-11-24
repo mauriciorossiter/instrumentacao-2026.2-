@@ -81,7 +81,3 @@ t = t + ts;
   (δ = 1,97597) devolvem ζ = 0,300.
 - **Pulso:** pico 16,86 (x ≈ 0,16862 m) em t ≈ 2,329 s, vale 7,98 (x ≈ 0,07980 m) em t ≈ 2,806 s e retorno
   definitivo à faixa de ±2% em torno de 10 em t = 3,549 s; deslocamento máximo dentro de |x| ≤ 0,20 m.
-
-## Captura de tela (esquemático + painel SCADA)
-
-![Esquemático e painel de instrumentação](captura-scada.png)

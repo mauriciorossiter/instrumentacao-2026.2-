@@ -83,7 +83,3 @@ e senoide `offset + amplitude * sin(2*M_PI*freq*t)`.
   e 2,5 (vértice inferior); amplitude efetiva reduzida em Zx.
 - **Verificação:** no plano (x, y) surge o paralelogramo com ∆x = 5,00; cada patamar dura 2,5 s, que a 2 un/s
   dá ∆x = 5. A largura medida, ∆x = 5,0000, coincide com Zx = 5 (erro nulo na resolução do passo).
-
-## Captura de tela (esquemático + painel SCADA)
-
-![Esquemático e painel de instrumentação](captura-scada.png)

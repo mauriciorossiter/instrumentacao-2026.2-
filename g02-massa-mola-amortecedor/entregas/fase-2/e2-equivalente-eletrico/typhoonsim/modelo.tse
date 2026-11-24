@@ -1,0 +1,439 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "g02_fase2_e02_equivalente_eletrico" {
+    configuration {
+        hil_device = "VHIL+"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 10.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/C function" gerador_ensaios {
+            arb_defs = "/*Begin code section*/
+/* Gerador dos ensaios. Uma borda de subida em \'disparo\' zera o relogio do ensaio. */
+double t_G = 0.0;          /* relogio do ensaio [s]       */
+double disp_ant_G = 0.0;   /* disparo no passo anterior   */
+double TS_G = 1e-4;        /* passo [s]                   */
+double T_EV_G = 2.0;  /* instante do evento [s]      */
+int ens_G = 1;
+double A_G = 0.0;
+/*End code section*/"
+            execution_rate = "1e-4"
+            init_fnc = "/*Begin code section*/
+t_G = 0.0;
+disp_ant_G = 0.0;
+/*End code section*/"
+            input_terminals = "real ensaio;real amplitude;real disparo;"
+            input_terminals_dimensions = "inherit;inherit;inherit"
+            input_terminals_feedthrough = "True;True;True"
+            input_terminals_show_labels = "True;True;True"
+            output_fnc = "/*Begin code section*/
+ens_G = (int)(ensaio + 0.5);
+A_G = amplitude;
+d = 0.0;
+if (ens_G == 1) {                 /* (a) degrau a partir do repouso */
+    r = (t_G >= T_EV_G) ? A_G : 0.0;
+} else if (ens_G == 2) {          /* (b) condicao inicial nao nula: segura em A e solta */
+    r = (t_G < T_EV_G) ? A_G : 0.0;
+} else if (ens_G == 3) {          /* (c) transitorio temporario: pulso de 1,5 A por 0,5 s */
+    r = (t_G >= T_EV_G && t_G < T_EV_G + 0.5) ? 1.5 * A_G : A_G;
+} else {                          /* (d) perturbacao de forca de 0,5 A em t_ev */
+    r = (t_G >= 0.5) ? A_G : 0.0;
+    d = (t_G >= T_EV_G) ? 0.5 * A_G : 0.0;
+}
+t_ens = t_G;
+/*End code section*/"
+            output_terminals = "real r;real d;real t_ens;"
+            output_terminals_dimensions = "1;1;1"
+            output_terminals_feedthrough = "True;True;True"
+            output_terminals_show_labels = "True;True;True"
+            update_fnc = "/*Begin code section*/
+if (disparo > 0.5 && disp_ant_G <= 0.5) {
+    t_G = 0.0;
+} else {
+    t_G = t_G + TS_G;
+}
+disp_ant_G = disparo;
+/*End code section*/"
+        }
+        [
+            position = 6500, 7000
+            size = 112, 96
+        ]
+
+        component "core/SCADA Input" ensaio {
+            def_value = "1"
+            execution_rate = "1e-4"
+            max = "4"
+            min = "1"
+            unit = " "
+        }
+        [
+            position = 6300, 6940
+        ]
+
+        component "core/SCADA Input" amplitude {
+            def_value = "10"
+            execution_rate = "1e-4"
+            max = "20"
+            min = "-20"
+            unit = " "
+        }
+        [
+            position = 6300, 7000
+        ]
+
+        component "core/SCADA Input" disparo {
+            def_value = "0"
+            execution_rate = "1e-4"
+            max = "1"
+            min = "0"
+            unit = " "
+        }
+        [
+            position = 6300, 7060
+        ]
+
+        component "core/Probe" r {
+        }
+        [
+            position = 6640, 6900
+        ]
+
+        component "core/Probe" t_ensaio {
+        }
+        [
+            position = 6640, 7120
+        ]
+
+        component "core/Signal Controlled Voltage Source" Vf_atuador {
+        }
+        [
+            position = 6900, 7000
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Inductor" L_massa {
+            inductance = "1"
+        }
+        [
+            position = 7000, 6900
+        ]
+
+        component "core/Current Measurement" v_massa {
+            execution_rate = "1e-4"
+            sig_output = "True"
+        }
+        [
+            position = 7110, 6900
+            size = 64, 32
+        ]
+
+        component "core/Resistor" R_amortecedor {
+            resistance = "6"
+        }
+        [
+            position = 7220, 6900
+        ]
+
+        component "core/Capacitor" C_mola {
+            capacitance = "0.01"
+        }
+        [
+            position = 7320, 7000
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" y_real {
+            execution_rate = "1e-4"
+            sig_output = "True"
+        }
+        [
+            position = 7420, 7000
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Ground" gnd_planta {
+        }
+        [
+            position = 7160, 7130
+        ]
+
+        component "core/Probe" x_real {
+        }
+        [
+            position = 7560, 6860
+        ]
+
+        component "core/Scope" Scope1 {
+            selected_signals = "[\'x_real\', \'v_massa\', \'r\']"
+            signals_data = "{\"plot_settings\": {\"layout\": \"Vertical\", \"background_color\": \"white\", \"legend_visible\": true, \"signals_tooltips_enabled\": true}, \"signals\": {\"x_real\": {\"viewports\": [1], \"type\": \"analog\", \"color\": {\"1\": \"#FF0000\"}, \"display\": {\"1\": \"solid\"}, \"is_manual\": {\"1\": false}}, \"v_massa\": {\"viewports\": [2], \"type\": \"analog\", \"color\": {\"2\": \"#FF0000\"}, \"display\": {\"2\": \"solid\"}, \"is_manual\": {\"2\": false}}, \"r\": {\"viewports\": [3], \"type\": \"analog\", \"color\": {\"3\": \"#FF0000\"}, \"display\": {\"3\": \"solid\"}, \"is_manual\": {\"3\": false}}}, \"viewports\": {\"1\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"2\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"3\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"4\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"5\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}, \"6\": {\"log_scale_x\": false, \"log_scale_y\": false, \"y_axis_db\": false}}}"
+        }
+        [
+            position = 7700, 6600
+        ]
+
+        junction J_r sp
+        [
+            position = 6540, 7000
+        ]
+
+        junction J_p4 pe
+        [
+            position = 7260, 6900
+        ]
+
+        junction J_p0 pe
+        [
+            position = 7360, 7000
+        ]
+
+        scheme_area Area1 {
+            title = <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Tahoma'; font-size:14pt; font-weight:100; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;text-indent:0px;">Gerador de ensaios e referencia r</p></body></html>
+        }
+        [
+            position = 6440, 7000
+            size = 420, 360
+            background_color = #0e52514e
+        ]
+
+        scheme_area Area2 {
+            title = <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }li.unchecked::marker { content: "\2610"; }li.checked::marker { content: "\2612"; }</style></head><body style=" font-family:'Tahoma'; font-size:14pt; font-weight:100; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;text-indent:0px;">Planta: equivalente eletrico (L = m = 1 H, R = c = 6 ohm, C = 1/k = 10 mF; 1 V = 1 N = 1 cm)</p></body></html>
+        }
+        [
+            position = 7180, 6980
+            size = 720, 360
+            background_color = #0e2a78d6
+        ]
+
+        connect ensaio.out gerador_ensaios.ensaio as Connection1
+        connect amplitude.out gerador_ensaios.amplitude as Connection2
+        connect disparo.out gerador_ensaios.disparo as Connection3
+        connect J_r gerador_ensaios.r as Connection4
+        connect J_r r.in as Connection5
+        connect J_r Vf_atuador.in as Connection6
+        connect gerador_ensaios.t_ens t_ensaio.in as Connection7
+        connect Vf_atuador.p_node L_massa.p_node as Connection8
+        connect L_massa.n_node v_massa.p_node as Connection9
+        connect v_massa.n_node R_amortecedor.p_node as Connection10
+        connect J_p4 R_amortecedor.n_node as Connection11
+        connect J_p4 C_mola.p_node as Connection12
+        connect J_p4 y_real.p_node as Connection13
+        connect J_p0 C_mola.n_node as Connection14
+        connect J_p0 y_real.n_node as Connection15
+        connect J_p0 Vf_atuador.n_node as Connection16
+        connect J_p0 gnd_planta.node as Connection17
+        connect y_real.out x_real.in as Connection18
+    }
+
+    default {
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/Capacitor" {
+            signal_access = "inherit"
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Current Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Inductor" {
+            signal_access = "inherit"
+            inductance = "1e-3"
+            initial_current = "0.0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/SCADA Input" {
+            signal_access = "inherit"
+            addr = "0"
+            format = "real"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "real"
+            min = "-1e6"
+            max = "1e6"
+            def_value = "0"
+            unit = " "
+            execution_rate = "100e-6"
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Signal Controlled Voltage Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+    }
+}

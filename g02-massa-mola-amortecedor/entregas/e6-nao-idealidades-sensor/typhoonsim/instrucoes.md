@@ -137,7 +137,3 @@ Observar `ButterWorthOut` × `Videal`. O modelo não tem bloco de calibração: 
   transparente com chopagem.
 - **R10**: sem correção, ≈ 62 % do valor real (0,119 a 0,623 V); com calibração ×1,625: 0,193 / 0,399 / 0,610 /
   0,808 / 1,012 V. Leitura utilizável para forças acima de ≈ 0,03 N rms.
-
-## Captura de tela (esquemático + painel SCADA)
-
-![Esquemático e painel de instrumentação](captura-scada.png)

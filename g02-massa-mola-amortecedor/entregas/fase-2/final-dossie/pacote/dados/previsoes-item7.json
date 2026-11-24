@@ -1,0 +1,13 @@
+{
+  "gerado_em": "2026-11-22 19:11:43",
+  "metodo": "malha linear (PID com D na medicao + planta + Butterworth 2a ordem), sem portadora e sem ruido",
+  "item7a_fc_minimo_para_sobressinal_10pct_Hz": 6.9,
+  "item7a_ripple_portadora": "atenuacao do Butterworth em 200 Hz = (fc/200)^2; com Kd=0,2 e Tf=0,01 s o ganho do PID em 200 Hz e ~|Kd/Tf|=20 -> esforco de ripple ~ 20*A*(fc/200)^2/sqrt(2)",
+  "item7a_fc_maximo_ripple_1N_Hz": 16.817928305074293,
+  "item7b_erro_regime_pct": "e_ss = S_nom/S - 1 (acao integral zera o erro da MEDICAO, nao o da planta)",
+  "item7b_faixa_S_sobre_Snom_para_2pct": [
+    0.9803921568627451,
+    1.0204081632653061
+  ],
+  "item7b_margem_ganho_fc10Hz_S_sobre_Snom": 2.293
+}
