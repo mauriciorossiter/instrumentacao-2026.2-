@@ -1,0 +1,868 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.3
+//
+
+model "G04_Fase2_E02_livre" {
+    configuration {
+        hil_device = "HIL404"
+        hil_configuration_id = 6
+        simulation_method = exact
+        simulation_time_step = auto
+        fine_auto_sim_step = False
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 2e-06
+        simulation_time = 0.252
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 1e-05
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component Subsystem Excitacao_e_parametros {
+            layout = dynamic
+            component "core/SCADA Input" Potencia_W {
+                def_value = "10.0"
+                execution_rate = "1e-06"
+                max = "10.0"
+                min = "0.0"
+                override_signal_name = "True"
+                signal_access = "Public"
+                signal_name = "Potencia_W"
+                unit = "W"
+            }
+            [
+                position = 300, 500
+            ]
+
+            component "core/Step" Inicio {
+                execution_rate = "1e-06"
+                final_value = "0.0"
+                initial_value = "1.0"
+                step_time = "0.002"
+            }
+            [
+                position = 300, 648
+            ]
+
+            component "core/Step" Fim {
+                execution_rate = "1e-06"
+                final_value = "0.0"
+                initial_value = "0.0"
+                step_time = "0.012"
+            }
+            [
+                position = 300, 800
+            ]
+
+            component "core/Sum" Janela {
+                execution_rate = "1e-06"
+                signs = "+-"
+            }
+            [
+                position = 648, 648
+            ]
+
+            component "core/Product" Entrada_termica {
+                execution_rate = "1e-06"
+                signs = "**"
+            }
+            [
+                position = 1000, 500
+            ]
+
+            component "core/Clock" Relogio {
+                execution_rate = "1e-06"
+            }
+            [
+                position = 1000, 700
+            ]
+
+            component "core/Probe" Probe_Tempo_s {
+                execution_rate = "1e-06"
+                override_signal_name = "True"
+                signal_access = "Public"
+                signal_name = "Tempo_s"
+            }
+            [
+                position = 1248, 800
+            ]
+
+            component "core/Probe" Probe_P_W {
+                execution_rate = "1e-06"
+                override_signal_name = "True"
+                signal_access = "Public"
+                signal_name = "P_W"
+            }
+            [
+                position = 1248, 352
+            ]
+
+            port P_W {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 1700, 500
+            ]
+
+            port Tempo_s {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 1700, 700
+            ]
+
+            connect Inicio.out Janela.in as Connection1
+            connect Fim.out Janela.in1 as Connection2
+            connect Potencia_W.out Entrada_termica.in as Connection3
+            connect Janela.out Entrada_termica.in1 as Connection4
+            connect Entrada_termica.out P_W as Connection5
+            connect Relogio.out Tempo_s as Connection6
+            connect Relogio.out Probe_Tempo_s.in as Connection7
+            connect Entrada_termica.out Probe_P_W.in as Connection8
+        }
+        [
+            position = 600, 500
+        ]
+
+        component Subsystem Planta_RC_eletrica {
+            layout = dynamic
+            component "core/Ground" GND {
+            }
+            [
+                position = 1600, 1600
+            ]
+
+            component "core/Signal Controlled Current Source" Iexc {
+                execution_rate = "1e-06"
+            }
+            [
+                position = 400, 500
+            ]
+
+            component "core/Gain" W_para_A {
+                execution_rate = "1e-06"
+                gain = "0.01"
+            }
+            [
+                position = 448, 248
+            ]
+
+            component "core/Current Measurement" Ientrada_A {
+                override_signal_name = "True"
+                signal_access = "Public"
+                signal_name = "Ientrada_A"
+            }
+            [
+                position = 800, 500
+            ]
+
+            component "core/Capacitor" C1 {
+                capacitance = "4.061194072281132e-05"
+                initial_voltage = "0.492466"
+            }
+            [
+                position = 1300, 500
+            ]
+
+            component "core/Resistor" R1_x0p2 {
+                resistance = "0.9849320000000001"
+            }
+            [
+                position = 552, 500
+            ]
+
+            component "core/Single Pole Single Throw Contactor" Selecao_R1_0 {
+                ctrl_src = "Model"
+                execution_rate = "1e-06"
+            }
+            [
+                position = 552, 592
+            ]
+
+            component "core/SCADA Input" R1_nivel0 {
+                def_value = "0.0"
+                execution_rate = "1e-06"
+                max = "1.0"
+                min = "0.0"
+                override_signal_name = "True"
+                signal_access = "Public"
+                signal_name = "R1_nivel0"
+                unit = "0/1"
+            }
+            [
+                position = 300, 1800
+            ]
+
+            component "core/Resistor" R1_x1p0 {
+                resistance = "4.92466"
+            }
+            [
+                position = 768, 500
+            ]
+
+            component "core/Single Pole Single Throw Contactor" Selecao_R1_1 {
+                ctrl_src = "Model"
+                execution_rate = "1e-06"
+                initial_state = "on"
+            }
+            [
+                position = 768, 592
+            ]
+
+            component "core/SCADA Input" R1_nivel1 {
+                def_value = "1.0"
+                execution_rate = "1e-06"
+                max = "1.0"
+                min = "0.0"
+                override_signal_name = "True"
+                signal_access = "Public"
+                signal_name = "R1_nivel1"
+                unit = "0/1"
+            }
+            [
+                position = 500, 1800
+            ]
+
+            component "core/Resistor" R1_x5p0 {
+                resistance = "24.6233"
+            }
+            [
+                position = 992, 500
+            ]
+
+            component "core/Single Pole Single Throw Contactor" Selecao_R1_2 {
+                ctrl_src = "Model"
+                execution_rate = "1e-06"
+            }
+            [
+                position = 992, 592
+            ]
+
+            component "core/SCADA Input" R1_nivel2 {
+                def_value = "0.0"
+                execution_rate = "1e-06"
+                max = "1.0"
+                min = "0.0"
+                override_signal_name = "True"
+                signal_access = "Public"
+                signal_name = "R1_nivel2"
+                unit = "0/1"
+            }
+            [
+                position = 700, 1800
+            ]
+
+            component "core/Voltage Measurement" Vramo1 {
+                execution_rate = "1e-06"
+                sig_output = "True"
+            }
+            [
+                position = 1552, 500
+            ]
+
+            component "core/Gain" V_para_theta1 {
+                execution_rate = "1e-06"
+                gain = "10.0"
+            }
+            [
+                position = 1780, 500
+            ]
+
+            component "core/Probe" Probe_theta1_K {
+                execution_rate = "1e-06"
+                override_signal_name = "True"
+                signal_access = "Public"
+                signal_name = "theta1_K"
+            }
+            [
+                position = 1952, 500
+            ]
+
+            component "core/Capacitor" C2 {
+                capacitance = "6.105758521773248e-05"
+                initial_voltage = "0.884411"
+            }
+            [
+                position = 1300, 760
+            ]
+
+            component "core/Resistor" R2 {
+                resistance = "8.844109999999999"
+            }
+            [
+                position = 800, 760
+            ]
+
+            component "core/Voltage Measurement" Vramo2 {
+                execution_rate = "1e-06"
+                sig_output = "True"
+            }
+            [
+                position = 1552, 760
+            ]
+
+            component "core/Gain" V_para_theta2 {
+                execution_rate = "1e-06"
+                gain = "10.0"
+            }
+            [
+                position = 1780, 760
+            ]
+
+            component "core/Probe" Probe_theta2_K {
+                execution_rate = "1e-06"
+                override_signal_name = "True"
+                signal_access = "Public"
+                signal_name = "theta2_K"
+            }
+            [
+                position = 1952, 760
+            ]
+
+            component "core/Capacitor" C3 {
+                capacitance = "0.00035644149182645704"
+                initial_voltage = "0.589157"
+            }
+            [
+                position = 1300, 1020
+            ]
+
+            component "core/Resistor" R3 {
+                resistance = "5.891570000000001"
+            }
+            [
+                position = 800, 1020
+            ]
+
+            component "core/Voltage Measurement" Vramo3 {
+                execution_rate = "1e-06"
+                sig_output = "True"
+            }
+            [
+                position = 1552, 1020
+            ]
+
+            component "core/Gain" V_para_theta3 {
+                execution_rate = "1e-06"
+                gain = "10.0"
+            }
+            [
+                position = 1780, 1020
+            ]
+
+            component "core/Probe" Probe_theta3_K {
+                execution_rate = "1e-06"
+                override_signal_name = "True"
+                signal_access = "Public"
+                signal_name = "theta3_K"
+            }
+            [
+                position = 1952, 1020
+            ]
+
+            component "core/Capacitor" C4 {
+                capacitance = "0.04297096629701518"
+                initial_voltage = "0.073673"
+            }
+            [
+                position = 1300, 1280
+            ]
+
+            component "core/Resistor" R4_x0p2 {
+                resistance = "0.147346"
+            }
+            [
+                position = 552, 1280
+            ]
+
+            component "core/Single Pole Single Throw Contactor" Selecao_R4_0 {
+                ctrl_src = "Model"
+                execution_rate = "1e-06"
+            }
+            [
+                position = 552, 1368
+            ]
+
+            component "core/SCADA Input" R4_nivel0 {
+                def_value = "0.0"
+                execution_rate = "1e-06"
+                max = "1.0"
+                min = "0.0"
+                override_signal_name = "True"
+                signal_access = "Public"
+                signal_name = "R4_nivel0"
+                unit = "0/1"
+            }
+            [
+                position = 300, 2100
+            ]
+
+            component "core/Resistor" R4_x1p0 {
+                resistance = "0.73673"
+            }
+            [
+                position = 768, 1280
+            ]
+
+            component "core/Single Pole Single Throw Contactor" Selecao_R4_1 {
+                ctrl_src = "Model"
+                execution_rate = "1e-06"
+                initial_state = "on"
+            }
+            [
+                position = 768, 1368
+            ]
+
+            component "core/SCADA Input" R4_nivel1 {
+                def_value = "1.0"
+                execution_rate = "1e-06"
+                max = "1.0"
+                min = "0.0"
+                override_signal_name = "True"
+                signal_access = "Public"
+                signal_name = "R4_nivel1"
+                unit = "0/1"
+            }
+            [
+                position = 500, 2100
+            ]
+
+            component "core/Resistor" R4_x5p0 {
+                resistance = "3.68365"
+            }
+            [
+                position = 992, 1280
+            ]
+
+            component "core/Single Pole Single Throw Contactor" Selecao_R4_2 {
+                ctrl_src = "Model"
+                execution_rate = "1e-06"
+            }
+            [
+                position = 992, 1368
+            ]
+
+            component "core/SCADA Input" R4_nivel2 {
+                def_value = "0.0"
+                execution_rate = "1e-06"
+                max = "1.0"
+                min = "0.0"
+                override_signal_name = "True"
+                signal_access = "Public"
+                signal_name = "R4_nivel2"
+                unit = "0/1"
+            }
+            [
+                position = 700, 2100
+            ]
+
+            component "core/Voltage Measurement" Vramo4 {
+                execution_rate = "1e-06"
+                sig_output = "True"
+            }
+            [
+                position = 1552, 1280
+            ]
+
+            component "core/Gain" V_para_theta4 {
+                execution_rate = "1e-06"
+                gain = "10.0"
+            }
+            [
+                position = 1780, 1280
+            ]
+
+            component "core/Probe" Probe_theta4_K {
+                execution_rate = "1e-06"
+                override_signal_name = "True"
+                signal_access = "Public"
+                signal_name = "theta4_K"
+            }
+            [
+                position = 1952, 1280
+            ]
+
+            component "core/Voltage Measurement" Veq_V {
+                execution_rate = "1e-06"
+                override_signal_name = "True"
+                sig_output = "True"
+                signal_access = "Public"
+                signal_name = "Veq_V"
+            }
+            [
+                position = 1800, 1500
+            ]
+
+            component "core/Gain" Elevacao_K {
+                execution_rate = "1e-06"
+                gain = "10.0"
+            }
+            [
+                position = 1900, 200
+            ]
+
+            component "core/Constant" Tc_K {
+                execution_rate = "1e-06"
+                value = "298.15"
+            }
+            [
+                position = 1900, 80
+            ]
+
+            component "core/Sum" T_planta {
+                execution_rate = "1e-06"
+                signs = "++"
+            }
+            [
+                position = 2100, 200
+            ]
+
+            component "core/Probe" Probe_T_planta_K {
+                execution_rate = "1e-06"
+                override_signal_name = "True"
+                signal_access = "Public"
+                signal_name = "T_planta_K"
+            }
+            [
+                position = 2352, 200
+            ]
+
+            port P_W {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 300, 200
+            ]
+
+            port T_K {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 2100, 352
+            ]
+
+            connect P_W W_para_A.in as Connection1
+            connect W_para_A.out Iexc.in as Connection2
+            connect Iexc.p_node Ientrada_A.p_node as Connection3
+            connect R1_nivel0.out Selecao_R1_0.ctrl_in as Connection4
+            connect C1.p_node R1_x0p2.p_node as Connection5
+            connect R1_x0p2.n_node Selecao_R1_0.a_in as Connection6
+            connect Selecao_R1_0.a_out C1.n_node as Connection7
+            connect R1_nivel1.out Selecao_R1_1.ctrl_in as Connection8
+            connect C1.p_node R1_x1p0.p_node as Connection9
+            connect R1_x1p0.n_node Selecao_R1_1.a_in as Connection10
+            connect Selecao_R1_1.a_out C1.n_node as Connection11
+            connect R1_nivel2.out Selecao_R1_2.ctrl_in as Connection12
+            connect C1.p_node R1_x5p0.p_node as Connection13
+            connect R1_x5p0.n_node Selecao_R1_2.a_in as Connection14
+            connect Selecao_R1_2.a_out C1.n_node as Connection15
+            connect Vramo1.p_node C1.p_node as Connection16
+            connect Vramo1.n_node C1.n_node as Connection17
+            connect Vramo1.out V_para_theta1.in as Connection18
+            connect V_para_theta1.out Probe_theta1_K.in as Connection19
+            connect R2.p_node C2.p_node as Connection20
+            connect R2.n_node C2.n_node as Connection21
+            connect Vramo2.p_node C2.p_node as Connection22
+            connect Vramo2.n_node C2.n_node as Connection23
+            connect Vramo2.out V_para_theta2.in as Connection24
+            connect V_para_theta2.out Probe_theta2_K.in as Connection25
+            connect C1.n_node C2.p_node as Connection26
+            connect R3.p_node C3.p_node as Connection27
+            connect R3.n_node C3.n_node as Connection28
+            connect Vramo3.p_node C3.p_node as Connection29
+            connect Vramo3.n_node C3.n_node as Connection30
+            connect Vramo3.out V_para_theta3.in as Connection31
+            connect V_para_theta3.out Probe_theta3_K.in as Connection32
+            connect C2.n_node C3.p_node as Connection33
+            connect R4_nivel0.out Selecao_R4_0.ctrl_in as Connection34
+            connect C4.p_node R4_x0p2.p_node as Connection35
+            connect R4_x0p2.n_node Selecao_R4_0.a_in as Connection36
+            connect Selecao_R4_0.a_out C4.n_node as Connection37
+            connect R4_nivel1.out Selecao_R4_1.ctrl_in as Connection38
+            connect C4.p_node R4_x1p0.p_node as Connection39
+            connect R4_x1p0.n_node Selecao_R4_1.a_in as Connection40
+            connect Selecao_R4_1.a_out C4.n_node as Connection41
+            connect R4_nivel2.out Selecao_R4_2.ctrl_in as Connection42
+            connect C4.p_node R4_x5p0.p_node as Connection43
+            connect R4_x5p0.n_node Selecao_R4_2.a_in as Connection44
+            connect Selecao_R4_2.a_out C4.n_node as Connection45
+            connect Vramo4.p_node C4.p_node as Connection46
+            connect Vramo4.n_node C4.n_node as Connection47
+            connect Vramo4.out V_para_theta4.in as Connection48
+            connect V_para_theta4.out Probe_theta4_K.in as Connection49
+            connect C3.n_node C4.p_node as Connection50
+            connect Ientrada_A.n_node C1.p_node as Connection51
+            connect Iexc.n_node C4.n_node as Connection52
+            connect C4.n_node GND.node as Connection53
+            connect Veq_V.p_node C1.p_node as Connection54
+            connect Veq_V.n_node C4.n_node as Connection55
+            connect Veq_V.out Elevacao_K.in as Connection56
+            connect Elevacao_K.out T_planta.in as Connection57
+            connect Tc_K.out T_planta.in1 as Connection58
+            connect T_planta.out T_K as Connection59
+            connect T_planta.out Probe_T_planta_K.in as Connection60
+        }
+        [
+            position = 1100, 500
+        ]
+
+        component "core/Scope" Resultados_offline {
+            selected_signals = "[\"Planta_RC_eletrica.Veq_V\"]"
+        }
+        [
+            position = 1600, 800
+        ]
+
+        comment Comment1 START G04: equivalente ELETRICO. 0.1 V/K de elevacao; 0.01 A/W.\nAbra os subsistemas para ver os componentes nativos em SI. ENDCOMMENT 
+        [
+            position = 500, 248
+        ]
+
+        connect Excitacao_e_parametros.P_W Planta_RC_eletrica.P_W as Connection1
+    }
+
+    default {
+        "core/Capacitor" {
+            signal_access = "inherit"
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Clock" {
+            enb_reset = "False"
+            reset_at = "1.0"
+            execution_rate = "100e-6"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Product" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/SCADA Input" {
+            signal_access = "inherit"
+            addr = "0"
+            format = "real"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "real"
+            min = "-1e6"
+            max = "1e6"
+            def_value = "0"
+            unit = " "
+            execution_rate = "100e-6"
+        }
+
+        "core/Scope" {
+            signals_data = "{}"
+            selected_signals = "[]"
+            user_range_data = "{}"
+        }
+
+        "core/Step" {
+            step_time = "1"
+            initial_value = "0"
+            final_value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Current Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Signal Controlled Current Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Single Pole Single Throw Contactor" {
+            signal_access = "inherit"
+            switches_option = "False"
+            resistance = "1.0"
+            ctrl_src = "Digital input"
+            ctrl_mode = "switch"
+            Sa = "1"
+            Sa_logic = "active high"
+            pwm_enabling = "False"
+            pwm_enable_di = "13"
+            pwm_enable_inv = "active high"
+            enable_fb_out = "False"
+            fb_out_type = "real"
+            execution_rate = "inherit"
+            dtsm_switch_name = ""
+            dtsm_switch_ctrl = ""
+            initial_state = "off"
+            on_delay = "0"
+            off_delay = "0"
+            switching = "any current"
+            hide_int_meas = "False"
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+}
