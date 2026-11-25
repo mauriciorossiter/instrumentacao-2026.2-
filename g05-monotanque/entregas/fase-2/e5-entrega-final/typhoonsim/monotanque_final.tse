@@ -1,0 +1,6492 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.2
+//
+
+model "monotanque_final" {
+    configuration {
+        hil_device = "HIL402"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = 2e-5
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 8.0
+        abs_tol = 1e-7
+        rel_tol = 1e-7
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/SCADA Input" ensaio {
+            def_value = "1.0"
+            execution_rate = "Ts"
+            max = "3"
+            min = "1"
+            unit = ""
+        }
+        [
+            position = 6600, 6496
+        ]
+
+        component "core/SCADA Input" disparo {
+            def_value = "0.0"
+            execution_rate = "Ts"
+            max = "1"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 6600, 6560
+        ]
+
+        component "core/SCADA Input" h_op_m {
+            def_value = "0.5"
+            execution_rate = "Ts"
+            max = "1.2"
+            min = "0.1"
+            unit = "m"
+        }
+        [
+            position = 6600, 6624
+        ]
+
+        component "core/SCADA Input" dsp_m {
+            def_value = "0.1"
+            execution_rate = "Ts"
+            max = "0.6"
+            min = "-0.4"
+            unit = "m"
+        }
+        [
+            position = 6600, 6688
+        ]
+
+        component "core/SCADA Input" rampa_mm_s {
+            def_value = "1.0"
+            execution_rate = "Ts"
+            max = "50"
+            min = "0.01"
+            unit = "mm/s"
+        }
+        [
+            position = 6600, 6752
+        ]
+
+        component "core/SCADA Input" qd_degrau_Ls {
+            def_value = "2.0"
+            execution_rate = "Ts"
+            max = "10"
+            min = "-5"
+            unit = "L/s"
+        }
+        [
+            position = 6600, 6816
+        ]
+
+        component "core/SCADA Input" qd_Ls {
+            def_value = "0.0"
+            execution_rate = "Ts"
+            max = "10"
+            min = "-5"
+            unit = "L/s"
+        }
+        [
+            position = 6600, 6880
+        ]
+
+        component "core/SCADA Input" degrau_bomba_pct {
+            def_value = "20.0"
+            execution_rate = "Ts"
+            max = "150"
+            min = "-90"
+            unit = "%"
+        }
+        [
+            position = 6600, 6944
+        ]
+
+        component "core/SCADA Input" malha {
+            def_value = "1.0"
+            execution_rate = "Ts"
+            max = "1"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 6600, 7136
+        ]
+
+        component "core/SCADA Input" realimentacao {
+            def_value = "1.0"
+            execution_rate = "Ts"
+            max = "1"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 6600, 7200
+        ]
+
+        component "core/SCADA Input" Kp_Ls_m {
+            def_value = "46.93"
+            execution_rate = "Ts"
+            max = "1000"
+            min = "0"
+            unit = "(L/s)/m"
+        }
+        [
+            position = 6600, 7264
+        ]
+
+        component "core/SCADA Input" Ti_s {
+            def_value = "26.07"
+            execution_rate = "Ts"
+            max = "1000"
+            min = "0.5"
+            unit = "s"
+        }
+        [
+            position = 6600, 7328
+        ]
+
+        component "core/SCADA Input" prefiltro {
+            def_value = "1.0"
+            execution_rate = "Ts"
+            max = "1"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 6600, 7392
+        ]
+
+        component "core/SCADA Input" dT_ar_C {
+            def_value = "5.0"
+            execution_rate = "Ts"
+            max = "60"
+            min = "-30"
+            unit = "C"
+        }
+        [
+            position = 7000, 6496
+        ]
+
+        component "core/SCADA Input" e0_mm {
+            def_value = "5.0"
+            execution_rate = "Ts"
+            max = "100"
+            min = "-100"
+            unit = "mm"
+        }
+        [
+            position = 7000, 6560
+        ]
+
+        component "core/SCADA Input" ruido_mm {
+            def_value = "2.0"
+            execution_rate = "Ts"
+            max = "200"
+            min = "0"
+            unit = "mm"
+        }
+        [
+            position = 7000, 6624
+        ]
+
+        component "core/SCADA Input" T_amostra_s {
+            def_value = "0.15"
+            execution_rate = "Ts"
+            max = "60"
+            min = "0"
+            unit = "s"
+        }
+        [
+            position = 7000, 6688
+        ]
+
+        component "core/SCADA Input" tau_sensor_s {
+            def_value = "0.5"
+            execution_rate = "Ts"
+            max = "200"
+            min = "0"
+            unit = "s"
+        }
+        [
+            position = 7000, 6752
+        ]
+
+        component "core/SCADA Input" t_lat_s {
+            def_value = "0.14"
+            execution_rate = "Ts"
+            max = "30"
+            min = "0"
+            unit = "s"
+        }
+        [
+            position = 7000, 6816
+        ]
+
+        component "core/SCADA Input" resol_mm {
+            def_value = "5.0"
+            execution_rate = "Ts"
+            max = "200"
+            min = "0"
+            unit = "mm"
+        }
+        [
+            position = 7000, 6880
+        ]
+
+        component "core/SCADA Input" interf_mV {
+            def_value = "10.0"
+            execution_rate = "Ts"
+            max = "1000"
+            min = "0"
+            unit = "mV"
+        }
+        [
+            position = 7000, 7056
+        ]
+
+        component "core/SCADA Input" adc_bits {
+            def_value = "12.0"
+            execution_rate = "Ts"
+            max = "16"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 7000, 7120
+        ]
+
+        component "core/SCADA Input" R_terra_mOhm {
+            def_value = "0.0"
+            execution_rate = "Ts"
+            max = "100000"
+            min = "0"
+            unit = "mOhm"
+        }
+        [
+            position = 7000, 7184
+        ]
+
+        component "core/SCADA Input" diferencial {
+            def_value = "0.0"
+            execution_rate = "Ts"
+            max = "1"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 7000, 7248
+        ]
+
+        component "core/SCADA Input" comp_termica {
+            def_value = "0.0"
+            execution_rate = "Ts"
+            max = "1"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 7000, 7376
+        ]
+
+        component "core/SCADA Input" cal_zero_mm {
+            def_value = "0.0"
+            execution_rate = "Ts"
+            max = "100"
+            min = "-100"
+            unit = "mm"
+        }
+        [
+            position = 7000, 7440
+        ]
+
+        component "core/SCADA Input" tau_filtro_s {
+            def_value = "1.0"
+            execution_rate = "Ts"
+            max = "200"
+            min = "0"
+            unit = "s"
+        }
+        [
+            position = 7000, 7504
+        ]
+
+        component "core/Integrator" relogio {
+            execution_rate = "Ts"
+            show_reset = "rising"
+        }
+        [
+            position = 7400, 6460
+        ]
+
+        component "core/Constant" um_relogio {
+            execution_rate = "Ts"
+        }
+        [
+            position = 7280, 6440
+        ]
+
+        component "core/Ground" GND {
+        }
+        [
+            position = 7832, 7808
+        ]
+
+        component "core/Signal Controlled Current Source" q_i_bomba {
+            execution_rate = "Ts"
+        }
+        [
+            position = 7648, 7600
+            rotation = right
+        ]
+
+        component "core/Current Measurement" A_qi {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 7648, 7420
+            rotation = left
+        ]
+
+        component "core/Capacitor" C_tanque {
+            capacitance = "C"
+            initial_voltage = "V0"
+            pole_shift_ignore = "True"
+        }
+        [
+            position = 7832, 7528
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" V_nivel {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 7960, 7528
+            rotation = right
+        ]
+
+        component "core/Current Measurement" A_qo {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 8184, 7420
+            rotation = right
+        ]
+
+        component "core/Inductor" L_tubo {
+            inductance = "L"
+            initial_current = "I0"
+            pole_shift_ignore = "True"
+        }
+        [
+            position = 8184, 7512
+            rotation = right
+        ]
+
+        component "core/Resistor" R_escoamento {
+            resistance = "R_or"
+        }
+        [
+            position = 8184, 7600
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Voltage Source" e_nao_linear {
+            execution_rate = "Ts"
+        }
+        [
+            position = 8184, 7680
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Current Source" q_d_consumo {
+            execution_rate = "Ts"
+        }
+        [
+            position = 8412, 7600
+            rotation = left
+        ]
+
+        component "core/Current Measurement" A_qd {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 8412, 7420
+            rotation = right
+        ]
+
+        component Subsystem Parte_nao_linear {
+            layout = dynamic
+            component "core/Abs" abs_i {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7336, 7088
+            ]
+
+            component "core/Product" i_vezes_abs_i {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7528, 7032
+            ]
+
+            component "core/Gain" v_or_nao_linear {
+                execution_rate = "Ts"
+                gain = "1/K_e**2"
+            }
+            [
+                position = 7944, 7056
+            ]
+
+            component "core/Gain" R_or_i {
+                execution_rate = "Ts"
+                gain = "R_or"
+            }
+            [
+                position = 8552, 7632
+            ]
+
+            component "core/Sum" e_menos_R_i {
+                execution_rate = "Ts"
+                signs = "+-"
+            }
+            [
+                position = 8840, 7448
+            ]
+
+            port i_o {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7000
+            ]
+
+            port e {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 9136, 7000
+            ]
+
+            tag tl1 {
+                value = "p_i_o"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7000
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl2 {
+                value = "p_i_o"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7232, 7080
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl3 {
+                value = "p_i_o"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7424, 7024
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl4 {
+                value = "p_i_o"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 8448, 7624
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl5 {
+                value = "s_e"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 8944, 7448
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl6 {
+                value = "s_e"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 9048, 7000
+                hide_name = True
+                size = 60, 20
+            ]
+
+            connect i_o tl1 as Connection1
+            connect tl2 abs_i.in as Connection2
+            connect tl3 i_vezes_abs_i.in as Connection3
+            connect abs_i.out i_vezes_abs_i.in1 as Connection4
+            connect i_vezes_abs_i.out v_or_nao_linear.in as Connection5
+            connect tl4 R_or_i.in as Connection6
+            connect v_or_nao_linear.out e_menos_R_i.in as Connection7
+            connect R_or_i.out e_menos_R_i.in1 as Connection8
+            connect e_menos_R_i.out tl5 as Connection9
+            connect tl6 e as Connection10
+        }
+        [
+            position = 8552, 7920
+            size = 160, 90
+        ]
+
+        component "core/Gain" v_para_h {
+            execution_rate = "Ts"
+            gain = "1/kv"
+        }
+        [
+            position = 8152, 7920
+        ]
+
+        component Subsystem Medicao_ideal {
+            layout = dynamic
+            component "core/Gain" ganho_unitario {
+                execution_rate = "Ts"
+            }
+            [
+                position = 8040, 7000
+            ]
+
+            port h {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7000
+            ]
+
+            port h_ideal {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8336, 7000
+            ]
+
+            tag tl7 {
+                value = "p_h"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7000
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl8 {
+                value = "p_h"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7936, 6992
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl9 {
+                value = "s_h_ideal"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 8144, 7000
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl10 {
+                value = "s_h_ideal"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 8248, 7000
+                hide_name = True
+                size = 60, 20
+            ]
+
+            connect h tl7 as Connection1
+            connect tl8 ganho_unitario.in as Connection2
+            connect ganho_unitario.out tl9 as Connection3
+            connect tl10 h_ideal as Connection4
+        }
+        [
+            position = 8848, 7248
+            size = 160, 70
+        ]
+
+        component Subsystem Sensor_ultrassonico_MB7389 {
+            layout = dynamic
+            component "core/Constant" H_s_ {
+                execution_rate = "Ts"
+                value = "H_s"
+            }
+            [
+                position = 6760, 6944
+            ]
+
+            component "core/Sum" transducao_d {
+                execution_rate = "Ts"
+                signs = "+-"
+            }
+            [
+                position = 6920, 7000
+            ]
+
+            component "core/Constant" T_sensor_K {
+                execution_rate = "Ts"
+                value = "T_amb+273.15"
+            }
+            [
+                position = 6760, 7184
+            ]
+
+            component "core/Sum" T_caminho_K {
+                execution_rate = "Ts"
+                signs = "++"
+            }
+            [
+                position = 6920, 7208
+            ]
+
+            component "core/Mathematical function" um_sobre_T_caminho {
+                execution_rate = "Ts"
+                mathematical_fn = "reciprocal"
+            }
+            [
+                position = 7080, 7296
+            ]
+
+            component "core/Gain" T_sensor_K_x {
+                execution_rate = "Ts"
+                gain = "T_amb+273.15"
+            }
+            [
+                position = 7128, 7208
+            ]
+
+            component "core/Mathematical function" fator_c_sensor_c_real {
+                execution_rate = "Ts"
+                mathematical_fn = "sqrt"
+            }
+            [
+                position = 7304, 7208
+            ]
+
+            component "core/Product" efeito_temperatura {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7496, 7000
+            ]
+
+            component "core/Gain" e0_m {
+                execution_rate = "Ts"
+                gain = "1e-3"
+            }
+            [
+                position = 7560, 7392
+            ]
+
+            component "core/Sum" erro_de_zero {
+                execution_rate = "Ts"
+                signs = "+-"
+            }
+            [
+                position = 7720, 7000
+            ]
+
+            component "core/C function" ruido_gaussiano {
+                execution_rate = "Ts"
+                global_variables = "real s;
+real u1;
+real u2;"
+                init_fnc = "s = 20261116.0;"
+                input_terminals_dimensions = "inherit"
+                output_fnc = "s = fmod(16807.0 * s, 2147483647.0);
+u1 = s / 2147483647.0;
+s = fmod(16807.0 * s, 2147483647.0);
+u2 = s / 2147483647.0;
+out = sqrt(-2.0 * log(u1)) * cos(6.283185307179586 * u2);"
+                output_terminals_dimensions = "inherit"
+            }
+            [
+                position = 7560, 7536
+            ]
+
+            component "core/Constant" zero_r {
+                execution_rate = "Ts"
+                value = "0"
+            }
+            [
+                position = 7400, 7536
+            ]
+
+            component "core/Gain" sigma_m {
+                execution_rate = "Ts"
+                gain = "1e-3"
+            }
+            [
+                position = 7560, 7664
+            ]
+
+            component "core/Product" ruido_x_sigma {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7752, 7600
+            ]
+
+            component "core/Sum" soma_ruido {
+                execution_rate = "Ts"
+                signs = "++"
+            }
+            [
+                position = 7944, 7000
+            ]
+
+            component "core/Limit" Ta_min {
+                execution_rate = "Ts"
+                lower_limit = "0.001"
+                upper_limit = "1000000.0"
+            }
+            [
+                position = 6920, 7992
+            ]
+
+            component "core/Mathematical function" um_sobre_Ta {
+                execution_rate = "Ts"
+                mathematical_fn = "reciprocal"
+            }
+            [
+                position = 7048, 7904
+            ]
+
+            component "core/Gain" w_amostra {
+                execution_rate = "Ts"
+                gain = "2*3.141592653589793*kt"
+            }
+            [
+                position = 7240, 7904
+            ]
+
+            component "core/Trigonometric function" amostragem_SH_relogio {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7992, 7992
+            ]
+
+            component "core/Product" amostragem_SH_wt {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7816, 7992
+            ]
+
+            component "core/Sample and Hold" amostragem_SH {
+                execution_rate = "Ts"
+                operator = ">"
+                trigger_type = "Rising Edge"
+            }
+            [
+                position = 8168, 7904
+            ]
+
+            component "core/Signal switch" amostragem_liga {
+                execution_rate = "Ts"
+                threshold = "0"
+            }
+            [
+                position = 8360, 7032
+            ]
+
+            component "core/Integrator" filtro_firmware_estado {
+                execution_rate = "Ts"
+                init_value = "d0"
+            }
+            [
+                position = 9032, 7032
+            ]
+
+            component "core/Sum" filtro_firmware_erro {
+                execution_rate = "Ts"
+                signs = "+-"
+            }
+            [
+                position = 8648, 7032
+            ]
+
+            component "core/Limit" filtro_firmware_tau_min {
+                execution_rate = "Ts"
+                lower_limit = "0.001"
+                upper_limit = "1000000.0"
+            }
+            [
+                position = 8264, 7136
+            ]
+
+            component "core/Mathematical function" filtro_firmware_1_tau {
+                execution_rate = "Ts"
+                mathematical_fn = "reciprocal"
+            }
+            [
+                position = 8456, 7136
+            ]
+
+            component "core/Gain" filtro_firmware_kt {
+                execution_rate = "Ts"
+                gain = "kt"
+            }
+            [
+                position = 8648, 7136
+            ]
+
+            component "core/Product" filtro_firmware_deriv {
+                execution_rate = "Ts"
+            }
+            [
+                position = 8840, 7032
+            ]
+
+            component "core/Signal switch" filtro_firmware_liga {
+                execution_rate = "Ts"
+                threshold = "0"
+            }
+            [
+                position = 9368, 7056
+            ]
+
+            component "core/Delay" latencia {
+                delay_type = "Variable delay"
+                execution_rate = "Ts"
+                init_value = "d0"
+                max_delay_length = "N_MAX_ATRASO"
+            }
+            [
+                position = 9560, 7032
+            ]
+
+            component "core/Gain" lat_amostras {
+                execution_rate = "Ts"
+                gain = "1/(kt*Ts)"
+            }
+            [
+                position = 9080, 8200
+            ]
+
+            component "core/Limit" lat_max {
+                execution_rate = "Ts"
+                lower_limit = "0"
+                upper_limit = "N_MAX_ATRASO-1"
+            }
+            [
+                position = 9320, 8200
+            ]
+
+            component "core/Signal switch" latencia_liga {
+                execution_rate = "Ts"
+                threshold = "0"
+            }
+            [
+                position = 9800, 7056
+            ]
+
+            component "core/Gain" resol_m {
+                execution_rate = "Ts"
+                gain = "1e-3"
+            }
+            [
+                position = 9880, 7480
+            ]
+
+            component "core/Limit" resolucao_qmin {
+                execution_rate = "Ts"
+                lower_limit = "1e-09"
+                upper_limit = "1000000.0"
+            }
+            [
+                position = 9912, 7256
+            ]
+
+            component "core/Mathematical function" resolucao_1_q {
+                execution_rate = "Ts"
+                mathematical_fn = "reciprocal"
+            }
+            [
+                position = 9960, 7184
+            ]
+
+            component "core/Product" resolucao_x_sobre_q {
+                execution_rate = "Ts"
+            }
+            [
+                position = 10056, 7056
+            ]
+
+            component "core/C function" resolucao_arredonda {
+                execution_rate = "Ts"
+                input_terminals_dimensions = "inherit"
+                output_fnc = "out = floor(in + 0.5);"
+                output_terminals_dimensions = "inherit"
+            }
+            [
+                position = 10232, 7056
+            ]
+
+            component "core/Product" resolucao_vezes_q {
+                execution_rate = "Ts"
+            }
+            [
+                position = 10424, 7056
+            ]
+
+            component "core/Signal switch" resolucao_liga {
+                execution_rate = "Ts"
+                threshold = "0"
+            }
+            [
+                position = 10600, 7088
+            ]
+
+            component "core/Gain" saida_analogica_k_s {
+                execution_rate = "Ts"
+                gain = "k_s"
+            }
+            [
+                position = 10920, 7088
+            ]
+
+            port h {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7000
+            ]
+
+            port t {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7184
+            ]
+
+            port dT_ar_C {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7360
+            ]
+
+            port e0_mm {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7536
+            ]
+
+            port ruido_mm {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7720
+            ]
+
+            port T_amostra_s {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7904
+            ]
+
+            port tau_sensor_s {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 8080
+            ]
+
+            port t_lat_s {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 8256
+            ]
+
+            port resol_mm {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 8440
+            ]
+
+            port v_sensor {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 11216, 7000
+            ]
+
+            port d_lida {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 11216, 7240
+            ]
+
+            tag tl11 {
+                value = "p_h"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7000
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl12 {
+                value = "p_h"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 6816, 7008
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl13 {
+                value = "p_dT_ar_C"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7360
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl14 {
+                value = "p_dT_ar_C"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 6816, 7216
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl15 {
+                value = "p_e0_mm"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7536
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl16 {
+                value = "p_e0_mm"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7456, 7384
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl17 {
+                value = "p_ruido_mm"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7720
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl18 {
+                value = "p_ruido_mm"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7456, 7656
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl19 {
+                value = "p_T_amostra_s"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7904
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl20 {
+                value = "p_T_amostra_s"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 6816, 7984
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl21 {
+                value = "p_t"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7184
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl22 {
+                value = "p_t"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7712, 8000
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl23 {
+                value = "p_T_amostra_s"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 8256, 7032
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl24 {
+                value = "p_tau_sensor_s"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 8080
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl25 {
+                value = "p_tau_sensor_s"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 8160, 7128
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl26 {
+                value = "p_tau_sensor_s"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 9264, 7056
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl27 {
+                value = "p_t_lat_s"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 8256
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl28 {
+                value = "p_t_lat_s"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 8976, 8192
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl29 {
+                value = "p_t_lat_s"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 9696, 7056
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl30 {
+                value = "p_resol_mm"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 8440
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl31 {
+                value = "p_resol_mm"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 9776, 7472
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl32 {
+                value = "s_d_lida"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 10864, 7088
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl33 {
+                value = "s_d_lida"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 11128, 7240
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl34 {
+                value = "s_v_sensor"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 11024, 7088
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl35 {
+                value = "s_v_sensor"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 11128, 7000
+                hide_name = True
+                size = 60, 20
+            ]
+
+            junction j_d sp
+            [
+                position = 7080, 7000
+            ]
+
+            junction filtro_firmware_jy sp
+            [
+                position = 9192, 7032
+            ]
+
+            junction resolucao_jq sp
+            [
+                position = 9864, 7184
+            ]
+
+            junction resolucao_jx sp
+            [
+                position = 9864, 7056
+            ]
+
+            junction j_dlida sp
+            [
+                position = 10760, 7088
+            ]
+
+            comment Comment1 START 1 transducao d = H_s - h | 2 temperatura | 3 erro de zero | 4 ruido | 5 amostragem | 6 filtro do firmware | 7 latencia | 8 resolucao | saida Vcc/5120 por mm ENDCOMMENT 
+            [
+                position = 6800, 6848
+            ]
+
+            connect H_s_.out transducao_d.in as Connection1
+            connect h tl11 as Connection2
+            connect tl12 transducao_d.in1 as Connection3
+            connect transducao_d.out j_d as Connection4
+            connect T_sensor_K.out T_caminho_K.in as Connection5
+            connect dT_ar_C tl13 as Connection6
+            connect tl14 T_caminho_K.in1 as Connection7
+            connect T_caminho_K.out um_sobre_T_caminho.in as Connection8
+            connect um_sobre_T_caminho.out T_sensor_K_x.in as Connection9
+            connect T_sensor_K_x.out fator_c_sensor_c_real.in as Connection10
+            connect j_d efeito_temperatura.in as Connection11
+            connect fator_c_sensor_c_real.out efeito_temperatura.in1 as Connection12
+            connect e0_mm tl15 as Connection13
+            connect tl16 e0_m.in as Connection14
+            connect efeito_temperatura.out erro_de_zero.in as Connection15
+            connect e0_m.out erro_de_zero.in1 as Connection16
+            connect zero_r.out ruido_gaussiano.in as Connection17
+            connect ruido_mm tl17 as Connection18
+            connect tl18 sigma_m.in as Connection19
+            connect ruido_gaussiano.out ruido_x_sigma.in as Connection20
+            connect sigma_m.out ruido_x_sigma.in1 as Connection21
+            connect erro_de_zero.out soma_ruido.in as Connection22
+            connect ruido_x_sigma.out soma_ruido.in1 as Connection23
+            connect T_amostra_s tl19 as Connection24
+            connect tl20 Ta_min.in as Connection25
+            connect Ta_min.out um_sobre_Ta.in as Connection26
+            connect um_sobre_Ta.out w_amostra.in as Connection27
+            connect w_amostra.out amostragem_SH_wt.in as Connection28
+            connect t tl21 as Connection29
+            connect tl22 amostragem_SH_wt.in1 as Connection30
+            connect amostragem_SH_wt.out amostragem_SH_relogio.in as Connection31
+            connect soma_ruido.out amostragem_SH.In1 as Connection32
+            connect amostragem_SH_relogio.out amostragem_SH.In2 as Connection33
+            connect amostragem_SH.Out1 amostragem_liga.in as Connection34
+            connect soma_ruido.out amostragem_liga.in1 as Connection35
+            connect tl23 amostragem_liga.in2 as Connection36
+            connect filtro_firmware_estado.out filtro_firmware_jy as Connection37
+            connect amostragem_liga.out filtro_firmware_erro.in as Connection38
+            connect filtro_firmware_jy filtro_firmware_erro.in1 as Connection39
+            connect tau_sensor_s tl24 as Connection40
+            connect tl25 filtro_firmware_tau_min.in as Connection41
+            connect filtro_firmware_tau_min.out filtro_firmware_1_tau.in as Connection42
+            connect filtro_firmware_1_tau.out filtro_firmware_kt.in as Connection43
+            connect filtro_firmware_erro.out filtro_firmware_deriv.in as Connection44
+            connect filtro_firmware_kt.out filtro_firmware_deriv.in1 as Connection45
+            connect filtro_firmware_deriv.out filtro_firmware_estado.in as Connection46
+            connect filtro_firmware_jy filtro_firmware_liga.in as Connection47
+            connect amostragem_liga.out filtro_firmware_liga.in1 as Connection48
+            connect tl26 filtro_firmware_liga.in2 as Connection49
+            connect filtro_firmware_liga.out latencia.in as Connection50
+            connect t_lat_s tl27 as Connection51
+            connect tl28 lat_amostras.in as Connection52
+            connect lat_amostras.out lat_max.in as Connection53
+            connect lat_max.out latencia.delay_in as Connection54
+            connect latencia.out latencia_liga.in as Connection55
+            connect filtro_firmware_liga.out latencia_liga.in1 as Connection56
+            connect tl29 latencia_liga.in2 as Connection57
+            connect resol_mm tl30 as Connection58
+            connect tl31 resol_m.in as Connection59
+            connect resol_m.out resolucao_jq as Connection60
+            connect latencia_liga.out resolucao_jx as Connection61
+            connect resolucao_jq resolucao_qmin.in as Connection62
+            connect resolucao_qmin.out resolucao_1_q.in as Connection63
+            connect resolucao_jx resolucao_x_sobre_q.in as Connection64
+            connect resolucao_1_q.out resolucao_x_sobre_q.in1 as Connection65
+            connect resolucao_x_sobre_q.out resolucao_arredonda.in as Connection66
+            connect resolucao_arredonda.out resolucao_vezes_q.in as Connection67
+            connect resolucao_jq resolucao_vezes_q.in1 as Connection68
+            connect resolucao_vezes_q.out resolucao_liga.in as Connection69
+            connect resolucao_jx resolucao_liga.in1 as Connection70
+            connect resolucao_jq resolucao_liga.in2 as Connection71
+            connect resolucao_liga.out j_dlida as Connection72
+            connect j_dlida tl32 as Connection73
+            connect tl33 d_lida as Connection74
+            connect j_dlida saida_analogica_k_s.in as Connection75
+            connect saida_analogica_k_s.out tl34 as Connection76
+            connect tl35 v_sensor as Connection77
+        }
+        [
+            position = 8000, 8300
+            size = 160, 420
+        ]
+
+        component Subsystem Condicionamento {
+            layout = dynamic
+            component "core/Trigonometric function" sen_60Hz {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7080, 7448
+            ]
+
+            component "core/Gain" w_60Hz {
+                execution_rate = "Ts"
+                gain = "2*3.141592653589793*60*kt"
+            }
+            [
+                position = 6920, 7448
+            ]
+
+            component "core/Gain" mV_para_V {
+                execution_rate = "Ts"
+                gain = "1e-3"
+            }
+            [
+                position = 7080, 7296
+            ]
+
+            component "core/Product" interferencia_60Hz {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7304, 7392
+            ]
+
+            component "core/Product" R_terra_x_i {
+                execution_rate = "Ts"
+            }
+            [
+                position = 6968, 7688
+            ]
+
+            component "core/Gain" queda_no_terra {
+                execution_rate = "Ts"
+                gain = "alfa_bomba*1e-3"
+            }
+            [
+                position = 7160, 7688
+            ]
+
+            component "core/Sum" modo_comum {
+                execution_rate = "Ts"
+                signs = "++"
+            }
+            [
+                position = 7336, 7600
+            ]
+
+            component "core/Constant" rejeicao_CMRR {
+                execution_rate = "Ts"
+                value = "rej_cm"
+            }
+            [
+                position = 7160, 7776
+            ]
+
+            component "core/Constant" terminacao_simples {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7160, 7872
+            ]
+
+            component "core/Signal switch" entrada_diferencial {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7336, 7808
+            ]
+
+            component "core/Product" modo_comum_residual {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7464, 7688
+            ]
+
+            component "core/Sum" cabo_sensor {
+                execution_rate = "Ts"
+                signs = "++"
+            }
+            [
+                position = 7528, 7000
+            ]
+
+            component "core/Signal Controlled Voltage Source" saida_do_sensor {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7800, 7224
+                rotation = right
+            ]
+
+            component "core/Resistor" R_filtro {
+                resistance = "R_f"
+            }
+            [
+                position = 8008, 7088
+            ]
+
+            component "core/Capacitor" C_filtro {
+                capacitance = "C_f"
+                initial_voltage = "k_s*d0"
+            }
+            [
+                position = 8200, 7224
+                rotation = right
+            ]
+
+            component "core/Voltage Measurement" V_filtro {
+                execution_rate = "Ts"
+                sig_output = "True"
+            }
+            [
+                position = 8392, 7224
+            ]
+
+            component "core/Ground" GND_cond {
+            }
+            [
+                position = 8200, 7448
+            ]
+
+            component "core/Constant" V_off_ {
+                execution_rate = "Ts"
+                value = "V_off"
+            }
+            [
+                position = 8600, 7328
+            ]
+
+            component "core/Sum" menos_V_off {
+                execution_rate = "Ts"
+                signs = "+-"
+            }
+            [
+                position = 8728, 7224
+            ]
+
+            component "core/Gain" ganho_G {
+                execution_rate = "Ts"
+                gain = "G_amp"
+            }
+            [
+                position = 8888, 7224
+            ]
+
+            component "core/Limit" faixa_ADC {
+                execution_rate = "Ts"
+                lower_limit = "0"
+                upper_limit = "V_ref"
+            }
+            [
+                position = 9080, 7224
+            ]
+
+            component "core/Constant" V_ref_ {
+                execution_rate = "Ts"
+                value = "V_ref"
+            }
+            [
+                position = 7368, 7840
+            ]
+
+            component "core/Gain" menos_ln2 {
+                execution_rate = "Ts"
+                gain = "-0.6931471805599453"
+            }
+            [
+                position = 7160, 7960
+            ]
+
+            component "core/Mathematical function" dois_a_menos_bits {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7368, 7960
+            ]
+
+            component "core/Product" LSB {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7560, 7904
+            ]
+
+            component "core/Constant" w_adc {
+                execution_rate = "Ts"
+                value = "2*3.141592653589793*f_adc*kt"
+            }
+            [
+                position = 9000, 7688
+            ]
+
+            component "core/Trigonometric function" ADC_amostragem_relogio {
+                execution_rate = "Ts"
+            }
+            [
+                position = 9224, 7688
+            ]
+
+            component "core/Product" ADC_amostragem_wt {
+                execution_rate = "Ts"
+            }
+            [
+                position = 9048, 7688
+            ]
+
+            component "core/Sample and Hold" ADC_amostragem {
+                execution_rate = "Ts"
+                operator = ">"
+                trigger_type = "Rising Edge"
+            }
+            [
+                position = 9400, 7600
+            ]
+
+            component "core/Limit" ADC_quantizador_qmin {
+                execution_rate = "Ts"
+                lower_limit = "1e-09"
+                upper_limit = "1000000.0"
+            }
+            [
+                position = 9752, 7792
+            ]
+
+            component "core/Mathematical function" ADC_quantizador_1_q {
+                execution_rate = "Ts"
+                mathematical_fn = "reciprocal"
+            }
+            [
+                position = 9800, 7720
+            ]
+
+            component "core/Product" ADC_quantizador_x_sobre_q {
+                execution_rate = "Ts"
+            }
+            [
+                position = 9896, 7600
+            ]
+
+            component "core/C function" ADC_quantizador_arredonda {
+                execution_rate = "Ts"
+                input_terminals_dimensions = "inherit"
+                output_fnc = "out = floor(in + 0.5);"
+                output_terminals_dimensions = "inherit"
+            }
+            [
+                position = 10072, 7600
+            ]
+
+            component "core/Product" ADC_quantizador_vezes_q {
+                execution_rate = "Ts"
+            }
+            [
+                position = 10264, 7600
+            ]
+
+            component "core/Signal switch" ADC_quantizador_liga {
+                execution_rate = "Ts"
+                threshold = "0"
+            }
+            [
+                position = 10440, 7632
+            ]
+
+            component "core/Signal switch" ADC_liga {
+                execution_rate = "Ts"
+                threshold = "0"
+            }
+            [
+                position = 10600, 7296
+            ]
+
+            port v_sensor {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7000
+            ]
+
+            port t {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7184
+            ]
+
+            port interf_mV {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7360
+            ]
+
+            port adc_bits {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7536
+            ]
+
+            port i_bomba {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7720
+            ]
+
+            port R_terra_mOhm {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7904
+            ]
+
+            port diferencial {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 8080
+            ]
+
+            port v_adc {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 10896, 7000
+            ]
+
+            port v_filtro {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 10896, 7240
+            ]
+
+            port v_modo_comum {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 10896, 7480
+            ]
+
+            tag tl36 {
+                value = "p_t"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7184
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl37 {
+                value = "p_t"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 6816, 7440
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl38 {
+                value = "p_interf_mV"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7360
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl39 {
+                value = "p_interf_mV"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 6976, 7288
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl40 {
+                value = "p_R_terra_mOhm"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7904
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl41 {
+                value = "p_R_terra_mOhm"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 6864, 7680
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl42 {
+                value = "p_i_bomba"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7720
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl43 {
+                value = "p_i_bomba"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 6864, 7696
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl44 {
+                value = "s_v_modo_comum"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 7536, 7600
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl45 {
+                value = "s_v_modo_comum"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 10808, 7480
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl46 {
+                value = "p_diferencial"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 8080
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl47 {
+                value = "p_diferencial"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7232, 7808
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl48 {
+                value = "p_v_sensor"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7000
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl49 {
+                value = "p_v_sensor"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7424, 6992
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl50 {
+                value = "s_v_filtro"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 8704, 7224
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl51 {
+                value = "s_v_filtro"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 10808, 7240
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl52 {
+                value = "p_adc_bits"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7536
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl53 {
+                value = "p_adc_bits"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7056, 7952
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl54 {
+                value = "p_t"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 8944, 7696
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl55 {
+                value = "p_adc_bits"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 10496, 7296
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl56 {
+                value = "s_v_adc"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 10704, 7296
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl57 {
+                value = "s_v_adc"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 10808, 7000
+                hide_name = True
+                size = 60, 20
+            ]
+
+            junction j_vcm sp
+            [
+                position = 7432, 7600
+            ]
+
+            junction n_rc_a pe
+            [
+                position = 8200, 7088
+            ]
+
+            junction n_rc_b pe
+            [
+                position = 8392, 7088
+            ]
+
+            junction n_gnd_a pe
+            [
+                position = 7800, 7376
+            ]
+
+            junction n_gnd_b pe
+            [
+                position = 8200, 7376
+            ]
+
+            junction n_gnd_c pe
+            [
+                position = 8392, 7376
+            ]
+
+            junction j_vf sp
+            [
+                position = 8600, 7224
+            ]
+
+            junction ADC_quantizador_jq sp
+            [
+                position = 9704, 7720
+            ]
+
+            junction ADC_quantizador_jx sp
+            [
+                position = 9704, 7600
+            ]
+
+            comment Comment1 START modo comum (60 Hz no cabo + laco de terra R_terra*alfa*q_i) -> entrada simples ou diferencial (CMRR) -> filtro RC (R_f, C_f: tau 16 ms real) -> amplificador G (v - V_off) -> ADC (f_adc, bits) ENDCOMMENT 
+            [
+                position = 6900, 6848
+            ]
+
+            connect t tl36 as Connection1
+            connect tl37 w_60Hz.in as Connection2
+            connect w_60Hz.out sen_60Hz.in as Connection3
+            connect interf_mV tl38 as Connection4
+            connect tl39 mV_para_V.in as Connection5
+            connect sen_60Hz.out interferencia_60Hz.in as Connection6
+            connect mV_para_V.out interferencia_60Hz.in1 as Connection7
+            connect R_terra_mOhm tl40 as Connection8
+            connect tl41 R_terra_x_i.in as Connection9
+            connect i_bomba tl42 as Connection10
+            connect tl43 R_terra_x_i.in1 as Connection11
+            connect R_terra_x_i.out queda_no_terra.in as Connection12
+            connect interferencia_60Hz.out modo_comum.in as Connection13
+            connect queda_no_terra.out modo_comum.in1 as Connection14
+            connect modo_comum.out j_vcm as Connection15
+            connect j_vcm tl44 as Connection16
+            connect tl45 v_modo_comum as Connection17
+            connect rejeicao_CMRR.out entrada_diferencial.in as Connection18
+            connect terminacao_simples.out entrada_diferencial.in1 as Connection19
+            connect diferencial tl46 as Connection20
+            connect tl47 entrada_diferencial.in2 as Connection21
+            connect j_vcm modo_comum_residual.in as Connection22
+            connect entrada_diferencial.out modo_comum_residual.in1 as Connection23
+            connect v_sensor tl48 as Connection24
+            connect tl49 cabo_sensor.in as Connection25
+            connect modo_comum_residual.out cabo_sensor.in1 as Connection26
+            connect cabo_sensor.out saida_do_sensor.in as Connection27
+            connect saida_do_sensor.p_node R_filtro.p_node as Connection28
+            connect R_filtro.n_node n_rc_a as Connection29
+            connect n_rc_a C_filtro.p_node as Connection30
+            connect n_rc_a n_rc_b as Connection31
+            connect n_rc_b V_filtro.p_node as Connection32
+            connect saida_do_sensor.n_node n_gnd_a as Connection33
+            connect n_gnd_a n_gnd_b as Connection34
+            connect n_gnd_b C_filtro.n_node as Connection35
+            connect n_gnd_b n_gnd_c as Connection36
+            connect n_gnd_c V_filtro.n_node as Connection37
+            connect n_gnd_b GND_cond.node as Connection38
+            connect V_filtro.out j_vf as Connection39
+            connect j_vf tl50 as Connection40
+            connect tl51 v_filtro as Connection41
+            connect j_vf menos_V_off.in as Connection42
+            connect V_off_.out menos_V_off.in1 as Connection43
+            connect menos_V_off.out ganho_G.in as Connection44
+            connect ganho_G.out faixa_ADC.in as Connection45
+            connect adc_bits tl52 as Connection46
+            connect tl53 menos_ln2.in as Connection47
+            connect menos_ln2.out dois_a_menos_bits.in as Connection48
+            connect V_ref_.out LSB.in as Connection49
+            connect dois_a_menos_bits.out LSB.in1 as Connection50
+            connect w_adc.out ADC_amostragem_wt.in as Connection51
+            connect tl54 ADC_amostragem_wt.in1 as Connection52
+            connect ADC_amostragem_wt.out ADC_amostragem_relogio.in as Connection53
+            connect faixa_ADC.out ADC_amostragem.In1 as Connection54
+            connect ADC_amostragem_relogio.out ADC_amostragem.In2 as Connection55
+            connect LSB.out ADC_quantizador_jq as Connection56
+            connect ADC_amostragem.Out1 ADC_quantizador_jx as Connection57
+            connect ADC_quantizador_jq ADC_quantizador_qmin.in as Connection58
+            connect ADC_quantizador_qmin.out ADC_quantizador_1_q.in as Connection59
+            connect ADC_quantizador_jx ADC_quantizador_x_sobre_q.in as Connection60
+            connect ADC_quantizador_1_q.out ADC_quantizador_x_sobre_q.in1 as Connection61
+            connect ADC_quantizador_x_sobre_q.out ADC_quantizador_arredonda.in as Connection62
+            connect ADC_quantizador_arredonda.out ADC_quantizador_vezes_q.in as Connection63
+            connect ADC_quantizador_jq ADC_quantizador_vezes_q.in1 as Connection64
+            connect ADC_quantizador_vezes_q.out ADC_quantizador_liga.in as Connection65
+            connect ADC_quantizador_jx ADC_quantizador_liga.in1 as Connection66
+            connect ADC_quantizador_jq ADC_quantizador_liga.in2 as Connection67
+            connect ADC_quantizador_liga.out ADC_liga.in as Connection68
+            connect faixa_ADC.out ADC_liga.in1 as Connection69
+            connect tl55 ADC_liga.in2 as Connection70
+            connect ADC_liga.out tl56 as Connection71
+            connect tl57 v_adc as Connection72
+        }
+        [
+            position = 8552, 8300
+            size = 160, 340
+        ]
+
+        component Subsystem Processamento {
+            layout = dynamic
+            component "core/Gain" div_G {
+                execution_rate = "Ts"
+                gain = "1/G_amp"
+            }
+            [
+                position = 6920, 7000
+            ]
+
+            component "core/Constant" V_off_p {
+                execution_rate = "Ts"
+                value = "V_off"
+            }
+            [
+                position = 7000, 7088
+            ]
+
+            component "core/Sum" mais_V_off {
+                execution_rate = "Ts"
+                signs = "++"
+            }
+            [
+                position = 7160, 7000
+            ]
+
+            component "core/Gain" V_para_m {
+                execution_rate = "Ts"
+                gain = "1/k_s"
+            }
+            [
+                position = 7400, 7000
+            ]
+
+            component "core/Constant" e_Text_ {
+                execution_rate = "Ts"
+                value = "e_Text"
+            }
+            [
+                position = 6888, 7512
+            ]
+
+            component "core/Sum" dT_externo {
+                execution_rate = "Ts"
+                signs = "+-"
+            }
+            [
+                position = 7048, 7448
+            ]
+
+            component "core/Product" dT_medido_se_ligado {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7240, 7448
+            ]
+
+            component "core/Constant" TK_ {
+                execution_rate = "Ts"
+                value = "T_amb+273.15"
+            }
+            [
+                position = 7240, 7536
+            ]
+
+            component "core/Sum" T_caminho_med {
+                execution_rate = "Ts"
+                signs = "++"
+            }
+            [
+                position = 7400, 7448
+            ]
+
+            component "core/Gain" div_T_sensor {
+                execution_rate = "Ts"
+                gain = "1/(T_amb+273.15)"
+            }
+            [
+                position = 7560, 7448
+            ]
+
+            component "core/Mathematical function" fator_correcao {
+                execution_rate = "Ts"
+                mathematical_fn = "sqrt"
+            }
+            [
+                position = 7720, 7448
+            ]
+
+            component "core/Product" compensacao_termica {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7880, 7000
+            ]
+
+            component "core/Constant" H_s_p {
+                execution_rate = "Ts"
+                value = "H_s"
+            }
+            [
+                position = 7928, 7088
+            ]
+
+            component "core/Sum" H_s_menos_d {
+                execution_rate = "Ts"
+                signs = "+-"
+            }
+            [
+                position = 8088, 7000
+            ]
+
+            component "core/Gain" cal_m {
+                execution_rate = "Ts"
+                gain = "1e-3"
+            }
+            [
+                position = 8088, 7184
+            ]
+
+            component "core/Sum" nivel_H_menos_d {
+                execution_rate = "Ts"
+                signs = "+-"
+            }
+            [
+                position = 8280, 7000
+            ]
+
+            component "core/Integrator" filtro_digital_estado {
+                execution_rate = "Ts"
+                init_value = "h0"
+            }
+            [
+                position = 8952, 7000
+            ]
+
+            component "core/Sum" filtro_digital_erro {
+                execution_rate = "Ts"
+                signs = "+-"
+            }
+            [
+                position = 8568, 7000
+            ]
+
+            component "core/Limit" filtro_digital_tau_min {
+                execution_rate = "Ts"
+                lower_limit = "0.001"
+                upper_limit = "1000000.0"
+            }
+            [
+                position = 8184, 7104
+            ]
+
+            component "core/Mathematical function" filtro_digital_1_tau {
+                execution_rate = "Ts"
+                mathematical_fn = "reciprocal"
+            }
+            [
+                position = 8376, 7104
+            ]
+
+            component "core/Gain" filtro_digital_kt {
+                execution_rate = "Ts"
+                gain = "kt"
+            }
+            [
+                position = 8568, 7104
+            ]
+
+            component "core/Product" filtro_digital_deriv {
+                execution_rate = "Ts"
+            }
+            [
+                position = 8760, 7000
+            ]
+
+            component "core/Signal switch" filtro_digital_liga {
+                execution_rate = "Ts"
+                threshold = "0"
+            }
+            [
+                position = 9288, 7032
+            ]
+
+            port v_adc {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7000
+            ]
+
+            port dT_ar_C {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7184
+            ]
+
+            port comp_termica {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7360
+            ]
+
+            port cal_zero_mm {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7536
+            ]
+
+            port tau_filtro_s {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7720
+            ]
+
+            port h_medido {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 9584, 7000
+            ]
+
+            tag tl58 {
+                value = "p_v_adc"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7000
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl59 {
+                value = "p_v_adc"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 6816, 6992
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl60 {
+                value = "p_dT_ar_C"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7184
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl61 {
+                value = "p_dT_ar_C"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 6944, 7440
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl62 {
+                value = "p_comp_termica"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7360
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl63 {
+                value = "p_comp_termica"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7136, 7440
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl64 {
+                value = "p_cal_zero_mm"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7536
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl65 {
+                value = "p_cal_zero_mm"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7984, 7176
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl66 {
+                value = "p_tau_filtro_s"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7720
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl67 {
+                value = "p_tau_filtro_s"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 8080, 7096
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl68 {
+                value = "p_tau_filtro_s"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 9184, 7032
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl69 {
+                value = "s_h_medido"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 9392, 7032
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl70 {
+                value = "s_h_medido"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 9496, 7000
+                hide_name = True
+                size = 60, 20
+            ]
+
+            junction filtro_digital_jy sp
+            [
+                position = 9112, 7000
+            ]
+
+            comment Comment1 START conversao de unidades -> correcao de temperatura (sensor externo) -> nivel = H_s - d - correcao de zero -> filtro digital ENDCOMMENT 
+            [
+                position = 6800, 6848
+            ]
+
+            connect v_adc tl58 as Connection1
+            connect tl59 div_G.in as Connection2
+            connect div_G.out mais_V_off.in as Connection3
+            connect V_off_p.out mais_V_off.in1 as Connection4
+            connect mais_V_off.out V_para_m.in as Connection5
+            connect dT_ar_C tl60 as Connection6
+            connect tl61 dT_externo.in as Connection7
+            connect e_Text_.out dT_externo.in1 as Connection8
+            connect comp_termica tl62 as Connection9
+            connect tl63 dT_medido_se_ligado.in as Connection10
+            connect dT_externo.out dT_medido_se_ligado.in1 as Connection11
+            connect TK_.out T_caminho_med.in as Connection12
+            connect dT_medido_se_ligado.out T_caminho_med.in1 as Connection13
+            connect T_caminho_med.out div_T_sensor.in as Connection14
+            connect div_T_sensor.out fator_correcao.in as Connection15
+            connect V_para_m.out compensacao_termica.in as Connection16
+            connect fator_correcao.out compensacao_termica.in1 as Connection17
+            connect H_s_p.out H_s_menos_d.in as Connection18
+            connect compensacao_termica.out H_s_menos_d.in1 as Connection19
+            connect cal_zero_mm tl64 as Connection20
+            connect tl65 cal_m.in as Connection21
+            connect H_s_menos_d.out nivel_H_menos_d.in as Connection22
+            connect cal_m.out nivel_H_menos_d.in1 as Connection23
+            connect filtro_digital_estado.out filtro_digital_jy as Connection24
+            connect nivel_H_menos_d.out filtro_digital_erro.in as Connection25
+            connect filtro_digital_jy filtro_digital_erro.in1 as Connection26
+            connect tau_filtro_s tl66 as Connection27
+            connect tl67 filtro_digital_tau_min.in as Connection28
+            connect filtro_digital_tau_min.out filtro_digital_1_tau.in as Connection29
+            connect filtro_digital_1_tau.out filtro_digital_kt.in as Connection30
+            connect filtro_digital_erro.out filtro_digital_deriv.in as Connection31
+            connect filtro_digital_kt.out filtro_digital_deriv.in1 as Connection32
+            connect filtro_digital_deriv.out filtro_digital_estado.in as Connection33
+            connect filtro_digital_jy filtro_digital_liga.in as Connection34
+            connect nivel_H_menos_d.out filtro_digital_liga.in1 as Connection35
+            connect tl68 filtro_digital_liga.in2 as Connection36
+            connect filtro_digital_liga.out tl69 as Connection37
+            connect tl70 h_medido as Connection38
+        }
+        [
+            position = 9100, 8300
+            size = 160, 240
+        ]
+
+        component Subsystem Referencia_e_perturbacao {
+            layout = dynamic
+            component "core/Constant" t_ev_ {
+                execution_rate = "Ts"
+                value = "t_ev"
+            }
+            [
+                position = 6920, 7240
+            ]
+
+            component "core/Sum" t_menos_t_ev {
+                execution_rate = "Ts"
+                signs = "+-"
+            }
+            [
+                position = 7080, 7184
+            ]
+
+            component "core/Constant" um_ {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7320, 7240
+            ]
+
+            component "core/Constant" zero_ {
+                execution_rate = "Ts"
+                value = "0"
+            }
+            [
+                position = 7320, 7360
+            ]
+
+            component "core/Signal switch" depois_de_t_ev {
+                execution_rate = "Ts"
+                threshold = "0"
+            }
+            [
+                position = 7480, 7296
+            ]
+
+            component "core/Product" degrau_ref {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7800, 7448
+            ]
+
+            component "core/Constant" sem_mudanca {
+                execution_rate = "Ts"
+                value = "0"
+            }
+            [
+                position = 7800, 7568
+            ]
+
+            component "core/Gain" rampa_m_s {
+                execution_rate = "Ts"
+                gain = "1e-3*kt"
+            }
+            [
+                position = 7400, 7688
+            ]
+
+            component "core/Limit" t_pos {
+                execution_rate = "Ts"
+                lower_limit = "0"
+                upper_limit = "1000000.0"
+            }
+            [
+                position = 7400, 7776
+            ]
+
+            component "core/Signal switch" fim_da_rampa {
+                execution_rate = "Ts"
+                threshold = "0"
+            }
+            [
+                position = 8040, 7720
+            ]
+
+            component "core/Product" rampa_x_t {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7640, 7720
+            ]
+
+            component "core/Sum" rampa_passou {
+                execution_rate = "Ts"
+                signs = "+-"
+            }
+            [
+                position = 7880, 7840
+            ]
+
+            component "core/Multiport signal switch" tipo_de_referencia {
+                execution_rate = "Ts"
+                number_of_input_terminals = "3"
+            }
+            [
+                position = 8360, 7528
+            ]
+
+            component "core/Sum" h_op_mais {
+                execution_rate = "Ts"
+                signs = "++"
+            }
+            [
+                position = 8600, 7448
+            ]
+
+            component "core/Gain" kv_hop {
+                execution_rate = "Ts"
+                gain = "kv"
+            }
+            [
+                position = 7080, 8352
+            ]
+
+            component "core/Limit" vop_pos {
+                execution_rate = "Ts"
+                lower_limit = "0"
+                upper_limit = "1000000.0"
+            }
+            [
+                position = 7320, 8440
+            ]
+
+            component "core/Mathematical function" raiz_vop {
+                execution_rate = "Ts"
+                mathematical_fn = "sqrt"
+            }
+            [
+                position = 7400, 8352
+            ]
+
+            component "core/Gain" q_equilibrio {
+                execution_rate = "Ts"
+                gain = "K_e"
+            }
+            [
+                position = 7560, 8352
+            ]
+
+            component "core/Gain" kv_h {
+                execution_rate = "Ts"
+                gain = "kv"
+            }
+            [
+                position = 7560, 8624
+            ]
+
+            component "core/Sum" erro_prep {
+                execution_rate = "Ts"
+                signs = "+-"
+            }
+            [
+                position = 7720, 8560
+            ]
+
+            component "core/Gain" Kp_prep_ {
+                execution_rate = "Ts"
+                gain = "Kp_prep"
+            }
+            [
+                position = 7880, 8560
+            ]
+
+            component "core/Sum" ff_mais_p {
+                execution_rate = "Ts"
+                signs = "++"
+            }
+            [
+                position = 8040, 8496
+            ]
+
+            component "core/Limit" prep_0_a_Qmax {
+                execution_rate = "Ts"
+                lower_limit = "0"
+                upper_limit = "Q_MAX"
+            }
+            [
+                position = 8200, 8496
+            ]
+
+            component "core/Constant" um_d {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7800, 8232
+            ]
+
+            component "core/Gain" pct_bomba {
+                execution_rate = "Ts"
+                gain = "0.01"
+            }
+            [
+                position = 7800, 8288
+            ]
+
+            component "core/Sum" um_mais_degrau {
+                execution_rate = "Ts"
+                signs = "++"
+            }
+            [
+                position = 7960, 8256
+            ]
+
+            component "core/Product" q_degrau {
+                execution_rate = "Ts"
+            }
+            [
+                position = 8200, 8352
+            ]
+
+            component "core/Signal switch" preparo_ou_degrau {
+                execution_rate = "Ts"
+            }
+            [
+                position = 8520, 8424
+            ]
+
+            component "core/Constant" z1 {
+                execution_rate = "Ts"
+                value = "0"
+            }
+            [
+                position = 7720, 7992
+            ]
+
+            component "core/Signal switch" so_ensaio_2 {
+                execution_rate = "Ts"
+                threshold = "2.5"
+            }
+            [
+                position = 7880, 8048
+            ]
+
+            component "core/Constant" z2 {
+                execution_rate = "Ts"
+                value = "0"
+            }
+            [
+                position = 7880, 8144
+            ]
+
+            component "core/Signal switch" e_ensaio_2 {
+                execution_rate = "Ts"
+                threshold = "1.5"
+            }
+            [
+                position = 8040, 8048
+            ]
+
+            component "core/Product" degrau_qd {
+                execution_rate = "Ts"
+            }
+            [
+                position = 8280, 8048
+            ]
+
+            component "core/Sum" consumo_total {
+                execution_rate = "Ts"
+                signs = "++"
+            }
+            [
+                position = 8600, 8048
+            ]
+
+            port ensaio {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7000
+            ]
+
+            port t {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7184
+            ]
+
+            port h_op_m {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7360
+            ]
+
+            port dsp_m {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7536
+            ]
+
+            port rampa_mm_s {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7720
+            ]
+
+            port qd_degrau_Ls {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7904
+            ]
+
+            port qd_Ls {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 8080
+            ]
+
+            port degrau_bomba_pct {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 8256
+            ]
+
+            port h_real {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 8440
+            ]
+
+            port referencia_m {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8896, 7000
+            ]
+
+            port qd_A {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8896, 7240
+            ]
+
+            port q_aberta_A {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8896, 7480
+            ]
+
+            tag tl71 {
+                value = "p_t"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7184
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl72 {
+                value = "p_t"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 6976, 7176
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl73 {
+                value = "p_dsp_m"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7536
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl74 {
+                value = "p_dsp_m"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7696, 7456
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl75 {
+                value = "p_rampa_mm_s"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7720
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl76 {
+                value = "p_rampa_mm_s"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7296, 7680
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl77 {
+                value = "p_dsp_m"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7936, 7712
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl78 {
+                value = "p_dsp_m"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7776, 7848
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl79 {
+                value = "p_ensaio"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7000
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl80 {
+                value = "p_ensaio"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 8256, 7504
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl81 {
+                value = "p_h_op_m"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7360
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl82 {
+                value = "p_h_op_m"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 8496, 7440
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl83 {
+                value = "s_referencia_m"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 8704, 7448
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl84 {
+                value = "s_referencia_m"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 8808, 7000
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl85 {
+                value = "p_h_op_m"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 6976, 8344
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl86 {
+                value = "p_h_real"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 8440
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl87 {
+                value = "p_h_real"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7456, 8616
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl88 {
+                value = "p_degrau_bomba_pct"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 8256
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl89 {
+                value = "p_degrau_bomba_pct"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7696, 8280
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl90 {
+                value = "s_q_aberta_A"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 8624, 8424
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl91 {
+                value = "s_q_aberta_A"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 8808, 7480
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl92 {
+                value = "p_ensaio"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7776, 8048
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl93 {
+                value = "p_ensaio"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7936, 8048
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl94 {
+                value = "p_qd_degrau_Ls"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7904
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl95 {
+                value = "p_qd_degrau_Ls"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 8176, 8056
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl96 {
+                value = "p_qd_Ls"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 8080
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl97 {
+                value = "p_qd_Ls"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 8496, 8056
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl98 {
+                value = "s_qd_A"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 8704, 8048
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl99 {
+                value = "s_qd_A"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 8808, 7240
+                hide_name = True
+                size = 60, 20
+            ]
+
+            junction j_tm sp
+            [
+                position = 7240, 7184
+            ]
+
+            junction j_depois sp
+            [
+                position = 7640, 7296
+            ]
+
+            junction j_rampa sp
+            [
+                position = 7768, 7720
+            ]
+
+            junction j_vop sp
+            [
+                position = 7240, 8352
+            ]
+
+            junction j_qeq sp
+            [
+                position = 7720, 8352
+            ]
+
+            comment Comment1 START ensaio 1 = degrau de referencia dsp_m | 2 = degrau de consumo qd_degrau_Ls | 3 = rampa de referencia (rampa_mm_s ate dsp_m). Evento em t_ev = 150 s. ENDCOMMENT 
+            [
+                position = 6800, 6752
+            ]
+
+            connect t tl71 as Connection1
+            connect tl72 t_menos_t_ev.in as Connection2
+            connect t_ev_.out t_menos_t_ev.in1 as Connection3
+            connect t_menos_t_ev.out j_tm as Connection4
+            connect um_.out depois_de_t_ev.in as Connection5
+            connect zero_.out depois_de_t_ev.in1 as Connection6
+            connect j_tm depois_de_t_ev.in2 as Connection7
+            connect depois_de_t_ev.out j_depois as Connection8
+            connect j_depois degrau_ref.in as Connection9
+            connect dsp_m tl73 as Connection10
+            connect tl74 degrau_ref.in1 as Connection11
+            connect rampa_mm_s tl75 as Connection12
+            connect tl76 rampa_m_s.in as Connection13
+            connect j_tm t_pos.in as Connection14
+            connect rampa_m_s.out rampa_x_t.in as Connection15
+            connect t_pos.out rampa_x_t.in1 as Connection16
+            connect rampa_x_t.out j_rampa as Connection17
+            connect tl77 fim_da_rampa.in as Connection18
+            connect j_rampa fim_da_rampa.in1 as Connection19
+            connect j_rampa rampa_passou.in as Connection20
+            connect tl78 rampa_passou.in1 as Connection21
+            connect rampa_passou.out fim_da_rampa.in2 as Connection22
+            connect ensaio tl79 as Connection23
+            connect tl80 tipo_de_referencia.ctrl as Connection24
+            connect degrau_ref.out tipo_de_referencia.in as Connection25
+            connect sem_mudanca.out tipo_de_referencia.in1 as Connection26
+            connect fim_da_rampa.out tipo_de_referencia.in2 as Connection27
+            connect h_op_m tl81 as Connection28
+            connect tl82 h_op_mais.in as Connection29
+            connect tipo_de_referencia.out h_op_mais.in1 as Connection30
+            connect h_op_mais.out tl83 as Connection31
+            connect tl84 referencia_m as Connection32
+            connect tl85 kv_hop.in as Connection33
+            connect kv_hop.out j_vop as Connection34
+            connect j_vop vop_pos.in as Connection35
+            connect vop_pos.out raiz_vop.in as Connection36
+            connect raiz_vop.out q_equilibrio.in as Connection37
+            connect q_equilibrio.out j_qeq as Connection38
+            connect h_real tl86 as Connection39
+            connect tl87 kv_h.in as Connection40
+            connect j_vop erro_prep.in as Connection41
+            connect kv_h.out erro_prep.in1 as Connection42
+            connect erro_prep.out Kp_prep_.in as Connection43
+            connect j_qeq ff_mais_p.in as Connection44
+            connect Kp_prep_.out ff_mais_p.in1 as Connection45
+            connect ff_mais_p.out prep_0_a_Qmax.in as Connection46
+            connect degrau_bomba_pct tl88 as Connection47
+            connect tl89 pct_bomba.in as Connection48
+            connect um_d.out um_mais_degrau.in as Connection49
+            connect pct_bomba.out um_mais_degrau.in1 as Connection50
+            connect j_qeq q_degrau.in as Connection51
+            connect um_mais_degrau.out q_degrau.in1 as Connection52
+            connect q_degrau.out preparo_ou_degrau.in as Connection53
+            connect prep_0_a_Qmax.out preparo_ou_degrau.in1 as Connection54
+            connect j_depois preparo_ou_degrau.in2 as Connection55
+            connect preparo_ou_degrau.out tl90 as Connection56
+            connect tl91 q_aberta_A as Connection57
+            connect z1.out so_ensaio_2.in as Connection58
+            connect j_depois so_ensaio_2.in1 as Connection59
+            connect tl92 so_ensaio_2.in2 as Connection60
+            connect so_ensaio_2.out e_ensaio_2.in as Connection61
+            connect z2.out e_ensaio_2.in1 as Connection62
+            connect tl93 e_ensaio_2.in2 as Connection63
+            connect e_ensaio_2.out degrau_qd.in as Connection64
+            connect qd_degrau_Ls tl94 as Connection65
+            connect tl95 degrau_qd.in1 as Connection66
+            connect degrau_qd.out consumo_total.in as Connection67
+            connect qd_Ls tl96 as Connection68
+            connect tl97 consumo_total.in1 as Connection69
+            connect consumo_total.out tl98 as Connection70
+            connect tl99 qd_A as Connection71
+        }
+        [
+            position = 8000, 6700
+            size = 160, 400
+        ]
+
+        component Subsystem Controlador_PI {
+            layout = dynamic
+            component "core/Product" Ti_se_ligado {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7080, 8016
+            ]
+
+            component "core/Integrator" prefiltro_ref_estado {
+                execution_rate = "Ts"
+                init_value = "h0"
+            }
+            [
+                position = 7592, 7000
+            ]
+
+            component "core/Sum" prefiltro_ref_erro {
+                execution_rate = "Ts"
+                signs = "+-"
+            }
+            [
+                position = 7208, 7000
+            ]
+
+            component "core/Limit" prefiltro_ref_tau_min {
+                execution_rate = "Ts"
+                lower_limit = "0.001"
+                upper_limit = "1000000.0"
+            }
+            [
+                position = 6824, 7104
+            ]
+
+            component "core/Mathematical function" prefiltro_ref_1_tau {
+                execution_rate = "Ts"
+                mathematical_fn = "reciprocal"
+            }
+            [
+                position = 7016, 7104
+            ]
+
+            component "core/Gain" prefiltro_ref_kt {
+                execution_rate = "Ts"
+                gain = "kt"
+            }
+            [
+                position = 7208, 7104
+            ]
+
+            component "core/Product" prefiltro_ref_deriv {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7400, 7000
+            ]
+
+            component "core/Signal switch" prefiltro_ref_liga {
+                execution_rate = "Ts"
+                threshold = "0"
+            }
+            [
+                position = 7928, 7032
+            ]
+
+            component "core/Signal switch" ideal_ou_real {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7560, 7376
+            ]
+
+            component "core/Sum" erro_m {
+                execution_rate = "Ts"
+                signs = "+-"
+            }
+            [
+                position = 8280, 7152
+            ]
+
+            component "core/Product" erro_so_em_malha_fechada {
+                execution_rate = "Ts"
+            }
+            [
+                position = 8440, 7152
+            ]
+
+            component "core/Gain" Kp_kt {
+                execution_rate = "Ts"
+                gain = "kt"
+            }
+            [
+                position = 7160, 7752
+            ]
+
+            component "core/Mathematical function" um_sobre_Ti {
+                execution_rate = "Ts"
+                mathematical_fn = "reciprocal"
+            }
+            [
+                position = 7160, 7904
+            ]
+
+            component "core/Product" Ki_circuito {
+                execution_rate = "Ts"
+            }
+            [
+                position = 7400, 7824
+            ]
+
+            component "core/PID controller" PI_nativo {
+                controller_type = "PI"
+                enb_anti_windup_out = "True"
+                enb_output_limit_out = "True"
+                execution_rate = "Ts"
+                int_init_value = "I0"
+                ki_source = "external"
+                kp_source = "external"
+                lower_sat_lim = "0"
+                upper_sat_lim = "Q_MAX"
+            }
+            [
+                position = 8600, 7224
+            ]
+
+            component "core/Signal switch" malha_fechada_ou_aberta {
+                execution_rate = "Ts"
+            }
+            [
+                position = 9000, 7296
+            ]
+
+            port referencia_m {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7000
+            ]
+
+            port h_ideal {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7184
+            ]
+
+            port h_medido {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7360
+            ]
+
+            port realimentacao {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7536
+            ]
+
+            port Kp_Ls_m {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7720
+            ]
+
+            port Ti_s {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 7904
+            ]
+
+            port prefiltro {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 8080
+            ]
+
+            port malha {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 8256
+            ]
+
+            port q_aberta {
+                position = left:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 6600, 8440
+            ]
+
+            port qi_ref_A {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 9296, 7000
+            ]
+
+            port ref_filtrada {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 9296, 7240
+            ]
+
+            port h_realimentado {
+                position = right:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 9296, 7480
+            ]
+
+            tag tl100 {
+                value = "p_Ti_s"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7904
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl101 {
+                value = "p_Ti_s"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 6976, 8008
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl102 {
+                value = "p_prefiltro"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 8080
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl103 {
+                value = "p_prefiltro"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 6976, 8024
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl104 {
+                value = "p_referencia_m"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7000
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl105 {
+                value = "p_referencia_m"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7104, 6992
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl106 {
+                value = "p_referencia_m"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7824, 7040
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl107 {
+                value = "s_ref_filtrada"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 8224, 7032
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl108 {
+                value = "s_ref_filtrada"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 9208, 7240
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl109 {
+                value = "p_h_medido"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7360
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl110 {
+                value = "p_h_medido"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7456, 7368
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl111 {
+                value = "p_h_ideal"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7184
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl112 {
+                value = "p_h_ideal"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7456, 7384
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl113 {
+                value = "p_realimentacao"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7536
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl114 {
+                value = "p_realimentacao"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7456, 7376
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl115 {
+                value = "s_h_realimentado"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 7824, 7376
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl116 {
+                value = "s_h_realimentado"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 9208, 7480
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl117 {
+                value = "p_malha"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 8256
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl118 {
+                value = "p_malha"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 8336, 7160
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl119 {
+                value = "p_Kp_Ls_m"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 7720
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl120 {
+                value = "p_Kp_Ls_m"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7056, 7744
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl121 {
+                value = "p_Ti_s"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 7056, 7896
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl122 {
+                value = "p_Kp_Ls_m"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 8496, 7224
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl123 {
+                value = "p_q_aberta"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 6688, 8440
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl124 {
+                value = "p_q_aberta"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 8896, 7304
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl125 {
+                value = "p_malha"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 8896, 7296
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl126 {
+                value = "s_qi_ref_A"
+                scope = local
+                kind = sp
+                direction = in
+            }
+            [
+                position = 9104, 7296
+                hide_name = True
+                size = 60, 20
+            ]
+
+            tag tl127 {
+                value = "s_qi_ref_A"
+                scope = local
+                kind = sp
+                direction = out
+            }
+            [
+                position = 9208, 7000
+                hide_name = True
+                size = 60, 20
+            ]
+
+            junction prefiltro_ref_jy sp
+            [
+                position = 7752, 7000
+            ]
+
+            junction j_rf sp
+            [
+                position = 8120, 7032
+            ]
+
+            junction j_fb sp
+            [
+                position = 7720, 7376
+            ]
+
+            comment Comment1 START PI nativo (anti-windup, bomba 0..Q_MAX) | pre-filtro 1/(Ti s+1) na referencia | realimentacao: 0 = medicao ideal, 1 = medicao real | malha: 1 = fechada (PI), 0 = aberta (bomba fixa) ENDCOMMENT 
+            [
+                position = 6800, 6800
+            ]
+
+            connect Ti_s tl100 as Connection1
+            connect tl101 Ti_se_ligado.in as Connection2
+            connect prefiltro tl102 as Connection3
+            connect tl103 Ti_se_ligado.in1 as Connection4
+            connect prefiltro_ref_estado.out prefiltro_ref_jy as Connection5
+            connect referencia_m tl104 as Connection6
+            connect tl105 prefiltro_ref_erro.in as Connection7
+            connect prefiltro_ref_jy prefiltro_ref_erro.in1 as Connection8
+            connect Ti_se_ligado.out prefiltro_ref_tau_min.in as Connection9
+            connect prefiltro_ref_tau_min.out prefiltro_ref_1_tau.in as Connection10
+            connect prefiltro_ref_1_tau.out prefiltro_ref_kt.in as Connection11
+            connect prefiltro_ref_erro.out prefiltro_ref_deriv.in as Connection12
+            connect prefiltro_ref_kt.out prefiltro_ref_deriv.in1 as Connection13
+            connect prefiltro_ref_deriv.out prefiltro_ref_estado.in as Connection14
+            connect prefiltro_ref_jy prefiltro_ref_liga.in as Connection15
+            connect tl106 prefiltro_ref_liga.in1 as Connection16
+            connect Ti_se_ligado.out prefiltro_ref_liga.in2 as Connection17
+            connect prefiltro_ref_liga.out j_rf as Connection18
+            connect j_rf tl107 as Connection19
+            connect tl108 ref_filtrada as Connection20
+            connect h_medido tl109 as Connection21
+            connect tl110 ideal_ou_real.in as Connection22
+            connect h_ideal tl111 as Connection23
+            connect tl112 ideal_ou_real.in1 as Connection24
+            connect realimentacao tl113 as Connection25
+            connect tl114 ideal_ou_real.in2 as Connection26
+            connect ideal_ou_real.out j_fb as Connection27
+            connect j_fb tl115 as Connection28
+            connect tl116 h_realimentado as Connection29
+            connect j_rf erro_m.in as Connection30
+            connect j_fb erro_m.in1 as Connection31
+            connect erro_m.out erro_so_em_malha_fechada.in as Connection32
+            connect malha tl117 as Connection33
+            connect tl118 erro_so_em_malha_fechada.in1 as Connection34
+            connect Kp_Ls_m tl119 as Connection35
+            connect tl120 Kp_kt.in as Connection36
+            connect tl121 um_sobre_Ti.in as Connection37
+            connect Kp_kt.out Ki_circuito.in as Connection38
+            connect um_sobre_Ti.out Ki_circuito.in1 as Connection39
+            connect erro_so_em_malha_fechada.out PI_nativo.in as Connection40
+            connect tl122 PI_nativo.kp_in as Connection41
+            connect Ki_circuito.out PI_nativo.ki_in as Connection42
+            connect PI_nativo.out malha_fechada_ou_aberta.in as Connection43
+            connect q_aberta tl123 as Connection44
+            connect tl124 malha_fechada_ou_aberta.in1 as Connection45
+            connect tl125 malha_fechada_ou_aberta.in2 as Connection46
+            connect malha_fechada_ou_aberta.out tl126 as Connection47
+            connect tl127 qi_ref_A as Connection48
+        }
+        [
+            position = 8600, 6700
+            size = 160, 420
+        ]
+
+        component "core/Probe" h_m {
+        }
+        [
+            position = 9700, 6640
+        ]
+
+        component "core/Probe" h_ideal_m {
+        }
+        [
+            position = 9700, 6704
+        ]
+
+        component "core/Probe" h_medido_m {
+        }
+        [
+            position = 9700, 6768
+        ]
+
+        component "core/Probe" d_lida_m {
+        }
+        [
+            position = 9700, 6832
+        ]
+
+        component "core/Probe" v_sensor_V {
+        }
+        [
+            position = 9700, 6896
+        ]
+
+        component "core/Probe" v_filtro_V {
+        }
+        [
+            position = 9700, 6960
+        ]
+
+        component "core/Probe" v_adc_V {
+        }
+        [
+            position = 9700, 7024
+        ]
+
+        component "core/Probe" v_modo_comum_V {
+        }
+        [
+            position = 9700, 7088
+        ]
+
+        component "core/Probe" qi_Ls {
+        }
+        [
+            position = 9700, 7152
+        ]
+
+        component "core/Probe" qo_Ls {
+        }
+        [
+            position = 9700, 7216
+        ]
+
+        component "core/Probe" qd_Ls_med {
+        }
+        [
+            position = 9700, 7280
+        ]
+
+        component "core/Probe" referencia_m {
+        }
+        [
+            position = 9700, 7344
+        ]
+
+        component "core/Probe" ref_filtrada_m {
+        }
+        [
+            position = 9700, 7408
+        ]
+
+        component "core/Probe" h_realimentado_m {
+        }
+        [
+            position = 9700, 7472
+        ]
+
+        component "core/Probe" t_fisico_s {
+        }
+        [
+            position = 9700, 7536
+        ]
+
+        component "core/Gain" t_para_tanque {
+            execution_rate = "Ts"
+            gain = "kt"
+        }
+        [
+            position = 9592, 7536
+        ]
+
+        component "core/Probe" erro_medicao_mm {
+        }
+        [
+            position = 9700, 7616
+        ]
+
+        component "core/Sum" medido_menos_real {
+            execution_rate = "Ts"
+            signs = "+-"
+        }
+        [
+            position = 9480, 7616
+        ]
+
+        component "core/Gain" erro_em_mm {
+            execution_rate = "Ts"
+            gain = "1000"
+        }
+        [
+            position = 9592, 7616
+        ]
+
+        tag de_ensaio {
+            value = "ensaio"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 6720, 6496
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_disparo {
+            value = "disparo"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 6720, 6560
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_h_op_m {
+            value = "h_op_m"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 6720, 6624
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_dsp_m {
+            value = "dsp_m"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 6720, 6688
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_rampa_mm_s {
+            value = "rampa_mm_s"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 6720, 6752
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_qd_degrau_Ls {
+            value = "qd_degrau_Ls"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 6720, 6816
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_qd_Ls {
+            value = "qd_Ls"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 6720, 6880
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_degrau_bomba_pct {
+            value = "degrau_bomba_pct"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 6720, 6944
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_malha {
+            value = "malha"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 6720, 7136
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_realimentacao {
+            value = "realimentacao"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 6720, 7200
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_Kp_Ls_m {
+            value = "Kp_Ls_m"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 6720, 7264
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_Ti_s {
+            value = "Ti_s"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 6720, 7328
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_prefiltro {
+            value = "prefiltro"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 6720, 7392
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_dT_ar_C {
+            value = "dT_ar_C"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7120, 6496
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_e0_mm {
+            value = "e0_mm"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7120, 6560
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_ruido_mm {
+            value = "ruido_mm"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7120, 6624
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_T_amostra_s {
+            value = "T_amostra_s"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7120, 6688
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_tau_sensor_s {
+            value = "tau_sensor_s"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7120, 6752
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_t_lat_s {
+            value = "t_lat_s"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7120, 6816
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_resol_mm {
+            value = "resol_mm"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7120, 6880
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_interf_mV {
+            value = "interf_mV"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7120, 7056
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_adc_bits {
+            value = "adc_bits"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7120, 7120
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_R_terra_mOhm {
+            value = "R_terra_mOhm"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7120, 7184
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_diferencial {
+            value = "diferencial"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7120, 7248
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_comp_termica {
+            value = "comp_termica"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7120, 7376
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_cal_zero_mm {
+            value = "cal_zero_mm"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7120, 7440
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_tau_filtro_s {
+            value = "tau_filtro_s"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7120, 7504
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_disparo_1 {
+            value = "disparo"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7280, 6520
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_t {
+            value = "t"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7520, 6460
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_qo {
+            value = "qo"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8264, 7420
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_qo_2 {
+            value = "qo"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8400, 7920
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_e_nl {
+            value = "e_nl"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8700, 7920
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_e_nl_3 {
+            value = "e_nl"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8280, 7680
+            hide_name = True
+            scale = -1, 1
+            size = 60, 20
+        ]
+
+        tag de_v_nivel {
+            value = "v_nivel"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8040, 7528
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_v_nivel_4 {
+            value = "v_nivel"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8048, 7920
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_h {
+            value = "h"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8248, 7920
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_qi {
+            value = "qi"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7568, 7420
+            hide_name = True
+            scale = -1, 1
+            size = 60, 20
+        ]
+
+        tag de_qd_med {
+            value = "qd_med"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8496, 7420
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_qi_ref_5 {
+            value = "qi_ref"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7740, 7600
+            hide_name = True
+            scale = -1, 1
+            size = 60, 20
+        ]
+
+        tag para_qd_6 {
+            value = "qd"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8300, 7600
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_h_7 {
+            value = "h"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8700, 7248
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_h_ideal {
+            value = "h_ideal"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 9000, 7248
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_h_8 {
+            value = "h"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 8128
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_t_9 {
+            value = "t"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 8176
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_dT_ar_C_10 {
+            value = "dT_ar_C"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 8216
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_e0_mm_11 {
+            value = "e0_mm"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 8256
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_ruido_mm_12 {
+            value = "ruido_mm"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 8304
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_T_amostra_s_13 {
+            value = "T_amostra_s"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 8344
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_tau_sensor_s_14 {
+            value = "tau_sensor_s"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 8384
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_t_lat_s_15 {
+            value = "t_lat_s"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 8424
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_resol_mm_16 {
+            value = "resol_mm"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 8464
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_v_sensor {
+            value = "v_sensor"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8152, 8112
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_d_lida {
+            value = "d_lida"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8152, 8488
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_v_sensor_17 {
+            value = "v_sensor"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8400, 8176
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_t_18 {
+            value = "t"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8400, 8216
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_interf_mV_19 {
+            value = "interf_mV"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8400, 8256
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_adc_bits_20 {
+            value = "adc_bits"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8400, 8304
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_qi_21 {
+            value = "qi"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8400, 8344
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_R_terra_mOhm_22 {
+            value = "R_terra_mOhm"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8400, 8384
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_diferencial_23 {
+            value = "diferencial"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8400, 8424
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_v_adc {
+            value = "v_adc"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8700, 8152
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_v_filtro {
+            value = "v_filtro"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8700, 8304
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_v_modo_comum {
+            value = "v_modo_comum"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8700, 8448
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_v_adc_24 {
+            value = "v_adc"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8952, 8224
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_dT_ar_C_25 {
+            value = "dT_ar_C"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8952, 8256
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_comp_termica_26 {
+            value = "comp_termica"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8952, 8304
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_cal_zero_mm_27 {
+            value = "cal_zero_mm"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8952, 8336
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_tau_filtro_s_28 {
+            value = "tau_filtro_s"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8952, 8384
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_h_medido {
+            value = "h_medido"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 9248, 8304
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_ensaio_29 {
+            value = "ensaio"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 6544
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_t_30 {
+            value = "t"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 6576
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_h_op_m_31 {
+            value = "h_op_m"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 6624
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_dsp_m_32 {
+            value = "dsp_m"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 6656
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_rampa_mm_s_33 {
+            value = "rampa_mm_s"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 6704
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_qd_degrau_Ls_34 {
+            value = "qd_degrau_Ls"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 6736
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_qd_Ls_35 {
+            value = "qd_Ls"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 6784
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_degrau_bomba_pct_36 {
+            value = "degrau_bomba_pct"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 6816
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_h_37 {
+            value = "h"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 6864
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_referencia {
+            value = "referencia"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8152, 6528
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_qd {
+            value = "qd"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8152, 6704
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_q_aberta {
+            value = "q_aberta"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8152, 6880
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_referencia_38 {
+            value = "referencia"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8448, 6528
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_h_ideal_39 {
+            value = "h_ideal"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8448, 6576
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_h_medido_40 {
+            value = "h_medido"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8448, 6616
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_realimentacao_41 {
+            value = "realimentacao"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8448, 6656
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_Kp_Ls_m_42 {
+            value = "Kp_Ls_m"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8448, 6704
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_Ti_s_43 {
+            value = "Ti_s"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8448, 6744
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_prefiltro_44 {
+            value = "prefiltro"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8448, 6784
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_malha_45 {
+            value = "malha"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8448, 6824
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_q_aberta_46 {
+            value = "q_aberta"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8448, 6864
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_qi_ref {
+            value = "qi_ref"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8752, 6512
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_ref_filtrada {
+            value = "ref_filtrada"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8752, 6704
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag de_h_realimentado {
+            value = "h_realimentado"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8752, 6888
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_h_47 {
+            value = "h"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9592, 6640
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_h_ideal_48 {
+            value = "h_ideal"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9592, 6704
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_h_medido_49 {
+            value = "h_medido"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9592, 6768
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_d_lida_50 {
+            value = "d_lida"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9592, 6832
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_v_sensor_51 {
+            value = "v_sensor"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9592, 6896
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_v_filtro_52 {
+            value = "v_filtro"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9592, 6960
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_v_adc_53 {
+            value = "v_adc"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9592, 7024
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_v_modo_comum_54 {
+            value = "v_modo_comum"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9592, 7088
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_qi_55 {
+            value = "qi"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9592, 7152
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_qo_56 {
+            value = "qo"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9592, 7216
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_qd_med_57 {
+            value = "qd_med"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9592, 7280
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_referencia_58 {
+            value = "referencia"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9592, 7344
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_ref_filtrada_59 {
+            value = "ref_filtrada"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9592, 7408
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_h_realimentado_60 {
+            value = "h_realimentado"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9592, 7472
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_t_61 {
+            value = "t"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9480, 7536
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_h_medido_62 {
+            value = "h_medido"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9368, 7600
+            hide_name = True
+            size = 60, 20
+        ]
+
+        tag para_h_63 {
+            value = "h"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9368, 7632
+            hide_name = True
+            size = 60, 20
+        ]
+
+        junction n_nivel_bomba pe
+        [
+            position = 7648, 7300
+        ]
+
+        junction n_nivel_C pe
+        [
+            position = 7832, 7300
+        ]
+
+        junction n_nivel_vm pe
+        [
+            position = 7960, 7300
+        ]
+
+        junction n_nivel_saida pe
+        [
+            position = 8184, 7300
+        ]
+
+        junction n_nivel_qd pe
+        [
+            position = 8412, 7300
+        ]
+
+        junction n_terra_bomba pe
+        [
+            position = 7648, 7760
+        ]
+
+        junction n_terra_C pe
+        [
+            position = 7832, 7760
+        ]
+
+        junction n_terra_vm pe
+        [
+            position = 7960, 7760
+        ]
+
+        junction n_terra_saida pe
+        [
+            position = 8184, 7760
+        ]
+
+        junction n_terra_qd pe
+        [
+            position = 8412, 7760
+        ]
+
+        comment Comment1 START ENTRADAS DO PAINEL (SCADA) ENDCOMMENT 
+        [
+            position = 6800, 6328
+        ]
+
+        comment Comment2 START ENSAIO E REFERENCIA ENDCOMMENT 
+        [
+            position = 6600, 6440
+        ]
+
+        comment Comment3 START CONTROLADOR ENDCOMMENT 
+        [
+            position = 6600, 7080
+        ]
+
+        comment Comment4 START SENSOR (0 desliga) ENDCOMMENT 
+        [
+            position = 7000, 6440
+        ]
+
+        comment Comment5 START CONDICIONAMENTO ENDCOMMENT 
+        [
+            position = 7000, 7000
+        ]
+
+        comment Comment6 START PROCESSAMENTO ENDCOMMENT 
+        [
+            position = 7000, 7320
+        ]
+
+        comment Comment7 START RELOGIO (zera no disparo) ENDCOMMENT 
+        [
+            position = 7400, 6380
+        ]
+
+        comment Comment8 START PLANTA (Entrega 02 v2): bomba | C = tanque | voltimetro = nivel | saida: L inercia, R escoamento, e parte nao linear | consumo qd ENDCOMMENT 
+        [
+            position = 7700, 7180
+        ]
+
+        comment Comment9 START LEITURAS (escala do tanque) ENDCOMMENT 
+        [
+            position = 9700, 6560
+        ]
+
+        connect ensaio.out de_ensaio as Connection1
+        connect disparo.out de_disparo as Connection2
+        connect h_op_m.out de_h_op_m as Connection3
+        connect dsp_m.out de_dsp_m as Connection4
+        connect rampa_mm_s.out de_rampa_mm_s as Connection5
+        connect qd_degrau_Ls.out de_qd_degrau_Ls as Connection6
+        connect qd_Ls.out de_qd_Ls as Connection7
+        connect degrau_bomba_pct.out de_degrau_bomba_pct as Connection8
+        connect malha.out de_malha as Connection9
+        connect realimentacao.out de_realimentacao as Connection10
+        connect Kp_Ls_m.out de_Kp_Ls_m as Connection11
+        connect Ti_s.out de_Ti_s as Connection12
+        connect prefiltro.out de_prefiltro as Connection13
+        connect dT_ar_C.out de_dT_ar_C as Connection14
+        connect e0_mm.out de_e0_mm as Connection15
+        connect ruido_mm.out de_ruido_mm as Connection16
+        connect T_amostra_s.out de_T_amostra_s as Connection17
+        connect tau_sensor_s.out de_tau_sensor_s as Connection18
+        connect t_lat_s.out de_t_lat_s as Connection19
+        connect resol_mm.out de_resol_mm as Connection20
+        connect interf_mV.out de_interf_mV as Connection21
+        connect adc_bits.out de_adc_bits as Connection22
+        connect R_terra_mOhm.out de_R_terra_mOhm as Connection23
+        connect diferencial.out de_diferencial as Connection24
+        connect comp_termica.out de_comp_termica as Connection25
+        connect cal_zero_mm.out de_cal_zero_mm as Connection26
+        connect tau_filtro_s.out de_tau_filtro_s as Connection27
+        connect um_relogio.out relogio.in as Connection28
+        connect para_disparo_1 relogio.reset as Connection29
+        connect relogio.out de_t as Connection30
+        connect n_nivel_bomba n_nivel_C as Connection31
+        connect n_terra_bomba n_terra_C as Connection32
+        connect n_nivel_C n_nivel_vm as Connection33
+        connect n_terra_C n_terra_vm as Connection34
+        connect n_nivel_vm n_nivel_saida as Connection35
+        connect n_terra_vm n_terra_saida as Connection36
+        connect n_nivel_saida n_nivel_qd as Connection37
+        connect n_terra_saida n_terra_qd as Connection38
+        connect n_terra_C GND.node as Connection39
+        connect q_i_bomba.n_node n_terra_bomba as Connection40
+        connect q_i_bomba.p_node A_qi.p_node as Connection41
+        connect A_qi.n_node n_nivel_bomba as Connection42
+        connect C_tanque.p_node n_nivel_C as Connection43
+        connect C_tanque.n_node n_terra_C as Connection44
+        connect V_nivel.p_node n_nivel_vm as Connection45
+        connect V_nivel.n_node n_terra_vm as Connection46
+        connect n_nivel_saida A_qo.p_node as Connection47
+        connect A_qo.n_node L_tubo.p_node as Connection48
+        connect L_tubo.n_node R_escoamento.p_node as Connection49
+        connect R_escoamento.n_node e_nao_linear.p_node as Connection50
+        connect e_nao_linear.n_node n_terra_saida as Connection51
+        connect n_nivel_qd A_qd.p_node as Connection52
+        connect A_qd.n_node q_d_consumo.n_node as Connection53
+        connect q_d_consumo.p_node n_terra_qd as Connection54
+        connect A_qo.out de_qo as Connection55
+        connect para_qo_2 Parte_nao_linear.i_o as Connection56
+        connect Parte_nao_linear.e de_e_nl as Connection57
+        connect para_e_nl_3 e_nao_linear.in as Connection58
+        connect V_nivel.out de_v_nivel as Connection59
+        connect para_v_nivel_4 v_para_h.in as Connection60
+        connect v_para_h.out de_h as Connection61
+        connect A_qi.out de_qi as Connection62
+        connect A_qd.out de_qd_med as Connection63
+        connect para_qi_ref_5 q_i_bomba.in as Connection64
+        connect para_qd_6 q_d_consumo.in as Connection65
+        connect para_h_7 Medicao_ideal.h as Connection66
+        connect Medicao_ideal.h_ideal de_h_ideal as Connection67
+        connect para_h_8 Sensor_ultrassonico_MB7389.h as Connection68
+        connect para_t_9 Sensor_ultrassonico_MB7389.t as Connection69
+        connect para_dT_ar_C_10 Sensor_ultrassonico_MB7389.dT_ar_C as Connection70
+        connect para_e0_mm_11 Sensor_ultrassonico_MB7389.e0_mm as Connection71
+        connect para_ruido_mm_12 Sensor_ultrassonico_MB7389.ruido_mm as Connection72
+        connect para_T_amostra_s_13 Sensor_ultrassonico_MB7389.T_amostra_s as Connection73
+        connect para_tau_sensor_s_14 Sensor_ultrassonico_MB7389.tau_sensor_s as Connection74
+        connect para_t_lat_s_15 Sensor_ultrassonico_MB7389.t_lat_s as Connection75
+        connect para_resol_mm_16 Sensor_ultrassonico_MB7389.resol_mm as Connection76
+        connect Sensor_ultrassonico_MB7389.v_sensor de_v_sensor as Connection77
+        connect Sensor_ultrassonico_MB7389.d_lida de_d_lida as Connection78
+        connect para_v_sensor_17 Condicionamento.v_sensor as Connection79
+        connect para_t_18 Condicionamento.t as Connection80
+        connect para_interf_mV_19 Condicionamento.interf_mV as Connection81
+        connect para_adc_bits_20 Condicionamento.adc_bits as Connection82
+        connect para_qi_21 Condicionamento.i_bomba as Connection83
+        connect para_R_terra_mOhm_22 Condicionamento.R_terra_mOhm as Connection84
+        connect para_diferencial_23 Condicionamento.diferencial as Connection85
+        connect Condicionamento.v_adc de_v_adc as Connection86
+        connect Condicionamento.v_filtro de_v_filtro as Connection87
+        connect Condicionamento.v_modo_comum de_v_modo_comum as Connection88
+        connect para_v_adc_24 Processamento.v_adc as Connection89
+        connect para_dT_ar_C_25 Processamento.dT_ar_C as Connection90
+        connect para_comp_termica_26 Processamento.comp_termica as Connection91
+        connect para_cal_zero_mm_27 Processamento.cal_zero_mm as Connection92
+        connect para_tau_filtro_s_28 Processamento.tau_filtro_s as Connection93
+        connect Processamento.h_medido de_h_medido as Connection94
+        connect para_ensaio_29 Referencia_e_perturbacao.ensaio as Connection95
+        connect para_t_30 Referencia_e_perturbacao.t as Connection96
+        connect para_h_op_m_31 Referencia_e_perturbacao.h_op_m as Connection97
+        connect para_dsp_m_32 Referencia_e_perturbacao.dsp_m as Connection98
+        connect para_rampa_mm_s_33 Referencia_e_perturbacao.rampa_mm_s as Connection99
+        connect para_qd_degrau_Ls_34 Referencia_e_perturbacao.qd_degrau_Ls as Connection100
+        connect para_qd_Ls_35 Referencia_e_perturbacao.qd_Ls as Connection101
+        connect para_degrau_bomba_pct_36 Referencia_e_perturbacao.degrau_bomba_pct as Connection102
+        connect para_h_37 Referencia_e_perturbacao.h_real as Connection103
+        connect Referencia_e_perturbacao.referencia_m de_referencia as Connection104
+        connect Referencia_e_perturbacao.qd_A de_qd as Connection105
+        connect Referencia_e_perturbacao.q_aberta_A de_q_aberta as Connection106
+        connect para_referencia_38 Controlador_PI.referencia_m as Connection107
+        connect para_h_ideal_39 Controlador_PI.h_ideal as Connection108
+        connect para_h_medido_40 Controlador_PI.h_medido as Connection109
+        connect para_realimentacao_41 Controlador_PI.realimentacao as Connection110
+        connect para_Kp_Ls_m_42 Controlador_PI.Kp_Ls_m as Connection111
+        connect para_Ti_s_43 Controlador_PI.Ti_s as Connection112
+        connect para_prefiltro_44 Controlador_PI.prefiltro as Connection113
+        connect para_malha_45 Controlador_PI.malha as Connection114
+        connect para_q_aberta_46 Controlador_PI.q_aberta as Connection115
+        connect Controlador_PI.qi_ref_A de_qi_ref as Connection116
+        connect Controlador_PI.ref_filtrada de_ref_filtrada as Connection117
+        connect Controlador_PI.h_realimentado de_h_realimentado as Connection118
+        connect para_h_47 h_m.in as Connection119
+        connect para_h_ideal_48 h_ideal_m.in as Connection120
+        connect para_h_medido_49 h_medido_m.in as Connection121
+        connect para_d_lida_50 d_lida_m.in as Connection122
+        connect para_v_sensor_51 v_sensor_V.in as Connection123
+        connect para_v_filtro_52 v_filtro_V.in as Connection124
+        connect para_v_adc_53 v_adc_V.in as Connection125
+        connect para_v_modo_comum_54 v_modo_comum_V.in as Connection126
+        connect para_qi_55 qi_Ls.in as Connection127
+        connect para_qo_56 qo_Ls.in as Connection128
+        connect para_qd_med_57 qd_Ls_med.in as Connection129
+        connect para_referencia_58 referencia_m.in as Connection130
+        connect para_ref_filtrada_59 ref_filtrada_m.in as Connection131
+        connect para_h_realimentado_60 h_realimentado_m.in as Connection132
+        connect para_t_61 t_para_tanque.in as Connection133
+        connect t_para_tanque.out t_fisico_s.in as Connection134
+        connect para_h_medido_62 medido_menos_real.in as Connection135
+        connect para_h_63 medido_menos_real.in1 as Connection136
+        connect medido_menos_real.out erro_em_mm.in as Connection137
+        connect erro_em_mm.out erro_medicao_mm.in as Connection138
+    }
+
+    default {
+        "core/Abs" {
+            execution_rate = "inherit"
+        }
+
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/Capacitor" {
+            signal_access = "inherit"
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Delay" {
+            delay_type = "Fixed delay"
+            del_length = "2"
+            max_delay_length = "20"
+            init_value = "0"
+            signal_out_type = "inherit"
+            tml_file = "gen_delay"
+            execution_rate = "inherit"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Inductor" {
+            signal_access = "inherit"
+            inductance = "1e-3"
+            initial_current = "0.0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Integrator" {
+            show_reset = "none"
+            reset_type = "asynchronous"
+            show_init_condition = "internal"
+            init_value = "0"
+            limit_output = "False"
+            limit_upper = "inf"
+            limit_lower = "-inf"
+            show_state = "False"
+            state_port_type = "inherit"
+            tml_file = "gen_accumulator_integrator"
+            mode = "integrator"
+            execution_rate = "inherit"
+        }
+
+        "core/Limit" {
+            upper_limit = "[\'inf\']"
+            lower_limit = "[\'-inf\']"
+            execution_rate = "inherit"
+        }
+
+        "core/Mathematical function" {
+            mathematical_fn = "exponential"
+            execution_rate = "inherit"
+        }
+
+        "core/Multiport signal switch" {
+            number_of_input_terminals = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/PID controller" {
+            controller_type = "PID"
+            kp = "1"
+            kp_source = "internal"
+            ki = "1"
+            ki_source = "internal"
+            kd = "0"
+            kd_source = "internal"
+            filt_coef = "100"
+            int_init_value = "0"
+            filt_init_value = "0"
+            enb_output_limit_out = "False"
+            show_reset = "none"
+            upper_sat_lim = "1"
+            upper_sat_lim_source = "internal"
+            lower_sat_lim = "-1"
+            lower_sat_lim_source = "internal"
+            enb_anti_windup_out = "False"
+            signal_out_type = "inherit"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Product" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/SCADA Input" {
+            signal_access = "inherit"
+            addr = "0"
+            format = "real"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "real"
+            min = "-1e6"
+            max = "1e6"
+            def_value = "0"
+            unit = " "
+            execution_rate = "100e-6"
+        }
+
+        "core/Signal switch" {
+            criterion = "ctrl > threshold"
+            threshold = "0.5"
+            execution_rate = "inherit"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Trigonometric function" {
+            trigonometric_fn = "sin"
+            angle = "Radians"
+            execution_rate = "inherit"
+        }
+
+        "core/Current Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Sample and Hold" {
+            trigger_type = "Both"
+            operator = "≠"
+            threshold = "0"
+            init_value = "0"
+            execution_rate = "100e-6"
+        }
+
+        "core/Signal Controlled Current Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Signal Controlled Voltage Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+
+    CODE model_init
+        # =====================================================================
+        #  ECOM060 - Instrumentacao Eletronica - UFAL - 2026.2 - Equipe G05 (Monotanque)
+        #  Fase 2 / ENTREGA FINAL: instrumentacao nao ideal e seus efeitos no controle
+        #  Planta (E02 v2):  A dh/dt = qi - q - qd ;  I_h dq/dt = h - q|q|/k^2
+        #  Sensor: ultrassonico de tempo de voo MaxBotix MB7389 (HRXL-MaxSonar-WRM), montado no topo
+        # =====================================================================
+        # ---- planta (Entrega 01 / 02)
+        A      = 0.5            # m2       area da base
+        l_tubo = 1.0            # m        comprimento do tubo de saida
+        k_nom  = 0.01           # m^2.5/s  coeficiente do orificio
+        h0     = 0.5            # m        nivel de operacao
+        g      = 9.81
+        Cd     = 0.60
+        a_or   = k_nom/(Cd*(2*g)**0.5)
+        I_h    = l_tubo/(g*a_or)
+        
+        # ---- escalas (1 V = 10 cm ; 1 A = 1 L/s ; 1 s no circuito = 100 s no tanque)
+        kv = 10.0
+        ki = 1000.0
+        kt = 100.0
+        
+        C     = A*ki/(kv*kt)
+        L     = kv*I_h/(ki*kt)
+        K_e   = k_nom*ki/kv**0.5
+        V0    = kv*h0
+        I0    = ki*k_nom*h0**0.5
+        R_or  = 2*V0**0.5/K_e
+        w_c   = 1/(R_or*C)
+        Ts    = 2e-5            # s (circuito) = 2 ms no tanque
+        
+        # ---- sensor MB7389 (datasheet MaxBotix HRXL-MaxSonar-WR, PD11500)
+        H_s    = 1.70           # m   altura da face do sensor sobre o fundo (h = 1,2 m -> d = 0,5 m)
+        T_amb  = 25.0           # C   temperatura do ar no sensor (compensacao interna)
+        k_s    = 5.0/5.120      # V/m saida analogica Vcc/5120 por mm, Vcc = 5 V (0,9766 V/m)
+        d0     = H_s - h0       # m   distancia no ponto de operacao (1,20 m)
+        N_MAX_ATRASO = 16000    # amostras de Ts (= 32 s no tanque)
+        
+        # ---- condicionamento
+        R_f    = 1.6e3          # ohm  filtro RC anti-serrilhado
+        C_f    = 10e-6/kt       # F    10 uF real -> tau = 16 ms (real) ; escalonado no tempo
+        V_off  = 0.45           # V    deslocamento do amplificador (d = 0,46 m)
+        G_amp  = 2.8            # V/V  ganho: 0,49..1,56 V -> 0,1..3,1 V
+        V_ref  = 3.3            # V    fundo de escala do ADC
+        f_adc  = 100.0          # Hz   taxa do ADC (tempo real) -> periodo 0,01 s no tanque
+        e_Text = 0.5            # C    erro do sensor externo de temperatura (estimativa)
+        
+        # ---- laco de terra e entrada diferencial (entrega final)
+        alfa_bomba = 2.0        # A/(L/s)  corrente do motor CC 24 V da bomba por vazao (estimativa: ~14 A em q0 = 7,07 L/s)
+        CMRR_dB    = 60.0       # dB       rejeicao de modo comum efetiva do amplificador diferencial (estimativa conservadora)
+        rej_cm     = 10**(-CMRR_dB/20)
+        
+        # ---- ensaios
+        t_ev  = 1.5            # s (circuito): instante do evento (150 s no tanque)
+        Kp_prep = 50.0
+        Q_MAX = 20.0            # A = L/s  vazao maxima da bomba
+        
+        # ---- controlador PI (alocacao de polos: wn = 0,06 rad/s, zeta = 0,9 ; previsao no relatorio)
+        R_hid = 2*h0**0.5/k_nom          # s/m2  ganho local (141,4)
+        tau_p = A*R_hid                  # s     constante de tempo (70,7)
+        wn    = 0.06
+        zeta  = 0.9
+        Kp_m  = (2*zeta*wn*tau_p - 1)/R_hid       # m2/s
+        Kp_d  = Kp_m*ki                           # (L/s)/m   = 46,9
+        Ti_d  = R_hid*Kp_m/(tau_p*wn**2)          # s (tanque) = 26,1
+    ENDCODE
+}

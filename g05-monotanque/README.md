@@ -26,6 +26,9 @@
 | [entrega_07](entregas/entrega_07/) | Fase 1, Entrega 03: validação funcional (vídeo) | entregue | — |
 | [e1-caracterizacao](entregas/fase-2/e1-caracterizacao/) | Fase 2, Entrega 01: caracterização da planta | entregue | — |
 | [e2-equivalente-eletrico](entregas/fase-2/e2-equivalente-eletrico/) | Fase 2, Entrega 02: equivalente elétrico no TyphoonSim | entregue | — |
+| [e3-instrumentacao-malha-aberta](entregas/fase-2/e3-instrumentacao-malha-aberta/) | Fase 2, Entrega 03: instrumentação em malha aberta | entregue | — |
+| [e4-malha-fechada](entregas/fase-2/e4-malha-fechada/) | Fase 2, Entrega 04: controle em malha fechada | entregue | — |
+| [e5-entrega-final](entregas/fase-2/e5-entrega-final/) | Fase 2, Entrega Final: instrumentação não ideal e seus efeitos no controle | entregue | — |
 
 ## Observações
 
