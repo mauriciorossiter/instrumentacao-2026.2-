@@ -1,0 +1,255 @@
+version = 4.2
+
+//
+// Motor CC E-576 - equivalente eletrico (analogia forca-corrente)
+// ECOM060 Instrumentacao Eletronica - UFAL 2026.2 - Fase 2 / Entrega 01
+// Armadura: Va - Ra - La - [Ia] - E_bemf (= Ke * v_omega)
+// Mecanico: I_Tm (= Kt * Ia) -> no omega || C_J = J || R_B = 1/B || I_TL (sai do no)
+// 1 V no no omega = 1 rad/s ; 1 A = 1 N.m
+//
+
+model "Motor CC E-576 equivalente eletrico" {
+    configuration {
+        hil_device = "HIL404"
+        hil_configuration_id = 6
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 10e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 1e-05
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 1.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+
+        component "core/SCADA Input" Va_ref {
+            def_value = "20"
+            unit = "V"
+            execution_rate = "1e-5"
+        }
+        [
+            position = 7600, 8000
+        ]
+
+        component "core/SCADA Input" TL_ref {
+            def_value = "0"
+            unit = "N.m"
+            execution_rate = "1e-5"
+        }
+        [
+            position = 8900, 7900
+        ]
+
+        component "core/Voltage Source" Va {
+            sig_input = "True"
+            execution_rate = "1e-5"
+        }
+        [
+            position = 7700, 8168
+            rotation = right
+        ]
+
+        component "core/Resistor" Ra {
+            resistance = "3"
+        }
+        [
+            position = 7800, 8080
+        ]
+
+        component "core/Inductor" La {
+            inductance = "6e-3"
+        }
+        [
+            position = 7920, 8080
+        ]
+
+        component "core/Current Measurement" Ia {
+            sig_output = "True"
+            execution_rate = "1e-5"
+        }
+        [
+            position = 8040, 8080
+            size = 64, 32
+        ]
+
+        component "core/Voltage Source" E_bemf {
+            sig_input = "True"
+            execution_rate = "1e-5"
+        }
+        [
+            position = 8120, 8168
+            rotation = right
+        ]
+
+        component "core/Gain" Gain_Ke {
+            gain = "50e-3"
+            execution_rate = "1e-5"
+        }
+        [
+            position = 8240, 8320
+            rotation = left
+        ]
+
+        component "core/Ground" gnd_el {
+        }
+        [
+            position = 7900, 8300
+        ]
+
+        junction J_el pe
+        [
+            position = 7900, 8256
+        ]
+
+        component "core/Gain" Gain_Kt {
+            gain = "50e-3"
+            execution_rate = "1e-5"
+        }
+        [
+            position = 8240, 7980
+        ]
+
+        component "core/Current Source" I_Tm {
+            sig_input = "True"
+            execution_rate = "1e-5"
+        }
+        [
+            position = 8400, 8168
+            rotation = right
+        ]
+
+        component "core/Capacitor" C_J {
+            capacitance = "100e-6"
+        }
+        [
+            position = 8540, 8168
+            rotation = right
+        ]
+
+        component "core/Resistor" R_B {
+            resistance = "9523.80952"
+        }
+        [
+            position = 8680, 8168
+            rotation = right
+        ]
+
+        component "core/Current Source" I_TL {
+            sig_input = "True"
+            execution_rate = "1e-5"
+        }
+        [
+            position = 8820, 8168
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" omega {
+            sig_output = "True"
+            execution_rate = "1e-5"
+        }
+        [
+            position = 8960, 8168
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Ground" gnd_mec {
+        }
+        [
+            position = 8680, 8300
+        ]
+
+        junction J_w pe
+        [
+            position = 8540, 8080
+        ]
+
+        junction J_g pe
+        [
+            position = 8680, 8256
+        ]
+
+        connect Va_ref.out Va.in as Con_va_ref
+        connect Va.p_node Ra.p_node as Con1
+        connect Ra.n_node La.p_node as Con2
+        connect La.n_node Ia.p_node as Con3
+        connect Ia.n_node E_bemf.p_node as Con4
+        connect E_bemf.n_node J_el as Con5
+        connect Va.n_node J_el as Con6
+        connect gnd_el.node J_el as Con7
+
+        connect Ia.out Gain_Kt.in as Con_kt_in
+        connect Gain_Kt.out I_Tm.in as Con_kt_out
+        connect omega.out Gain_Ke.in as Con_ke_in
+        connect Gain_Ke.out E_bemf.in as Con_ke_out
+        connect TL_ref.out I_TL.in as Con_tl
+
+        connect I_Tm.p_node J_w as Con10
+        connect C_J.p_node J_w as Con11
+        connect R_B.p_node J_w as Con12
+        connect I_TL.n_node J_w as Con13
+        connect omega.p_node J_w as Con14
+        connect I_Tm.n_node J_g as Con15
+        connect C_J.n_node J_g as Con16
+        connect R_B.n_node J_g as Con17
+        connect I_TL.p_node J_g as Con18
+        connect omega.n_node J_g as Con19
+        connect gnd_mec.node J_g as Con20
+    }
+}

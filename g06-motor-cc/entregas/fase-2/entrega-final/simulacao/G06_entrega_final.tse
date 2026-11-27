@@ -1,0 +1,2367 @@
+version = 4.2
+
+//
+// Saved by sw version: 2026.3
+//
+
+model "G06_entrega_final" {
+    configuration {
+        hil_device = "HIL404"
+        hil_configuration_id = 6
+        simulation_method = exact
+        simulation_time_step = auto
+        fine_auto_sim_step = False
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        dma_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 1e-05
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_term_var_location = "local"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        excluded_component_from_locking_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        solver_type = "DAE"
+        integration_method = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 1.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.1
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component Subsystem Caminho_ideal {
+            layout = dynamic
+            context real_time {
+            }
+
+            context typhoonsim {
+            }
+
+            component "core/Gain" Gain_ideal {
+                execution_rate = "1e-5"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            port w {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8080, 8192
+            ]
+
+            port w_ideal {
+                position = auto:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8304, 8192
+            ]
+
+            connect w Gain_ideal.in as Con1
+            connect Gain_ideal.out w_ideal as Con2
+        }
+        [
+            position = 8708, 8064
+            size = 144, 64
+        ]
+
+        component Subsystem Sensor_HEDS5540 {
+            layout = dynamic
+            context real_time {
+            }
+
+            context typhoonsim {
+            }
+
+            component "core/C function" HEDS5540 {
+                arb_defs = "/*Begin code section*/
+/* HEDS5540: angulo do disco, mantido em [0, 2*pi) (passo de 10 us) */
+double dsk_th = 0.0;        /* angulo do eixo, rad */
+double dsk_w_nov = 0.0;     /* velocidade lida em output_fnc, usada em update_fnc */
+/*End code section*/"
+                execution_rate = "1e-5"
+                init_fnc = "/*Begin code section*/
+dsk_th = 0.0;
+dsk_w_nov = 0.0;
+/*End code section*/"
+                input_terminals = "real w;real CPR;real dTheta_arcmin;real dS_e;"
+                input_terminals_dimensions = "inherit;inherit;inherit;inherit"
+                input_terminals_feedthrough = "True;True;True;True"
+                input_terminals_show_labels = "True;True;True;True"
+                output_fnc = "/*Begin code section*/
+/* HEDS-5540 (passo de 10 us): o disco gira com o eixo e gera a posicao em contagens.
+   - erro de posicao (excentricidade): dTheta_arcmin * sen(theta), 1 ciclo por volta
+   - erro de largura de estado: bordas impares deslocadas de dS_e graus eletricos */
+const double DSK_PI2 = 6.283185307179586;
+double th = dsk_th;
+double K, x, s, p, base, pw;
+if (CPR > 0.0) {
+    th = dsk_th + dTheta_arcmin * (DSK_PI2 / 21600.0) * sin(dsk_th);  /* 1 arcmin = 2*pi/21600 rad */
+    K = 4.0 * CPR / DSK_PI2;          /* contagens (x4) por radiano */
+    x = K * th;                       /* posicao em contagens, 0 a 4*CPR */
+    s = dS_e / 90.0;                  /* deslocamento da borda, em contagens (90 graus eletricos = 1 contagem) */
+    if (s > 0.9) s = 0.9;
+    if (s < -0.9) s = -0.9;
+    p = x - 2.0 * floor(0.5 * x);     /* posicao dentro do par de estados, 0 <= p < 2 */
+    base = x - p;
+    if (p < 1.0 + s) {
+        pw = p / (1.0 + s);
+    } else {
+        pw = 1.0 + (p - 1.0 - s) / (1.0 - s);
+    }
+    th = (base + pw) / K;
+}
+theta_e = th;
+theta_eixo = dsk_th;
+dsk_w_nov = w;
+/*End code section*/"
+                output_terminals = "real theta_e;real theta_eixo;"
+                output_terminals_dimensions = "inherit;inherit"
+                output_terminals_feedthrough = "True;True"
+                output_terminals_show_labels = "True;True"
+                update_fnc = "/*Begin code section*/
+/* integra a velocidade (Euler, 10 us) e mantem o angulo em uma volta */
+dsk_th = dsk_th + 1e-5 * dsk_w_nov;
+if (dsk_th >= 6.283185307179586) dsk_th = dsk_th - 6.283185307179586;
+if (dsk_th < 0.0) dsk_th = dsk_th + 6.283185307179586;
+/*End code section*/"
+            }
+            [
+                position = 8232, 8180
+                size = 128, 128
+            ]
+
+            component "core/Gain" Gain_cont {
+                execution_rate = "1e-5"
+                gain = "0.6366197723675814"
+            }
+            [
+                position = 8192, 8352
+            ]
+
+            component "core/Product" Prod_K {
+                execution_rate = "1e-5"
+            }
+            [
+                position = 8384, 8168
+            ]
+
+            port w {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8044, 8192
+            ]
+
+            port CPR {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7980, 8240
+            ]
+
+            port dTheta_arcmin {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8020, 8272
+            ]
+
+            port dS_e {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8080, 8312
+            ]
+
+            port x_cont {
+                position = auto:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8496, 8168
+            ]
+
+            port theta_eixo {
+                position = auto:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8496, 8208
+            ]
+
+            junction J_CPR sp
+            [
+                position = 8120, 8192
+            ]
+
+            connect w HEDS5540.w as Con1
+            connect CPR J_CPR as Con2
+            connect J_CPR HEDS5540.CPR as Con3
+            connect J_CPR Gain_cont.in as Con4
+            connect dTheta_arcmin HEDS5540.dTheta_arcmin as Con5
+            connect dS_e HEDS5540.dS_e as Con6
+            connect HEDS5540.theta_e Prod_K.in as Con7
+            connect Gain_cont.out Prod_K.in1 as Con8
+            connect HEDS5540.theta_eixo theta_eixo as Con9
+            connect Prod_K.out x_cont as Con10
+        }
+        [
+            position = 8588, 8468
+            size = 192, 144
+        ]
+
+        component Subsystem Entradas_espurias {
+            layout = dynamic
+            context real_time {
+            }
+
+            context typhoonsim {
+            }
+
+            component "core/Random Source" ruido_borda {
+                execution_rate = "1e-5"
+                mean = "0"
+                stddev = "1"
+            }
+            [
+                position = 8160, 8176
+            ]
+
+            component "core/Product" Prod_sigma {
+                execution_rate = "1e-5"
+            }
+            [
+                position = 8304, 8192
+            ]
+
+            port sigma_cnt {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8048, 8192
+            ]
+
+            port ruido {
+                position = auto:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8416, 8192
+            ]
+
+            connect sigma_cnt Prod_sigma.in1 as Con1
+            connect ruido_borda.out Prod_sigma.in as Con2
+            connect Prod_sigma.out ruido as Con3
+        }
+        [
+            position = 8676, 8728
+            size = 176, 64
+        ]
+
+        component Subsystem Condicionamento {
+            layout = dynamic
+            context real_time {
+            }
+
+            context typhoonsim {
+            }
+
+            component "core/Sum" Sum_ruido {
+                execution_rate = "1e-5"
+            }
+            [
+                position = 8160, 8192
+            ]
+
+            component "core/Round" Quant_floor {
+                execution_rate = "1e-5"
+            }
+            [
+                position = 8288, 8264
+            ]
+
+            component "core/Sum" Sum_frac {
+                execution_rate = "1e-5"
+                signs = "+-"
+            }
+            [
+                position = 8400, 8256
+            ]
+
+            component "core/Product" Prod_q {
+                execution_rate = "1e-5"
+            }
+            [
+                position = 8512, 8264
+            ]
+
+            component "core/Sum" Sum_N {
+                execution_rate = "1e-5"
+                signs = "+-"
+            }
+            [
+                position = 8624, 8200
+            ]
+
+            port x_cont {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8048, 8192
+            ]
+
+            port ruido {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8048, 8232
+            ]
+
+            port quant_on {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8048, 8272
+            ]
+
+            port N_enc {
+                position = auto:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8736, 8200
+            ]
+
+            junction J_x sp
+            [
+                position = 8232, 8192
+            ]
+
+            connect x_cont Sum_ruido.in as Con1
+            connect ruido Sum_ruido.in1 as Con2
+            connect Sum_ruido.out J_x as Con3
+            connect J_x Quant_floor.in as Con4
+            connect J_x Sum_frac.in as Con5
+            connect J_x Sum_N.in as Con6
+            connect Quant_floor.out Sum_frac.in1 as Con7
+            connect Sum_frac.out Prod_q.in as Con8
+            connect quant_on Prod_q.in1 as Con9
+            connect Prod_q.out Sum_N.in1 as Con10
+            connect Sum_N.out N_enc as Con11
+        }
+        [
+            position = 8968, 8472
+            size = 176, 112
+        ]
+
+        component Subsystem Processamento_compensacao {
+            layout = dynamic
+            context real_time {
+            }
+
+            context typhoonsim {
+            }
+
+            component "core/C function" QEI_estimador {
+                arb_defs = "/*Begin code section*/
+/* QEI_estimador: decodificador + metodo M em janela deslizante + IIR.
+   O bloco roda a 10 us (mesma taxa do modelo) e executa a rotina do microcontrolador
+   a cada 10 chamadas, ou seja, com periodo de 100 us. */
+double est_dbuf[4096];      /* incrementos de contagem de cada passo (janela maxima de 409,5 ms) */
+int est_idx = 0;            /* proxima posicao livre do historico */
+int est_ok = 0;             /* 0 ate a primeira amostra */
+int est_M = 0;              /* largura da janela usada no passo anterior, em passos */
+double est_S = 0.0;         /* soma dos incrementos dentro da janela */
+double est_Nant = 0.0;      /* ultima leitura do encoder */
+double est_pos = 0.0;       /* registrador de posicao do QEI, modulo 4*CPR */
+double est_y = 0.0;         /* estado do filtro IIR, rad/s */
+double est_dN_nov = 0.0;    /* valores calculados em output_fnc e gravados em update_fnc */
+double est_N_nov = 0.0;
+double est_S_nov = 0.0;
+double est_pos_nov = 0.0;
+double est_y_nov = 0.0;
+int est_M_nov = 0;
+int est_div = 0;            /* contador de chamadas: a rotina roda quando vale 0 */
+int est_calc = 0;           /* 1 na chamada em que a rotina rodou */
+/*End code section*/"
+                execution_rate = "1e-5"
+                init_fnc = "/*Begin code section*/
+est_idx = 0;
+est_ok = 0;
+est_M = 0;
+est_S = 0.0;
+est_Nant = 0.0;
+est_pos = 0.0;
+est_y = 0.0;
+est_dN_nov = 0.0;
+est_N_nov = 0.0;
+est_S_nov = 0.0;
+est_pos_nov = 0.0;
+est_y_nov = 0.0;
+est_M_nov = 0;
+est_div = 0;
+est_calc = 0;
+/*End code section*/"
+                input_terminals = "real N_enc;real CPR;real Tw_ms;real fmax_kHz;real fc_Hz;"
+                input_terminals_dimensions = "inherit;inherit;inherit;inherit;inherit"
+                input_terminals_feedthrough = "True;True;True;True;True"
+                input_terminals_show_labels = "True;True;True;True;True"
+                output_fnc = "/*Begin code section*/
+const double EST_TS = 1e-4;             /* periodo da rotina do microcontrolador, s */
+const double EST_PI2 = 6.283185307179586;
+int i, k, M, j;
+double R, dN, dmax, S, w_raw, a, y, pos;
+if (est_div == 0) {
+    R = 4.0 * CPR;                          /* contagens por volta (x4) */
+    if (!est_ok) {                          /* primeira amostra: historico parado */
+        for (i = 0; i < 4096; i++) est_dbuf[i] = 0.0;
+        est_Nant = N_enc;
+        est_S = 0.0;
+        est_M = 0;
+        est_pos = 0.0;
+        est_y = 0.0;
+        est_ok = 1;
+    }
+    /* 1) QEI: incremento desde a ultima leitura, com a volta do contador */
+    dN = N_enc - est_Nant;
+    if (dN > 0.5 * R) dN = dN - R;
+    if (dN < -0.5 * R) dN = dN + R;
+    /* frequencia maxima de contagem: no maximo 4*fmax bordas por segundo (fmax_kHz = 0 desliga) */
+    if (fmax_kHz > 0.0) {
+        dmax = 4.0 * fmax_kHz * 1e3 * EST_TS;
+        if (dN > dmax) dN = dmax;
+        if (dN < -dmax) dN = -dmax;
+    }
+    /* 2) metodo M em janela deslizante: w = (soma dos ultimos M incrementos) * (2*pi/R) / (M*EST_TS) */
+    M = (int)(Tw_ms * 1e-3 / EST_TS + 0.5);
+    if (M < 1) M = 1;
+    if (M > 4095) M = 4095;
+    if (M == est_M) {
+        j = est_idx - M;
+        if (j < 0) j = j + 4096;
+        S = est_S + dN - est_dbuf[j];       /* entra o incremento novo, sai o mais antigo */
+    } else {
+        S = dN;                             /* janela mudou: soma refeita */
+        for (i = 1; i < M; i++) {
+            k = est_idx - i;
+            if (k < 0) k = k + 4096;
+            S = S + est_dbuf[k];
+        }
+    }
+    w_raw = S * (EST_PI2 / R) / (M * EST_TS);
+    /* 3) filtro IIR de 1a ordem, fc_Hz = 0 desliga */
+    if (fc_Hz > 0.0) {
+        a = 1.0 - exp(-EST_PI2 * fc_Hz * EST_TS);
+    } else {
+        a = 1.0;
+    }
+    y = est_y + a * (w_raw - est_y);
+    pos = est_pos + dN;
+    if (pos >= R) pos = pos - R;
+    if (pos < 0.0) pos = pos + R;
+    est_dN_nov = dN;
+    est_N_nov = N_enc;
+    est_S_nov = S;
+    est_M_nov = M;
+    est_pos_nov = pos;
+    est_y_nov = y;
+    w_est = y;
+    N_qei = pos;
+    est_calc = 1;
+} else {
+    w_est = est_y;                      /* entre execucoes, a saida fica retida */
+    N_qei = est_pos;
+    est_calc = 0;
+}
+/*End code section*/"
+                output_terminals = "real w_est;real N_qei;"
+                output_terminals_dimensions = "inherit;inherit"
+                output_terminals_feedthrough = "True;True"
+                output_terminals_show_labels = "True;True"
+                update_fnc = "/*Begin code section*/
+if (est_calc) {
+    est_dbuf[est_idx] = est_dN_nov;
+    est_idx = est_idx + 1;
+    if (est_idx >= 4096) est_idx = 0;
+    est_S = est_S_nov;
+    est_M = est_M_nov;
+    est_Nant = est_N_nov;
+    est_pos = est_pos_nov;
+    est_y = est_y_nov;
+}
+est_div = est_div + 1;
+if (est_div >= 10) est_div = 0;
+/*End code section*/"
+            }
+            [
+                position = 8192, 8192
+                size = 128, 128
+            ]
+
+            component "core/Discrete Transfer Function" Comp_avanco {
+                a_coeff = "[3e-3,1]"
+                b_coeff = "[5e-3,1]"
+                domain = "S-domain"
+                execution_rate = "1e-5"
+            }
+            [
+                position = 8432, 8304
+            ]
+
+            component "core/Sum" Sum_cdif {
+                execution_rate = "1e-5"
+                signs = "+-"
+            }
+            [
+                position = 8560, 8312
+            ]
+
+            component "core/Product" Prod_comp {
+                execution_rate = "1e-5"
+            }
+            [
+                position = 8672, 8320
+            ]
+
+            component "core/Sum" Sum_comp {
+                execution_rate = "1e-5"
+                signs = "++"
+            }
+            [
+                position = 8784, 8176
+            ]
+
+            port CPR {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8080, 8192
+            ]
+
+            port N_enc {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8080, 8232
+            ]
+
+            port Tw_ms {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8080, 8272
+            ]
+
+            port fmax_kHz {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8080, 8312
+            ]
+
+            port fc_Hz {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8080, 8352
+            ]
+
+            port comp_on {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8080, 8392
+            ]
+
+            port w_realim {
+                position = auto:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8896, 8176
+            ]
+
+            port w_medido {
+                position = auto:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8896, 8216
+            ]
+
+            port N_qei {
+                position = auto:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8896, 8256
+            ]
+
+            junction J_w_medido sp
+            [
+                position = 8320, 8160
+            ]
+
+            connect CPR QEI_estimador.CPR as Con1
+            connect N_enc QEI_estimador.N_enc as Con2
+            connect Tw_ms QEI_estimador.Tw_ms as Con3
+            connect fmax_kHz QEI_estimador.fmax_kHz as Con4
+            connect fc_Hz QEI_estimador.fc_Hz as Con5
+            connect QEI_estimador.w_est J_w_medido as Con6
+            connect J_w_medido Comp_avanco.in as Con7
+            connect J_w_medido Sum_cdif.in1 as Con8
+            connect J_w_medido Sum_comp.in1 as Con9
+            connect J_w_medido w_medido as Con10
+            connect QEI_estimador.N_qei N_qei as Con11
+            connect Comp_avanco.out Sum_cdif.in as Con12
+            connect Sum_cdif.out Prod_comp.in as Con13
+            connect comp_on Prod_comp.in1 as Con14
+            connect Prod_comp.out Sum_comp.in as Con15
+            connect Sum_comp.out w_realim as Con16
+        }
+        [
+            position = 9388, 8472
+            size = 208, 208
+        ]
+
+        component Subsystem Seletor_ideal_real {
+            layout = dynamic
+            context real_time {
+            }
+
+            context typhoonsim {
+            }
+
+            component "core/Sum" Sum_fbdif {
+                execution_rate = "1e-5"
+                signs = "+-"
+            }
+            [
+                position = 8176, 8264
+            ]
+
+            component "core/Product" Prod_fb {
+                execution_rate = "1e-5"
+            }
+            [
+                position = 8288, 8256
+            ]
+
+            component "core/Sum" Sum_fb {
+                execution_rate = "1e-5"
+                signs = "++"
+            }
+            [
+                position = 8400, 8192
+            ]
+
+            port fb_real {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8064, 8256
+            ]
+
+            port w_ideal {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8064, 8296
+            ]
+
+            port w_realim {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8064, 8336
+            ]
+
+            port w_fb {
+                position = auto:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8512, 8192
+            ]
+
+            junction J_w_ideal sp
+            [
+                position = 8104, 8264
+            ]
+
+            connect w_ideal J_w_ideal as Con1
+            connect J_w_ideal Sum_fbdif.in1 as Con2
+            connect J_w_ideal Sum_fb.in1 as Con3
+            connect w_realim Sum_fbdif.in as Con4
+            connect fb_real Prod_fb.in1 as Con5
+            connect Sum_fbdif.out Prod_fb.in as Con6
+            connect Prod_fb.out Sum_fb.in as Con7
+            connect Sum_fb.out w_fb as Con8
+        }
+        [
+            position = 9200, 8064
+            size = 176, 112
+        ]
+
+        component Subsystem Controlador_PI {
+            layout = dynamic
+            context real_time {
+            }
+
+            context typhoonsim {
+            }
+
+            component "core/Product" Prod_b {
+                execution_rate = "1e-5"
+            }
+            [
+                position = 8136, 8184
+            ]
+
+            component "core/Sum" Sum_p {
+                execution_rate = "1e-5"
+                signs = "+-"
+            }
+            [
+                position = 8264, 8192
+            ]
+
+            component "core/Product" Prod_Kp {
+                execution_rate = "1e-5"
+            }
+            [
+                position = 8392, 8128
+            ]
+
+            component "core/Sum" Sum_e {
+                execution_rate = "1e-5"
+                signs = "+-"
+            }
+            [
+                position = 8264, 8296
+            ]
+
+            component "core/Product" Prod_Ki {
+                execution_rate = "1e-5"
+            }
+            [
+                position = 8392, 8304
+            ]
+
+            component "core/Sum" Sum_I {
+                execution_rate = "1e-5"
+                signs = "++"
+            }
+            [
+                position = 8512, 8312
+            ]
+
+            component "core/Discrete Transfer Function" Int_PI {
+                a_coeff = "[1,-1]"
+                b_coeff = "[0,1e-5]"
+                execution_rate = "1e-5"
+            }
+            [
+                position = 8632, 8312
+            ]
+
+            component "core/Sum" Sum_u {
+                execution_rate = "1e-5"
+                signs = "++"
+            }
+            [
+                position = 8752, 8136
+            ]
+
+            component "core/Sum" Sum_aw {
+                execution_rate = "1e-5"
+                signs = "+-"
+            }
+            [
+                position = 8752, 8424
+            ]
+
+            component "core/Product" Prod_Kaw {
+                execution_rate = "1e-5"
+            }
+            [
+                position = 8512, 8432
+            ]
+
+            port Kp {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8024, 8128
+            ]
+
+            port w_ref {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8024, 8184
+            ]
+
+            port b_ref {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8024, 8224
+            ]
+
+            port w_fb {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8024, 8264
+            ]
+
+            port Ki {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8024, 8304
+            ]
+
+            port Va {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8024, 8424
+            ]
+
+            port Kaw {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8024, 8464
+            ]
+
+            port u {
+                position = auto:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8864, 8136
+            ]
+
+            junction J_w_ref sp
+            [
+                position = 8064, 8184
+            ]
+
+            junction J_w_fb sp
+            [
+                position = 8064, 8192
+            ]
+
+            junction J_u sp
+            [
+                position = 8832, 8136
+            ]
+
+            connect w_ref J_w_ref as Con1
+            connect J_w_ref Prod_b.in1 as Con2
+            connect J_w_ref Sum_e.in as Con3
+            connect w_fb J_w_fb as Con4
+            connect J_w_fb Sum_p.in1 as Con5
+            connect J_w_fb Sum_e.in1 as Con6
+            connect b_ref Prod_b.in as Con7
+            connect Prod_b.out Sum_p.in as Con8
+            connect Sum_p.out Prod_Kp.in1 as Con9
+            connect Kp Prod_Kp.in as Con10
+            connect Prod_Kp.out Sum_u.in as Con11
+            connect Sum_e.out Prod_Ki.in1 as Con12
+            connect Ki Prod_Ki.in as Con13
+            connect Prod_Ki.out Sum_I.in as Con14
+            connect Prod_Kaw.out Sum_I.in1 as Con15
+            connect Sum_I.out Int_PI.in as Con16
+            connect Int_PI.out Sum_u.in1 as Con17
+            connect Sum_u.out J_u as Con18
+            connect J_u Sum_aw.in1 as Con19
+            connect J_u u as Con20
+            connect Kaw Prod_Kaw.in as Con21
+            connect Sum_aw.out Prod_Kaw.in1 as Con22
+            connect Va Sum_aw.in as Con23
+        }
+        [
+            position = 9640, 8064
+            size = 176, 240
+        ]
+
+        component Subsystem Atuador {
+            layout = dynamic
+            context real_time {
+            }
+
+            context typhoonsim {
+            }
+
+            component "core/Sum" Sum_vdif {
+                execution_rate = "1e-5"
+                signs = "+-"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            component "core/Product" Prod_malha {
+                execution_rate = "1e-5"
+            }
+            [
+                position = 8304, 8200
+            ]
+
+            component "core/Sum" Sum_vsel {
+                execution_rate = "1e-5"
+                signs = "++"
+            }
+            [
+                position = 8416, 8208
+            ]
+
+            component "core/Limit" Limit_Va {
+                execution_rate = "1e-5"
+                lower_limit = "0"
+                upper_limit = "30"
+            }
+            [
+                position = 8528, 8208
+            ]
+
+            port u {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8080, 8192
+            ]
+
+            port Va_ma {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8080, 8232
+            ]
+
+            port malha {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8080, 8272
+            ]
+
+            port Va {
+                position = auto:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8640, 8208
+            ]
+
+            junction J_Va_ma sp
+            [
+                position = 8112, 8320
+            ]
+
+            connect malha Prod_malha.in1 as Con1
+            connect Va_ma J_Va_ma as Con2
+            connect J_Va_ma Sum_vdif.in1 as Con3
+            connect J_Va_ma Sum_vsel.in1 as Con4
+            connect u Sum_vdif.in as Con5
+            connect Sum_vdif.out Prod_malha.in as Con6
+            connect Prod_malha.out Sum_vsel.in as Con7
+            connect Sum_vsel.out Limit_Va.in as Con8
+            connect Limit_Va.out Va as Con9
+        }
+        [
+            position = 10000, 8064
+            size = 160, 112
+        ]
+
+        component Subsystem Carregamento_disco {
+            layout = dynamic
+            context real_time {
+            }
+
+            context typhoonsim {
+            }
+
+            component "core/Discrete Transfer Function" Deriv_w {
+                a_coeff = "[1,0]"
+                b_coeff = "[1e5,-1e5]"
+                execution_rate = "1e-5"
+            }
+            [
+                position = 8192, 8192
+            ]
+
+            component "core/Gain" Gain_Jd {
+                execution_rate = "1e-5"
+                gain = "6e-8"
+            }
+            [
+                position = 8320, 8192
+            ]
+
+            component "core/Product" Prod_carga {
+                execution_rate = "1e-5"
+            }
+            [
+                position = 8432, 8200
+            ]
+
+            port w {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8080, 8192
+            ]
+
+            port carga_on {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 8080, 8232
+            ]
+
+            port T_disco {
+                position = auto:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8544, 8200
+            ]
+
+            connect w Deriv_w.in as Con1
+            connect Deriv_w.out Gain_Jd.in as Con2
+            connect Gain_Jd.out Prod_carga.in as Con3
+            connect carga_on Prod_carga.in1 as Con4
+            connect Prod_carga.out T_disco as Con5
+        }
+        [
+            position = 8096, 8472
+            size = 176, 80
+        ]
+
+        component "core/Signal Controlled Voltage Source" Va {
+        }
+        [
+            position = 7464, 7908
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" Va_measurement {
+            execution_rate = "1e-5"
+        }
+        [
+            position = 7404, 7944
+            rotation = right
+        ]
+
+        component "core/Resistor" Ra {
+            resistance = "3"
+        }
+        [
+            position = 7592, 7848
+        ]
+
+        component "core/Inductor" La {
+            inductance = "6e-3"
+        }
+        [
+            position = 7684, 7848
+        ]
+
+        component "core/Current Measurement" Ia {
+            execution_rate = "1e-5"
+            sig_output = "True"
+        }
+        [
+            position = 7752, 7848
+        ]
+
+        component "core/Signal Controlled Voltage Source" E_bemf {
+        }
+        [
+            position = 7808, 7920
+            rotation = right
+        ]
+
+        component "core/Ground" gnd_el {
+        }
+        [
+            position = 7676, 8028
+        ]
+
+        component "core/Gain" Gain_Ke {
+            execution_rate = "1e-5"
+            gain = "50e-3"
+        }
+        [
+            position = 7872, 8036
+            rotation = left
+        ]
+
+        component "core/Gain" Gain_Kt {
+            execution_rate = "1e-5"
+            gain = "50e-3"
+        }
+        [
+            position = 7936, 7756
+        ]
+
+        component "core/Signal Controlled Current Source" I_Tm {
+        }
+        [
+            position = 7980, 7936
+            rotation = right
+        ]
+
+        component "core/Capacitor" C_J {
+            capacitance = "100e-6"
+        }
+        [
+            position = 8084, 7948
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Current Source" I_TL {
+        }
+        [
+            position = 8164, 7896
+            rotation = left
+        ]
+
+        component "core/Resistor" R_B {
+            resistance = "9523.80952"
+        }
+        [
+            position = 8252, 7956
+            rotation = right
+        ]
+
+        component "core/Signal Controlled Current Source" I_disco {
+        }
+        [
+            position = 8324, 7936
+            rotation = left
+        ]
+
+        component "core/Voltage Measurement" omega_equivalent {
+            execution_rate = "1e-5"
+            sig_output = "True"
+        }
+        [
+            position = 8468, 7976
+            rotation = right
+        ]
+
+        component "core/Ground" gnd_mec {
+        }
+        [
+            position = 8084, 8084
+        ]
+
+        component "core/Probe" w_planta {
+            execution_rate = "1e-5"
+        }
+        [
+            position = 8556, 8200
+        ]
+
+        component "core/SCADA Input" ensaio {
+            def_value = "1"
+            execution_rate = "1e-5"
+            unit = ""
+        }
+        [
+            position = 9232, 7596
+        ]
+
+        component "core/SCADA Input" disparo {
+            execution_rate = "1e-5"
+            unit = ""
+        }
+        [
+            position = 9232, 7656
+        ]
+
+        component "core/SCADA Input" malha {
+            def_value = "1"
+            execution_rate = "1e-5"
+            unit = ""
+        }
+        [
+            position = 9228, 7712
+        ]
+
+        component "core/SCADA Input" w_ref_man {
+            execution_rate = "1e-5"
+            unit = "rad/s"
+        }
+        [
+            position = 9232, 7768
+        ]
+
+        component "core/SCADA Input" Va_man {
+            execution_rate = "1e-5"
+            unit = "V"
+        }
+        [
+            position = 9232, 7820
+        ]
+
+        component "core/SCADA Input" TL_man {
+            execution_rate = "1e-5"
+            unit = "N.m"
+        }
+        [
+            position = 9232, 7872
+        ]
+
+        component "core/C function" Gerador_ensaio {
+            arb_defs = "/*Begin code section*/
+/* Gerador_ensaio (entrega final): ensaios de malha aberta (E03) e de malha fechada (E04).
+   Roda a 10 us e atualiza a cada 10 chamadas (100 us). */
+int gen_ativo = 0;          /* 1 depois da borda de subida de \'disparo\' */
+long gen_k = 0;             /* passos de 100 us desde o disparo */
+double gen_disp_ant = 0.0;  /* valor anterior de \'disparo\' */
+int gen_div = 0;            /* contador de chamadas */
+int gen_calc = 0;
+double gen_ref = 0.0;       /* saidas retidas entre atualizacoes */
+double gen_va = 0.0;
+double gen_tl = 0.0;
+double gen_mk = 0.0;
+/*End code section*/"
+            execution_rate = "1e-5"
+            init_fnc = "/*Begin code section*/
+gen_ativo = 0;
+gen_k = 0;
+gen_disp_ant = 0.0;
+gen_div = 0;
+gen_calc = 0;
+gen_ref = 0.0;
+gen_va = 0.0;
+gen_tl = 0.0;
+gen_mk = 0.0;
+/*End code section*/"
+            input_terminals = "real ensaio;real disparo;real malha;real w_ref_man;real Va_man;real TL_man;"
+            input_terminals_dimensions = "inherit;inherit;inherit;inherit;inherit;inherit"
+            input_terminals_feedthrough = "True;True;True;True;True;True"
+            input_terminals_show_labels = "True;True;True;True;True;True"
+            output_fnc = "/*Begin code section*/
+/* malha = 0 (aberta, ensaios da E03; o controlador nao age):
+     ensaio 0: manual (Va_man, TL_man)
+     ensaio 1: degrau de Va 0 -> 30 V no disparo
+     ensaio 2: inercia livre, Va 30 -> 0 V no disparo
+     ensaio 3: pulso de TL = 0,05 N.m por 50 ms no disparo, com Va = 30 V
+   malha = 1 (fechada, ensaios da E04; Va vem do controlador):
+     ensaio 0: manual (w_ref_man, TL_man)
+     ensaio 1: degrau de referencia 0 -> 400 rad/s no disparo
+     ensaio 2: degrau de carga TL 0 -> 0,05 N.m no disparo, referencia 400 rad/s
+     ensaio 3: degrau pequeno de referencia 400 -> 420 rad/s no disparo */
+if (gen_div == 0) {
+    int e_ens = (int)(ensaio + 0.5);
+    double r = 0.0;
+    double va = 0.0;
+    double tl = TL_man;
+    if (malha < 0.5) {
+        va = Va_man;
+        if (e_ens == 1) {
+            va = gen_ativo ? 30.0 : 0.0;
+            tl = 0.0;
+        } else if (e_ens == 2) {
+            va = gen_ativo ? 0.0 : 30.0;
+            tl = 0.0;
+        } else if (e_ens == 3) {
+            va = 30.0;
+            tl = (gen_ativo && gen_k < 500) ? 0.05 : 0.0;   /* 500 x 100 us = 50 ms */
+        }
+    } else {
+        r = w_ref_man;
+        if (e_ens == 1) {
+            r = gen_ativo ? 400.0 : 0.0;
+            tl = 0.0;
+        } else if (e_ens == 2) {
+            r = 400.0;
+            tl = gen_ativo ? 0.05 : 0.0;
+        } else if (e_ens == 3) {
+            r = gen_ativo ? 420.0 : 400.0;
+            tl = 0.0;
+        }
+    }
+    gen_ref = r;
+    gen_va = va;
+    gen_tl = tl;
+    gen_mk = gen_ativo ? 1.0 : 0.0;
+    gen_calc = 1;
+} else {
+    gen_calc = 0;
+}
+w_ref = gen_ref;
+Va_ma = gen_va;
+TL_cmd = gen_tl;
+marca = gen_mk;
+/*End code section*/"
+            output_terminals = "real w_ref;real Va_ma;real TL_cmd;real marca;"
+            output_terminals_dimensions = "inherit;inherit;inherit;inherit"
+            output_terminals_feedthrough = "True;True;True;True"
+            output_terminals_show_labels = "True;True;True;True"
+            update_fnc = "/*Begin code section*/
+if (gen_calc) {
+    if (disparo > 0.5 && gen_disp_ant <= 0.5) {
+        gen_ativo = 1;
+        gen_k = 0;
+    } else if (disparo <= 0.5) {
+        gen_ativo = 0;
+        gen_k = 0;
+    } else if (gen_ativo) {
+        gen_k = gen_k + 1;
+    }
+    gen_disp_ant = disparo;
+}
+gen_div = gen_div + 1;
+if (gen_div >= 10) gen_div = 0;
+/*End code section*/"
+        }
+        [
+            position = 9456, 7768
+            size = 112, 160
+        ]
+
+        component "core/Probe" w_ref {
+            execution_rate = "1e-5"
+        }
+        [
+            position = 9648, 7708
+        ]
+
+        component "core/Probe" marca {
+            execution_rate = "1e-5"
+        }
+        [
+            position = 9648, 7864
+        ]
+
+        component "core/Probe" TL_aplicado {
+            execution_rate = "1e-5"
+        }
+        [
+            position = 9648, 7788
+        ]
+
+        component "core/Probe" w_ideal {
+            execution_rate = "1e-5"
+        }
+        [
+            position = 8900, 8016
+        ]
+
+        component "core/SCADA Input" CPR {
+            def_value = "500"
+            execution_rate = "1e-5"
+            unit = ""
+        }
+        [
+            position = 8312, 8608
+        ]
+
+        component "core/SCADA Input" dTheta_arcmin {
+            def_value = "10"
+            execution_rate = "1e-5"
+            unit = "arcmin"
+        }
+        [
+            position = 8312, 8668
+        ]
+
+        component "core/SCADA Input" dS_e {
+            def_value = "5"
+            execution_rate = "1e-5"
+            unit = "graus e"
+        }
+        [
+            position = 8308, 8728
+        ]
+
+        component "core/Probe" theta_eixo {
+            execution_rate = "1e-5"
+        }
+        [
+            position = 8748, 8568
+        ]
+
+        component "core/SCADA Input" sigma_cnt {
+            def_value = "0.02"
+            execution_rate = "1e-5"
+            unit = "contagens"
+        }
+        [
+            position = 8512, 8728
+        ]
+
+        component "core/SCADA Input" quant_on {
+            def_value = "1"
+            execution_rate = "1e-5"
+            unit = ""
+        }
+        [
+            position = 8792, 8504
+        ]
+
+        component "core/Probe" N_enc {
+            execution_rate = "1e-5"
+        }
+        [
+            position = 9160, 8392
+        ]
+
+        component "core/SCADA Input" fmax_kHz {
+            def_value = "100"
+            execution_rate = "1e-5"
+            unit = "kHz"
+        }
+        [
+            position = 9116, 8544
+        ]
+
+        component "core/SCADA Input" Tw_ms {
+            def_value = "10"
+            execution_rate = "1e-5"
+            unit = "ms"
+        }
+        [
+            position = 9116, 8600
+        ]
+
+        component "core/SCADA Input" fc_Hz {
+            execution_rate = "1e-5"
+            unit = "Hz"
+        }
+        [
+            position = 9116, 8656
+        ]
+
+        component "core/SCADA Input" comp_on {
+            execution_rate = "1e-5"
+            unit = ""
+        }
+        [
+            position = 9116, 8708
+        ]
+
+        component "core/Probe" w_medido {
+            execution_rate = "1e-5"
+        }
+        [
+            position = 9640, 8472
+        ]
+
+        component "core/Probe" N_qei {
+            execution_rate = "1e-5"
+        }
+        [
+            position = 9608, 8552
+        ]
+
+        component "core/Probe" w_realim {
+            execution_rate = "1e-5"
+        }
+        [
+            position = 9644, 8392
+        ]
+
+        component "core/Sum" Sum_erro {
+            execution_rate = "1e-5"
+            signs = "+-"
+        }
+        [
+            position = 9704, 8296
+        ]
+
+        component "core/Probe" erro_med {
+            execution_rate = "1e-5"
+        }
+        [
+            position = 9800, 8296
+        ]
+
+        component "core/SCADA Input" fb_real {
+            def_value = "1"
+            execution_rate = "1e-5"
+            unit = ""
+        }
+        [
+            position = 9040, 8016
+        ]
+
+        component "core/Probe" w_fb {
+            execution_rate = "1e-5"
+        }
+        [
+            position = 9400, 7960
+        ]
+
+        component "core/SCADA Input" Kp {
+            def_value = "0.378"
+            execution_rate = "1e-5"
+            unit = "V/(rad/s)"
+        }
+        [
+            position = 9432, 8136
+        ]
+
+        component "core/SCADA Input" Ki {
+            def_value = "12.63"
+            execution_rate = "1e-5"
+            unit = "V/rad"
+        }
+        [
+            position = 9432, 8176
+        ]
+
+        component "core/SCADA Input" b_ref {
+            def_value = "0.6"
+            execution_rate = "1e-5"
+            unit = ""
+        }
+        [
+            position = 9432, 8216
+        ]
+
+        component "core/SCADA Input" Kaw {
+            def_value = "33.4"
+            execution_rate = "1e-5"
+            unit = "1/s"
+        }
+        [
+            position = 9432, 8256
+        ]
+
+        component "core/Probe" Va_cmd {
+            execution_rate = "1e-5"
+        }
+        [
+            position = 10184, 7984
+        ]
+
+        component "core/SCADA Input" carga_on {
+            def_value = "1"
+            execution_rate = "1e-5"
+            unit = ""
+        }
+        [
+            position = 7892, 8492
+        ]
+
+        component "core/Probe" T_disco {
+            execution_rate = "1e-5"
+        }
+        [
+            position = 8308, 8472
+        ]
+
+        junction J_malha sp
+        [
+            position = 9336, 7752
+        ]
+
+        junction J_w_ref sp
+        [
+            position = 9568, 7708
+        ]
+
+        junction J_w sp
+        [
+            position = 8456, 8200
+        ]
+
+        junction J_N_enc sp
+        [
+            position = 9096, 8472
+        ]
+
+        junction J_w_fb sp
+        [
+            position = 9352, 8064
+        ]
+
+        junction J_Va sp
+        [
+            position = 10120, 8064
+        ]
+
+        junction Junction3 pe
+        [
+            position = 8252, 7848
+        ]
+
+        junction Junction14 pe
+        [
+            position = 7676, 7984
+        ]
+
+        junction Junction17 pe
+        [
+            position = 8164, 8024
+        ]
+
+        junction Junction21 pe
+        [
+            position = 7464, 7848
+        ]
+
+        junction J_disco_p pe
+        [
+            position = 8324, 7848
+        ]
+
+        junction J_disco_n pe
+        [
+            position = 8324, 8024
+        ]
+
+        junction Junction23 sp
+        [
+            position = 8456, 8064
+        ]
+
+        junction Junction24 sp
+        [
+            position = 8456, 8304
+        ]
+
+        junction Junction25 sp
+        [
+            position = 7872, 8200
+        ]
+
+        junction Junction26 sp
+        [
+            position = 8352, 8452
+        ]
+
+        junction Junction27 sp
+        [
+            position = 9556, 8392
+        ]
+
+        junction Junction28 sp
+        [
+            position = 9540, 7788
+        ]
+
+        junction Junction29 pe
+        [
+            position = 7464, 7984
+        ]
+
+        junction Junction30 sp
+        [
+            position = 9536, 8472
+        ]
+
+        junction Junction31 sp
+        [
+            position = 8844, 8064
+        ]
+
+        junction Junction32 pe
+        [
+            position = 8084, 8024
+        ]
+
+        junction Junction33 pe
+        [
+            position = 8252, 8024
+        ]
+
+        junction Junction34 pe
+        [
+            position = 8164, 7848
+        ]
+
+        junction Junction35 pe
+        [
+            position = 8084, 7848
+        ]
+
+        junction Junction36 sp
+        [
+            position = 8240, 8472
+        ]
+
+        connect Ia.out Gain_Kt.in as Con1
+        connect Gain_Kt.out I_Tm.in as Con2
+        connect Gain_Ke.out E_bemf.in as Con3
+        connect ensaio.out Gerador_ensaio.ensaio as Con4
+        connect disparo.out Gerador_ensaio.disparo as Con5
+        [
+            breakpoints = 9352, 7656; 9352, 7732
+        ]
+        connect w_ref_man.out Gerador_ensaio.w_ref_man as Con6
+        connect Va_man.out Gerador_ensaio.Va_man as Con7
+        connect TL_man.out Gerador_ensaio.TL_man as Con8
+        connect malha.out J_malha as Con9
+        connect J_malha Gerador_ensaio.malha as Con10
+        connect J_malha Atuador.malha as Con11
+        connect Gerador_ensaio.w_ref J_w_ref as Con12
+        connect J_w_ref w_ref.in as Con13
+        connect J_w_ref Controlador_PI.w_ref as Con14
+        connect Gerador_ensaio.Va_ma Atuador.Va_ma as Con15
+        [
+            breakpoints = 9528, 7748; 9868, 7748; 9868, 8064
+        ]
+        connect Gerador_ensaio.marca marca.in as Con19
+        [
+            breakpoints = 9528, 7864; 9616, 7864
+        ]
+        connect J_w w_planta.in as Con22
+        [
+            breakpoints = 8456, 8200; 8456, 8200; 8528, 8200
+        ]
+        connect dTheta_arcmin.out Sensor_HEDS5540.dTheta_arcmin as Con33
+        [
+            breakpoints = 8388, 8656; 8388, 8484
+        ]
+        connect dS_e.out Sensor_HEDS5540.dS_e as Con34
+        [
+            breakpoints = 8432, 8704; 8432, 8516
+        ]
+        connect Sensor_HEDS5540.theta_eixo theta_eixo.in as Con35
+        connect Sensor_HEDS5540.x_cont Condicionamento.x_cont as Con36
+        connect sigma_cnt.out Entradas_espurias.sigma_cnt as Con37
+        connect Entradas_espurias.ruido Condicionamento.ruido as Con38
+        [
+            breakpoints = 8828, 8728; 8828, 8536; 8828, 8536; 8828, 8472
+        ]
+        connect Condicionamento.N_enc J_N_enc as Con40
+        connect J_N_enc N_enc.in as Con41
+        connect J_N_enc Processamento_compensacao.N_enc as Con42
+        [
+            breakpoints = 9124, 8472; 9124, 8440; 9264, 8440
+        ]
+        connect Tw_ms.out Processamento_compensacao.Tw_ms as Con43
+        [
+            breakpoints = 9228, 8592; 9228, 8456
+        ]
+        connect fmax_kHz.out Processamento_compensacao.fmax_kHz as Con44
+        [
+            breakpoints = 9180, 8544; 9180, 8488
+        ]
+        connect fc_Hz.out Processamento_compensacao.fc_Hz as Con45
+        [
+            breakpoints = 9248, 8640; 9248, 8520
+        ]
+        connect Processamento_compensacao.N_qei N_qei.in as Con49
+        connect comp_on.out Processamento_compensacao.comp_on as Con50
+        connect Sum_erro.out erro_med.in as Con54
+        connect Seletor_ideal_real.w_fb J_w_fb as Con56
+        connect J_w_fb w_fb.in as Con57
+        connect J_w_fb Controlador_PI.w_fb as Con58
+        connect b_ref.out Controlador_PI.b_ref as Con59
+        connect Kp.out Controlador_PI.Kp as Con60
+        connect Ki.out Controlador_PI.Ki as Con61
+        connect Controlador_PI.u Atuador.u as Con62
+        [
+            breakpoints = 9788, 8064; 9788, 8032; 9904, 8032
+        ]
+        connect Kaw.out Controlador_PI.Kaw as Con63
+        connect Atuador.Va J_Va as Con64
+        connect J_Va Va.in as Con65
+        [
+            breakpoints = 10120, 8064; 10120, 7908; 8476, 7908; 8476, 7704; 7800, 7704
+        ]
+        connect J_Va Va_cmd.in as Con66
+        connect J_Va Controlador_PI.Va as Con67
+        connect Ra.n_node La.p_node as Con72
+        connect La.n_node Ia.p_node as Con73
+        connect omega_equivalent.p_node J_disco_p as Con74
+        connect J_disco_p Junction3 as Con75
+        connect R_B.p_node Junction3 as Con76
+        connect omega_equivalent.n_node J_disco_n as Con77
+        connect I_disco.n_node J_disco_p as Con80
+        connect I_disco.p_node J_disco_n as Con81
+        connect E_bemf.p_node Ia.n_node as Con83
+        connect gnd_el.node Junction14 as Con84
+        connect E_bemf.n_node Junction14 as Con85
+        connect I_TL.p_node Junction17 as Con89
+        connect Ra.p_node Junction21 as Con96
+        [
+            breakpoints = 7496, 7848
+        ]
+        connect Junction21 Va.p_node as Con97
+        connect Va_measurement.p_node Junction21 as Con98
+        connect omega_equivalent.out Junction23 as Connection1
+        connect Junction23 J_w as Connection2
+        connect Caminho_ideal.w Junction23 as Connection3
+        connect J_w Junction24 as Connection4
+        [
+            breakpoints = 8456, 8200; 8456, 8304
+        ]
+        connect Junction24 Sum_erro.in1 as Connection5
+        connect Sensor_HEDS5540.w Junction24 as Connection6
+        connect J_w Junction25 as Connection7
+        connect Junction25 Gain_Ke.in as Connection8
+        connect Carregamento_disco.w Junction25 as Connection9
+        [
+            breakpoints = 7872, 8448; 7872, 8200
+        ]
+        connect CPR.out Junction26 as Connection11
+        [
+            breakpoints = 8352, 8608
+        ]
+        connect Junction26 Sensor_HEDS5540.CPR as Connection12
+        [
+            breakpoints = 8352, 8452; 8476, 8452
+        ]
+        connect Processamento_compensacao.CPR Junction26 as Connection13
+        [
+            breakpoints = 9224, 8396; 9224, 8344; 9072, 8344; 8352, 8344
+        ]
+        connect Seletor_ideal_real.w_realim Junction27 as Connection15
+        [
+            breakpoints = 9096, 8320; 9304, 8320; 9304, 8320; 9556, 8320
+        ]
+        connect Junction27 w_realim.in as Connection16
+        connect Processamento_compensacao.w_realim Junction27 as Connection17
+        connect fb_real.out Seletor_ideal_real.fb_real as Connection18
+        connect Gerador_ensaio.TL_cmd Junction28 as Connection20
+        connect Junction28 TL_aplicado.in as Connection21
+        connect I_TL.in Junction28 as Connection22
+        [
+            breakpoints = 9540, 7524; 9540, 7680
+        ]
+        connect Junction14 Junction29 as Connection24
+        [
+            breakpoints = 7496, 7984
+        ]
+        connect Junction29 Va_measurement.n_node as Connection25
+        [
+            breakpoints = 7464, 7984
+        ]
+        connect Va.n_node Junction29 as Connection26
+        connect Processamento_compensacao.w_medido Junction30 as Connection28
+        connect Junction30 Sum_erro.in as Connection29
+        [
+            breakpoints = 9536, 8424
+        ]
+        connect w_medido.in Junction30 as Connection30
+        connect Caminho_ideal.w_ideal Junction31 as Connection32
+        connect Junction31 Seletor_ideal_real.w_ideal as Connection33
+        [
+            breakpoints = 9064, 8064; 9064, 8064
+        ]
+        connect w_ideal.in Junction31 as Connection34
+        connect Junction17 Junction32 as Connection37
+        connect Junction32 gnd_mec.node as Connection38
+        [
+            breakpoints = 8084, 8024
+        ]
+        connect C_J.n_node Junction32 as Connection39
+        connect I_Tm.n_node Junction32 as Connection40
+        connect J_disco_n Junction33 as Connection42
+        connect Junction33 Junction17 as Connection43
+        connect R_B.n_node Junction33 as Connection44
+        connect Junction3 Junction34 as Connection47
+        connect Junction34 I_TL.n_node as Connection48
+        [
+            breakpoints = 8164, 7848
+        ]
+        connect I_Tm.p_node Junction35 as Connection50
+        connect Junction35 Junction34 as Connection51
+        connect C_J.p_node Junction35 as Connection52
+        connect carga_on.out Carregamento_disco.carga_on as Connection53
+        connect quant_on.out Condicionamento.quant_on as Connection54
+        connect Carregamento_disco.T_disco Junction36 as Connection56
+        connect Junction36 T_disco.in as Connection57
+        connect I_disco.in Junction36 as Connection58
+        [
+            breakpoints = 8284, 8120; 8240, 8120; 8240, 8472
+        ]
+    }
+
+    default {
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/Capacitor" {
+            signal_access = "inherit"
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Discrete Transfer Function" {
+            domain = "Z-domain"
+            method = "Zero-order hold"
+            b_coeff = "[1,1]"
+            a_coeff = "[1,1]"
+            signal_out_type = "inherit"
+            execution_rate = "inherit"
+        }
+
+        "core/Gain" {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            force_tml = "True"
+            _tunable = "False"
+            execution_rate = "inherit"
+        }
+
+        "core/Inductor" {
+            signal_access = "inherit"
+            inductance = "1e-3"
+            initial_current = "0.0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Limit" {
+            upper_limit = "[\'inf\']"
+            lower_limit = "[\'-inf\']"
+            execution_rate = "inherit"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Product" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/Round" {
+            round_fn = "floor"
+            execution_rate = "inherit"
+        }
+
+        "core/SCADA Input" {
+            signal_access = "inherit"
+            addr = "0"
+            format = "real"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "real"
+            min = "-1e6"
+            max = "1e6"
+            def_value = "0"
+            unit = " "
+            execution_rate = "100e-6"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Current Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Random Source" {
+            distribution = "Normal"
+            min = "0"
+            max = "5"
+            mean = "1"
+            stddev = "3"
+            lambd = "2"
+            k = "1"
+            rate = "1"
+            execution_rate = "100e-6"
+        }
+
+        "core/Signal Controlled Current Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Signal Controlled Voltage Source" {
+            execution_rate = "inherit"
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+}
